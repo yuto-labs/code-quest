@@ -266,7 +266,7 @@ export default function MapScreen({ onSelectCountry, onBack, progress, quizProgr
               style={styles.tooltipBtn}
               onClick={() => handleCountryClick(tooltip.id)}
             >
-              {clearedIds.has(tooltip.id) ? '🔄 もう一度' : '▶ START'}
+              ▶ START
             </button>
           )}
         </div>
@@ -336,7 +336,6 @@ const styles = {
     border: '2px solid var(--accent)',
     padding: '12px 20px',
     textAlign: 'center',
-    pointerEvents: 'none',
     minWidth: 200,
     zIndex: 10,
   },

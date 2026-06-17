@@ -1,0 +1,183 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #0d0d1a;
+  --bg2: #1a1a2e;
+  --panel: #16213e;
+  --border: #00ff88;
+  --border2: #0066ff;
+  --text: #e0e0e0;
+  --text-dim: #888;
+  --accent: #00ff88;
+  --accent2: #ffdd00;
+  --danger: #ff4444;
+  --pixel-font: 'Press Start 2P', monospace;
+}
+
+html, body, #root {
+  width: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--pixel-font);
+  overflow-x: hidden;
+}
+
+body {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+.pixel-box {
+  background: var(--panel);
+  border: 3px solid var(--border);
+  position: relative;
+}
+
+.pixel-box::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border: 3px solid var(--border2);
+  pointer-events: none;
+}
+
+.pixel-btn {
+  font-family: var(--pixel-font);
+  font-size: 10px;
+  background: var(--bg);
+  color: var(--accent);
+  border: 3px solid var(--accent);
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: background 0.1s, color 0.1s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.pixel-btn:hover {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.pixel-btn:active {
+  transform: translate(2px, 2px);
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.cursor::after {
+  content: '█';
+  animation: blink 1s infinite;
+  color: var(--accent);
+}
+
+.scanlines {
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.12) 2px,
+    rgba(0,0,0,0.12) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.4s ease forwards;
+}
+
+.xp-bar {
+  height: 12px;
+  background: var(--bg);
+  border: 2px solid var(--accent);
+  overflow: hidden;
+}
+
+.xp-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.5s ease;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); }
+
+@keyframes pulse {
+  from { opacity: 0.6; transform: scale(0.98); }
+  to   { opacity: 1;   transform: scale(1.02); }
+}
+
+/* スマホ向け調整 */
+@media (max-width: 600px) {
+  .pixel-btn {
+    font-size: 9px;
+    padding: 14px 18px;
+    min-height: 48px;
+  }
+
+  /* スキャンラインはスマホでは薄くする */
+  .scanlines {
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      rgba(0,0,0,0.06) 3px,
+      rgba(0,0,0,0.06) 6px
+    );
+  }
+}
+
+/* ゲームエフェクト用アニメーション */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%      { transform: translateX(-10px); }
+  40%      { transform: translateX(10px); }
+  60%      { transform: translateX(-7px); }
+  80%      { transform: translateX(7px); }
+}
+
+@keyframes floatUp {
+  0%   { opacity: 1; transform: translateY(0) scale(1); }
+  20%  { opacity: 1; transform: translateY(-10px) scale(1.15); }
+  100% { opacity: 0; transform: translateY(-70px) scale(0.9); }
+}
+
+@keyframes flashFade {
+  0%   { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes comboPopup {
+  0%   { opacity: 0; transform: translateX(-50%) scale(0.4); }
+  25%  { opacity: 1; transform: translateX(-50%) scale(1.15); }
+  70%  { opacity: 1; transform: translateX(-50%) scale(1); }
+  100% { opacity: 0; transform: translateX(-50%) scale(0.85) translateY(-24px); }
+}
+
+@keyframes heartBreak {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.5); filter: drop-shadow(0 0 8px red); }
+  60%  { transform: scale(0.7); }
+  100% { transform: scale(1); }
+}
+
+@keyframes scorePop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}

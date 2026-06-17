@@ -1,0 +1,196 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" shape-rendering="crispEdges">
+  <!-- CODE QUEST pixel art globe icon -->
+
+  <!-- Background (dark, rounded for mobile icon) -->
+  <rect width="64" height="64" rx="10" fill="#0d0d1a"/>
+
+  <!-- ── Pixel art globe (16×16 grid → 4px per pixel) ── -->
+  <!-- Each rect: x = col×4, y = row×4, width=4, height=4 -->
+  <!-- Color key: G=#00ff88  D=#0a1828 -->
+
+  <!-- Row 0: globe top arc -->
+  <rect x="20" y="0"  width="4" height="4" fill="#00ff88"/>
+  <rect x="24" y="0"  width="4" height="4" fill="#00ff88"/>
+  <rect x="28" y="0"  width="4" height="4" fill="#00ff88"/>
+  <rect x="32" y="0"  width="4" height="4" fill="#00ff88"/>
+  <rect x="36" y="0"  width="4" height="4" fill="#00ff88"/>
+  <rect x="40" y="0"  width="4" height="4" fill="#00ff88"/>
+
+  <!-- Row 1 -->
+  <rect x="12" y="4"  width="4" height="4" fill="#00ff88"/>
+  <rect x="16" y="4"  width="4" height="4" fill="#0a1828"/>
+  <rect x="20" y="4"  width="4" height="4" fill="#0a1828"/>
+  <rect x="24" y="4"  width="4" height="4" fill="#0a1828"/>
+  <rect x="28" y="4"  width="4" height="4" fill="#0a1828"/>
+  <rect x="32" y="4"  width="4" height="4" fill="#0a1828"/>
+  <rect x="36" y="4"  width="4" height="4" fill="#0a1828"/>
+  <rect x="40" y="4"  width="4" height="4" fill="#0a1828"/>
+  <rect x="44" y="4"  width="4" height="4" fill="#00ff88"/>
+
+  <!-- Row 2 -->
+  <rect x="8"  y="8"  width="4" height="4" fill="#00ff88"/>
+  <rect x="12" y="8"  width="4" height="4" fill="#0a1828"/>
+  <rect x="16" y="8"  width="4" height="4" fill="#0a1828"/>
+  <rect x="20" y="8"  width="4" height="4" fill="#00ff88"/>
+  <rect x="24" y="8"  width="4" height="4" fill="#0a1828"/>
+  <rect x="28" y="8"  width="4" height="4" fill="#00ff88"/>
+  <rect x="32" y="8"  width="4" height="4" fill="#0a1828"/>
+  <rect x="36" y="8"  width="4" height="4" fill="#00ff88"/>
+  <rect x="40" y="8"  width="4" height="4" fill="#0a1828"/>
+  <rect x="44" y="8"  width="4" height="4" fill="#0a1828"/>
+  <rect x="48" y="8"  width="4" height="4" fill="#00ff88"/>
+
+  <!-- Row 3 -->
+  <rect x="4"  y="12" width="4" height="4" fill="#00ff88"/>
+  <rect x="8"  y="12" width="4" height="4" fill="#0a1828"/>
+  <rect x="12" y="12" width="4" height="4" fill="#00ff88"/>
+  <rect x="16" y="12" width="4" height="4" fill="#0a1828"/>
+  <rect x="20" y="12" width="4" height="4" fill="#0a1828"/>
+  <rect x="24" y="12" width="4" height="4" fill="#0a1828"/>
+  <rect x="28" y="12" width="4" height="4" fill="#00ff88"/>
+  <rect x="32" y="12" width="4" height="4" fill="#0a1828"/>
+  <rect x="36" y="12" width="4" height="4" fill="#0a1828"/>
+  <rect x="40" y="12" width="4" height="4" fill="#00ff88"/>
+  <rect x="44" y="12" width="4" height="4" fill="#0a1828"/>
+  <rect x="48" y="12" width="4" height="4" fill="#0a1828"/>
+  <rect x="52" y="12" width="4" height="4" fill="#00ff88"/>
+
+  <!-- Row 4: upper latitude line -->
+  <rect x="4"  y="16" width="4" height="4" fill="#00ff88"/>
+  <rect x="8"  y="16" width="4" height="4" fill="#0a1828"/>
+  <rect x="12" y="16" width="4" height="4" fill="#0a1828"/>
+  <rect x="16" y="16" width="4" height="4" fill="#00ff88"/>
+  <rect x="20" y="16" width="4" height="4" fill="#00ff88"/>
+  <rect x="24" y="16" width="4" height="4" fill="#00ff88"/>
+  <rect x="28" y="16" width="4" height="4" fill="#00ff88"/>
+  <rect x="32" y="16" width="4" height="4" fill="#00ff88"/>
+  <rect x="36" y="16" width="4" height="4" fill="#00ff88"/>
+  <rect x="40" y="16" width="4" height="4" fill="#00ff88"/>
+  <rect x="44" y="16" width="4" height="4" fill="#00ff88"/>
+  <rect x="48" y="16" width="4" height="4" fill="#0a1828"/>
+  <rect x="52" y="16" width="4" height="4" fill="#00ff88"/>
+
+  <!-- Row 5 -->
+  <rect x="4"  y="20" width="4" height="4" fill="#00ff88"/>
+  <rect x="8"  y="20" width="4" height="4" fill="#0a1828"/>
+  <rect x="12" y="20" width="4" height="4" fill="#00ff88"/>
+  <rect x="16" y="20" width="4" height="4" fill="#0a1828"/>
+  <rect x="20" y="20" width="4" height="4" fill="#0a1828"/>
+  <rect x="24" y="20" width="4" height="4" fill="#0a1828"/>
+  <rect x="28" y="20" width="4" height="4" fill="#00ff88"/>
+  <rect x="32" y="20" width="4" height="4" fill="#0a1828"/>
+  <rect x="36" y="20" width="4" height="4" fill="#0a1828"/>
+  <rect x="40" y="20" width="4" height="4" fill="#00ff88"/>
+  <rect x="44" y="20" width="4" height="4" fill="#0a1828"/>
+  <rect x="48" y="20" width="4" height="4" fill="#0a1828"/>
+  <rect x="52" y="20" width="4" height="4" fill="#00ff88"/>
+
+  <!-- Row 6 -->
+  <rect x="4"  y="24" width="4" height="4" fill="#00ff88"/>
+  <rect x="8"  y="24" width="4" height="4" fill="#0a1828"/>
+  <rect x="12" y="24" width="4" height="4" fill="#0a1828"/>
+  <rect x="16" y="24" width="4" height="4" fill="#0a1828"/>
+  <rect x="20" y="24" width="4" height="4" fill="#0a1828"/>
+  <rect x="24" y="24" width="4" height="4" fill="#0a1828"/>
+  <rect x="28" y="24" width="4" height="4" fill="#00ff88"/>
+  <rect x="32" y="24" width="4" height="4" fill="#0a1828"/>
+  <rect x="36" y="24" width="4" height="4" fill="#0a1828"/>
+  <rect x="40" y="24" width="4" height="4" fill="#0a1828"/>
+  <rect x="44" y="24" width="4" height="4" fill="#0a1828"/>
+  <rect x="48" y="24" width="4" height="4" fill="#0a1828"/>
+  <rect x="52" y="24" width="4" height="4" fill="#00ff88"/>
+
+  <!-- Row 7: EQUATOR (full green line) -->
+  <rect x="4"  y="28" width="56" height="4" fill="#00ff88"/>
+
+  <!-- Row 8 -->
+  <rect x="4"  y="32" width="4" height="4" fill="#00ff88"/>
+  <rect x="8"  y="32" width="4" height="4" fill="#0a1828"/>
+  <rect x="12" y="32" width="4" height="4" fill="#0a1828"/>
+  <rect x="16" y="32" width="4" height="4" fill="#0a1828"/>
+  <rect x="20" y="32" width="4" height="4" fill="#0a1828"/>
+  <rect x="24" y="32" width="4" height="4" fill="#0a1828"/>
+  <rect x="28" y="32" width="4" height="4" fill="#00ff88"/>
+  <rect x="32" y="32" width="4" height="4" fill="#0a1828"/>
+  <rect x="36" y="32" width="4" height="4" fill="#0a1828"/>
+  <rect x="40" y="32" width="4" height="4" fill="#0a1828"/>
+  <rect x="44" y="32" width="4" height="4" fill="#0a1828"/>
+  <rect x="48" y="32" width="4" height="4" fill="#0a1828"/>
+  <rect x="52" y="32" width="4" height="4" fill="#00ff88"/>
+
+  <!-- Row 9: lower latitude line -->
+  <rect x="4"  y="36" width="4" height="4" fill="#00ff88"/>
+  <rect x="8"  y="36" width="4" height="4" fill="#0a1828"/>
+  <rect x="12" y="36" width="4" height="4" fill="#00ff88"/>
+  <rect x="16" y="36" width="4" height="4" fill="#00ff88"/>
+  <rect x="20" y="36" width="4" height="4" fill="#00ff88"/>
+  <rect x="24" y="36" width="4" height="4" fill="#00ff88"/>
+  <rect x="28" y="36" width="4" height="4" fill="#00ff88"/>
+  <rect x="32" y="36" width="4" height="4" fill="#00ff88"/>
+  <rect x="36" y="36" width="4" height="4" fill="#00ff88"/>
+  <rect x="40" y="36" width="4" height="4" fill="#00ff88"/>
+  <rect x="44" y="36" width="4" height="4" fill="#00ff88"/>
+  <rect x="48" y="36" width="4" height="4" fill="#0a1828"/>
+  <rect x="52" y="36" width="4" height="4" fill="#00ff88"/>
+
+  <!-- Row 10 -->
+  <rect x="4"  y="40" width="4" height="4" fill="#00ff88"/>
+  <rect x="8"  y="40" width="4" height="4" fill="#0a1828"/>
+  <rect x="12" y="40" width="4" height="4" fill="#00ff88"/>
+  <rect x="16" y="40" width="4" height="4" fill="#0a1828"/>
+  <rect x="20" y="40" width="4" height="4" fill="#0a1828"/>
+  <rect x="24" y="40" width="4" height="4" fill="#0a1828"/>
+  <rect x="28" y="40" width="4" height="4" fill="#00ff88"/>
+  <rect x="32" y="40" width="4" height="4" fill="#0a1828"/>
+  <rect x="36" y="40" width="4" height="4" fill="#0a1828"/>
+  <rect x="40" y="40" width="4" height="4" fill="#00ff88"/>
+  <rect x="44" y="40" width="4" height="4" fill="#0a1828"/>
+  <rect x="48" y="40" width="4" height="4" fill="#0a1828"/>
+  <rect x="52" y="40" width="4" height="4" fill="#00ff88"/>
+
+  <!-- Row 11 -->
+  <rect x="8"  y="44" width="4" height="4" fill="#00ff88"/>
+  <rect x="12" y="44" width="4" height="4" fill="#0a1828"/>
+  <rect x="16" y="44" width="4" height="4" fill="#00ff88"/>
+  <rect x="20" y="44" width="4" height="4" fill="#0a1828"/>
+  <rect x="24" y="44" width="4" height="4" fill="#0a1828"/>
+  <rect x="28" y="44" width="4" height="4" fill="#0a1828"/>
+  <rect x="32" y="44" width="4" height="4" fill="#00ff88"/>
+  <rect x="36" y="44" width="4" height="4" fill="#0a1828"/>
+  <rect x="40" y="44" width="4" height="4" fill="#0a1828"/>
+  <rect x="44" y="44" width="4" height="4" fill="#00ff88"/>
+  <rect x="48" y="44" width="4" height="4" fill="#0a1828"/>
+  <rect x="52" y="44" width="4" height="4" fill="#00ff88"/>
+
+  <!-- Row 12 -->
+  <rect x="8"  y="48" width="4" height="4" fill="#00ff88"/>
+  <rect x="12" y="48" width="4" height="4" fill="#0a1828"/>
+  <rect x="16" y="48" width="4" height="4" fill="#0a1828"/>
+  <rect x="20" y="48" width="4" height="4" fill="#00ff88"/>
+  <rect x="24" y="48" width="4" height="4" fill="#0a1828"/>
+  <rect x="28" y="48" width="4" height="4" fill="#00ff88"/>
+  <rect x="32" y="48" width="4" height="4" fill="#0a1828"/>
+  <rect x="36" y="48" width="4" height="4" fill="#00ff88"/>
+  <rect x="40" y="48" width="4" height="4" fill="#0a1828"/>
+  <rect x="44" y="48" width="4" height="4" fill="#0a1828"/>
+  <rect x="48" y="48" width="4" height="4" fill="#00ff88"/>
+
+  <!-- Row 13 -->
+  <rect x="12" y="52" width="4" height="4" fill="#00ff88"/>
+  <rect x="16" y="52" width="4" height="4" fill="#0a1828"/>
+  <rect x="20" y="52" width="4" height="4" fill="#0a1828"/>
+  <rect x="24" y="52" width="4" height="4" fill="#0a1828"/>
+  <rect x="28" y="52" width="4" height="4" fill="#0a1828"/>
+  <rect x="32" y="52" width="4" height="4" fill="#0a1828"/>
+  <rect x="36" y="52" width="4" height="4" fill="#0a1828"/>
+  <rect x="40" y="52" width="4" height="4" fill="#0a1828"/>
+  <rect x="44" y="52" width="4" height="4" fill="#00ff88"/>
+
+  <!-- Row 14: globe bottom arc -->
+  <rect x="20" y="56" width="4" height="4" fill="#00ff88"/>
+  <rect x="24" y="56" width="4" height="4" fill="#00ff88"/>
+  <rect x="28" y="56" width="4" height="4" fill="#00ff88"/>
+  <rect x="32" y="56" width="4" height="4" fill="#00ff88"/>
+  <rect x="36" y="56" width="4" height="4" fill="#00ff88"/>
+  <rect x="40" y="56" width="4" height="4" fill="#00ff88"/>
+</svg>

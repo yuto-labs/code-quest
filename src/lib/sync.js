@@ -1,24 +1,28 @@
 import { supabase } from './supabase';
 
 export async function loadCloudProgress(userId) {
+  // .limit(1) + order で重複行があっても最新を取得（.single()は複数行でエラーになる）
   const { data, error } = await supabase
     .from('user_progress')
     .select('progress, quiz_progress, scores')
     .eq('user_id', userId)
-    .single();
+    .order('updated_at', { ascending: false })
+    .limit(1);
 
-  if (error || !data) return null;
-  return data;
+  if (error) throw error;
+  if (!data || data.length === 0) return null;
+  return data[0];
 }
 
 export async function saveCloudProgress(userId, progress, quizProgress, scores) {
-  await supabase.from('user_progress').upsert({
+  const { error } = await supabase.from('user_progress').upsert({
     user_id: userId,
     progress,
     quiz_progress: quizProgress,
     scores,
     updated_at: new Date().toISOString(),
-  });
+  }, { onConflict: 'user_id' });
+  if (error) throw error;
 }
 
 // ローカルとクラウドの進捗をマージ（より進んでいる方を優先）

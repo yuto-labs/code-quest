@@ -121,9 +121,9 @@ export default function ChallengeScreen({
   if (!questions[idx]) {
     enterActionRef.current = () => { onSaveScore?.(score); onComplete(country.id); };
     return (
-      <div style={styles.wrap} className="fade-in">
+      <div style={{ ...styles.wrap, overflowY: 'auto' }} className="fade-in">
         <WireframeBackground countryId={country.id} />
-        <div style={styles.complete}>
+        <div style={{ ...styles.complete, justifyContent: 'flex-start', paddingTop: 'clamp(32px, 10vh, 80px)' }}>
           <div style={{ fontSize: 'clamp(48px, 12vw, 72px)' }}>🎉</div>
           <div style={styles.completeTitle}>QUEST CLEAR!</div>
           <div style={styles.completeSub}>{country.name} の {language.name} クエスト完了！</div>

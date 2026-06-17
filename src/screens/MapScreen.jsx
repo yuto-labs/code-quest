@@ -152,9 +152,9 @@ export default function MapScreen({ onSelectCountry, onBack, progress, quizProgr
       const base = {
         fill: 'rgba(0,0,0,0.05)',
         stroke: neon,
-        strokeWidth: 0.55,
+        strokeWidth: 0.65,
         outline: 'none',
-        opacity: 0.30,
+        opacity: 0.50,
         cursor: 'default',
       };
       const hov = {
@@ -172,9 +172,9 @@ export default function MapScreen({ onSelectCountry, onBack, progress, quizProgr
     const base = {
       fill: 'rgba(0,0,0,0.04)',
       stroke: neon,
-      strokeWidth: 0.45,
+      strokeWidth: 0.50,
       outline: 'none',
-      opacity: 0.38,
+      opacity: 0.55,
     };
     const hov = {
       fill: 'rgba(255,220,80,0.32)',
@@ -338,6 +338,14 @@ export default function MapScreen({ onSelectCountry, onBack, progress, quizProgr
         </div>
       )}
 
+      {/* タップで閉じる透明overlay（モバイル用） */}
+      {isTouch && tooltip && (
+        <div
+          onClick={() => setTooltip(null)}
+          style={{ position: 'absolute', inset: 0, zIndex: 28 }}
+        />
+      )}
+
       {!zooming && tooltip && (
         <div style={styles.tooltip}>
           <div style={styles.tooltipEmoji}>{tooltip.emoji}</div>
@@ -383,11 +391,11 @@ export default function MapScreen({ onSelectCountry, onBack, progress, quizProgr
 
 const styles = {
   wrap: {
-    width: '100%',
-    height: 'calc(100dvh - 56px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px))',
+    position: 'fixed',
+    inset: 0,
     background: '#04050e',
-    position: 'relative',
     overflow: 'hidden',
+    zIndex: 1,
   },
   crtScanlines: {
     position: 'absolute',
@@ -413,7 +421,7 @@ const styles = {
     position: 'absolute',
     top: 12,
     left: 16,
-    zIndex: 10,
+    zIndex: 30,
     display: 'flex',
     alignItems: 'center',
     gap: 14,
@@ -422,19 +430,19 @@ const styles = {
     fontFamily: 'var(--pixel-font)',
     fontSize: 8,
     background: 'transparent',
-    color: '#00ffaa',
+    color: '#00ffcc',
     border: 'none',
     padding: '8px 4px',
     cursor: 'pointer',
     letterSpacing: 1,
-    textShadow: '0 0 6px #00ffaa, 0 0 14px #00ff88, 0 0 28px #00ff8866',
+    textShadow: '0 0 5px #00ffcc, 0 0 12px #00ffaa, 0 0 25px #00ff88',
   },
   title: {
     fontFamily: 'var(--pixel-font)',
-    fontSize: 'clamp(8px, 2.2vw, 11px)',
-    color: '#00ffcc',
+    fontSize: 'clamp(9px, 2.2vw, 12px)',
+    color: '#00ffdd',
     letterSpacing: 2,
-    textShadow: '0 0 8px #00ffaa, 0 0 20px #00ff88, 0 0 40px #00ff8844',
+    textShadow: '0 0 5px #00ffdd, 0 0 14px #00ffaa, 0 0 30px #00ff88',
   },
   cursor: {
     animation: 'blink 1s step-end infinite',
@@ -456,7 +464,7 @@ const styles = {
     padding: '18px 28px',
     textAlign: 'center',
     minWidth: 260,
-    zIndex: 10,
+    zIndex: 30,
   },
   tooltipEmoji: { fontSize: 40, marginBottom: 10 },
   tooltipName: {
@@ -490,14 +498,15 @@ const styles = {
     alignItems: 'center',
     gap: 14,
     padding: '8px 12px',
+    zIndex: 30,
   },
   legendLabel: {
     fontFamily: 'var(--pixel-font)',
     fontSize: 7,
-    color: '#4488aa',
+    color: '#55aacc',
     letterSpacing: 1,
     marginRight: 4,
-    textShadow: '0 0 6px #2266aa',
+    textShadow: '0 0 6px #3399bb',
   },
   legendItem: {
     fontFamily: 'var(--pixel-font)',
@@ -507,7 +516,7 @@ const styles = {
     gap: 4,
   },
   legendText: {
-    color: '#778899',
+    color: '#99aabb',
     fontSize: 7,
   },
   zoomOverlay: {
@@ -516,7 +525,7 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 20,
+    zIndex: 40,
     pointerEvents: 'none',
   },
   resetBtn: {
@@ -530,7 +539,7 @@ const styles = {
     border: 'none',
     padding: '10px 8px',
     cursor: 'pointer',
-    zIndex: 10,
+    zIndex: 30,
     letterSpacing: 1,
     textShadow: '0 0 6px #ffee00, 0 0 16px #ffcc0066, 0 0 30px #ffaa0033',
   },

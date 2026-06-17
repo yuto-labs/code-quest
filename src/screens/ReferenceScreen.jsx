@@ -11,7 +11,7 @@ export default function ReferenceScreen({ onBack }) {
   return (
     <div style={styles.wrap} className="fade-in">
       <div style={styles.header}>
-        <button style={styles.backBtn} onClick={onBack}>◀ BACK</button>
+        <button style={styles.backBtn} onClick={onBack}>{'[ < BACK ]'}</button>
         <div style={styles.headerText}>
           <div style={styles.title}>📚 PYTHON REFERENCE</div>
           <div style={styles.sub}>タップして詳細を見る</div>
@@ -46,7 +46,7 @@ function TopicDetail({ topic, onBack }) {
   return (
     <div style={styles.wrap} className="fade-in">
       <div style={styles.header}>
-        <button style={styles.backBtn} onClick={onBack}>◀ BACK</button>
+        <button style={styles.backBtn} onClick={onBack}>{'[ < BACK ]'}</button>
         <div style={styles.headerText}>
           <div style={styles.title}>{topic.emoji} {topic.title}</div>
           <div style={styles.sub}>{sectionIdx + 1} / {topic.sections.length}</div>
@@ -129,11 +129,13 @@ const styles = {
     fontFamily: 'var(--pixel-font)',
     fontSize: 8,
     background: 'transparent',
-    color: 'var(--text-dim)',
-    border: '2px solid var(--text-dim)',
-    padding: '8px 12px',
+    color: '#00ffcc',
+    border: 'none',
+    padding: '8px 4px',
     cursor: 'pointer',
     flexShrink: 0,
+    letterSpacing: 1,
+    textShadow: '0 0 5px #00ffcc, 0 0 12px #00ffaa, 0 0 25px #00ff88',
   },
   headerText: {
     display: 'flex',

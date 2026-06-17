@@ -137,6 +137,7 @@ const s = {
     display: 'flex',
     alignItems: 'center',
     gap: 16,
+    flexWrap: 'wrap',
   },
   cardIcon: { fontSize: 36, flexShrink: 0 },
   cardTitles: { flex: 1, display: 'flex', flexDirection: 'column', gap: 5 },

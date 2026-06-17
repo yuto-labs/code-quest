@@ -17,6 +17,10 @@ const ISO_MAP = {
   826: 'GB', 410: 'KR', 124: 'CA', 380: 'IT', 484: 'MX',
   682: 'SA',  32: 'AR', 792: 'TR', 360: 'ID', 710: 'ZA',
 };
+// 逆引き: countryId → numericId (Marker hover で Geography をハイライトするため)
+const REVERSE_ISO = Object.fromEntries(
+  Object.entries(ISO_MAP).map(([num, id]) => [id, parseInt(num)])
+);
 
 const CONTINENT_NEON = {
   na: '#ff3344',
@@ -67,7 +71,7 @@ function getNeonColor(numericId) {
   return continent ? CONTINENT_NEON[continent] : '#3355aa';
 }
 
-export default function MapScreen({ onSelectCountry, onBack, progress, quizProgress }) {
+export default function MapScreen({ onSelectCountry, onBack, progress, quizProgress, world = 'decode' }) {
   const [tooltip, setTooltip] = useState(null);
   const [isTouch] = useState(() => window.matchMedia('(pointer: coarse)').matches);
   const defaultPos = { coordinates: [20, 15], zoom: isTouch ? 1.8 : 1 };
@@ -280,8 +284,19 @@ export default function MapScreen({ onSelectCountry, onBack, progress, quizProgr
                     r={10}
                     fill="transparent"
                     style={{ cursor: isUnlocked ? 'pointer' : 'default' }}
-                    onMouseEnter={() => !isTouch && setTooltip(c)}
-                    onMouseLeave={() => !isTouch && setTooltip(null)}
+                    onMouseEnter={() => {
+                      if (!isTouch) {
+                        const numId = REVERSE_ISO[c.id];
+                        if (numId) setHoveredNumId(numId);
+                        setTooltip(c);
+                      }
+                    }}
+                    onMouseLeave={() => {
+                      if (!isTouch) {
+                        setHoveredNumId(null);
+                        setTooltip(null);
+                      }
+                    }}
                   />
                   <text
                     textAnchor="middle"
@@ -303,7 +318,7 @@ export default function MapScreen({ onSelectCountry, onBack, progress, quizProgr
                       style={{
                         fontSize: 4,
                         fill: clearedIds.has(c.id) ? '#00ff88'
-                            : (quizProgress || {})[`${c.id}_python`] ? '#ffdd00'
+                            : Object.keys(quizProgress || {}).some(k => k.startsWith(`${world}_${c.id}_`)) ? '#ffdd00'
                             : '#aaa',
                         fontFamily: 'Press Start 2P, monospace',
                         userSelect: 'none',

@@ -1,15 +1,23 @@
 import { useState, useEffect, useRef } from 'react';
 import { CHALLENGES } from '../data/challenges';
+import { EXECUTE_CHALLENGES } from '../data/execute_challenges';
+import { DEBUG_CHALLENGES } from '../data/debug_challenges';
 import WireframeBackground from '../components/WireframeBackground';
+
+const WORLD_CHALLENGES = {
+  decode:  CHALLENGES,
+  execute: EXECUTE_CHALLENGES,
+  debug:   DEBUG_CHALLENGES,
+};
 
 const MAX_HEARTS = 3;
 const BASE_SCORE = 100;
 
 export default function ChallengeScreen({
-  country, language, onBack, onComplete,
+  country, language, world = 'decode', onBack, onComplete,
   initialIdx = 0, onSaveIdx, onSaveScore,
 }) {
-  const questions = CHALLENGES[country.id]?.[language.id] || [];
+  const questions = (WORLD_CHALLENGES[world] ?? CHALLENGES)[country.id]?.[language.id] || [];
   const [idx, setIdx]       = useState(initialIdx);
   const [answer, setAnswer] = useState('');
   const [status, setStatus] = useState('idle');
@@ -31,6 +39,12 @@ export default function ChallengeScreen({
   const [shakingHeartIdx, setShakingHeartIdx]   = useState(-1);
   const [scorePop, setScorePop]                 = useState(false);
 
+  // new question types
+  const [selectedOption,    setSelectedOption]    = useState(null);
+  const [blankAnswers,      setBlankAnswers]      = useState([]);
+  const [debugStepIdx,      setDebugStepIdx]      = useState(0);
+  const [orderingSelection, setOrderingSelection] = useState([]);
+
   // fix: track all timers so we can cancel them on unmount / retry
   const timersRef = useRef([]);
   const schedule = (fn, delay) => {
@@ -50,6 +64,10 @@ export default function ChallengeScreen({
     setStatus('idle');
     setShowHint(false);
     setShowExplanation(false);
+    setSelectedOption(null);
+    setBlankAnswers([]);
+    setDebugStepIdx(0);
+    setOrderingSelection([]);
   }, [idx]);
 
   // Enterキーを document レベルで捕捉（input が disabled でも発火）
@@ -76,6 +94,10 @@ export default function ChallengeScreen({
     setAnswer('');
     setScreenEffect(null);
     setShakingHeartIdx(-1);
+    setSelectedOption(null);
+    setBlankAnswers([]);
+    setDebugStepIdx(0);
+    setOrderingSelection([]);
     onSaveIdx?.(0);
   };
 
@@ -154,65 +176,146 @@ export default function ChallengeScreen({
 
   // ── 通常クイズ ────────────────────────────────
   const q = questions[idx];
-  const codeLines = q.code.split('\n');
-  // fix: (idx+1)/length so Q1 shows 20% not 0%
-  const progress = Math.round(((idx + 1) / questions.length) * 100);
+  const qType        = q.questionType || 'fill-blank';
+  const isDebugStep  = qType === 'debug-step';
+
+  // debug-step: resolve current step
+  const currentStep  = isDebugStep ? (q.steps?.[debugStepIdx] ?? null) : null;
+  const stepCount    = isDebugStep ? (q.steps?.length ?? 0) : 0;
+
+  // code source (debug steps may have per-step code or none)
+  const codeSource   = isDebugStep ? (currentStep?.code ?? '') : (q.code ?? '');
+  const codeLines    = codeSource ? codeSource.split('\n') : [];
+
+  // text fields, normalised across decode/execute/debug schemas
+  // debug-step: situationText = step.prompt (context), questionLabel = step.question (what to answer)
+  const situationText      = isDebugStep ? (currentStep?.prompt ?? '') : (q.description || q.prompt || '');
+  const questionLabel      = isDebugStep ? (currentStep?.question ?? null) : null;
+  const currentHint        = isDebugStep ? (currentStep?.hint ?? q.hint ?? '') : (q.hint ?? '');
+  const currentExplanation = isDebugStep ? (currentStep?.explanation ?? q.explanation ?? '') : (q.explanation ?? '');
+  const currentOptions     = isDebugStep ? (currentStep?.options ?? []) : (q.options ?? []);
+  const correctAnswer      = isDebugStep ? (currentStep?.answer ?? '') : (q.answer ?? q.blank ?? '');
+
+  // fix: (idx+1)/length so Q1 shows > 0%
+  const progress        = Math.round(((idx + 1) / questions.length) * 100);
   const comboMultiplier = Math.min(combo + 1, 5);
 
-  const handleSubmit = () => {
-    const correct = answer.trim() === q.blank.trim();
-    setStatus(correct ? 'correct' : 'wrong');
+  const canSubmit = (() => {
+    if (qType === 'fill-blank')        return answer.trim().length > 0;
+    if (qType === 'multiple-blanks')   return blankAnswers.length > 0 && blankAnswers.every(a => a.trim().length > 0);
+    if (qType === 'code-ordering')     return orderingSelection.length === (q.blocks?.length ?? 0);
+    return selectedOption !== null; // multiple-choice, output-predict, implementation-selection, debug-step
+  })();
 
-    if (correct) {
-      const newCombo = combo + 1;
-      const mult     = Math.min(newCombo, 5);
-      const earned   = BASE_SCORE * mult;
-      setCombo(newCombo);
-      setScore(s => s + earned);
-      setShowExplanation(true);
-
-      setFloatText(`+${earned}${mult >= 2 ? ` \xd7${mult}` : ''}`);
-      setFloatKey(k => k + 1);
-
-      if (newCombo >= 2) {
-        setComboDisplay(newCombo); // fix: store actual newCombo for popup display
-        setShowCombo(true);
-        schedule(() => setShowCombo(false), 1300);
-      }
-      setScorePop(true);
-      schedule(() => setScorePop(false), 400);
-      setScreenEffect('correct');
-      schedule(() => setScreenEffect(null), 400);
-
-    } else {
-      const newHearts = hearts - 1;
-      setCombo(0);
-
-      // hearts を即時更新（フィードバック表示を正確に保つ）
-      // shakingHeartIdx で CSS アニメーションは独立して動くので即時でも問題なし
-      setHearts(newHearts);
-      setShakingHeartIdx(newHearts);
-      setScreenEffect('wrong');
-      schedule(() => setScreenEffect(null), 400);
-      schedule(() => setShakingHeartIdx(-1), 500);
-
-      if (newHearts <= 0) {
-        schedule(() => setGameOver(true), 750);
-      }
+  const fireCorrect = () => {
+    const newCombo = combo + 1;
+    const mult     = Math.min(newCombo, 5);
+    const earned   = BASE_SCORE * mult;
+    setCombo(newCombo);
+    setScore(s => s + earned);
+    setShowExplanation(true);
+    setFloatText(`+${earned}${mult >= 2 ? ` \xd7${mult}` : ''}`);
+    setFloatKey(k => k + 1);
+    if (newCombo >= 2) {
+      setComboDisplay(newCombo);
+      setShowCombo(true);
+      schedule(() => setShowCombo(false), 1300);
     }
+    setScorePop(true);
+    schedule(() => setScorePop(false), 400);
+    setScreenEffect('correct');
+    schedule(() => setScreenEffect(null), 400);
+  };
+
+  const fireWrong = () => {
+    const newHearts = hearts - 1;
+    setCombo(0);
+    setHearts(newHearts);
+    setShakingHeartIdx(newHearts);
+    setScreenEffect('wrong');
+    schedule(() => setScreenEffect(null), 400);
+    schedule(() => setShakingHeartIdx(-1), 500);
+    if (newHearts <= 0) schedule(() => setGameOver(true), 750);
+  };
+
+  const handleSubmit = () => {
+    let correct = false;
+    if (qType === 'fill-blank') {
+      correct = answer.trim() === (q.blank ?? q.answer ?? '').trim();
+    } else if (qType === 'multiple-blanks') {
+      correct = (q.blanks ?? []).every((b, i) => (blankAnswers[i] ?? '').trim() === b.trim());
+    } else if (qType === 'code-ordering') {
+      const expected = q.answer ?? [];
+      correct = orderingSelection.length === expected.length &&
+                orderingSelection.every((b, i) => b === expected[i]);
+    } else {
+      correct = selectedOption === correctAnswer;
+    }
+    setStatus(correct ? 'correct' : 'wrong');
+    if (correct) fireCorrect(); else fireWrong();
   };
 
   const handleNext = () => {
+    // debug-step: step-by-step advance before moving to next question
+    if (isDebugStep && status === 'correct' && debugStepIdx < stepCount - 1) {
+      setDebugStepIdx(i => i + 1);
+      setSelectedOption(null);
+      setStatus('idle');
+      setShowHint(false);
+      setShowExplanation(false);
+      return;
+    }
     const nextIdx = idx + 1;
     setIdx(nextIdx);
     onSaveIdx?.(nextIdx);
   };
 
-  // Enter アクションを status に応じて毎レンダーセット
-  if (status === 'idle')   enterActionRef.current = handleSubmit;
-  else if (status === 'correct') enterActionRef.current = handleNext;
-  else if (status === 'wrong')   enterActionRef.current = () => { setStatus('idle'); setAnswer(''); };
-  else                           enterActionRef.current = null;
+  const handleRetry = () => {
+    setStatus('idle');
+    setAnswer('');
+    if (qType === 'code-ordering') setOrderingSelection([]);
+  };
+
+  // Enter key bindings
+  if (status === 'idle' && canSubmit) enterActionRef.current = handleSubmit;
+  else if (status === 'correct')      enterActionRef.current = handleNext;
+  else if (status === 'wrong')        enterActionRef.current = handleRetry;
+  else                                enterActionRef.current = null;
+
+  // helper: render a code line that may contain ___BLANK_N___ placeholders
+  const renderBlankLine = (line) => {
+    const parts = line.split(/(___BLANK_\d+___)/);
+    return parts.map((part, j) => {
+      const m = part.match(/___BLANK_(\d+)___/);
+      if (!m) return <span key={j}>{part}</span>;
+      const bi = parseInt(m[1]);
+      return (
+        <input
+          key={j}
+          style={{
+            ...styles.blankInput,
+            borderColor: status === 'correct' ? 'var(--accent)'
+                        : status === 'wrong'   ? 'var(--danger)'
+                        : 'var(--accent2)',
+            color: status === 'correct' ? 'var(--accent)'
+                 : status === 'wrong'   ? 'var(--danger)'
+                 : 'var(--accent2)',
+          }}
+          value={blankAnswers[bi] ?? ''}
+          onChange={e => {
+            if (status !== 'idle') return;
+            setBlankAnswers(prev => { const n = [...prev]; n[bi] = e.target.value; return n; });
+          }}
+          placeholder={`?${bi}`}
+          disabled={status !== 'idle'}
+          autoFocus={bi === 0}
+        />
+      );
+    });
+  };
+
+  const showMCOptions   = qType === 'multiple-choice' || qType === 'output-predict' || isDebugStep || qType === 'implementation-selection';
+  const optionsUseCode  = qType === 'implementation-selection';
 
   return (
     <div
@@ -234,7 +337,7 @@ export default function ChallengeScreen({
         }} />
       )}
 
-      {/* コンボポップアップ - fix: comboDisplay instead of combo */}
+      {/* コンボポップアップ */}
       {showCombo && (
         <div style={{
           position: 'fixed', top: '28%', left: '50%',
@@ -283,7 +386,6 @@ export default function ChallengeScreen({
       <div style={styles.header}>
         <button style={styles.back} onClick={handleBack}>◀ BACK</button>
 
-        {/* ハート（ライフ） */}
         <div style={{ display: 'flex', gap: 3, alignItems: 'center' }}>
           {Array.from({ length: MAX_HEARTS }).map((_, i) => (
             <span
@@ -301,13 +403,11 @@ export default function ChallengeScreen({
           ))}
         </div>
 
-        {/* 国・言語バッジ */}
         <div style={styles.info}>
           <span style={styles.flag}>{country.emoji}</span>
           <span style={styles.langBadge}>{language.emoji} {language.name}</span>
         </div>
 
-        {/* スコア表示 */}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 2 }}>
           <div style={{ fontSize: 6, color: 'var(--text-dim)' }}>SCORE</div>
           <div style={{
@@ -323,7 +423,6 @@ export default function ChallengeScreen({
           )}
         </div>
 
-        {/* 問題数プログレス */}
         <div style={styles.progress}>
           <span style={styles.progressLabel}>{idx + 1} / {questions.length}</span>
           <div className="xp-bar" style={{ width: 80 }}>
@@ -336,52 +435,163 @@ export default function ChallengeScreen({
       <div style={styles.content}>
         <div style={styles.questionNum}>QUESTION {idx + 1}</div>
         <div style={styles.title}>{q.title}</div>
-        <div style={styles.description}>{q.description}</div>
 
-        {/* コードブロック */}
-        <div style={styles.codeBlock}>
-          {codeLines.map((line, i) => (
-            <div key={i} style={styles.codeLine}>
-              <span style={styles.lineNum}>{i + 1}</span>
-              {line.includes('___BLANK___') ? (
-                <span style={styles.codeText}>
-                  {line.split('___BLANK___')[0]}
-                  <input
-                    style={{
-                      ...styles.blankInput,
-                      borderColor: status === 'correct' ? 'var(--accent)'
-                                 : status === 'wrong'   ? 'var(--danger)'
-                                 : 'var(--accent2)',
-                      color: status === 'correct' ? 'var(--accent)'
-                           : status === 'wrong'   ? 'var(--danger)'
-                           : 'var(--accent2)',
-                    }}
-                    value={answer}
-                    onChange={e => setAnswer(e.target.value)}
-                    placeholder="???"
-                    disabled={status !== 'idle'}
-                    autoFocus
-                  />
-                  {line.split('___BLANK___')[1]}
-                </span>
-              ) : (
-                <span style={styles.codeText}>{line}</span>
-              )}
-            </div>
-          ))}
-        </div>
+        {/* debug-step ステップ進捗ヘッダー */}
+        {isDebugStep && (
+          <div style={styles.debugStepHeader}>
+            <span style={styles.debugStepNum}>STEP {debugStepIdx + 1} / {stepCount}</span>
+            {currentStep?.stepTitle && (
+              <span style={styles.debugStepTitle}>{currentStep.stepTitle}</span>
+            )}
+          </div>
+        )}
+
+        <div style={styles.description}>{situationText}</div>
+
+        {/* コードブロック（コードがある場合のみ） */}
+        {codeLines.length > 0 && (
+          <div style={styles.codeBlock}>
+            {codeLines.map((line, i) => (
+              <div key={i} style={styles.codeLine}>
+                <span style={styles.lineNum}>{i + 1}</span>
+                {qType === 'fill-blank' && line.includes('___BLANK___') ? (
+                  <span style={styles.codeText}>
+                    {line.split('___BLANK___')[0]}
+                    <input
+                      style={{
+                        ...styles.blankInput,
+                        borderColor: status === 'correct' ? 'var(--accent)'
+                                   : status === 'wrong'   ? 'var(--danger)'
+                                   : 'var(--accent2)',
+                        color: status === 'correct' ? 'var(--accent)'
+                             : status === 'wrong'   ? 'var(--danger)'
+                             : 'var(--accent2)',
+                      }}
+                      value={answer}
+                      onChange={e => setAnswer(e.target.value)}
+                      placeholder="???"
+                      disabled={status !== 'idle'}
+                      autoFocus
+                    />
+                    {line.split('___BLANK___')[1]}
+                  </span>
+                ) : qType === 'multiple-blanks' && line.includes('___BLANK_') ? (
+                  <span style={styles.codeText}>{renderBlankLine(line)}</span>
+                ) : (
+                  <span style={styles.codeText}>{line}</span>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* debug-step: 実際の質問ラベル（prompt の後、選択肢の前） */}
+        {questionLabel && (
+          <div style={styles.debugQuestion}>{questionLabel}</div>
+        )}
+
+        {/* コードブロック並び替え (code-ordering) */}
+        {qType === 'code-ordering' && (
+          <div style={styles.orderingList}>
+            <div style={styles.orderingInstr}>クリックして正しい順序に選択（再クリックで解除）</div>
+            {(q.blocks || []).map((block, i) => {
+              const pos     = orderingSelection.indexOf(i);
+              const chosen  = pos !== -1;
+              const revealed = status !== 'idle';
+              const isOk    = revealed && status === 'correct';
+              const isErr   = revealed && status === 'wrong' && chosen;
+              return (
+                <button
+                  key={i}
+                  style={{
+                    ...styles.orderingBlock,
+                    borderColor: isOk  ? 'var(--accent)'
+                               : isErr ? 'var(--danger)'
+                               : chosen ? 'var(--accent2)'
+                               : 'rgba(0,102,255,0.3)',
+                    background: isOk  ? 'rgba(0,255,136,0.06)'
+                              : isErr ? 'rgba(255,68,68,0.06)'
+                              : chosen ? 'rgba(255,221,0,0.05)'
+                              : 'transparent',
+                  }}
+                  onClick={() => {
+                    if (status !== 'idle') return;
+                    setOrderingSelection(prev =>
+                      chosen ? prev.filter(x => x !== i) : [...prev, i]
+                    );
+                  }}
+                  disabled={status !== 'idle'}
+                >
+                  <span style={{
+                    ...styles.orderingNum,
+                    color: isOk ? 'var(--accent)' : isErr ? 'var(--danger)' : chosen ? 'var(--accent2)' : '#555',
+                  }}>
+                    {chosen ? `${pos + 1}` : '?'}
+                  </span>
+                  <pre style={styles.orderingCode}>{block}</pre>
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        {/* 選択肢（multiple-choice / output-predict / implementation-selection / debug-step） */}
+        {showMCOptions && (
+          <div style={styles.optionsList}>
+            {currentOptions.map((opt, i) => {
+              const isSelected = opt === selectedOption;
+              const revealed   = status !== 'idle';
+              const isCorrect  = revealed && opt === correctAnswer;
+              const isWrong    = revealed && isSelected && opt !== correctAnswer;
+              return (
+                <button
+                  key={i}
+                  style={{
+                    ...styles.optionBtn,
+                    borderColor: isCorrect ? 'var(--accent)'
+                               : isWrong   ? 'var(--danger)'
+                               : isSelected ? 'var(--accent2)'
+                               : 'rgba(0,102,255,0.3)',
+                    color: isCorrect ? 'var(--accent)'
+                         : isWrong   ? 'var(--danger)'
+                         : isSelected ? 'var(--accent2)'
+                         : 'var(--text)',
+                    background: isCorrect ? 'rgba(0,255,136,0.08)'
+                              : isWrong   ? 'rgba(255,68,68,0.08)'
+                              : isSelected ? 'rgba(255,221,0,0.06)'
+                              : 'transparent',
+                  }}
+                  onClick={() => { if (status === 'idle') setSelectedOption(opt); }}
+                  disabled={status !== 'idle'}
+                >
+                  <span style={styles.optionKey}>{String.fromCharCode(65 + i)}.</span>
+                  <span style={optionsUseCode ? styles.optionCodeText : styles.optionText}>{opt}</span>
+                </button>
+              );
+            })}
+          </div>
+        )}
 
         {/* ヒント */}
-        {showHint && (
-          <div style={styles.hint}>
-            💡 HINT: {q.hint}
-          </div>
+        {showHint && currentHint && (
+          <div style={styles.hint}>💡 HINT: {currentHint}</div>
         )}
 
         {/* フィードバック */}
         {status === 'correct' && (
           <div style={styles.feedbackCorrect} className="fade-in">
-            ✅ CORRECT! &nbsp; 答え: <code style={styles.answerCode}>{q.blank}</code>
+            ✅ CORRECT!
+            {qType === 'fill-blank' && (
+              <> &nbsp; 答え: <code style={styles.answerCode}>{q.blank ?? q.answer}</code></>
+            )}
+            {qType === 'multiple-blanks' && (
+              <> &nbsp; 答え: {(q.blanks ?? []).map((b, i) => (
+                <code key={i} style={{ ...styles.answerCode, marginRight: 4 }}>{b}</code>
+              ))}</>
+            )}
+            {isDebugStep && debugStepIdx < stepCount - 1 && (
+              <span style={{ color: 'var(--text-dim)', fontSize: 9, marginLeft: 8 }}>→ 次のステップへ</span>
+            )}
           </div>
         )}
         {status === 'wrong' && (
@@ -391,10 +601,10 @@ export default function ChallengeScreen({
         )}
 
         {/* 解説 */}
-        {showExplanation && (
+        {showExplanation && currentExplanation && (
           <div style={styles.explanation} className="fade-in">
             <div style={styles.explanationTitle}>📖 解説</div>
-            <div style={styles.explanationText}>{q.explanation}</div>
+            <div style={styles.explanationText}>{currentExplanation}</div>
           </div>
         )}
 
@@ -409,7 +619,12 @@ export default function ChallengeScreen({
               >
                 💡 HINT
               </button>
-              <button className="pixel-btn" onClick={handleSubmit}>
+              <button
+                className="pixel-btn"
+                onClick={handleSubmit}
+                disabled={!canSubmit}
+                style={!canSubmit ? { opacity: 0.4 } : undefined}
+              >
                 ▶ ANSWER
               </button>
             </>
@@ -418,14 +633,14 @@ export default function ChallengeScreen({
             <button
               className="pixel-btn"
               style={{ borderColor: 'var(--danger)', color: 'var(--danger)' }}
-              onClick={() => { setStatus('idle'); setAnswer(''); }}
+              onClick={handleRetry}
             >
               🔄 RETRY
             </button>
           )}
           {status === 'correct' && (
             <button className="pixel-btn" onClick={handleNext}>
-              NEXT ▶
+              {isDebugStep && debugStepIdx < stepCount - 1 ? 'NEXT STEP ▶' : 'NEXT ▶'}
             </button>
           )}
         </div>
@@ -625,6 +840,113 @@ const styles = {
     marginTop: 8,
     flexWrap: 'wrap',
     paddingBottom: 24,
+  },
+  debugQuestion: {
+    fontSize: 'clamp(10px, 2.8vw, 12px)',
+    color: 'var(--accent2)',
+    background: 'rgba(255,221,0,0.06)',
+    border: '1px solid rgba(255,221,0,0.2)',
+    padding: '8px 12px',
+  },
+  orderingList: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 8,
+  },
+  orderingInstr: {
+    fontSize: 8,
+    color: 'var(--text-dim)',
+    marginBottom: 2,
+  },
+  orderingBlock: {
+    background: 'transparent',
+    border: '2px solid',
+    padding: '10px 12px',
+    cursor: 'pointer',
+    display: 'flex',
+    gap: 10,
+    alignItems: 'flex-start',
+    transition: 'border-color 0.15s, background 0.15s',
+    width: '100%',
+    textAlign: 'left',
+  },
+  orderingNum: {
+    flexShrink: 0,
+    minWidth: 20,
+    fontSize: 11,
+    fontFamily: 'var(--pixel-font)',
+    textAlign: 'center',
+  },
+  orderingCode: {
+    flex: 1,
+    fontFamily: 'monospace',
+    fontSize: 'clamp(11px, 3vw, 13px)',
+    color: '#a8d8a8',
+    margin: 0,
+    whiteSpace: 'pre',
+    overflow: 'auto',
+    textAlign: 'left',
+  },
+  optionCodeText: {
+    flex: 1,
+    wordBreak: 'break-word',
+    whiteSpace: 'pre-wrap',
+    fontFamily: 'monospace',
+    fontSize: 'clamp(9px, 2.5vw, 11px)',
+    background: 'rgba(0,5,25,0.6)',
+    padding: '6px 8px',
+    border: '1px solid rgba(0,102,255,0.15)',
+    lineHeight: 1.6,
+  },
+  debugStepHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 12,
+    padding: '8px 12px',
+    background: 'rgba(255,68,68,0.07)',
+    border: '1px solid rgba(255,68,68,0.3)',
+  },
+  debugStepNum: {
+    fontFamily: 'var(--pixel-font)',
+    fontSize: 9,
+    color: '#ff4466',
+    flexShrink: 0,
+  },
+  debugStepTitle: {
+    fontSize: 10,
+    color: 'var(--text)',
+    lineHeight: 1.6,
+  },
+  optionsList: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 8,
+  },
+  optionBtn: {
+    fontFamily: 'var(--pixel-font)',
+    fontSize: 'clamp(9px, 2.5vw, 11px)',
+    background: 'transparent',
+    border: '2px solid',
+    padding: '10px 14px',
+    cursor: 'pointer',
+    textAlign: 'left',
+    display: 'flex',
+    gap: 10,
+    alignItems: 'flex-start',
+    transition: 'border-color 0.15s, color 0.15s, background 0.15s',
+    lineHeight: 1.7,
+    width: '100%',
+  },
+  optionKey: {
+    flexShrink: 0,
+    minWidth: 18,
+  },
+  optionText: {
+    flex: 1,
+    wordBreak: 'break-word',
+    whiteSpace: 'pre-wrap',
+    fontFamily: 'monospace',
+    fontSize: 'clamp(10px, 2.8vw, 12px)',
   },
   resumeBanner: {
     background: 'rgba(0,102,255,0.12)',

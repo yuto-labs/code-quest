@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import TitleScreen from './screens/TitleScreen';
 import HomeScreen from './screens/HomeScreen';
+import WorldScreen from './screens/WorldScreen';
 import MapScreen from './screens/MapScreen';
 import LanguageScreen from './screens/LanguageScreen';
 import ChallengeScreen from './screens/ChallengeScreen';
@@ -8,6 +9,7 @@ import ReferenceScreen from './screens/ReferenceScreen';
 import ProgressScreen from './screens/ProgressScreen';
 import { useAuth } from './hooks/useAuth';
 import { loadCloudProgress, saveCloudProgress, mergeProgressData } from './lib/sync';
+import { migrateProgressKeys } from './utils/progress';
 
 const getStorageKey = (uid, type) => {
   const prefix = uid ? `cq_${uid}` : 'cq_guest';
@@ -24,6 +26,7 @@ function saveToLocal(key, val) {
 
 export default function App() {
   const [screen, setScreen]       = useState('title');
+  const [world, setWorld]         = useState('decode');
   const [country, setCountry]     = useState(null);
   const [language, setLanguage]   = useState(null);
   const [progress, setProgress]   = useState({});
@@ -142,9 +145,16 @@ export default function App() {
           setMigrationDone(true);
         }
 
-        const localP = loadFromLocal(pKey);
-        const localQ = loadFromLocal(qKey);
-        const localS = loadFromLocal(sKey);
+        // Migrate old 'JP_python' keys → 'decode_JP_python'
+        const rawP = loadFromLocal(pKey);
+        const rawQ = loadFromLocal(qKey);
+        const rawS = loadFromLocal(sKey);
+        const localP = migrateProgressKeys(rawP);
+        const localQ = migrateProgressKeys(rawQ);
+        const localS = migrateProgressKeys(rawS);
+        if (JSON.stringify(rawP) !== JSON.stringify(localP)) saveToLocal(pKey, localP);
+        if (JSON.stringify(rawQ) !== JSON.stringify(localQ)) saveToLocal(qKey, localQ);
+        if (JSON.stringify(rawS) !== JSON.stringify(localS)) saveToLocal(sKey, localS);
 
         if (uid) {
           const cloud = await loadCloudProgress(uid);
@@ -223,8 +233,8 @@ export default function App() {
     }, 1000);
   };
 
-  const saveScore = (countryId, langId, newScore) => {
-    const key = `${countryId}_${langId}`;
+  const saveScore = (worldId, countryId, langId, newScore) => {
+    const key = `${worldId}_${countryId}_${langId}`;
     const uid = user?.id;
     if (newScore > (scores[key] || 0)) {
       const next = { ...scores, [key]: newScore };
@@ -234,8 +244,8 @@ export default function App() {
     }
   };
 
-  const saveQuizIdx = (countryId, langId, idx) => {
-    const key = `${countryId}_${langId}`;
+  const saveQuizIdx = (worldId, countryId, langId, idx) => {
+    const key = `${worldId}_${countryId}_${langId}`;
     const uid = user?.id;
     const next = { ...quizProgress, [key]: idx };
     setQuizProgress(next);
@@ -258,13 +268,13 @@ export default function App() {
     }
   };
 
-  const handleComplete = (countryId, langId) => {
+  const handleComplete = (worldId, countryId, langId) => {
     const uid = user?.id;
-    const nextProgress = { ...progress, [`${countryId}_${langId}`]: true };
+    const key = `${worldId}_${countryId}_${langId}`;
+    const nextProgress = { ...progress, [key]: true };
     setProgress(nextProgress);
     saveToLocal(getStorageKey(uid, 'progress'), nextProgress);
 
-    const key = `${countryId}_${langId}`;
     const nextQuiz = { ...quizProgress };
     delete nextQuiz[key];
     setQuizProgress(nextQuiz);
@@ -293,7 +303,7 @@ export default function App() {
       {screen === 'home' && (
         <HomeScreen
           progress={progress}
-          onNavigate={setScreen}
+          onNavigate={(s) => setScreen(s === 'map' ? 'world' : s)}
           user={user}
           syncing={syncing}
           onSendOtp={sendOtp}
@@ -306,12 +316,20 @@ export default function App() {
         />
       )}
 
+      {screen === 'world' && (
+        <WorldScreen
+          onSelectWorld={(w) => { setWorld(w); setScreen('map'); }}
+          onBack={() => setScreen('home')}
+        />
+      )}
+
       {screen === 'map' && (
         <MapScreen
+          world={world}
           progress={progress}
           quizProgress={quizProgress}
           onSelectCountry={(c) => { setCountry(c); setScreen('language'); }}
-          onBack={() => setScreen('home')}
+          onBack={() => setScreen('world')}
         />
       )}
 
@@ -331,6 +349,7 @@ export default function App() {
       {screen === 'language' && country && (
         <LanguageScreen
           country={country}
+          world={world}
           onSelectLanguage={(l) => { setLanguage(l); setScreen('challenge'); }}
           onBack={() => setScreen('map')}
         />
@@ -340,11 +359,12 @@ export default function App() {
         <ChallengeScreen
           country={country}
           language={language}
-          initialIdx={quizProgress[`${country.id}_${language.id}`] || 0}
-          onSaveIdx={(idx) => saveQuizIdx(country.id, language.id, idx)}
-          onSaveScore={(s) => saveScore(country.id, language.id, s)}
+          world={world}
+          initialIdx={quizProgress[`${world}_${country.id}_${language.id}`] || 0}
+          onSaveIdx={(idx) => saveQuizIdx(world, country.id, language.id, idx)}
+          onSaveScore={(s) => saveScore(world, country.id, language.id, s)}
           onBack={() => setScreen('language')}
-          onComplete={(cId) => handleComplete(cId, language.id)}
+          onComplete={(cId) => handleComplete(world, cId, language.id)}
         />
       )}
     </>

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { COUNTRIES } from '../data/countries';
 import SettingsModal from '../components/SettingsModal';
 
-export default function HomeScreen({ onNavigate, progress, user, syncing, onSendOtp, onVerifyOtp, onSignOut }) {
+export default function HomeScreen({ onNavigate, progress, user, syncing, onSendOtp, onVerifyOtp, onSignOut, onRefreshSync, onResetData, syncError, cloudStats }) {
   const [showSettings, setShowSettings] = useState(false);
 
   const cleared = Object.keys(progress || {}).length;
@@ -29,8 +29,8 @@ export default function HomeScreen({ onNavigate, progress, user, syncing, onSend
 
       {/* ロゴ */}
       <div style={styles.logoArea}>
-        <div style={styles.logoSmall}>CODE</div>
-        <div style={styles.logoSmall2}>QUEST</div>
+        <div style={styles.logoSmall} className="pip-blink">CODE</div>
+        <div style={styles.logoSmall2} className="pip-blink">QUEST</div>
       </div>
 
       {/* 進捗サマリー */}
@@ -63,7 +63,6 @@ export default function HomeScreen({ onNavigate, progress, user, syncing, onSend
         ))}
       </div>
 
-      <div style={styles.version}>v0.1.0 · PYTHON EDITION</div>
 
       {showSettings && (
         <SettingsModal
@@ -72,6 +71,11 @@ export default function HomeScreen({ onNavigate, progress, user, syncing, onSend
           onSendOtp={onSendOtp}
           onVerifyOtp={onVerifyOtp}
           onSignOut={onSignOut}
+          onRefreshSync={onRefreshSync}
+          onResetData={onResetData}
+          syncError={syncError}
+          cloudStats={cloudStats}
+          localStats={Object.keys(progress || {}).length}
           onClose={() => setShowSettings(false)}
         />
       )}
@@ -141,9 +145,9 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  progressLabel: { fontSize: 8, color: 'var(--text-dim)' },
-  progressPct: { fontSize: 10, color: 'var(--accent)' },
-  progressSub: { fontSize: 9, color: 'var(--text-dim)', textAlign: 'right' },
+  progressLabel: { fontSize: 11, color: 'var(--text-dim)' },
+  progressPct: { fontSize: 13, color: 'var(--accent)' },
+  progressSub: { fontSize: 11, color: 'var(--text-dim)', textAlign: 'right' },
   menu: {
     display: 'flex',
     flexDirection: 'column',
@@ -164,10 +168,9 @@ const styles = {
     minHeight: 70,
     textAlign: 'left',
   },
-  menuEmoji: { fontSize: 28, flexShrink: 0 },
+  menuEmoji: { fontSize: 34, flexShrink: 0 },
   menuText: { flex: 1, display: 'flex', flexDirection: 'column', gap: 6 },
-  menuLabel: { fontSize: 'clamp(10px, 3vw, 12px)' },
-  menuSub: { fontSize: 9, color: 'var(--text-dim)' },
-  arrow: { fontSize: 10, flexShrink: 0 },
-  version: { fontSize: 9, color: 'var(--text-dim)', marginTop: 8 },
+  menuLabel: { fontSize: 'clamp(12px, 3.5vw, 15px)' },
+  menuSub: { fontSize: 11, color: 'var(--text-dim)' },
+  arrow: { fontSize: 12, flexShrink: 0 },
 };

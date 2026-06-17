@@ -108,11 +108,15 @@ function TopicDetail({ topic, onBack }) {
 
 const styles = {
   wrap: {
-    width: '100%',
-    minHeight: '100dvh',
+    position: 'fixed',
+    top: 'calc(var(--vv-offset, 0px) + env(safe-area-inset-top, 0px))',
+    left: 0,
+    right: 0,
+    bottom: 0,
     background: 'var(--bg)',
     display: 'flex',
     flexDirection: 'column',
+    overflow: 'hidden',
   },
   header: {
     display: 'flex',
@@ -137,11 +141,11 @@ const styles = {
     gap: 4,
   },
   title: {
-    fontSize: 'clamp(10px, 3vw, 13px)',
+    fontSize: 'clamp(12px, 3.5vw, 15px)',
     color: 'var(--accent)',
   },
   sub: {
-    fontSize: 7,
+    fontSize: 10,
     color: 'var(--text-dim)',
   },
   grid: {
@@ -152,6 +156,9 @@ const styles = {
     maxWidth: 680,
     margin: '0 auto',
     width: '100%',
+    flex: 1,
+    overflowY: 'auto',
+    WebkitOverflowScrolling: 'touch',
   },
   card: {
     fontFamily: 'var(--pixel-font)',
@@ -177,11 +184,11 @@ const styles = {
     gap: 6,
   },
   cardTitle: {
-    fontSize: 10,
+    fontSize: 12,
     color: 'var(--accent)',
   },
   cardSummary: {
-    fontSize: 7,
+    fontSize: 9,
     color: 'var(--text-dim)',
   },
   arrow: {
@@ -203,27 +210,30 @@ const styles = {
   },
   content: {
     flex: 1,
-    padding: '20px',
+    padding: '16px 20px',
     maxWidth: 680,
     margin: '0 auto',
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
-    gap: 16,
+    gap: 12,
+    overflow: 'hidden',
   },
   sectionHeading: {
-    fontSize: 'clamp(10px, 3vw, 13px)',
+    fontSize: 'clamp(13px, 3.5vw, 16px)',
     color: 'var(--accent2)',
   },
   sectionText: {
-    fontSize: 9,
+    fontSize: 'clamp(11px, 3vw, 13px)',
     color: 'var(--text)',
     lineHeight: 2.2,
   },
   codeBlock: {
     background: '#0a0f1a',
     border: '2px solid var(--border2)',
-    overflow: 'hidden',
+    overflow: 'auto',
+    flex: 1,
+    WebkitOverflowScrolling: 'touch',
   },
   codeHeader: {
     padding: '8px 14px',
@@ -269,7 +279,7 @@ const styles = {
   navRow: {
     display: 'flex',
     gap: 12,
-    marginTop: 8,
-    paddingBottom: 24,
+    flexShrink: 0,
+    paddingBottom: 'env(safe-area-inset-bottom, 16px)',
   },
 };

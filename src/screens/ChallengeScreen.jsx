@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { CHALLENGES } from '../data/challenges';
+import WireframeBackground from '../components/WireframeBackground';
 
 const MAX_HEARTS = 3;
 const BASE_SCORE = 100;
@@ -51,6 +52,18 @@ export default function ChallengeScreen({
     setShowExplanation(false);
   }, [idx]);
 
+  // Enterキーを document レベルで捕捉（input が disabled でも発火）
+  const enterActionRef = useRef(null);
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.key !== 'Enter') return;
+      e.preventDefault();
+      enterActionRef.current?.();
+    };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, []);
+
   const resetGame = () => {
     clearTimers();
     setIdx(0);
@@ -73,8 +86,10 @@ export default function ChallengeScreen({
 
   // ── ゲームオーバー画面 ────────────────────────
   if (gameOver) {
+    enterActionRef.current = resetGame;
     return (
       <div style={styles.wrap} className="fade-in">
+        <WireframeBackground countryId={country.id} />
         <div style={styles.complete}>
           <div style={{ fontSize: 'clamp(48px, 12vw, 72px)' }}>💀</div>
           <div style={{ ...styles.completeTitle, color: 'var(--danger)' }}>GAME OVER</div>
@@ -104,8 +119,10 @@ export default function ChallengeScreen({
 
   // ── クリア画面 ────────────────────────────────
   if (!questions[idx]) {
+    enterActionRef.current = () => { onSaveScore?.(score); onComplete(country.id); };
     return (
       <div style={styles.wrap} className="fade-in">
+        <WireframeBackground countryId={country.id} />
         <div style={styles.complete}>
           <div style={{ fontSize: 'clamp(48px, 12vw, 72px)' }}>🎉</div>
           <div style={styles.completeTitle}>QUEST CLEAR!</div>
@@ -171,19 +188,14 @@ export default function ChallengeScreen({
       const newHearts = hearts - 1;
       setCombo(0);
 
-      // fix: animate heart BEFORE reducing count so it's still visible during animation
-      // hearts-1 is still visible right now (i < hearts is still true for hearts-1)
+      // hearts を即時更新（フィードバック表示を正確に保つ）
+      // shakingHeartIdx で CSS アニメーションは独立して動くので即時でも問題なし
+      setHearts(newHearts);
       setShakingHeartIdx(newHearts);
       setScreenEffect('wrong');
       schedule(() => setScreenEffect(null), 400);
+      schedule(() => setShakingHeartIdx(-1), 500);
 
-      // Delay heart count reduction until after heartBreak animation (~0.5s)
-      schedule(() => {
-        setHearts(newHearts);
-        setShakingHeartIdx(-1);
-      }, 400);
-
-      // fix: game over timeout stored in ref, cancelled on retry/back
       if (newHearts <= 0) {
         schedule(() => setGameOver(true), 750);
       }
@@ -196,12 +208,11 @@ export default function ChallengeScreen({
     onSaveIdx?.(nextIdx);
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && status === 'idle') handleSubmit();
-    if (e.key === 'Enter' && status === 'correct') handleNext();
-    // fix: Enter key retries after wrong answer
-    if (e.key === 'Enter' && status === 'wrong') { setStatus('idle'); setAnswer(''); }
-  };
+  // Enter アクションを status に応じて毎レンダーセット
+  if (status === 'idle')   enterActionRef.current = handleSubmit;
+  else if (status === 'correct') enterActionRef.current = handleNext;
+  else if (status === 'wrong')   enterActionRef.current = () => { setStatus('idle'); setAnswer(''); };
+  else                           enterActionRef.current = null;
 
   return (
     <div
@@ -211,6 +222,7 @@ export default function ChallengeScreen({
       }}
       className={screenEffect !== 'wrong' ? 'fade-in' : undefined}
     >
+      <WireframeBackground countryId={country.id} />
       {/* スクリーンフラッシュオーバーレイ */}
       {screenEffect && (
         <div style={{
@@ -346,7 +358,6 @@ export default function ChallengeScreen({
                     }}
                     value={answer}
                     onChange={e => setAnswer(e.target.value)}
-                    onKeyDown={handleKeyDown}
                     placeholder="???"
                     disabled={status !== 'idle'}
                     autoFocus
@@ -425,20 +436,30 @@ export default function ChallengeScreen({
 
 const styles = {
   wrap: {
-    width: '100%',
-    minHeight: '100dvh',
-    background: 'var(--bg)',
+    position: 'fixed',
+    top: 'calc(var(--vv-offset, 0px) + env(safe-area-inset-top, 0px))',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: '#000010',
     display: 'flex',
     flexDirection: 'column',
+    overflow: 'hidden',
   },
   header: {
     display: 'flex',
     alignItems: 'center',
     gap: 12,
-    padding: '10px 16px',
-    borderBottom: '2px solid var(--border)',
+    padding: '14px 16px',
+    borderBottom: '2px solid rgba(0,255,136,0.35)',
     flexWrap: 'wrap',
     rowGap: 8,
+    flexShrink: 0,
+    background: 'rgba(0,0,10,0.88)',
+    backdropFilter: 'blur(10px)',
+    WebkitBackdropFilter: 'blur(10px)',
+    position: 'relative',
+    zIndex: 1,
   },
   back: {
     fontFamily: 'var(--pixel-font)',
@@ -476,30 +497,35 @@ const styles = {
   },
   content: {
     flex: 1,
-    padding: '20px 16px',
+    padding: '16px',
     maxWidth: 700,
     margin: '0 auto',
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
-    gap: 16,
+    gap: 14,
+    overflowY: 'auto',
+    WebkitOverflowScrolling: 'touch',
+    position: 'relative',
+    zIndex: 1,
+    background: 'rgba(0,2,18,0.38)',
   },
   questionNum: {
-    fontSize: 8,
+    fontSize: 10,
     color: 'var(--text-dim)',
   },
   title: {
-    fontSize: 'clamp(11px, 3vw, 15px)',
+    fontSize: 'clamp(13px, 3.5vw, 17px)',
     color: 'var(--accent2)',
   },
   description: {
-    fontSize: 'clamp(9px, 2.5vw, 11px)',
+    fontSize: 'clamp(11px, 3vw, 13px)',
     color: 'var(--text)',
     lineHeight: 2.2,
   },
   codeBlock: {
-    background: '#0a0f1a',
-    border: '2px solid var(--border2)',
+    background: 'rgba(0,5,25,0.92)',
+    border: '2px solid rgba(0,102,255,0.45)',
     padding: '14px 12px',
     fontFamily: 'monospace',
     fontSize: 'clamp(12px, 3.5vw, 15px)',
@@ -544,7 +570,7 @@ const styles = {
     WebkitAppearance: 'none',
   },
   hint: {
-    fontSize: 8,
+    fontSize: 10,
     color: 'var(--accent2)',
     background: 'rgba(255,221,0,0.08)',
     border: '1px solid var(--accent2)',
@@ -552,7 +578,7 @@ const styles = {
     lineHeight: 2,
   },
   feedbackCorrect: {
-    fontSize: 9,
+    fontSize: 11,
     color: 'var(--accent)',
     background: 'rgba(0,255,136,0.08)',
     border: '2px solid var(--accent)',
@@ -563,7 +589,7 @@ const styles = {
     flexWrap: 'wrap',
   },
   feedbackWrong: {
-    fontSize: 9,
+    fontSize: 11,
     color: 'var(--danger)',
     background: 'rgba(255,68,68,0.08)',
     border: '2px solid var(--danger)',
@@ -585,11 +611,11 @@ const styles = {
     gap: 8,
   },
   explanationTitle: {
-    fontSize: 8,
+    fontSize: 10,
     color: 'var(--border2)',
   },
   explanationText: {
-    fontSize: 8,
+    fontSize: 10,
     color: 'var(--text)',
     lineHeight: 2.2,
   },
@@ -614,7 +640,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     gap: 14,
-    height: 'calc(100dvh - env(safe-area-inset-top, 0px))',
+    flex: 1,
     textAlign: 'center',
     padding: 20,
   },

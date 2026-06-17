@@ -103,7 +103,11 @@ export default function MapScreen({ onSelectCountry, onBack, progress, quizProgr
 
   return (
     <div style={styles.wrap}>
-      {/* タイトルオーバーレイ（ヘッダー廃止→地図を最大化） */}
+      {/* CRTエフェクト */}
+      <div style={styles.crtScanlines} />
+      <div style={styles.crtVignette} />
+
+      {/* タイトルオーバーレイ */}
       <div style={styles.titleOverlay}>
         <button style={styles.backBtn} onClick={onBack}>◀ BACK</button>
         <span style={styles.title}>🌍 WORLD MAP</span>
@@ -296,6 +300,27 @@ const styles = {
     height: 'calc(100dvh - 56px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px))',
     background: 'var(--bg)',
     position: 'relative',
+    overflow: 'hidden',
+  },
+  crtScanlines: {
+    position: 'absolute',
+    inset: 0,
+    backgroundImage: `repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.18) 2px,
+      rgba(0,0,0,0.18) 4px
+    )`,
+    pointerEvents: 'none',
+    zIndex: 20,
+  },
+  crtVignette: {
+    position: 'absolute',
+    inset: 0,
+    background: 'radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.65) 100%)',
+    pointerEvents: 'none',
+    zIndex: 21,
   },
   titleOverlay: {
     position: 'absolute',
@@ -334,26 +359,26 @@ const styles = {
     transform: 'translateX(-50%)',
     background: 'var(--panel)',
     border: '2px solid var(--accent)',
-    padding: '12px 20px',
+    padding: '18px 28px',
     textAlign: 'center',
-    minWidth: 200,
+    minWidth: 260,
     zIndex: 10,
   },
-  tooltipEmoji: { fontSize: 24, marginBottom: 8 },
-  tooltipName: { fontSize: 10, color: 'var(--accent)', marginBottom: 6 },
-  tooltipCapital: { fontSize: 9, color: 'var(--text-dim)', marginBottom: 4 },
-  tooltipTheme: { fontSize: 9, color: 'var(--accent2)', marginBottom: 4 },
-  tooltipLocked: { fontSize: 9, color: 'var(--danger)', marginTop: 4 },
-  tooltipCleared: { fontSize: 9, color: 'var(--accent)', marginTop: 4 },
+  tooltipEmoji: { fontSize: 40, marginBottom: 10 },
+  tooltipName: { fontSize: 13, color: 'var(--accent)', marginBottom: 8 },
+  tooltipCapital: { fontSize: 11, color: 'var(--text-dim)', marginBottom: 6 },
+  tooltipTheme: { fontSize: 11, color: 'var(--accent2)', marginBottom: 6 },
+  tooltipLocked: { fontSize: 11, color: 'var(--danger)', marginTop: 6 },
+  tooltipCleared: { fontSize: 11, color: 'var(--accent)', marginTop: 6 },
   tooltipBtn: {
     fontFamily: 'var(--pixel-font)',
-    fontSize: 8,
+    fontSize: 11,
     background: 'var(--accent)',
     color: 'var(--bg)',
     border: 'none',
-    padding: '8px 16px',
+    padding: '12px 20px',
     cursor: 'pointer',
-    marginTop: 8,
+    marginTop: 10,
     width: '100%',
   },
   legend: {
@@ -362,7 +387,7 @@ const styles = {
     right: 16,
     display: 'flex',
     gap: 16,
-    fontSize: 9,
+    fontSize: 11,
     color: 'var(--text-dim)',
     background: 'rgba(13,13,26,0.8)',
     padding: '8px 12px',
@@ -388,11 +413,11 @@ const styles = {
     top: 16,
     right: 16,
     fontFamily: 'var(--pixel-font)',
-    fontSize: 8,
+    fontSize: 10,
     background: 'var(--panel)',
     color: 'var(--accent2)',
     border: '2px solid var(--accent2)',
-    padding: '8px 12px',
+    padding: '10px 14px',
     cursor: 'pointer',
     zIndex: 10,
   },

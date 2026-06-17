@@ -91,16 +91,19 @@ export default function LanguageScreen({ country, onSelectLanguage, onBack }) {
 
 const styles = {
   wrap: {
-    width: '100%',
-    minHeight: 'calc(100dvh - env(safe-area-inset-top, 0px))',
+    position: 'fixed',
+    top: 'calc(var(--vv-offset, 0px) + env(safe-area-inset-top, 0px))',
+    left: 0,
+    right: 0,
+    bottom: 0,
     background: 'var(--bg)',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
-    position: 'relative',
     overflow: 'hidden',
+    overscrollBehavior: 'none',
   },
   mapBg: {
     position: 'absolute',
@@ -153,11 +156,11 @@ const styles = {
     marginTop: -8,
   },
   countryCapital: {
-    fontSize: 'clamp(10px, 2.5vw, 12px)',
+    fontSize: 'clamp(12px, 3vw, 14px)',
     color: 'var(--text-dim)',
   },
   theme: {
-    fontSize: 'clamp(10px, 2.5vw, 12px)',
+    fontSize: 'clamp(12px, 3vw, 14px)',
     color: 'var(--accent2)',
     marginTop: 4,
   },
@@ -168,7 +171,7 @@ const styles = {
     margin: '8px 0',
   },
   label: {
-    fontSize: 9,
+    fontSize: 11,
     color: 'var(--text)',
     marginBottom: 8,
   },

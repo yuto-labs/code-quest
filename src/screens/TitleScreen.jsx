@@ -15,8 +15,8 @@ export default function TitleScreen({ onStart }) {
       <div style={styles.center}>
         <div style={styles.logo}>
           <div style={styles.logoSub}>- PIXEL RPG CODING ADVENTURE -</div>
-          <div style={styles.logoMain}>CODE</div>
-          <div style={styles.logoMain2}>QUEST</div>
+          <div style={styles.logoMain} className="pip-blink">CODE</div>
+          <div style={styles.logoMain2} className="pip-blink">QUEST</div>
         </div>
 
         <div style={styles.desc}>
@@ -30,8 +30,6 @@ export default function TitleScreen({ onStart }) {
         >
           ▶ PRESS START
         </button>
-
-        <div style={styles.version}>v0.1.0 &nbsp;|&nbsp; PYTHON EDITION</div>
       </div>
     </div>
   );
@@ -80,7 +78,7 @@ const styles = {
     gap: 8,
   },
   logoSub: {
-    fontSize: 8,
+    fontSize: 'clamp(9px, 2.5vw, 12px)',
     color: 'var(--text-dim)',
     letterSpacing: 2,
     marginBottom: 8,
@@ -99,23 +97,18 @@ const styles = {
     marginTop: -8,
   },
   desc: {
-    fontSize: 'clamp(8px, 2vw, 11px)',
+    fontSize: 'clamp(11px, 2.5vw, 14px)',
     color: 'var(--text)',
-    lineHeight: 2.2,
+    lineHeight: 2.4,
   },
   startBtn: {
     fontFamily: 'var(--pixel-font)',
-    fontSize: 'clamp(10px, 3vw, 14px)',
+    fontSize: 'clamp(14px, 4vw, 18px)',
     background: 'transparent',
     color: 'var(--accent2)',
     border: 'none',
     cursor: 'pointer',
     transition: 'opacity 0.1s',
-    letterSpacing: 2,
-  },
-  version: {
-    fontSize: 8,
-    color: 'var(--text-dim)',
-    marginTop: 16,
+    letterSpacing: 3,
   },
 };

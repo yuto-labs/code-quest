@@ -16,6 +16,9 @@
   --accent2: #ffdd00;
   --danger: #ff4444;
   --pixel-font: 'Press Start 2P', monospace;
+  /* visual viewport tracking for iOS keyboard */
+  --vv-offset: 0px;
+  --vv-height: 100dvh;
 }
 
 html, body, #root {
@@ -24,10 +27,12 @@ html, body, #root {
   color: var(--text);
   font-family: var(--pixel-font);
   overflow-x: hidden;
+  overscroll-behavior: none;
 }
 
 body {
   padding-top: env(safe-area-inset-top, 0px);
+  overscroll-behavior: none;
 }
 
 .pixel-box {
@@ -186,3 +191,15 @@ input, select, textarea {
   50%  { transform: scale(1.25); }
   100% { transform: scale(1); }
 }
+
+/* ロゴ ぴぴっぴ点滅（CODE と QUEST が同時に点滅） */
+@keyframes pipBlink {
+  0%,  8%  { opacity: 1; }
+  9%,  14% { opacity: 0.05; }
+  15%, 23% { opacity: 1; }
+  24%, 29% { opacity: 0.05; }
+  30%, 55% { opacity: 1; }
+  56%, 75% { opacity: 0.05; }
+  76%,100% { opacity: 1; }
+}
+.pip-blink { animation: pipBlink 4s ease-in-out infinite; }

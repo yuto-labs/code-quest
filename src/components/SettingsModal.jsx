@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function SettingsModal({ user, syncing, onSendOtp, onVerifyOtp, onSignOut, onClose }) {
+export default function SettingsModal({ user, syncing, onSendOtp, onVerifyOtp, onSignOut, onRefreshSync, onClose, onResetData, syncError, cloudStats, localStats }) {
   const [step, setStep] = useState('email');
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
@@ -18,7 +18,7 @@ export default function SettingsModal({ user, syncing, onSendOtp, onVerifyOtp, o
   };
 
   const handleVerify = async () => {
-    if (code.length !== 6) { setError('6桁のコードを入力してください'); return; }
+    if (code.length !== 8) { setError('8桁のコードを入力してください'); return; }
     setLoading(true);
     setError('');
     const { error } = await onVerifyOtp(email, code);
@@ -43,10 +43,24 @@ export default function SettingsModal({ user, syncing, onSendOtp, onVerifyOtp, o
             <div style={styles.loggedIn}>
               <div style={styles.userEmail}>{user.email}</div>
               <div style={styles.syncBadge}>
-                {syncing ? '⬆ 同期中...' : '✅ 同期済み'}
+                {syncing ? '⬆ 同期中...' : syncError ? `❌ ${syncError}` : '✅ 同期済み'}
               </div>
-              <button style={styles.signOutBtn} onClick={() => { onSignOut(); onClose(); }}>
-                ログアウト
+              <div style={styles.statsRow}>
+                <span style={styles.statItem}>
+                  📱 ローカル: <span style={styles.statNum}>{localStats ?? 0}</span> 件
+                </span>
+                <span style={styles.statItem}>
+                  ☁ クラウド: <span style={styles.statNum}>
+                    {cloudStats === null ? '---' : cloudStats === 0 ? 'データなし' : `${cloudStats} 件`}
+                  </span>
+                </span>
+              </div>
+              <button
+                style={styles.refreshBtn}
+                onClick={onRefreshSync}
+                disabled={syncing}
+              >
+                {syncing ? '同期中...' : '🔄 今すぐ同期'}
               </button>
             </div>
           ) : step === 'email' ? (
@@ -68,13 +82,13 @@ export default function SettingsModal({ user, syncing, onSendOtp, onVerifyOtp, o
             </div>
           ) : (
             <div style={styles.form}>
-              <div style={styles.desc}>{email} に届いた6桁のコード</div>
+              <div style={styles.desc}>{email} に届いた8桁のコード</div>
               <input
                 style={styles.codeInput}
                 type="number"
-                placeholder="000000"
+                placeholder="00000000"
                 value={code}
-                onChange={(e) => setCode(e.target.value.slice(0, 6))}
+                onChange={(e) => setCode(e.target.value.slice(0, 8))}
                 onKeyDown={(e) => e.key === 'Enter' && handleVerify()}
                 autoFocus
               />
@@ -88,6 +102,7 @@ export default function SettingsModal({ user, syncing, onSendOtp, onVerifyOtp, o
             </div>
           )}
         </div>
+
 
       </div>
     </div>
@@ -215,6 +230,27 @@ const styles = {
     fontSize: 8,
     color: 'var(--text-dim)',
   },
+  statsRow: {
+    display: 'flex',
+    gap: 12,
+    flexWrap: 'wrap',
+  },
+  statItem: {
+    fontSize: 8,
+    color: 'var(--text-dim)',
+  },
+  statNum: {
+    color: 'var(--accent)',
+  },
+  refreshBtn: {
+    fontFamily: 'var(--pixel-font)',
+    fontSize: 8,
+    background: 'transparent',
+    color: 'var(--accent)',
+    border: '2px solid var(--accent)',
+    padding: '10px',
+    cursor: 'pointer',
+  },
   signOutBtn: {
     fontFamily: 'var(--pixel-font)',
     fontSize: 8,
@@ -223,6 +259,15 @@ const styles = {
     border: '1px solid #333',
     padding: '10px',
     cursor: 'pointer',
-    marginTop: 4,
+  },
+  resetBtn: {
+    fontFamily: 'var(--pixel-font)',
+    fontSize: 8,
+    background: 'transparent',
+    color: 'var(--danger)',
+    border: '1px solid var(--danger)',
+    padding: '10px',
+    cursor: 'pointer',
+    width: '100%',
   },
 };

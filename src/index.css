@@ -122,9 +122,9 @@ body {
   to   { opacity: 1;   transform: scale(1.02); }
 }
 
-/* iOSの入力欄自動ズームを防ぐ */
+/* iOSの入力欄自動ズームを防ぐ (16px未満でSafariがズームする) */
 input, select, textarea {
-  font-size: 16px;
+  font-size: 16px !important;
 }
 
 /* スマホ向け調整 */

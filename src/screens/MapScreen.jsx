@@ -407,7 +407,10 @@ export default function MapScreen({ onSelectCountry, onBack, progress, quizProgr
 const styles = {
   wrap: {
     position: 'fixed',
-    inset: 0,
+    top: 'calc(var(--vv-offset, 0px) + env(safe-area-inset-top, 0px))',
+    left: 0,
+    right: 0,
+    bottom: 0,
     background: '#04050e',
     overflow: 'hidden',
     zIndex: 1,

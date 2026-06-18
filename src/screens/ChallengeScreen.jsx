@@ -185,7 +185,7 @@ export default function ChallengeScreen({
     return (
       <div style={styles.wrap} className="fade-in">
         <WireframeBackground countryId={country.id} />
-        <div style={styles.complete}>
+        <div style={{ ...styles.complete, position: 'relative', zIndex: 1 }}>
           <div style={{ fontSize: 'clamp(48px, 12vw, 72px)' }}>💀</div>
           <div style={{ ...styles.completeTitle, color: 'var(--danger)' }}>GAME OVER</div>
           <div style={styles.completeSub}>ライフがなくなりました</div>

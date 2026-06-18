@@ -44,7 +44,7 @@ function buildAttemptId(worldId, countryId, langId, missionId = null) {
 
 function getInitialLives(meta, attemptId) {
   const attempt = meta?.attempts?.[attemptId];
-  if (!attempt || attempt.status === 'completed') return MAX_LIVES;
+  if (!attempt || attempt.status === 'completed' || attempt.status === 'failed') return MAX_LIVES;
   return typeof attempt.remainingLives === 'number' ? attempt.remainingLives : MAX_LIVES;
 }
 

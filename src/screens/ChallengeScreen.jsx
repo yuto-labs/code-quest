@@ -15,8 +15,9 @@ const BASE_SCORE = 100;
 
 export default function ChallengeScreen({
   country, language, world = 'decode', onBack, onComplete,
-  initialIdx = 0, onSaveIdx, onSaveScore,
+  initialIdx = 0, onSaveIdx, onSaveScore, onMistake,
 }) {
+  const isPC = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   const questions = (WORLD_CHALLENGES[world] ?? CHALLENGES)[country.id]?.[language.id] || [];
   const [idx, setIdx]       = useState(initialIdx);
   const [answer, setAnswer] = useState('');
@@ -43,10 +44,12 @@ export default function ChallengeScreen({
   const [selectedOption,    setSelectedOption]    = useState(null);
   const [blankAnswers,      setBlankAnswers]      = useState([]);
   const [debugStepIdx,      setDebugStepIdx]      = useState(0);
+  const [debugStepAnswers,  setDebugStepAnswers]  = useState([]);
   const [orderingSelection, setOrderingSelection] = useState([]);
 
   // fix: track all timers so we can cancel them on unmount / retry
   const timersRef = useRef([]);
+  const debugSkipPersistRef = useRef(null);
   const schedule = (fn, delay) => {
     const id = setTimeout(fn, delay);
     timersRef.current.push(id);
@@ -67,8 +70,47 @@ export default function ChallengeScreen({
     setSelectedOption(null);
     setBlankAnswers([]);
     setDebugStepIdx(0);
+    setDebugStepAnswers([]);
     setOrderingSelection([]);
   }, [idx]);
+
+  useEffect(() => {
+    const q = questions[idx];
+    if (q?.questionType !== 'debug-step') return;
+
+    const storageKey = `cq_debug_step_${world}_${country.id}_${language.id}_${q.id}`;
+    debugSkipPersistRef.current = storageKey;
+    try {
+      const saved = JSON.parse(localStorage.getItem(storageKey) || '{}');
+      const nextAnswers = Array.isArray(saved.answers) ? saved.answers : [];
+      const nextStep = Number.isInteger(saved.stepIdx)
+        ? Math.min(Math.max(saved.stepIdx, 0), Math.max((q.steps?.length || 1) - 1, 0))
+        : 0;
+      setDebugStepAnswers(nextAnswers);
+      setDebugStepIdx(nextStep);
+      setSelectedOption(nextAnswers[nextStep] ?? null);
+    } catch {
+      setDebugStepAnswers([]);
+      setDebugStepIdx(0);
+      setSelectedOption(null);
+    }
+  }, [world, country.id, language.id, idx, questions]);
+
+  useEffect(() => {
+    const q = questions[idx];
+    if (q?.questionType !== 'debug-step') return;
+
+    const storageKey = `cq_debug_step_${world}_${country.id}_${language.id}_${q.id}`;
+    if (debugSkipPersistRef.current === storageKey) {
+      debugSkipPersistRef.current = null;
+      return;
+    }
+
+    localStorage.setItem(storageKey, JSON.stringify({
+      stepIdx: debugStepIdx,
+      answers: debugStepAnswers,
+    }));
+  }, [world, country.id, language.id, idx, questions, debugStepIdx, debugStepAnswers]);
 
   // Enterキーを document レベルで捕捉（input が disabled でも発火）
   const enterActionRef = useRef(null);
@@ -97,6 +139,7 @@ export default function ChallengeScreen({
     setSelectedOption(null);
     setBlankAnswers([]);
     setDebugStepIdx(0);
+    setDebugStepAnswers([]);
     setOrderingSelection([]);
     onSaveIdx?.(0);
   };
@@ -182,19 +225,27 @@ export default function ChallengeScreen({
   // debug-step: resolve current step
   const currentStep  = isDebugStep ? (q.steps?.[debugStepIdx] ?? null) : null;
   const stepCount    = isDebugStep ? (q.steps?.length ?? 0) : 0;
+  const firstContextStep = isDebugStep
+    ? (q.steps?.find(step => step.code || step.prompt || step.context || step.description) ?? null)
+    : null;
 
-  // code source (debug steps may have per-step code or none)
-  const codeSource   = isDebugStep ? (currentStep?.code ?? '') : (q.code ?? '');
+  // DEBUG uses the parent question as the canonical scenario/code.
+  // If old data lacks parent fields, fall back to the first step that has them.
+  const debugScenario = q.description || q.prompt || q.context || firstContextStep?.prompt || firstContextStep?.context || firstContextStep?.description || '';
+  const debugCode     = q.code || firstContextStep?.code || '';
+
+  const codeSource   = isDebugStep ? debugCode : (q.code ?? '');
   const codeLines    = codeSource ? codeSource.split('\n') : [];
 
   // text fields, normalised across decode/execute/debug schemas
   // debug-step: situationText = step.prompt (context), questionLabel = step.question (what to answer)
-  const situationText      = isDebugStep ? (currentStep?.prompt ?? '') : (q.description || q.prompt || '');
+  const situationText      = isDebugStep ? debugScenario : (q.description || q.prompt || '');
   const questionLabel      = isDebugStep ? (currentStep?.question ?? null) : null;
   const currentHint        = isDebugStep ? (currentStep?.hint ?? q.hint ?? '') : (q.hint ?? '');
   const currentExplanation = isDebugStep ? (currentStep?.explanation ?? q.explanation ?? '') : (q.explanation ?? '');
   const currentOptions     = isDebugStep ? (currentStep?.options ?? []) : (q.options ?? []);
   const correctAnswer      = isDebugStep ? (currentStep?.answer ?? '') : (q.answer ?? q.blank ?? '');
+  const priorDebugAnswers  = isDebugStep ? debugStepAnswers.slice(0, debugStepIdx) : [];
 
   // fix: (idx+1)/length so Q1 shows > 0%
   const progress        = Math.round(((idx + 1) / questions.length) * 100);
@@ -236,6 +287,7 @@ export default function ChallengeScreen({
     schedule(() => setScreenEffect(null), 400);
     schedule(() => setShakingHeartIdx(-1), 500);
     if (newHearts <= 0) schedule(() => setGameOver(true), 750);
+    if (q?.id) onMistake?.(q.id);
   };
 
   const handleSubmit = () => {
@@ -251,6 +303,13 @@ export default function ChallengeScreen({
     } else {
       correct = selectedOption === correctAnswer;
     }
+    if (isDebugStep && selectedOption !== null) {
+      setDebugStepAnswers(prev => {
+        const next = prev.slice(0, debugStepIdx);
+        next[debugStepIdx] = selectedOption;
+        return next;
+      });
+    }
     setStatus(correct ? 'correct' : 'wrong');
     if (correct) fireCorrect(); else fireWrong();
   };
@@ -258,8 +317,9 @@ export default function ChallengeScreen({
   const handleNext = () => {
     // debug-step: step-by-step advance before moving to next question
     if (isDebugStep && status === 'correct' && debugStepIdx < stepCount - 1) {
-      setDebugStepIdx(i => i + 1);
-      setSelectedOption(null);
+      const nextStepIdx = debugStepIdx + 1;
+      setDebugStepIdx(nextStepIdx);
+      setSelectedOption(debugStepAnswers[nextStepIdx] ?? null);
       setStatus('idle');
       setShowHint(false);
       setShowExplanation(false);
@@ -308,7 +368,7 @@ export default function ChallengeScreen({
           }}
           placeholder={`?${bi}`}
           disabled={status !== 'idle'}
-          autoFocus={bi === 0}
+          autoFocus={isPC && bi === 0}
         />
       );
     });
@@ -446,11 +506,18 @@ export default function ChallengeScreen({
           </div>
         )}
 
+        {isDebugStep && (
+          <div style={styles.debugSectionLabel}>ORIGINAL SCENARIO</div>
+        )}
         <div style={styles.description}>{situationText}</div>
 
         {/* コードブロック（コードがある場合のみ） */}
         {codeLines.length > 0 && (
-          <div style={styles.codeBlock}>
+          <>
+            {isDebugStep && (
+              <div style={styles.debugSectionLabel}>ORIGINAL CODE</div>
+            )}
+            <div style={styles.codeBlock}>
             {codeLines.map((line, i) => (
               <div key={i} style={styles.codeLine}>
                 <span style={styles.lineNum}>{i + 1}</span>
@@ -471,7 +538,7 @@ export default function ChallengeScreen({
                       onChange={e => setAnswer(e.target.value)}
                       placeholder="???"
                       disabled={status !== 'idle'}
-                      autoFocus
+                      autoFocus={isPC}
                     />
                     {line.split('___BLANK___')[1]}
                   </span>
@@ -480,6 +547,20 @@ export default function ChallengeScreen({
                 ) : (
                   <span style={styles.codeText}>{line}</span>
                 )}
+              </div>
+            ))}
+            </div>
+          </>
+        )}
+
+        {priorDebugAnswers.length > 0 && (
+          <div style={styles.debugPriorList}>
+            {priorDebugAnswers.map((priorAnswer, priorIdx) => (
+              <div key={`${priorIdx}-${priorAnswer}`} style={styles.debugPriorItem}>
+                <div style={styles.debugPriorLabel}>
+                  STEP {priorIdx + 1} SELECTED
+                </div>
+                <div style={styles.debugPriorText}>{priorAnswer}</div>
               </div>
             ))}
           </div>
@@ -561,7 +642,17 @@ export default function ChallengeScreen({
                               : isSelected ? 'rgba(255,221,0,0.06)'
                               : 'transparent',
                   }}
-                  onClick={() => { if (status === 'idle') setSelectedOption(opt); }}
+                  onClick={() => {
+                    if (status !== 'idle') return;
+                    setSelectedOption(opt);
+                    if (isDebugStep) {
+                      setDebugStepAnswers(prev => {
+                        const next = prev.slice(0, debugStepIdx);
+                        next[debugStepIdx] = opt;
+                        return next;
+                      });
+                    }
+                  }}
                   disabled={status !== 'idle'}
                 >
                   <span style={styles.optionKey}>{String.fromCharCode(65 + i)}.</span>
@@ -847,6 +938,37 @@ const styles = {
     background: 'rgba(255,221,0,0.06)',
     border: '1px solid rgba(255,221,0,0.2)',
     padding: '8px 12px',
+  },
+  debugSectionLabel: {
+    fontFamily: 'var(--pixel-font)',
+    fontSize: 8,
+    color: '#ff4466',
+    letterSpacing: 1,
+    marginTop: 2,
+  },
+  debugPriorList: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 8,
+    background: 'rgba(255,68,68,0.06)',
+    border: '1px solid rgba(255,68,68,0.25)',
+    padding: '10px 12px',
+  },
+  debugPriorItem: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 4,
+  },
+  debugPriorLabel: {
+    fontFamily: 'var(--pixel-font)',
+    fontSize: 8,
+    color: '#ff4466',
+  },
+  debugPriorText: {
+    fontSize: 'clamp(10px, 2.8vw, 12px)',
+    color: 'var(--text)',
+    lineHeight: 1.8,
+    wordBreak: 'break-word',
   },
   orderingList: {
     display: 'flex',

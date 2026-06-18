@@ -1,32 +1,71 @@
+import { useState } from 'react';
 import { COUNTRIES } from '../data/countries';
-import { CHALLENGES, LANGUAGES } from '../data/challenges';
-import { getUnlockedIds } from '../utils/progress';
+import { CHALLENGES } from '../data/challenges';
+import { EXECUTE_CHALLENGES } from '../data/execute_challenges';
+import { DEBUG_CHALLENGES } from '../data/debug_challenges';
+import { buildProgressKey, getUnlockedIds, getClearedCountryIds, getLanguageEmblemTier, getCountrySealTier } from '../utils/progress';
+import { AVAILABLE_STAGES, WORLD_META, WORLD_IDS } from '../utils/stageData';
 
-export default function ProgressScreen({ progress, quizProgress, scores = {}, onBack }) {
-  // 新スキーマ: 'JP_python' 形式 → 国IDを抽出してユニーク数を数える
-  const cleared     = new Set(Object.keys(progress || {}).map(k => k.split('_')[0])).size;
-  const total       = COUNTRIES.length;
-  const pct         = Math.round((cleared / total) * 100);
-  const unlockedIds = getUnlockedIds(progress || {});
+const WORLD_CHALLENGES = { decode: CHALLENGES, execute: EXECUTE_CHALLENGES, debug: DEBUG_CHALLENGES };
 
-  // ベストスコア合計
+const EMBLEM_TIERS = {
+  none:   { label: 'NONE',   color: '#555',    glyph: '' },
+  bronze: { label: 'BRONZE', color: '#cd7f32', glyph: '🥉' },
+  silver: { label: 'SILVER', color: '#c0c0c0', glyph: '🥈' },
+  gold:   { label: 'GOLD',   color: '#ffd700', glyph: '🥇' },
+};
+
+// Discover all languages that appear in any world's content
+function discoverLangs() {
+  const langs = new Set();
+  for (const countryLangMap of Object.values(AVAILABLE_STAGES)) {
+    for (const langList of Object.values(countryLangMap)) {
+      langList.forEach(l => langs.add(l));
+    }
+  }
+  // Keep stable order
+  const order = ['python', 'javascript'];
+  return [...new Set([...order.filter(l => langs.has(l)), ...langs])];
+}
+
+const ALL_LANGS = discoverLangs();
+const LANG_META = {
+  python:     { name: 'PYTHON',     emoji: '🐍' },
+  javascript: { name: 'JAVASCRIPT', emoji: '⚡' },
+};
+
+export default function ProgressScreen({ progress, quizProgress, scores = {}, mistakes = {}, onBack }) {
+  const [activeWorld, setActiveWorld] = useState('decode');
+  const p = progress || {};
+  const qp = quizProgress || {};
+
+  // --- Per-language × per-world summary ---
+  const langWorldStats = {};
+  for (const langId of ALL_LANGS) {
+    langWorldStats[langId] = {};
+    for (const worldId of WORLD_IDS) {
+      const stages = AVAILABLE_STAGES[worldId] || {};
+      const availCountries = Object.entries(stages)
+        .filter(([, langs]) => langs.includes(langId))
+        .map(([countryId]) => countryId);
+      const clearedCount = availCountries.filter(
+        countryId => !!p[buildProgressKey(worldId, countryId, langId)]
+      ).length;
+      langWorldStats[langId][worldId] = { cleared: clearedCount, available: availCountries.length };
+    }
+  }
+
+  // --- Country list for active world ---
+  const clearedIds  = getClearedCountryIds(p, activeWorld);
+  const unlockedIds = getUnlockedIds(p, activeWorld);
+  const stages      = AVAILABLE_STAGES[activeWorld] || {};
+  const worldChallenges = WORLD_CHALLENGES[activeWorld] || {};
+
+  // Countries with content in active world, preserving COUNTRIES order
+  const worldCountries = COUNTRIES.filter(c => (stages[c.id] || []).length > 0);
+
+  // Total best score
   const totalBestScore = Object.values(scores).reduce((a, b) => a + b, 0);
-
-  // 全問題数と総正解数を計算
-  let totalQ = 0;
-  let answeredQ = 0;
-  COUNTRIES.forEach(c => {
-    LANGUAGES.filter(l => l.available).forEach(l => {
-      const qs = CHALLENGES[c.id]?.[l.id] || [];
-      totalQ += qs.length;
-      if ((progress || {})[`${c.id}_${l.id}`]) {
-        answeredQ += qs.length; // クリア済みは全問正解
-      } else {
-        const savedIdx = (quizProgress || {})[`${c.id}_${l.id}`] || 0;
-        answeredQ += savedIdx;
-      }
-    });
-  });
 
   return (
     <div style={styles.wrap} className="fade-in">
@@ -38,13 +77,41 @@ export default function ProgressScreen({ progress, quizProgress, scores = {}, on
         </div>
       </div>
 
-      {/* 総合サマリー */}
-      <div style={styles.summary}>
-        <div style={styles.summaryRow}>
-          <StatCard label="COUNTRIES" value={`${cleared}/${total}`} color="var(--accent)" />
-          <StatCard label="SOLVED" value={`${answeredQ}/${totalQ}`} color="var(--accent2)" />
-          <StatCard label="COMPLETE" value={`${pct}%`} color={pct === 100 ? '#ffdd00' : 'var(--accent)'} />
-        </div>
+      {/* Per-language × per-world summary */}
+      <div style={styles.section}>
+        <div style={styles.sectionLabel}>// WORLD × LANGUAGE STATS</div>
+        {ALL_LANGS.map(langId => {
+          const meta = LANG_META[langId] || { name: langId.toUpperCase(), emoji: '📄' };
+          return (
+            <div key={langId} style={styles.langBlock}>
+              <div style={styles.langTitle}>{meta.emoji} {meta.name}</div>
+              {WORLD_IDS.map(worldId => {
+                const wm = WORLD_META[worldId];
+                const { cleared, available } = langWorldStats[langId][worldId];
+                if (available === 0) {
+                  return (
+                    <div key={worldId} style={styles.worldStatRow}>
+                      <span style={{ ...styles.worldTag, color: wm.color }}>{wm.label}</span>
+                      <span style={styles.noContent}>未実装</span>
+                    </div>
+                  );
+                }
+                const pct = Math.round((cleared / available) * 100);
+                return (
+                  <div key={worldId} style={styles.worldStatRow}>
+                    <span style={{ ...styles.worldTag, color: wm.color }}>{wm.label}</span>
+                    <div className="xp-bar" style={{ flex: 1, height: 8 }}>
+                      <div className="xp-fill" style={{ width: `${pct}%`, background: wm.color, boxShadow: `0 0 5px ${wm.color}88` }} />
+                    </div>
+                    <span style={styles.statFraction}>{cleared}/{available}</span>
+                    <span style={{ ...styles.statPct, color: pct === 100 ? '#ffdd00' : wm.color }}>{pct}%</span>
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })}
+
         {totalBestScore > 0 && (
           <div style={styles.scoreRow}>
             <span style={{ fontSize: 9, color: 'var(--text-dim)' }}>TOTAL BEST SCORE</span>
@@ -53,26 +120,109 @@ export default function ProgressScreen({ progress, quizProgress, scores = {}, on
             </span>
           </div>
         )}
+      </div>
 
-        <div style={styles.totalBar}>
-          <div style={styles.totalBarLabel}>WORLD COMPLETION</div>
-          <div className="xp-bar" style={{ width: '100%', height: 16 }}>
-            <div className="xp-fill" style={{ width: `${pct}%` }} />
-          </div>
+      {/* Language Emblems */}
+      <div style={styles.section}>
+        <div style={styles.sectionLabel}>// LANGUAGE EMBLEMS</div>
+        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+          {ALL_LANGS.map(langId => {
+            const meta = LANG_META[langId] || { name: langId.toUpperCase(), emoji: '📄' };
+            const tier = getLanguageEmblemTier(p, langId);
+            const tierMeta = EMBLEM_TIERS[tier];
+            return (
+              <div key={langId} style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 6,
+                padding: '12px 16px',
+                background: 'var(--panel)',
+                border: `2px solid ${tier === 'none' ? '#333' : tierMeta.color + '66'}`,
+                minWidth: 80,
+                opacity: tier === 'none' ? 0.5 : 1,
+              }}>
+                <div style={{ fontSize: 28 }}>{meta.emoji}</div>
+                <div style={{ fontSize: 8, color: 'var(--text-dim)', fontFamily: 'var(--pixel-font)' }}>
+                  {meta.name}
+                </div>
+                <div style={{ fontSize: 20 }}>{tierMeta.glyph || '○'}</div>
+                <div style={{ fontSize: 7, color: tierMeta.color, fontFamily: 'var(--pixel-font)', letterSpacing: 1 }}>
+                  {tierMeta.label}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 
-      {/* 国ごとの進捗 */}
+      {/* World tab selector */}
+      <div style={styles.tabs}>
+        {WORLD_IDS.map(wid => {
+          const wm = WORLD_META[wid];
+          const active = wid === activeWorld;
+          return (
+            <button
+              key={wid}
+              style={{
+                ...styles.tab,
+                color: active ? wm.color : '#445566',
+                borderBottom: active ? `2px solid ${wm.color}` : '2px solid transparent',
+              }}
+              onClick={() => setActiveWorld(wid)}
+            >
+              {wm.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Recovery: stages with mistakes */}
+      {(() => {
+        const reviewEntries = Object.entries(mistakes)
+          .filter(([, ids]) => ids.length > 0)
+          .map(([key, ids]) => {
+            const parts = key.split('_');
+            const worldId = parts[0];
+            const countryId = parts[1];
+            const langId = parts.slice(2).join('_');
+            const wm = WORLD_META[worldId];
+            const country = COUNTRIES.find(c => c.id === countryId);
+            if (!country || !wm) return null;
+            return { key, worldId, countryId, langId, ids, wm, country };
+          })
+          .filter(Boolean);
+
+        if (reviewEntries.length === 0) return null;
+        return (
+          <div style={styles.section}>
+            <div style={styles.sectionLabel}>// REVIEW QUEUE — 要復習</div>
+            {reviewEntries.map(({ key, wm, country, langId, ids }) => (
+              <div key={key} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 0', borderBottom: '1px solid var(--border2)' }}>
+                <span style={{ fontSize: 20 }}>{country.emoji}</span>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 10, color: 'var(--text)' }}>{country.name} / {langId}</div>
+                  <div style={{ fontSize: 8, color: 'var(--text-dim)' }}>
+                    <span style={{ color: wm.color }}>{wm.label}</span>
+                    &nbsp;— {ids.length} 問ミスあり
+                  </div>
+                </div>
+                <span style={{ fontSize: 9, color: '#ff4466' }}>⚠ {ids.length}</span>
+              </div>
+            ))}
+          </div>
+        );
+      })()}
+
+      {/* Country list for active world */}
       <div style={styles.list}>
-        {COUNTRIES.map((c, i) => {
-          const lang       = LANGUAGES.find(l => l.available);
-          const isCleared  = !!(progress || {})[`${c.id}_${lang?.id}`];
+        {worldCountries.length === 0 && (
+          <div style={styles.emptyMsg}>// このワールドにはまだコンテンツがありません</div>
+        )}
+        {worldCountries.map((c) => {
+          const isCleared  = clearedIds.has(c.id);
           const isUnlocked = unlockedIds.has(c.id);
-          const qs         = CHALLENGES[c.id]?.[lang?.id] || [];
-          const savedIdx   = (quizProgress || {})[`${c.id}_${lang?.id}`] || 0;
-          const doneCount  = isCleared ? qs.length : savedIdx;
-          const qPct       = qs.length ? Math.round((doneCount / qs.length) * 100) : 0;
-          const bestScore  = scores[`${c.id}_${lang?.id}`] || 0;
+          const availLangs = stages[c.id] || [];
 
           return (
             <div key={c.id} style={{
@@ -82,7 +232,6 @@ export default function ProgressScreen({ progress, quizProgress, scores = {}, on
                          : '#2a2a4a',
               opacity: isUnlocked || isCleared ? 1 : 0.45,
             }}>
-              {/* 国情報 */}
               <div style={styles.cardTop}>
                 <span style={styles.cardEmoji}>{c.emoji}</span>
                 <div style={styles.cardInfo}>
@@ -90,29 +239,34 @@ export default function ProgressScreen({ progress, quizProgress, scores = {}, on
                   <div style={styles.cardTheme}>{c.theme}</div>
                 </div>
                 <div style={styles.cardBadge}>
+                  {(() => {
+                    const seal = getCountrySealTier(p, c.id);
+                    const sm = EMBLEM_TIERS[seal];
+                    return seal !== 'none' ? (
+                      <span style={{ fontSize: 18, filter: `drop-shadow(0 0 4px ${sm.color})` }}>{sm.glyph}</span>
+                    ) : null;
+                  })()}
                   {isCleared  && <span style={styles.badgeCleared}>✅ CLEAR</span>}
-                  {!isCleared && isUnlocked && savedIdx > 0 && (
-                    <span style={styles.badgeInProgress}>▶ Q{savedIdx + 1}</span>
-                  )}
-                  {!isCleared && isUnlocked && savedIdx === 0 && (
+                  {!isCleared && isUnlocked && (
                     <span style={styles.badgeReady}>READY</span>
                   )}
                   {!isUnlocked && <span style={styles.badgeLocked}>🔒</span>}
                 </div>
               </div>
 
-              {/* 言語ごとの問題進捗バー */}
-              {isUnlocked && LANGUAGES.filter(l => l.available).map(l => {
-                const lqs      = CHALLENGES[c.id]?.[l.id] || [];
-                const lCleared = !!(progress || {})[`${c.id}_${l.id}`];
-                const lIdx     = lCleared ? lqs.length : ((quizProgress || {})[`${c.id}_${l.id}`] || 0);
-                const lPct     = lqs.length ? Math.round((lIdx / lqs.length) * 100) : 0;
-                const lScore   = scores[`${c.id}_${l.id}`] || 0;
+              {isUnlocked && availLangs.map(langId => {
+                const qs      = (worldChallenges[c.id]?.[langId] || []);
+                const key     = buildProgressKey(activeWorld, c.id, langId);
+                const lCleared = !!p[key];
+                const lIdx     = lCleared ? qs.length : (qp[key] || 0);
+                const lPct     = qs.length ? Math.round((lIdx / qs.length) * 100) : 0;
+                const lScore   = scores[key] || 0;
+                const lMeta    = LANG_META[langId] || { name: langId, emoji: '📄' };
                 return (
-                  <div key={l.id} style={styles.cardProgress}>
+                  <div key={langId} style={styles.cardProgress}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <div style={styles.cardProgressLabel}>
-                        {l.emoji} {l.name} &nbsp; {lIdx} / {lqs.length}問
+                        {lMeta.emoji} {lMeta.name} &nbsp; {lIdx} / {qs.length}問
                       </div>
                       {lScore > 0 && (
                         <div style={{ fontSize: 9, color: 'var(--accent2)' }}>
@@ -130,7 +284,6 @@ export default function ProgressScreen({ progress, quizProgress, scores = {}, on
                 );
               })}
 
-              {/* レベル表示 */}
               <div style={styles.cardLevel}>LV.{c.level}</div>
             </div>
           );
@@ -207,23 +360,62 @@ const styles = {
     fontSize: 'clamp(11px, 3vw, 14px)',
     color: 'var(--accent)',
   },
-  sub: {
-    fontSize: 9,
-    color: 'var(--text-dim)',
-  },
-  summary: {
+  sub: { fontSize: 9, color: 'var(--text-dim)' },
+
+  section: {
     padding: '16px 20px',
     borderBottom: '1px solid #1a1a2e',
     display: 'flex',
     flexDirection: 'column',
-    gap: 12,
+    gap: 14,
     maxWidth: 600,
     margin: '0 auto',
     width: '100%',
   },
-  summaryRow: {
+  sectionLabel: {
+    fontSize: 9,
+    color: '#445566',
+    letterSpacing: 1,
+  },
+  langBlock: {
     display: 'flex',
+    flexDirection: 'column',
+    gap: 6,
+  },
+  langTitle: {
+    fontSize: 10,
+    color: 'var(--text)',
+    marginBottom: 2,
+  },
+  worldStatRow: {
+    display: 'flex',
+    alignItems: 'center',
     gap: 8,
+  },
+  worldTag: {
+    fontFamily: 'var(--pixel-font)',
+    fontSize: 7,
+    letterSpacing: 1,
+    minWidth: 52,
+    flexShrink: 0,
+  },
+  noContent: {
+    fontSize: 8,
+    color: '#334455',
+    fontStyle: 'italic',
+  },
+  statFraction: {
+    fontSize: 9,
+    color: 'var(--text-dim)',
+    minWidth: 28,
+    textAlign: 'right',
+    flexShrink: 0,
+  },
+  statPct: {
+    fontSize: 9,
+    minWidth: 30,
+    textAlign: 'right',
+    flexShrink: 0,
   },
   scoreRow: {
     display: 'flex',
@@ -233,15 +425,28 @@ const styles = {
     border: '1px solid var(--accent2)',
     padding: '10px 14px',
   },
-  totalBar: {
+
+  tabs: {
     display: 'flex',
-    flexDirection: 'column',
-    gap: 8,
+    borderBottom: '1px solid #1a1a2e',
+    maxWidth: 600,
+    margin: '0 auto',
+    width: '100%',
+    paddingLeft: 20,
+    paddingRight: 20,
   },
-  totalBarLabel: {
-    fontSize: 9,
-    color: 'var(--text-dim)',
+  tab: {
+    fontFamily: 'var(--pixel-font)',
+    fontSize: 8,
+    background: 'transparent',
+    border: 'none',
+    borderBottom: '2px solid transparent',
+    padding: '10px 12px',
+    cursor: 'pointer',
+    letterSpacing: 1,
+    transition: 'color 0.15s',
   },
+
   list: {
     display: 'flex',
     flexDirection: 'column',
@@ -250,6 +455,12 @@ const styles = {
     maxWidth: 600,
     margin: '0 auto',
     width: '100%',
+  },
+  emptyMsg: {
+    fontSize: 9,
+    color: '#334455',
+    padding: '20px 0',
+    textAlign: 'center',
   },
   card: {
     background: 'var(--panel)',
@@ -272,27 +483,13 @@ const styles = {
     flexDirection: 'column',
     gap: 4,
   },
-  cardName: {
-    fontSize: 10,
-    color: 'var(--text)',
-  },
-  cardTheme: {
-    fontSize: 9,
-    color: 'var(--text-dim)',
-  },
-  cardBadge: {
-    flexShrink: 0,
-  },
+  cardName: { fontSize: 10, color: 'var(--text)' },
+  cardTheme: { fontSize: 9, color: 'var(--text-dim)' },
+  cardBadge: { flexShrink: 0 },
   badgeCleared: {
     fontSize: 9,
     color: 'var(--accent)',
     border: '1px solid var(--accent)',
-    padding: '3px 6px',
-  },
-  badgeInProgress: {
-    fontSize: 9,
-    color: 'var(--accent2)',
-    border: '1px solid var(--accent2)',
     padding: '3px 6px',
   },
   badgeReady: {
@@ -301,18 +498,13 @@ const styles = {
     border: '1px solid var(--border2)',
     padding: '3px 6px',
   },
-  badgeLocked: {
-    fontSize: 12,
-  },
+  badgeLocked: { fontSize: 12 },
   cardProgress: {
     display: 'flex',
     flexDirection: 'column',
     gap: 6,
   },
-  cardProgressLabel: {
-    fontSize: 9,
-    color: 'var(--text-dim)',
-  },
+  cardProgressLabel: { fontSize: 9, color: 'var(--text-dim)' },
   cardLevel: {
     position: 'absolute',
     top: 10,

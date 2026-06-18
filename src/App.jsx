@@ -32,8 +32,10 @@ export default function App() {
   const [progress, setProgress]   = useState({});
   const [quizProgress, setQuizProgress] = useState({});
   const [scores, setScores]       = useState({});
+  const [mistakes, setMistakes]   = useState({});
   const [syncing, setSyncing]     = useState(false);
   const [syncError, setSyncError] = useState('');
+  const [savedToast, setSavedToast] = useState(false);
   const [cloudStats, setCloudStats] = useState(null); // null = 未確認, 0 = データなし, N = N件
   const [isUserDataLoading, setIsUserDataLoading] = useState(true);
   const [migrationDone, setMigrationDone] = useState(() => localStorage.getItem('cq_migrated') === 'true');
@@ -124,6 +126,7 @@ export default function App() {
         const pKey = getStorageKey(uid, 'progress');
         const qKey = getStorageKey(uid, 'quiz');
         const sKey = getStorageKey(uid, 'scores');
+        setMistakes(loadFromLocal(getStorageKey(uid, 'mistakes')));
 
         // マイグレーション (ログイン時かつ未完了のみ)
         if (uid && !migrationDone) {
@@ -225,6 +228,8 @@ export default function App() {
       setSyncError('');
       try {
         await saveCloudProgress(targetUid, p, qp, sc);
+        setSavedToast(true);
+        setTimeout(() => setSavedToast(false), 1500);
       } catch (e) {
         setSyncError(e?.message || '保存エラー');
       } finally {
@@ -259,9 +264,11 @@ export default function App() {
     localStorage.removeItem(getStorageKey(uid, 'progress'));
     localStorage.removeItem(getStorageKey(uid, 'quiz'));
     localStorage.removeItem(getStorageKey(uid, 'scores'));
+    localStorage.removeItem(getStorageKey(uid, 'mistakes'));
     setProgress({});
     setQuizProgress({});
     setScores({});
+    setMistakes({});
     setCloudStats(0);
     if (uid) {
       try { await saveCloudProgress(uid, {}, {}, {}); } catch (_) { /* silent */ }
@@ -284,6 +291,16 @@ export default function App() {
     setScreen('map');
   };
 
+  const saveMistake = (worldId, countryId, langId, questionId) => {
+    const key = `${worldId}_${countryId}_${langId}`;
+    const uid = user?.id;
+    const existing = mistakes[key] || [];
+    if (existing.includes(questionId)) return;
+    const next = { ...mistakes, [key]: [...existing, questionId] };
+    setMistakes(next);
+    saveToLocal(getStorageKey(uid, 'mistakes'), next);
+  };
+
   if (authLoading || isUserDataLoading) {
     return (
       <div style={{ width: '100%', height: '100dvh', background: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -295,6 +312,27 @@ export default function App() {
   return (
     <>
       <div className="scanlines" />
+
+      {/* Saved toast */}
+      {savedToast && (
+        <div style={{
+          position: 'fixed',
+          bottom: 'calc(env(safe-area-inset-bottom, 0px) + 72px)',
+          right: 16,
+          zIndex: 9999,
+          background: '#001a0d',
+          border: '1px solid #00ff8866',
+          color: '#00ff88',
+          fontFamily: 'var(--pixel-font)',
+          fontSize: 8,
+          padding: '8px 14px',
+          letterSpacing: 1,
+          pointerEvents: 'none',
+          animation: 'fadeIn 0.2s ease',
+        }}>
+          ✓ SAVED
+        </div>
+      )}
 
       {screen === 'title' && (
         <TitleScreen onStart={() => setScreen('home')} />
@@ -334,7 +372,12 @@ export default function App() {
       )}
 
       {screen === 'reference' && (
-        <ReferenceScreen onBack={() => setScreen('home')} />
+        <ReferenceScreen
+          onBack={() => setScreen('home')}
+          progress={progress}
+          scores={scores}
+          onNavigate={(worldId) => { setWorld(worldId); setScreen('map'); }}
+        />
       )}
 
       {screen === 'progress' && (
@@ -342,6 +385,7 @@ export default function App() {
           progress={progress}
           quizProgress={quizProgress}
           scores={scores}
+          mistakes={mistakes}
           onBack={() => setScreen('home')}
         />
       )}
@@ -350,6 +394,7 @@ export default function App() {
         <LanguageScreen
           country={country}
           world={world}
+          progress={progress}
           onSelectLanguage={(l) => { setLanguage(l); setScreen('challenge'); }}
           onBack={() => setScreen('map')}
         />
@@ -363,6 +408,7 @@ export default function App() {
           initialIdx={quizProgress[`${world}_${country.id}_${language.id}`] || 0}
           onSaveIdx={(idx) => saveQuizIdx(world, country.id, language.id, idx)}
           onSaveScore={(s) => saveScore(world, country.id, language.id, s)}
+          onMistake={(qId) => saveMistake(world, country.id, language.id, qId)}
           onBack={() => setScreen('language')}
           onComplete={(cId) => handleComplete(world, cId, language.id)}
         />

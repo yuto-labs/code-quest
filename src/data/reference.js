@@ -107,6 +107,67 @@ show()               # → 1, 99
     ],
   },
   {
+    id: 'variables_advanced',
+    title: '変数と型（応用）',
+    emoji: '📦',
+    summary: '型ヒント・isinstance・定数',
+    sections: [
+      {
+        heading: '型アノテーション（型ヒント）',
+        text: 'Python 3.5以降では変数や引数に型アノテーションを書けます。コードの可読性が上がり、IDEや mypy などのツールで静的チェックができます。実行時には強制されません。',
+        code: `# 変数への型ヒント
+name: str = "Yuto"
+age: int = 20
+score: float = 98.5
+is_active: bool = True
+
+# 関数の引数と戻り値
+def greet(name: str, times: int = 1) -> str:
+    return name * times
+
+# リスト・辞書のヒント（Python 3.9+）
+from typing import Optional
+numbers: list[int] = [1, 2, 3]
+config: dict[str, str] = {"lang": "python"}
+maybe: Optional[str] = None   # str か None`,
+      },
+      {
+        heading: 'isinstance で型を確認する',
+        text: '実行時に変数の型をチェックするには isinstance() を使います。type() との違いは継承クラスも True になる点です。',
+        code: `x = 42
+
+# type() は完全一致
+print(type(x) == int)         # → True
+print(type(x) == float)       # → False
+
+# isinstance() は継承も考慮（推奨）
+print(isinstance(x, int))     # → True
+print(isinstance(x, (int, float)))  # → True（どちらか）
+
+# 実用例：引数の型バリデーション
+def add(a, b):
+    if not isinstance(a, (int, float)):
+        raise TypeError(f"数値を渡してください: {type(a)}")
+    return a + b`,
+      },
+      {
+        heading: '定数の扱い方',
+        text: 'Pythonには定数構文がありませんが、大文字スネークケースで「変更しない変数」を表す慣習があります。Python 3.8以降は Final を使って型レベルで保護できます。',
+        code: `# 慣習：大文字で定数を表す
+MAX_RETRY = 3
+BASE_URL  = "https://api.example.com"
+PI = 3.14159265358979
+
+# Python 3.8+ の Final 型ヒント
+from typing import Final
+MAX_SIZE: Final = 100   # 再代入しないことをツールに伝える
+
+for attempt in range(MAX_RETRY):
+    print(f"試行 {attempt + 1}/{MAX_RETRY}")`,
+      },
+    ],
+  },
+  {
     id: 'strings',
     title: '文字列操作',
     emoji: '📝',
@@ -203,6 +264,33 @@ print(f"年齢: {25}")          # f文字列を使う（推奨）
 # age = input("年齢: ")
 # print(age + 1)  ❌ エラー
 # print(int(age) + 1)  ✅ 正しい`,
+      },
+      {
+        heading: '正規表現の基本（re モジュール）',
+        text: '複雑なパターン検索や置換には re モジュールを使います。メールアドレスの検証やログ解析などに役立ちます。',
+        code: `import re
+
+text = "お問い合わせ: info@example.com または support@test.org"
+
+# 検索: パターンにマッチする最初の箇所
+m = re.search(r'\\w+@\\w+\\.\\w+', text)
+if m:
+    print(m.group())     # → info@example.com
+
+# 全検索: すべてのマッチを取得
+emails = re.findall(r'\\w+@\\w+\\.\\w+', text)
+print(emails)   # → ['info@example.com', 'support@test.org']
+
+# 置換
+cleaned = re.sub(r'\\d+', 'X', "ID:123 Score:456")
+print(cleaned)  # → ID:X Score:X
+
+# よく使うパターン
+# \\d   数字
+# \\w   英数字＋アンダースコア
+# \\s   空白
+# .     任意の1文字
+# +     1回以上  *  0回以上  ?  0か1回`,
       },
     ],
   },
@@ -674,6 +762,64 @@ triple = multiplier(3)
 print(double(5))    # → 10
 print(triple(5))    # → 15`,
       },
+      {
+        heading: 'デコレータ',
+        text: '関数を引数として受け取り、機能を追加した関数を返す仕組みです。ログ出力・認証チェック・処理時間の計測などに広く使われます。',
+        code: `import time
+
+# デコレータの定義
+def timer(func):
+    def wrapper(*args, **kwargs):
+        start = time.time()
+        result = func(*args, **kwargs)
+        end   = time.time()
+        print(f"{func.__name__} の実行時間: {end - start:.4f}秒")
+        return result
+    return wrapper
+
+# @記法でデコレータを適用
+@timer
+def slow_sum(n):
+    return sum(range(n))
+
+slow_sum(1_000_000)   # → slow_sum の実行時間: 0.0Xsec
+
+# 複数のデコレータを重ねることもできる
+def log(func):
+    def wrapper(*args, **kwargs):
+        print(f"呼び出し: {func.__name__}{args}")
+        return func(*args, **kwargs)
+    return wrapper
+
+@log
+@timer
+def add(a, b):
+    return a + b
+
+add(3, 5)`,
+      },
+      {
+        heading: 'ジェネレータ関数',
+        text: 'yield を使うと「必要なときだけ値を生成する」ジェネレータを作れます。大きなデータを一度にメモリに乗せずに処理できます。',
+        code: `# 通常の関数: 全要素をリストに入れて返す
+def squares_list(n):
+    return [x**2 for x in range(n)]   # n 要素をメモリに確保
+
+# ジェネレータ: 1つずつ生成する
+def squares_gen(n):
+    for x in range(n):
+        yield x**2   # ← yield で一時停止して値を返す
+
+# 使い方は同じだがメモリ効率が大幅に違う
+for sq in squares_gen(5):
+    print(sq)       # 0, 1, 4, 9, 16
+
+# ジェネレータ式（内包表記に似た書き方）
+gen = (x**2 for x in range(5))  # () に注意
+print(next(gen))    # → 0
+print(next(gen))    # → 1
+print(list(gen))    # → [4, 9, 16]（残り）`,
+      },
     ],
   },
   {
@@ -982,6 +1128,65 @@ print(v1)           # → Vector(1, 2)
 print(v1 + v2)      # → Vector(4, 6)
 print(len(v1))      # → 2`,
       },
+      {
+        heading: 'dataclass で定型クラスを簡潔に書く',
+        text: 'Python 3.7以降の @dataclass を使うと、__init__ や __repr__ などを自動生成できます。データを保持するだけのクラスに最適です。',
+        code: `from dataclasses import dataclass, field
+
+@dataclass
+class Point:
+    x: float
+    y: float
+
+p = Point(3.0, 4.0)
+print(p)        # → Point(x=3.0, y=4.0)（__repr__ 自動生成）
+print(p.x)      # → 3.0
+
+# デフォルト値と field
+@dataclass
+class Student:
+    name: str
+    scores: list = field(default_factory=list)  # ← ミュータブルは field()
+    grade: str = "A"
+
+s1 = Student("Alice")
+s2 = Student("Bob", [90, 85], "B")
+print(s1)   # → Student(name='Alice', scores=[], grade='A')
+
+# frozen=True で読み取り専用にする
+@dataclass(frozen=True)
+class Color:
+    r: int; g: int; b: int
+
+c = Color(255, 128, 0)
+# c.r = 0   ❌ FrozenInstanceError`,
+      },
+      {
+        heading: 'プロパティ（getter / setter）',
+        text: 'property を使うと、属性アクセスの形を保ちながら値の検証・計算を行えます。',
+        code: `class Temperature:
+    def __init__(self, celsius):
+        self._celsius = celsius
+
+    @property
+    def celsius(self):
+        return self._celsius
+
+    @celsius.setter
+    def celsius(self, value):
+        if value < -273.15:
+            raise ValueError("絶対零度より低い温度は設定できません")
+        self._celsius = value
+
+    @property
+    def fahrenheit(self):         # 読み取り専用の計算プロパティ
+        return self._celsius * 9/5 + 32
+
+t = Temperature(100)
+print(t.fahrenheit)   # → 212.0
+t.celsius = 25        # setter 経由で検証される
+# t.celsius = -300    ❌ ValueError`,
+      },
     ],
   },
   {
@@ -1096,6 +1301,60 @@ def withdraw(balance, amount):
         raise InsufficientFundsError(amount, balance)
     return balance - amount`,
       },
+      {
+        heading: 'コンテキストマネージャ（with 文）',
+        text: 'with 文を使うと、処理前後のセットアップ・クリーンアップを自動化できます。ファイル操作や DB 接続など「確実に閉じる」必要があるリソースに使います。',
+        code: `# ファイルを with で開く（自動でクローズされる）
+with open("data.txt", "w") as f:
+    f.write("Hello, World!")
+# ← with ブロックを抜けると f.close() が自動実行
+
+# 複数リソースを同時に扱う
+with open("input.txt") as src, open("output.txt", "w") as dst:
+    for line in src:
+        dst.write(line.upper())
+
+# 自作のコンテキストマネージャ
+from contextlib import contextmanager
+
+@contextmanager
+def timer(label=""):
+    import time
+    start = time.time()
+    yield               # ← with ブロックの中身がここで実行される
+    print(f"{label}: {time.time() - start:.4f}秒")
+
+with timer("処理"):
+    total = sum(range(1_000_000))`,
+      },
+      {
+        heading: 'よくあるエラーのデバッグ方法',
+        text: 'エラーメッセージの読み方と、デバッグの基本的なアプローチを覚えましょう。',
+        code: `# Traceback の読み方
+# Traceback (most recent call last):  ← 最後のエラーが最下部
+#   File "main.py", line 5, in <module>
+#     result = divide(10, 0)
+#   File "main.py", line 2, in divide
+#     return a / b
+# ZeroDivisionError: division by zero  ← エラーの種類と内容
+
+# print デバッグ（手軽）
+def calculate(a, b):
+    print(f"DEBUG: a={a}, b={b}")   # 変数の中身を確認
+    result = a / b
+    print(f"DEBUG: result={result}")
+    return result
+
+# breakpoint()（Python 3.7+）
+def calculate2(a, b):
+    breakpoint()   # ← ここで一時停止してインタラクティブに調査
+    return a / b
+
+# assert でロジックのチェック
+def get_positive(n):
+    assert n > 0, f"正の数が必要です: n={n}"
+    return n`,
+      },
     ],
   },
   {
@@ -1177,6 +1436,167 @@ data = response.json()       # JSONをdictに変換
 # numpy     → 配列・数値計算
 # pillow    → 画像処理
 # selenium  → ブラウザ自動化`,
+      },
+      {
+        heading: 'よく使う標準ライブラリ（応用）',
+        text: 'itertools・collections・pathlib など、知っておくと便利なモジュールです。',
+        code: `# itertools: 反復処理のユーティリティ
+import itertools
+
+# chain: 複数のイテラブルを繋ぐ
+list(itertools.chain([1,2], [3,4], [5]))  # → [1,2,3,4,5]
+
+# product: デカルト積（全組み合わせ）
+list(itertools.product("AB", [1,2]))
+# → [('A',1),('A',2),('B',1),('B',2)]
+
+# combinations: 重複なし組み合わせ
+list(itertools.combinations([1,2,3], 2))
+# → [(1,2),(1,3),(2,3)]
+
+# collections: 便利なデータ構造
+from collections import Counter, defaultdict, deque
+
+Counter("banana")  # → Counter({'a':3,'n':2,'b':1})
+
+d = defaultdict(int)
+d["key"] += 1      # KeyError にならない
+
+# pathlib: ファイルパス操作
+from pathlib import Path
+p = Path("data") / "file.txt"  # パスを結合
+p.exists()         # ファイルが存在するか
+p.read_text()      # ファイルを読む
+p.suffix           # → ".txt"`,
+      },
+      {
+        heading: 'モジュールの作り方',
+        text: '自分でモジュール（.py ファイル）を作って別のファイルからインポートできます。大きなプログラムを分割するときに使います。',
+        code: `# utils.py（自作モジュール）
+def add(a, b):
+    return a + b
+
+def greet(name):
+    return f"Hello, {name}!"
+
+PI = 3.14159
+
+# main.py（別ファイルから使う）
+import utils
+print(utils.add(3, 5))     # → 8
+print(utils.PI)            # → 3.14159
+
+# または特定の関数だけインポート
+from utils import greet
+print(greet("Alice"))      # → Hello, Alice!
+
+# __name__ でスクリプト直接実行か確認
+# utils.py の末尾に追加
+if __name__ == "__main__":
+    # このファイルを直接実行したときだけ動く
+    print("テスト:", add(1, 2))`,
+      },
+    ],
+  },
+  {
+    id: 'comprehensions',
+    title: '内包表記とイテレータ',
+    emoji: '⚡',
+    summary: 'Pythonic な反復処理',
+    sections: [
+      {
+        heading: 'リスト内包表記の応用',
+        text: '条件・ネスト・関数呼び出しを組み合わせた実践的な内包表記です。',
+        code: `# 基本（再確認）
+squares = [x**2 for x in range(10) if x % 2 == 0]
+# → [0, 4, 16, 36, 64]
+
+# ネストしたループ
+matrix = [[1,2,3],[4,5,6],[7,8,9]]
+flat = [n for row in matrix for n in row]
+# → [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+# 関数を適用
+words = ["hello", "world", "python"]
+capitalized = [w.capitalize() for w in words]
+# → ['Hello', 'World', 'Python']
+
+# 条件式（三項）との組み合わせ
+labels = ["偶数" if x % 2 == 0 else "奇数" for x in range(6)]
+# → ['偶数', '奇数', '偶数', '奇数', '偶数', '奇数']`,
+      },
+      {
+        heading: '辞書・集合の内包表記',
+        text: '辞書（dict）と集合（set）も内包表記で作れます。',
+        code: `# 辞書内包表記
+words = ["apple", "banana", "cherry"]
+lengths = {w: len(w) for w in words}
+# → {'apple':5, 'banana':6, 'cherry':6}
+
+# キーと値を反転
+original = {"a": 1, "b": 2, "c": 3}
+inverted = {v: k for k, v in original.items()}
+# → {1:'a', 2:'b', 3:'c'}
+
+# 集合内包表記（重複自動除去）
+nums = [1, 2, 2, 3, 3, 3, 4]
+unique_squares = {x**2 for x in nums}
+# → {1, 4, 9, 16}
+
+# フィルタリング
+scores = {"Alice": 85, "Bob": 55, "Carol": 92, "Dave": 48}
+passed = {k: v for k, v in scores.items() if v >= 60}
+# → {'Alice':85, 'Carol':92}`,
+      },
+      {
+        heading: 'map / filter / reduce',
+        text: '関数型プログラミングスタイルの組み込み関数です。内包表記と使い分けましょう。',
+        code: `nums = [1, 2, 3, 4, 5]
+
+# map: 各要素に関数を適用
+doubled = list(map(lambda x: x * 2, nums))
+# → [2, 4, 6, 8, 10]
+# 内包表記で書くと: [x * 2 for x in nums]
+
+# filter: 条件を満たす要素だけ残す
+evens = list(filter(lambda x: x % 2 == 0, nums))
+# → [2, 4]
+# 内包表記で書くと: [x for x in nums if x % 2 == 0]
+
+# reduce: 要素を畳み込む（累積計算）
+from functools import reduce
+total = reduce(lambda acc, x: acc + x, nums)
+# → 15（1+2+3+4+5）
+# → 組み込みの sum(nums) の方が読みやすい
+
+# 実際は内包表記 or 組み込み関数を優先
+# map/filter はイテレータを返す点に注意`,
+      },
+      {
+        heading: 'zip と enumerate の応用',
+        text: 'zip・enumerate はループで頻繁に使う便利な組み込み関数です。',
+        code: `# zip: 複数のリストを並行処理
+names  = ["Alice", "Bob", "Carol"]
+scores = [85, 92, 78]
+grades = ["A", "A+", "B+"]
+
+for name, score, grade in zip(names, scores, grades):
+    print(f"{name}: {score}点 ({grade})")
+
+# zip でリストを辞書に変換
+d = dict(zip(names, scores))
+# → {'Alice':85, 'Bob':92, 'Carol':78}
+
+# zip_longest: 短い方に None を補完
+from itertools import zip_longest
+a = [1, 2, 3]
+b = ["x", "y"]
+list(zip_longest(a, b, fillvalue=0))
+# → [(1,'x'), (2,'y'), (3,0)]
+
+# enumerate: インデックス付きでループ
+for i, name in enumerate(names, start=1):
+    print(f"{i}位: {name}")`,
       },
     ],
   },

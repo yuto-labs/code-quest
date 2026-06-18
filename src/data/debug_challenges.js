@@ -403,6 +403,59 @@ print(state_info["new york"])`,
   FR: {
     python: [
       {
+        id: 'dbg_fr_py_2',
+        worldId: 'debug',
+        conceptId: 'loops',
+        questionType: 'debug-step',
+        title: 'range の終端バグ',
+        steps: [
+          {
+            stepNum: 1,
+            stepTitle: '🔍 バグの特定',
+            prompt: 'エッフェル塔の 1〜10 階を 2 階ごとに表示しようとしていますが、10 階が出ません',
+            code: `floors = [f"Floor {i}" for i in range(2, 10, 2)]
+print(floors)`,
+            question: 'このコードの問題は？',
+            options: [
+              'range(2, 10, 2) は 2 から始まるので Floor 1 が出ない',
+              'range(2, 10, 2) の終端 10 は含まれないため Floor 10 が出ない',
+              'f-string の書き方が間違っている',
+              '問題ない、正常に動作する',
+            ],
+            answer: 'range(2, 10, 2) の終端 10 は含まれないため Floor 10 が出ない',
+            hint: 'range(start, stop, step) の stop は含まれません（exclusive）',
+          },
+          {
+            stepNum: 2,
+            stepTitle: '🔧 修正方法',
+            prompt: 'Floor 2, 4, 6, 8, 10 をすべて表示するには？',
+            question: '正しい修正を選べ',
+            options: [
+              'range(2, 10, 2) のまま',
+              'range(2, 11, 2) に変更する',
+              'range(2, 12, 2) に変更する',
+              'range(1, 10, 2) に変更する',
+            ],
+            answer: 'range(2, 11, 2) に変更する',
+            explanation: 'range(2, 11, 2) → 2, 4, 6, 8, 10。stop=11 にすることで 10 が含まれるようになります。',
+          },
+          {
+            stepNum: 3,
+            stepTitle: '💡 理由・影響',
+            prompt: 'range の終端が exclusive（含まない）な設計理由を選べ',
+            question: 'range(0, n) が n を含まない設計の利点は？',
+            options: [
+              '計算が速くなるから',
+              'range(0, len(lst)) でリストの全インデックスをちょうど過不足なく生成でき、スライス記法とも一致するから',
+              'Python の伝統だから',
+              '負の数への対応が楽になるから',
+            ],
+            answer: 'range(0, len(lst)) でリストの全インデックスをちょうど過不足なく生成でき、スライス記法とも一致するから',
+            explanation: 'range(0, 5) = 0,1,2,3,4 はちょうど 5 要素のリストのインデックスと一致します。lst[0:5] と同じ「終端を含まない」ルールで統一されているため、直感的に使えます。',
+          },
+        ],
+      },
+      {
         id: 'dbg_fr_py_1',
         worldId: 'debug',
         conceptId: 'loops',
@@ -460,6 +513,63 @@ for i in range(1, 5):
   },
   DE: {
     python: [
+      {
+        id: 'dbg_de_py_2',
+        worldId: 'debug',
+        conceptId: 'files',
+        questionType: 'debug-step',
+        title: 'ミュータブルなデフォルト引数のバグ',
+        steps: [
+          {
+            stepNum: 1,
+            stepTitle: '🔍 バグの特定',
+            prompt: 'ドイツの都市を収集する関数が 2 回目以降おかしな動作をします',
+            code: `def add_city(city, cities=[]):
+    cities.append(city)
+    return cities
+
+print(add_city("Berlin"))
+print(add_city("Munich"))`,
+            question: '2 回目の呼び出し add_city("Munich") の出力は？',
+            options: [
+              "['Munich']",
+              "['Berlin', 'Munich']",
+              "['Berlin']",
+              'Error',
+            ],
+            answer: "['Berlin', 'Munich']",
+            hint: 'デフォルト引数のリストは関数定義時に一度だけ作られます',
+          },
+          {
+            stepNum: 2,
+            stepTitle: '🔧 修正方法',
+            prompt: '毎回新しい空リストから始める正しい書き方は？',
+            question: '正しい修正を選べ',
+            options: [
+              'def add_city(city, cities=[]): のまま使う',
+              'def add_city(city, cities=None):\n    if cities is None:\n        cities = []',
+              'def add_city(city, cities=list()): に変更する',
+              'cities.clear() を先頭に追加する',
+            ],
+            answer: 'def add_city(city, cities=None):\n    if cities is None:\n        cities = []',
+            explanation: 'cities=None をデフォルトにして、関数内で None の場合のみ新しい [] を作ります。これで毎回独立したリストが使われます。',
+          },
+          {
+            stepNum: 3,
+            stepTitle: '💡 理由・影響',
+            prompt: 'ミュータブルなデフォルト引数が危険な理由を選べ',
+            question: 'def func(lst=[]) が問題になる理由は？',
+            options: [
+              'リストは引数に使えないから',
+              'デフォルト引数はdef文の実行時に一度だけ評価・作成されるため、呼び出しのたびに同じオブジェクトが使い回されるから',
+              'Python のバグだから',
+              'append() がデフォルト引数を変更できないから',
+            ],
+            answer: 'デフォルト引数はdef文の実行時に一度だけ評価・作成されるため、呼び出しのたびに同じオブジェクトが使い回されるから',
+            explanation: 'デフォルト引数はモジュールロード時に 1 回だけ評価されます。ミュータブルなオブジェクト（list/dict/set）は状態が累積します。None パターンはこれを防ぐ Python の定番イディオムです。',
+          },
+        ],
+      },
       {
         id: 'dbg_de_py_1',
         worldId: 'debug',
@@ -522,6 +632,61 @@ else:
   GB: {
     python: [
       {
+        id: 'dbg_gb_py_2',
+        worldId: 'debug',
+        conceptId: 'regex',
+        questionType: 'debug-step',
+        title: 're.match と re.search の使い間違い',
+        steps: [
+          {
+            stepNum: 1,
+            stepTitle: '🔍 バグの特定',
+            prompt: 'ロンドンのイベント情報から年を取り出そうとしていますが None が返ります',
+            code: `import re
+text = "Visit London in 2024"
+result = re.match(r"\\d+", text)
+print(result)`,
+            question: 'None が返る理由は？',
+            options: [
+              '\\d+ が間違っている',
+              're.match は文字列の先頭からしかマッチしないため、先頭に数字がない場合 None になる',
+              '2024 は整数なので re では使えない',
+              'import re が必要ない',
+            ],
+            answer: 're.match は文字列の先頭からしかマッチしないため、先頭に数字がない場合 None になる',
+            hint: 're.match と re.search の違いは「どこから」マッチするか',
+          },
+          {
+            stepNum: 2,
+            stepTitle: '🔧 修正方法',
+            prompt: '"Visit London in 2024" から "2024" を取り出すには？',
+            question: '正しい修正を選べ',
+            options: [
+              're.match(r"\\d+", text) のまま',
+              're.search(r"\\d+", text) に変更する',
+              're.fullmatch(r"\\d+", text) に変更する',
+              'text.find("2024") を使う',
+            ],
+            answer: 're.search(r"\\d+", text) に変更する',
+            explanation: 're.search() は文字列全体からパターンを探します。result.group() で "2024" が取得できます。',
+          },
+          {
+            stepNum: 3,
+            stepTitle: '💡 理由・影響',
+            prompt: 're の主要メソッドを整理しましょう',
+            question: 're.match / re.search / re.fullmatch の違いは？',
+            options: [
+              'すべて同じ動作をする',
+              'match=先頭のみ、search=文字列全体の最初のマッチ、fullmatch=文字列全体がパターンに一致',
+              'match=全マッチ、search=最初のみ、fullmatch=最後のみ',
+              'match と search は同じで fullmatch だけ異なる',
+            ],
+            answer: 'match=先頭のみ、search=文字列全体の最初のマッチ、fullmatch=文字列全体がパターンに一致',
+            explanation: 're.match は先頭から、re.search は文字列内の任意位置から最初のマッチを返します。re.fullmatch は文字列全体がパターンと完全一致するか確認します。入力検証には fullmatch、部分検索には search を使いましょう。',
+          },
+        ],
+      },
+      {
         id: 'dbg_gb_py_1',
         worldId: 'debug',
         conceptId: 'regex',
@@ -580,6 +745,64 @@ print(f"Area: {area}")`,
   ZA: {
     python: [
       {
+        id: 'dbg_za_py_2',
+        worldId: 'debug',
+        conceptId: 'typehints',
+        questionType: 'debug-step',
+        title: 'クラス変数の共有バグ',
+        steps: [
+          {
+            stepNum: 1,
+            stepTitle: '🔍 バグの特定',
+            prompt: '南アフリカの言語クラスにバグがあります。lang2 を変更していないのに official に値が入っています',
+            code: `class Language:
+    official = []
+
+lang1 = Language()
+lang1.official.append("Zulu")
+lang2 = Language()
+print(lang2.official)`,
+            question: '出力は何ですか？',
+            options: [
+              '[]',
+              "['Zulu']",
+              'None',
+              'Error',
+            ],
+            answer: "['Zulu']",
+            hint: 'official はどこで定義されていますか？',
+          },
+          {
+            stepNum: 2,
+            stepTitle: '🔧 修正方法',
+            prompt: '各インスタンスが独立した official リストを持つようにするには？',
+            question: '正しい修正を選べ',
+            options: [
+              'official = [] をクラスの外に移動する',
+              '__init__(self) メソッドで self.official = [] を定義する',
+              'official = tuple() に変更する',
+              'lang1 と lang2 を別のクラスにする',
+            ],
+            answer: '__init__(self) メソッドで self.official = [] を定義する',
+            explanation: 'def __init__(self): self.official = [] とすることで、インスタンス生成時に各自の独立したリストが作られます。',
+          },
+          {
+            stepNum: 3,
+            stepTitle: '💡 理由・影響',
+            prompt: 'クラス変数とインスタンス変数の違いを理解しましょう',
+            question: 'クラス変数がすべてのインスタンスで共有される理由は？',
+            options: [
+              'Python の仕様でクラス変数は自動的にコピーされるから',
+              'クラス変数はクラスオブジェクト自体に属し、インスタンスが直接変更しない限り全インスタンスで同じオブジェクトを参照するから',
+              'append() が特殊な動作をするから',
+              'リスト型のみこの動作が起きるから',
+            ],
+            answer: 'クラス変数はクラスオブジェクト自体に属し、インスタンスが直接変更しない限り全インスタンスで同じオブジェクトを参照するから',
+            explanation: 'クラス変数はクラス定義時に 1 回だけ作られます。lang1.official.append() はクラス変数のリストを直接変更するため lang2 にも影響します。self.official = [] は各インスタンスに固有のインスタンス変数を作ります。',
+          },
+        ],
+      },
+      {
         id: 'dbg_za_py_1',
         worldId: 'debug',
         conceptId: 'typehints',
@@ -631,6 +854,232 @@ print(original)`,
             ],
             answer: 'Python の変数はオブジェクトへの参照であり、= は参照をコピーするだけで新しいオブジェクトを作らないから',
             explanation: 'Python の変数はメモリ上のオブジェクトへのポインタです。copy = original は同じリストを指す 2 つの名前を作るだけです。copy() / list() / [:] は新しいリストオブジェクトを作成します。',
+          },
+        ],
+      },
+    ],
+  },
+  BR: {
+    python: [
+      {
+        id: 'dbg_br_py_1',
+        worldId: 'debug',
+        conceptId: 'lists',
+        questionType: 'debug-step',
+        title: 'append と extend の混同バグ',
+        steps: [
+          {
+            stepNum: 1,
+            stepTitle: '🔍 バグの特定',
+            prompt: 'ブラジルの都市リストを結合しようとしていますが、結果が入れ子リストになっています',
+            code: `cities = ["São Paulo", "Rio de Janeiro"]
+new_cities = ["Brasília", "Salvador"]
+cities.append(new_cities)
+print(len(cities))`,
+            question: 'len(cities) の値は？',
+            options: ['2', '3', '4', 'Error'],
+            answer: '3',
+            hint: 'append() はリスト全体を 1 要素として追加します',
+          },
+          {
+            stepNum: 2,
+            stepTitle: '🔧 修正方法',
+            prompt: 'cities に 4 つの都市を 1 フラットなリストとして追加するには？',
+            question: '正しい方法を選べ',
+            options: [
+              'cities.append(new_cities) のまま',
+              'cities.extend(new_cities) に変更する',
+              'cities + new_cities に変更する（再代入なし）',
+              'cities.insert(new_cities) に変更する',
+            ],
+            answer: 'cities.extend(new_cities) に変更する',
+            explanation: 'extend() は反復可能オブジェクトの各要素を 1 つずつ追加します。append() はオブジェクト全体を 1 要素として追加するため、リストを渡すと入れ子になります。',
+          },
+          {
+            stepNum: 3,
+            stepTitle: '💡 理由・影響',
+            prompt: 'append() と extend() の使い分けを整理しましょう',
+            question: 'append() を使うべき場面はどれ？',
+            options: [
+              '複数の要素をまとめてリストに追加したい場合',
+              '1 つの要素（値やオブジェクト）をリストの末尾に追加したい場合',
+              'リストをフラットに結合したい場合',
+              '常に extend() の方が良い',
+            ],
+            answer: '1 つの要素（値やオブジェクト）をリストの末尾に追加したい場合',
+            explanation: 'append(x) はどんな型でも 1 要素として追加します。extend(iterable) はリストやタプルなどの各要素を展開して追加します。cities.append("Fortaleza") は文字列 1 つを追加、cities.extend(["Fortaleza", "Manaus"]) は 2 つを展開して追加します。',
+          },
+        ],
+      },
+      {
+        id: 'dbg_br_py_2',
+        worldId: 'debug',
+        conceptId: 'lists',
+        questionType: 'debug-step',
+        title: 'sort() の戻り値バグ',
+        steps: [
+          {
+            stepNum: 1,
+            stepTitle: '🔍 バグの特定',
+            prompt: 'ブラジルの人口をソートして変数に代入しようとしていますが None が返ります',
+            code: `populations = [12325, 6747, 3094, 2900]
+ranked = populations.sort()
+print(ranked)`,
+            question: 'この出力は？',
+            options: [
+              '[2900, 3094, 6747, 12325]',
+              '[12325, 6747, 3094, 2900]',
+              'None',
+              'Error',
+            ],
+            answer: 'None',
+            hint: 'list.sort() は何を返しますか？',
+          },
+          {
+            stepNum: 2,
+            stepTitle: '🔧 修正方法',
+            prompt: 'ソート済みの新しいリストを ranked に代入するには？',
+            question: '正しい修正を選べ',
+            options: [
+              'populations.sort() のまま',
+              'ranked = sorted(populations) に変更する',
+              'ranked = populations.sorted() に変更する',
+              'populations.sort(inplace=False) に変更する',
+            ],
+            answer: 'ranked = sorted(populations) に変更する',
+            explanation: 'sorted() は元のリストを変更せず新しいソート済みリストを返します。populations.sort() は in-place でリスト自体を変更し None を返します。',
+          },
+          {
+            stepNum: 3,
+            stepTitle: '💡 理由・影響',
+            prompt: 'sort() と sorted() の使い分けを整理しましょう',
+            question: 'sorted() が list.sort() より適している場面はどれ？',
+            options: [
+              '元のリストを変更したい場合',
+              '元のリストを保持しつつ、ソート済みコピーが必要な場合',
+              '大きなリストを高速にソートしたい場合',
+              '降順ソートが必要な場合',
+            ],
+            answer: '元のリストを保持しつつ、ソート済みコピーが必要な場合',
+            explanation: 'list.sort() は in-place で元を変更・None を返します。sorted() は元を変更せず新しいリストを返します。どちらも key= や reverse= が使えます。元データを保持したい場合は sorted() を選びましょう。',
+          },
+        ],
+      },
+    ],
+  },
+  AU: {
+    python: [
+      {
+        id: 'dbg_au_py_1',
+        worldId: 'debug',
+        conceptId: 'functions',
+        questionType: 'debug-step',
+        title: 'スコープのバグ: UnboundLocalError',
+        steps: [
+          {
+            stepNum: 1,
+            stepTitle: '🔍 バグの特定',
+            prompt: 'シドニーからウロンゴンまでの距離を 2 倍にする関数がエラーになります',
+            code: `distance = 100
+
+def double_distance():
+    distance = distance * 2
+    return distance
+
+print(double_distance())`,
+            question: 'このエラーの原因は？',
+            options: [
+              'distance = 100 がグローバル変数として使えないから',
+              '関数内で distance に代入しているためローカル変数として扱われ、代入前に参照して UnboundLocalError になる',
+              'distance * 2 の計算が間違っている',
+              '関数に引数がないから',
+            ],
+            answer: '関数内で distance に代入しているためローカル変数として扱われ、代入前に参照して UnboundLocalError になる',
+            hint: '関数内で変数に代入すると、その変数はローカルスコープとして扱われます',
+          },
+          {
+            stepNum: 2,
+            stepTitle: '🔧 修正方法',
+            prompt: 'このバグを修正する最も安全な方法は？',
+            question: '正しい修正を選べ',
+            options: [
+              'global distance を関数の先頭に追加する',
+              '引数として渡す: def double_distance(d): return d * 2',
+              'distance を関数の中で定義し直す',
+              'distance = distance * 2 を distance *= 2 に変更する',
+            ],
+            answer: '引数として渡す: def double_distance(d): return d * 2',
+            explanation: '引数として渡す方法が最も安全です。global 宣言は動きますが、関数がグローバル状態に依存するため再利用性が下がります。',
+          },
+          {
+            stepNum: 3,
+            stepTitle: '💡 理由・影響',
+            prompt: 'Python のスコープルール LEGB を理解しましょう',
+            question: 'Python が関数内の変数をローカルと判断する条件は？',
+            options: [
+              '変数名が大文字で始まる場合',
+              '関数内のどこかで代入（= による束縛）が行われている場合、その変数全体がローカルとして扱われる',
+              'グローバルに同名変数が存在する場合',
+              'return 文の後に使われる場合',
+            ],
+            answer: '関数内のどこかで代入（= による束縛）が行われている場合、その変数全体がローカルとして扱われる',
+            explanation: 'Python は関数をコンパイルするとき、代入がある変数をローカルとマークします。そのため代入前に参照するとまだ値がない UnboundLocalError になります。グローバルを参照のみするなら問題ありませんが、変更するには global 宣言か引数渡しが必要です。',
+          },
+        ],
+      },
+      {
+        id: 'dbg_au_py_2',
+        worldId: 'debug',
+        conceptId: 'functions',
+        questionType: 'debug-step',
+        title: '*args の要素数不一致バグ',
+        steps: [
+          {
+            stepNum: 1,
+            stepTitle: '🔍 バグの特定',
+            prompt: 'オーストラリアの都市情報を表示する関数が TypeError になります',
+            code: `def describe(city, state, country):
+    return f"{city}, {state}, {country}"
+
+info = ["Sydney", "NSW"]
+print(describe(*info))`,
+            question: 'このエラーの原因は？',
+            options: [
+              'describe 関数の引数の書き方が間違っている',
+              '*info でリストを展開すると 2 つの引数になるが、describe は 3 つ必要なので TypeError',
+              'f-string の書き方が間違っている',
+              '*info は辞書に対してのみ使える',
+            ],
+            answer: '*info でリストを展開すると 2 つの引数になるが、describe は 3 つ必要なので TypeError',
+            hint: '*info はリストを展開して引数として渡します。info の要素数は？',
+          },
+          {
+            stepNum: 2,
+            stepTitle: '🔧 修正方法',
+            prompt: '正しく動かすための修正方法を選べ',
+            question: '最も適切な修正はどれ？',
+            options: [
+              'info = ["Sydney", "NSW"] のまま',
+              'info = ["Sydney", "NSW", "Australia"] に修正する',
+              'describe(*info) を describe(info) に変更する',
+              'describe の引数を 2 つに減らす',
+            ],
+            answer: 'info = ["Sydney", "NSW", "Australia"] に修正する',
+            explanation: 'describe は 3 引数なので、*info で展開するリストも 3 要素必要です。info に "Australia" を追加することで一致します。',
+          },
+          {
+            stepNum: 3,
+            stepTitle: '💡 理由・影響',
+            prompt: '*args によるアンパック展開を理解しましょう',
+            question: 'func(*lst) の動作として正しいのはどれ？',
+            options: [
+              'lst をリストとして 1 つの引数にまとめて渡す',
+              'lst の各要素を個別の位置引数として展開して渡す',
+              'lst を辞書に変換して渡す',
+              'lst の最初の要素のみを渡す',
+            ],
+            answer: 'lst の各要素を個別の位置引数として展開して渡す',
+            explanation: 'func(*[a, b, c]) は func(a, b, c) と同じです。リストの要素数が関数の必須引数数と一致している必要があります。辞書のアンパックは **kwargs で行います。',
           },
         ],
       },

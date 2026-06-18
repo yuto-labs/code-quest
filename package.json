@@ -5,9 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "npm run validate:questions",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "validate:questions": "node scripts/validate-questions.mjs",
+    "test:question-validator": "node scripts/test-question-validator.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.108.2",

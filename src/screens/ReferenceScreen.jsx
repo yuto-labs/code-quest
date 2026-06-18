@@ -1,11 +1,89 @@
 import { useState } from 'react';
 import { PYTHON_REFERENCE } from '../data/reference';
+import { getConceptCoreStatus, getConceptBestScores } from '../utils/progress';
+import { WORLD_META } from '../utils/stageData';
 
-export default function ReferenceScreen({ onBack }) {
+// Reference topic id → CONCEPTS.python id (null = not mapped)
+const REFERENCE_CONCEPT_MAP = {
+  variables:          'variables',
+  variables_advanced: 'variables',
+  strings:            null,
+  operators:          null,
+  conditionals:       'conditions',
+  loops:              'loops',
+  functions:          'functions',
+  lists:              'lists',
+  dicts:              'dicts',
+  classes:            'classes',
+  errors:             'errors',
+  modules:            'modules',
+  comprehensions:     'comprehension',
+};
+
+const WORLD_ORDER = ['decode', 'execute', 'debug'];
+
+function ConceptCore({ conceptId, progress, scores, size = 'sm' }) {
+  if (!conceptId) return null;
+  const status = getConceptCoreStatus(progress || {}, conceptId);
+  if (!status) return null;
+  const bestScores = scores ? getConceptBestScores(scores, conceptId) : null;
+
+  const dotSize = size === 'lg' ? 18 : 12;
+  const gap = size === 'lg' ? 10 : 6;
+
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap }}>
+      {WORLD_ORDER.map(wid => {
+        const meta = WORLD_META[wid];
+        const cleared = status[wid];
+        const hasContent = cleared !== null;
+        const best = bestScores?.[wid] || 0;
+
+        const bg = !hasContent ? 'transparent'
+          : cleared ? meta.color
+          : 'transparent';
+        const border = !hasContent ? '#333'
+          : cleared ? meta.color
+          : meta.color + '88';
+        const opacity = hasContent ? 1 : 0.25;
+
+        return (
+          <div key={wid} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, opacity }}>
+            <div style={{
+              width: dotSize,
+              height: dotSize,
+              borderRadius: '50%',
+              background: bg,
+              border: `2px solid ${border}`,
+              boxShadow: cleared ? `0 0 6px ${meta.color}88` : 'none',
+              transition: 'all 0.2s',
+            }} />
+            {size === 'lg' && best > 0 && (
+              <div style={{ fontSize: 8, color: meta.color, fontFamily: 'var(--pixel-font)' }}>
+                {best}
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+export default function ReferenceScreen({ onBack, progress, scores, onNavigate }) {
   const [selected, setSelected] = useState(null);
 
   if (selected) {
-    return <TopicDetail topic={selected} onBack={() => setSelected(null)} />;
+    return (
+      <TopicDetail
+        topic={selected}
+        conceptId={REFERENCE_CONCEPT_MAP[selected.id] ?? null}
+        progress={progress}
+        scores={scores}
+        onNavigate={onNavigate}
+        onBack={() => setSelected(null)}
+      />
+    );
   }
 
   return (
@@ -19,29 +97,36 @@ export default function ReferenceScreen({ onBack }) {
       </div>
 
       <div style={styles.grid}>
-        {PYTHON_REFERENCE.map((topic) => (
-          <button
-            key={topic.id}
-            style={styles.card}
-            onClick={() => setSelected(topic)}
-          >
-            <span style={styles.cardEmoji}>{topic.emoji}</span>
-            <div style={styles.cardBody}>
-              <div style={styles.cardTitle}>{topic.title}</div>
-              <div style={styles.cardSummary}>{topic.summary}</div>
-            </div>
-            <span style={styles.arrow}>▶</span>
-          </button>
-        ))}
+        {PYTHON_REFERENCE.map((topic) => {
+          const conceptId = REFERENCE_CONCEPT_MAP[topic.id] ?? null;
+          return (
+            <button
+              key={topic.id}
+              style={styles.card}
+              onClick={() => setSelected(topic)}
+            >
+              <span style={styles.cardEmoji}>{topic.emoji}</span>
+              <div style={styles.cardBody}>
+                <div style={styles.cardTitle}>{topic.title}</div>
+                <div style={styles.cardSummary}>{topic.summary}</div>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6, flexShrink: 0 }}>
+                <ConceptCore conceptId={conceptId} progress={progress} scores={scores} size="sm" />
+                <span style={styles.arrow}>▶</span>
+              </div>
+            </button>
+          );
+        })}
       </div>
     </div>
   );
 }
 
-function TopicDetail({ topic, onBack }) {
+function TopicDetail({ topic, conceptId, progress, scores, onNavigate, onBack }) {
   const [sectionIdx, setSectionIdx] = useState(0);
   const section = topic.sections[sectionIdx];
   const isLast = sectionIdx === topic.sections.length - 1;
+  const status = conceptId ? getConceptCoreStatus(progress || {}, conceptId) : null;
 
   return (
     <div style={styles.wrap} className="fade-in">
@@ -53,7 +138,41 @@ function TopicDetail({ topic, onBack }) {
         </div>
       </div>
 
-      {/* 進捗バー */}
+      {/* Concept Core status */}
+      {status && (
+        <div style={styles.coreBar}>
+          <span style={styles.coreLabel}>CONCEPT CORE</span>
+          <ConceptCore conceptId={conceptId} progress={progress} scores={scores} size="lg" />
+          <div style={{ display: 'flex', gap: 6, marginLeft: 4 }}>
+            {WORLD_ORDER.map(wid => {
+              const meta = WORLD_META[wid];
+              const cleared = status[wid];
+              if (cleared === null) return null;
+              return (
+                <button
+                  key={wid}
+                  style={{
+                    fontFamily: 'var(--pixel-font)',
+                    fontSize: 8,
+                    padding: '4px 8px',
+                    background: 'transparent',
+                    border: `1px solid ${meta.color}88`,
+                    color: cleared ? meta.color : meta.color + '66',
+                    cursor: onNavigate ? 'pointer' : 'default',
+                    letterSpacing: 1,
+                  }}
+                  onClick={() => onNavigate?.(wid)}
+                  title={`${meta.label} ワールドへ`}
+                >
+                  {cleared ? '✓' : '→'} {meta.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Section progress dots */}
       <div style={styles.progressWrap}>
         {topic.sections.map((_, i) => (
           <div
@@ -71,7 +190,6 @@ function TopicDetail({ topic, onBack }) {
         <div style={styles.sectionHeading}>{section.heading}</div>
         <div style={styles.sectionText}>{section.text}</div>
 
-        {/* コードブロック */}
         <div style={styles.codeBlock}>
           <div style={styles.codeHeader}>
             <span style={styles.codeLang}>🐍 Python</span>
@@ -79,7 +197,6 @@ function TopicDetail({ topic, onBack }) {
           <pre style={styles.code}>{section.code}</pre>
         </div>
 
-        {/* ナビゲーション */}
         <div style={styles.navRow}>
           <button
             style={{ ...styles.navBtn, opacity: sectionIdx === 0 ? 0.3 : 1 }}
@@ -149,6 +266,22 @@ const styles = {
   sub: {
     fontSize: 10,
     color: 'var(--text-dim)',
+  },
+  coreBar: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 12,
+    padding: '10px 20px',
+    background: 'var(--panel)',
+    borderBottom: '1px solid var(--border2)',
+    flexWrap: 'wrap',
+  },
+  coreLabel: {
+    fontFamily: 'var(--pixel-font)',
+    fontSize: 8,
+    color: 'var(--text-dim)',
+    letterSpacing: 1,
+    flexShrink: 0,
   },
   grid: {
     display: 'flex',

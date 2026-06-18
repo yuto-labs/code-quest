@@ -142,11 +142,11 @@ const s = {
   cardIcon: { fontSize: 36, flexShrink: 0 },
   cardTitles: { flex: 1, display: 'flex', flexDirection: 'column', gap: 5 },
   cardName: {
-    fontSize: 'clamp(16px, 4.5vw, 22px)',
+    fontSize: 'clamp(14px, 3.8vw, 18px)',
     letterSpacing: 3,
   },
   cardSub: {
-    fontSize: 'clamp(10px, 2.8vw, 12px)',
+    fontSize: 'clamp(9px, 2.4vw, 11px)',
     color: '#556677',
     letterSpacing: 1,
   },
@@ -157,7 +157,7 @@ const s = {
     flexShrink: 0,
   },
   cardDesc: {
-    fontSize: 'clamp(11px, 3vw, 13px)',
+    fontSize: 'clamp(10px, 2.6vw, 12px)',
     color: '#8899aa',
     margin: 0,
     lineHeight: 2,

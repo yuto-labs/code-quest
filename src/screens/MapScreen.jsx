@@ -7,7 +7,7 @@ import {
   ZoomableGroup,
 } from 'react-simple-maps';
 import { COUNTRIES } from '../data/countries';
-import { getUnlockedIds } from '../utils/progress';
+import { getUnlockedIds, getClearedCountryIds } from '../utils/progress';
 
 const GEO_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
 
@@ -81,8 +81,8 @@ export default function MapScreen({ onSelectCountry, onBack, progress, quizProgr
   const [zoomCountry, setZoomCountry] = useState(null);
   const [hoveredNumId, setHoveredNumId] = useState(null);
 
-  const clearedIds  = new Set(Object.keys(progress || {}).map(k => k.split('_')[0]));
-  const unlockedIds = getUnlockedIds(progress || {});
+  const clearedIds  = getClearedCountryIds(progress || {}, world);
+  const unlockedIds = getUnlockedIds(progress || {}, world);
 
   const getCountryStatus = (id) => {
     if (!COUNTRIES.find(c => c.id === id)) return 'other';

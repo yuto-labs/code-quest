@@ -1,13 +1,12 @@
 import { useState } from 'react';
-import { COUNTRIES } from '../data/countries';
 import SettingsModal from '../components/SettingsModal';
+import { getWorldStats } from '../utils/progress';
+import { WORLD_META, WORLD_IDS } from '../utils/stageData';
 
 export default function HomeScreen({ onNavigate, progress, user, syncing, onSendOtp, onVerifyOtp, onSignOut, onRefreshSync, onResetData, syncError, cloudStats }) {
   const [showSettings, setShowSettings] = useState(false);
 
-  const cleared = Object.keys(progress || {}).length;
-  const total = COUNTRIES.length;
-  const pct = Math.round((cleared / total) * 100);
+  const worldStats = getWorldStats(progress || {});
 
   const menuItems = [
     { id: 'map',       emoji: '🌍', label: 'WORLD MAP',  sub: '国を選んでクエストへ',   color: 'var(--accent)'  },
@@ -35,14 +34,21 @@ export default function HomeScreen({ onNavigate, progress, user, syncing, onSend
 
       {/* 進捗サマリー */}
       <div style={styles.progressCard}>
-        <div style={styles.progressTop}>
-          <span style={styles.progressLabel}>WORLD PROGRESS</span>
-          <span style={styles.progressPct}>{pct}%</span>
-        </div>
-        <div className="xp-bar" style={{ width: '100%', height: 14 }}>
-          <div className="xp-fill" style={{ width: `${pct}%` }} />
-        </div>
-        <div style={styles.progressSub}>{cleared} / {total} カ国クリア</div>
+        <span style={styles.progressLabel}>WORLD PROGRESS</span>
+        {WORLD_IDS.map(wid => {
+          const meta = WORLD_META[wid];
+          const { cleared = 0, available = 0 } = worldStats[wid] || {};
+          const pct = available > 0 ? Math.round((cleared / available) * 100) : 0;
+          return (
+            <div key={wid} style={styles.worldRow}>
+              <span style={{ ...styles.worldLabel, color: meta.color }}>{meta.label}</span>
+              <div className="xp-bar" style={{ flex: 1, height: 10 }}>
+                <div className="xp-fill" style={{ width: `${pct}%`, background: meta.color, boxShadow: `0 0 6px ${meta.color}88` }} />
+              </div>
+              <span style={styles.worldCount}>{cleared}/{available}</span>
+            </div>
+          );
+        })}
       </div>
 
       {/* メニュー */}
@@ -138,16 +144,28 @@ const styles = {
     padding: '14px 18px',
     display: 'flex',
     flexDirection: 'column',
-    gap: 8,
+    gap: 10,
   },
-  progressTop: {
+  progressLabel: { fontSize: 9, color: 'var(--text-dim)', letterSpacing: 1 },
+  worldRow: {
     display: 'flex',
-    justifyContent: 'space-between',
     alignItems: 'center',
+    gap: 10,
   },
-  progressLabel: { fontSize: 11, color: 'var(--text-dim)' },
-  progressPct: { fontSize: 13, color: 'var(--accent)' },
-  progressSub: { fontSize: 11, color: 'var(--text-dim)', textAlign: 'right' },
+  worldLabel: {
+    fontFamily: 'var(--pixel-font)',
+    fontSize: 8,
+    letterSpacing: 1,
+    minWidth: 52,
+    flexShrink: 0,
+  },
+  worldCount: {
+    fontSize: 9,
+    color: 'var(--text-dim)',
+    minWidth: 32,
+    textAlign: 'right',
+    flexShrink: 0,
+  },
   menu: {
     display: 'flex',
     flexDirection: 'column',

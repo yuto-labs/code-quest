@@ -1,4 +1,4 @@
-import { JS_CHALLENGES } from './js_challenges';
+import { JS_CHALLENGES } from './js_challenges.js';
 
 export const CHALLENGES = {
   JP: {
@@ -587,7 +587,7 @@ export const CHALLENGES = {
         id: 'gb_py_2',
         title: '全マッチをリストで取得しよう',
         description: 'テキスト内のすべての数字をリストで取得してください。',
-        code: `import re\ntext = "価格: 100円、200円、300円"\nnumbers = re.___BLANK__(r"\\d+", text)\nprint(numbers)`,
+        code: `import re\ntext = "価格: 100円、200円、300円"\nnumbers = re.___BLANK___(r"\\d+", text)\nprint(numbers)`,
         blank: 'findall',
         hint: '全マッチをリストで返すのは findall() です',
         explanation: 're.findall() はパターンに一致する全部分をリストで返します。\\d+ は1桁以上の数字にマッチします。',

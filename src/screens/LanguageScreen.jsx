@@ -1,5 +1,9 @@
 import { ComposableMap, Geographies, Geography, ZoomableGroup } from 'react-simple-maps';
 import { LANGUAGES } from '../data/challenges';
+import { EXECUTE_LANGUAGES } from '../data/execute_challenges';
+import { DEBUG_LANGUAGES } from '../data/debug_challenges';
+import { AVAILABLE_STAGES, WORLD_META } from '../utils/stageData';
+import { buildProgressKey, getLanguageEmblemTier, getCountrySealTier } from '../utils/progress';
 
 const GEO_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
 
@@ -10,7 +14,23 @@ const ISO_MAP = {
   682: 'SA',  32: 'AR', 792: 'TR', 360: 'ID', 710: 'ZA',
 };
 
-export default function LanguageScreen({ country, onSelectLanguage, onBack }) {
+const WORLD_LANGUAGES = { decode: LANGUAGES, execute: EXECUTE_LANGUAGES, debug: DEBUG_LANGUAGES };
+
+const TIER_META = {
+  none:   { label: '',         color: 'transparent', glyph: '' },
+  bronze: { label: 'BRONZE',   color: '#cd7f32',     glyph: '🥉' },
+  silver: { label: 'SILVER',   color: '#c0c0c0',     glyph: '🥈' },
+  gold:   { label: 'GOLD',     color: '#ffd700',     glyph: '🥇' },
+};
+
+export default function LanguageScreen({ country, world = 'decode', progress, onSelectLanguage, onBack }) {
+  const langs = WORLD_LANGUAGES[world] || LANGUAGES;
+  const worldMeta = WORLD_META[world];
+  const p = progress || {};
+
+  const sealTier = getCountrySealTier(p, country.id);
+  const sealMeta = TIER_META[sealTier];
+
   return (
     <div style={styles.wrap} className="fade-in">
 
@@ -32,12 +52,12 @@ export default function LanguageScreen({ country, onSelectLanguage, onBack }) {
                       geography={geo}
                       style={{
                         default: {
-                          fill: isSelected ? '#00ff88' : '#1e3a5c',
+                          fill: isSelected ? (worldMeta?.color || '#00ff88') : '#1e3a5c',
                           stroke: '#0a1520',
                           strokeWidth: 0.5,
                           outline: 'none',
                         },
-                        hover:   { fill: isSelected ? '#00ff88' : '#1e3a5c', outline: 'none' },
+                        hover:   { fill: isSelected ? (worldMeta?.color || '#00ff88') : '#1e3a5c', outline: 'none' },
                         pressed: { outline: 'none' },
                       }}
                     />
@@ -49,40 +69,85 @@ export default function LanguageScreen({ country, onSelectLanguage, onBack }) {
         </ComposableMap>
       </div>
 
-      {/* 半透明グラデーションで地図をさらに抑える */}
       <div style={styles.mapFade} />
 
       <button style={styles.back} onClick={onBack}>◀ BACK</button>
 
       <div style={styles.center}>
-        <div style={styles.flag}>{country.emoji}</div>
+        <div style={{ position: 'relative', display: 'inline-block' }}>
+          <div style={styles.flag}>{country.emoji}</div>
+          {sealTier !== 'none' && (
+            <div style={{
+              position: 'absolute',
+              bottom: -4,
+              right: -8,
+              fontSize: 22,
+              filter: `drop-shadow(0 0 6px ${sealMeta.color})`,
+            }}>
+              {sealMeta.glyph}
+            </div>
+          )}
+        </div>
 
-        {/* 国名：日本語名メイン + 英語名サブ */}
         <div style={styles.countryNameJa}>{country.nameJa}</div>
         <div style={styles.countryName}>{country.name}</div>
         <div style={styles.countryCapital}>首都: {country.capital}</div>
         <div style={styles.theme}>テーマ: 【 {country.theme} 】</div>
+
+        {/* World badge */}
+        {worldMeta && (
+          <div style={{
+            fontFamily: 'var(--pixel-font)',
+            fontSize: 9,
+            color: worldMeta.color,
+            border: `1px solid ${worldMeta.color}88`,
+            padding: '4px 10px',
+            letterSpacing: 2,
+          }}>
+            {worldMeta.label} WORLD
+          </div>
+        )}
 
         <div style={styles.divider} />
 
         <div style={styles.label}>使用言語を選択してください</div>
 
         <div style={styles.langGrid}>
-          {LANGUAGES.map((lang) => (
-            <button
-              key={lang.id}
-              style={{
-                ...styles.langBtn,
-                ...(lang.available ? styles.langBtnActive : styles.langBtnLocked),
-              }}
-              onClick={() => lang.available && onSelectLanguage(lang)}
-              disabled={!lang.available}
-            >
-              <span style={styles.langEmoji}>{lang.emoji}</span>
-              <span style={styles.langName}>{lang.name}</span>
-              {!lang.available && <span style={styles.soon}>COMING SOON</span>}
-            </button>
-          ))}
+          {langs.map((lang) => {
+            const stages = (AVAILABLE_STAGES[world] || {})[country.id] || [];
+            const hasContent = stages.includes(lang.id);
+            const isCleared = !!p[buildProgressKey(world, country.id, lang.id)];
+            const emblemTier = getLanguageEmblemTier(p, lang.id);
+            const emblemMeta = TIER_META[emblemTier];
+            const isAvailable = lang.available && hasContent;
+
+            return (
+              <button
+                key={lang.id}
+                style={{
+                  ...styles.langBtn,
+                  ...(isAvailable ? styles.langBtnActive : styles.langBtnLocked),
+                  ...(isCleared ? { borderColor: '#00ff8888', background: '#00ff8811' } : {}),
+                }}
+                onClick={() => isAvailable && onSelectLanguage(lang)}
+                disabled={!isAvailable}
+              >
+                <span style={styles.langEmoji}>{lang.emoji}</span>
+                <span style={styles.langName}>{lang.name}</span>
+                {isCleared && <span style={{ fontSize: 12, color: '#00ff88' }}>✓</span>}
+                {emblemTier !== 'none' && (
+                  <span style={{ fontSize: 14, filter: `drop-shadow(0 0 4px ${emblemMeta.color})` }}>
+                    {emblemMeta.glyph}
+                  </span>
+                )}
+                {!isAvailable && (
+                  <span style={styles.soon}>
+                    {!lang.available ? 'COMING SOON' : 'NO CONTENT'}
+                  </span>
+                )}
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>
@@ -199,21 +264,22 @@ const styles = {
     color: 'var(--accent)',
   },
   langBtnLocked: {
-    background: 'var(--bg)',
+    background: '#0d0d0d',
     borderColor: '#333',
     color: '#444',
-    cursor: 'not-allowed',
+    cursor: 'default',
   },
   langEmoji: {
     fontSize: 24,
   },
   langName: {
-    fontSize: 10,
     flex: 1,
-    textAlign: 'left',
+    fontSize: 'clamp(11px, 3vw, 14px)',
+    letterSpacing: 1,
   },
   soon: {
-    fontSize: 7,
+    fontSize: 8,
     color: '#555',
+    letterSpacing: 1,
   },
 };

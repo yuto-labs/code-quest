@@ -8,7 +8,7 @@ export const JS_CHALLENGES = {
       questionType: "fill-blank",
       title: "Kimigayo national anthem: object-property",
       description: "Kimigayo national anthem をコード内データとして使い、object-property を確認します。",
-      hint: "空欄には JavaScript の構文として必要な最小要素を入れます。",
+      hint: "fact の anthem プロパティに Kimigayo が入っています。ドットの後ろにキー名を書きます。",
       code: "const fact = { anthem: \"Kimigayo\", topic: \"Japan\" };\nconsole.log(fact.___BLANK___);",
       blank: "anthem",
       explanation: "ドット記法で anthem を読みます。 Kimigayo national anthem は問題文とコード内データに示されています。"
@@ -21,7 +21,7 @@ export const JS_CHALLENGES = {
       questionType: "fill-blank",
       title: "blue LED Nobel laureates: array-length",
       description: "blue LED Nobel laureates をコード内データとして使い、array-length を確認します。",
-      hint: "空欄には JavaScript の構文として必要な最小要素を入れます。",
+      hint: "people 配列には3人入っています。配列の要素数を読むプロパティを使います。",
       code: "const people = [\"Akasaki\", \"Amano\", \"Nakamura\"];\nconsole.log(people.___BLANK___);",
       blank: "length",
       explanation: "length は配列の要素数です。 blue LED Nobel laureates は問題文とコード内データに示されています。"
@@ -34,7 +34,7 @@ export const JS_CHALLENGES = {
       questionType: "fill-blank",
       title: "Akira Yoshino and lithium-ion battery: const-template",
       description: "Akira Yoshino and lithium-ion battery をコード内データとして使い、const-template を確認します。",
-      hint: "空欄には JavaScript の構文として必要な最小要素を入れます。",
+      hint: "テンプレート文字列の ${ } には、上で定義した person という変数名を入れます。",
       code: "const person = \"Akira Yoshino\";\nconst field = \"lithium-ion battery\";\nconsole.log(`${___BLANK___}: ${field}`);",
       blank: "person",
       explanation: "テンプレート内の ${person} が展開されます。 Akira Yoshino and lithium-ion battery は問題文とコード内データに示されています。"
@@ -47,7 +47,7 @@ export const JS_CHALLENGES = {
       questionType: "fill-blank",
       title: "Shinya Yamanaka and iPS cells: object-destructuring",
       description: "Shinya Yamanaka and iPS cells をコード内データとして使い、object-destructuring を確認します。",
-      hint: "空欄には JavaScript の構文として必要な最小要素を入れます。",
+      hint: "分割代入で取り出したあと console.log(field) しています。取り出すプロパティ名は field です。",
       code: "const fact = { scientist: \"Shinya Yamanaka\", field: \"iPS cells\" };\nconst { ___BLANK___ } = fact;\nconsole.log(field);",
       blank: "field",
       explanation: "分割代入で field を取り出します。 Shinya Yamanaka and iPS cells は問題文とコード内データに示されています。"
@@ -60,7 +60,7 @@ export const JS_CHALLENGES = {
       questionType: "fill-blank",
       title: "Himeji Castle and Shirasagi-jo nickname: strict-equality",
       description: "Himeji Castle and Shirasagi-jo nickname をコード内データとして使い、strict-equality を確認します。",
-      hint: "空欄には JavaScript の構文として必要な最小要素を入れます。",
+      hint: "値と型まで同じか比べる JavaScript の厳密等価演算子を入れます。",
       code: "const nickname = \"Shirasagi-jo\";\nconsole.log(nickname ___BLANK___ \"Shirasagi-jo\");",
       blank: "===",
       explanation: "厳密等価で true になります。 Himeji Castle and Shirasagi-jo nickname は問題文とコード内データに示されています。"
@@ -73,7 +73,7 @@ export const JS_CHALLENGES = {
       questionType: "fill-blank",
       title: "Mount Fuji elevation/context: numeric-comparison",
       description: "Mount Fuji elevation/context をコード内データとして使い、numeric-comparison を確認します。",
-      hint: "空欄には JavaScript の構文として必要な最小要素を入れます。",
+      hint: "富士山の標高 3776 は 3000 より大きいです。True になる比較演算子を選びます。",
       code: "const elevation = 3776;\nconsole.log(elevation ___BLANK___ 3000);",
       blank: ">",
       explanation: "3776 は 3000 より大きいです。 Mount Fuji elevation/context は問題文とコード内データに示されています。"
@@ -86,7 +86,7 @@ export const JS_CHALLENGES = {
       questionType: "fill-blank",
       title: "Francis Xavier arrival in Japan: conditional",
       description: "Francis Xavier arrival in Japan をコード内データとして使い、conditional を確認します。",
-      hint: "空欄には JavaScript の構文として必要な最小要素を入れます。",
+      hint: "if の条件はすでに true になります。console.log に渡す文字列をそのまま入れます。",
       code: "const arrivalYear = 1549;\nif (arrivalYear === 1549) {\n  console.log(___BLANK___);\n}",
       blank: "\"matched\"",
       explanation: "条件が true なので matched を表示します。 Francis Xavier arrival in Japan は問題文とコード内データに示されています。"
@@ -99,7 +99,7 @@ export const JS_CHALLENGES = {
       questionType: "fill-blank",
       title: "William Adams arrival in Japan: object-values",
       description: "William Adams arrival in Japan をコード内データとして使い、object-values を確認します。",
-      hint: "空欄には JavaScript の構文として必要な最小要素を入れます。",
+      hint: "Object の値だけを配列にして、[1] で2番目の year を取ります。",
       code: "const arrival = { name: \"William Adams\", year: 1600 };\nconsole.log(Object.___BLANK___(arrival)[1]);",
       blank: "values",
       explanation: "Object.values で値の配列を作ります。 William Adams arrival in Japan は問題文とコード内データに示されています。"
@@ -112,7 +112,7 @@ export const JS_CHALLENGES = {
       questionType: "fill-blank",
       title: "Murasaki Shikibu and The Tale of Genji: string-concatenation",
       description: "Murasaki Shikibu and The Tale of Genji をコード内データとして使い、string-concatenation を確認します。",
-      hint: "空欄には JavaScript の構文として必要な最小要素を入れます。",
+      hint: "文字列同士をつなげる演算子を入れます。後ろではすでに \" - \" + work が続いています。",
       code: "const author = \"Murasaki Shikibu\";\nconst work = \"The Tale of Genji\";\nconsole.log(author ___BLANK___ \" - \" + work);",
       blank: "+",
       explanation: "+ で文字列を連結します。 Murasaki Shikibu and The Tale of Genji は問題文とコード内データに示されています。"
@@ -125,7 +125,7 @@ export const JS_CHALLENGES = {
       questionType: "fill-blank",
       title: "Kabuki theatre: includes",
       description: "Kabuki theatre をコード内データとして使い、includes を確認します。",
-      hint: "空欄には JavaScript の構文として必要な最小要素を入れます。",
+      hint: "配列 arts の中に kabuki があるか調べます。配列の「含む」メソッドです。",
       code: "const arts = [\"noh\", \"kabuki\", \"bunraku\"];\nconsole.log(arts.___BLANK___(\"kabuki\"));",
       blank: "includes",
       explanation: "includes は含まれるかを返します。 Kabuki theatre は問題文とコード内データに示されています。"

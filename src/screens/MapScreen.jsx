@@ -266,19 +266,21 @@ export default function MapScreen({ onSelectCountry, onBack, progress, quizProgr
                       }
                     }}
                   />
-                  <text
-                    textAnchor="middle"
-                    dy="5"
-                    style={{
-                      fontSize: 14,
-                      cursor: isUnlocked ? 'pointer' : 'default',
-                      filter: isUnlocked ? 'none' : 'grayscale(1) opacity(0.35)',
-                      userSelect: 'none',
-                      pointerEvents: 'none',
-                    }}
-                  >
-                    {c.emoji}
-                  </text>
+                  {!isTouch && (
+                    <text
+                      textAnchor="middle"
+                      dy="5"
+                      style={{
+                        fontSize: 14,
+                        cursor: isUnlocked ? 'pointer' : 'default',
+                        filter: isUnlocked ? 'none' : 'grayscale(1) opacity(0.35)',
+                        userSelect: 'none',
+                        pointerEvents: 'none',
+                      }}
+                    >
+                      {c.emoji}
+                    </text>
+                  )}
                   {isUnlocked && (
                     <text
                       textAnchor="middle"

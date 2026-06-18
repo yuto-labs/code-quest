@@ -52,7 +52,7 @@ export const FINAL_MISSIONS = {
             questionType: "fill-blank",
             title: "Meiji Constitution promulgation context: dict-plus-comparison",
             description: "Meiji Constitution promulgation context をコード内データとして使い、dict-plus-comparison を確認します。",
-            hint: "空欄には Python の構文として必要な最小要素を入れます。",
+            hint: "変数 fact に答えになる文字列が入っています。print() には変数名を入れます。",
             code: "fact = \"Meiji Constitution promulgation context\"\nprint(___BLANK___)",
             blank: "fact",
             explanation: "変数 fact を表示します。 Meiji Constitution promulgation context は問題文とコード内データに示されています。"
@@ -65,7 +65,7 @@ export const FINAL_MISSIONS = {
             questionType: "fill-blank",
             title: "Kenzaburo Oe Nobel Literature: list-plus-sort-key",
             description: "Kenzaburo Oe Nobel Literature をコード内データとして使い、list-plus-sort-key を確認します。",
-            hint: "空欄には Python の構文として必要な最小要素を入れます。",
+            hint: "表示したい値は fact という変数に保存されています。文字列をもう一度書く必要はありません。",
             code: "fact = \"Kenzaburo Oe Nobel Literature\"\nprint(___BLANK___)",
             blank: "fact",
             explanation: "変数 fact を表示します。 Kenzaburo Oe Nobel Literature は問題文とコード内データに示されています。"
@@ -78,7 +78,7 @@ export const FINAL_MISSIONS = {
             questionType: "fill-blank",
             title: "Kinkaku-ji and Rokuon-ji naming: alias-resolution-plus-membership",
             description: "Kinkaku-ji and Rokuon-ji naming をコード内データとして使い、alias-resolution-plus-membership を確認します。",
-            hint: "空欄には Python の構文として必要な最小要素を入れます。",
+            hint: "print したいのは変数 fact の中身です。空欄には変数名を入れます。",
             code: "fact = \"Kinkaku-ji and Rokuon-ji naming\"\nprint(___BLANK___)",
             blank: "fact",
             explanation: "変数 fact を表示します。 Kinkaku-ji and Rokuon-ji naming は問題文とコード内データに示されています。"
@@ -101,7 +101,7 @@ export const FINAL_MISSIONS = {
             questionType: "fill-blank",
             title: "Hokusai and Thirty-six Views of Mount Fuji: array-method-plus-template",
             description: "Hokusai and Thirty-six Views of Mount Fuji をコード内データとして使い、array-method-plus-template を確認します。",
-            hint: "空欄には JavaScript の構文として必要な最小要素を入れます。",
+            hint: "const fact に文字列が入っています。console.log には変数名を渡します。",
             code: "const fact = \"Hokusai and Thirty-six Views of Mount Fuji\";\nconsole.log(___BLANK___);",
             blank: "fact",
             explanation: "変数 fact を表示します。 Hokusai and Thirty-six Views of Mount Fuji は問題文とコード内データに示されています。"
@@ -114,7 +114,7 @@ export const FINAL_MISSIONS = {
             questionType: "fill-blank",
             title: "Super-Kamiokande: nested-object-plus-boolean",
             description: "Super-Kamiokande をコード内データとして使い、nested-object-plus-boolean を確認します。",
-            hint: "空欄には JavaScript の構文として必要な最小要素を入れます。",
+            hint: "表示したい文字列は fact という変数に入っています。",
             code: "const fact = \"Super-Kamiokande\";\nconsole.log(___BLANK___);",
             blank: "fact",
             explanation: "変数 fact を表示します。 Super-Kamiokande は問題文とコード内データに示されています。"
@@ -127,7 +127,7 @@ export const FINAL_MISSIONS = {
             questionType: "fill-blank",
             title: "Itsukushima Shrine: set-plus-membership",
             description: "Itsukushima Shrine をコード内データとして使い、set-plus-membership を確認します。",
-            hint: "空欄には JavaScript の構文として必要な最小要素を入れます。",
+            hint: "console.log の引数には、上で宣言した fact をそのまま使います。",
             code: "const fact = \"Itsukushima Shrine\";\nconsole.log(___BLANK___);",
             blank: "fact",
             explanation: "変数 fact を表示します。 Itsukushima Shrine は問題文とコード内データに示されています。"
@@ -162,7 +162,7 @@ export const FINAL_MISSIONS = {
               "Error"
             ],
             answer: "6",
-            hint: "コードの条件と添字を順に追います。",
+            hint: "record[\"values\"] の中身は [1, 2, 3] です。sum() の結果を計算します。",
             explanation: "表示データにある Sacred Sites and Pilgrimage Routes in Kii Mountain Range を使い、処理の流れを追うと 6 が出力されます。"
           },
           {
@@ -181,7 +181,7 @@ export const FINAL_MISSIONS = {
               "Error"
             ],
             answer: "Kurobe Dam",
-            hint: "コードの条件と添字を順に追います。",
+            hint: "enumerate(route) の index が1のときだけ表示されます。真ん中の要素を見ます。",
             explanation: "表示データにある Kurobe Dam を使い、処理の流れを追うと Kurobe Dam が出力されます。"
           },
           {
@@ -200,7 +200,7 @@ export const FINAL_MISSIONS = {
               "Error"
             ],
             answer: "Gokayama gassho-zukuri villages",
-            hint: "コードの条件と添字を順に追います。",
+            hint: "score が1より大きい要素だけ残ります。残った要素の name が答えです。",
             explanation: "表示データにある Gokayama gassho-zukuri villages を使い、処理の流れを追うと Gokayama gassho-zukuri villages が出力されます。"
           }
         ]
@@ -229,7 +229,7 @@ export const FINAL_MISSIONS = {
               "Error"
             ],
             answer: "Shikoku 88-temple pilgrimage",
-            hint: "配列・オブジェクトの処理を順に追います。",
+            hint: "route.to を表示しています。オブジェクトの to プロパティの値を見ます。",
             explanation: "表示データにある Shikoku 88-temple pilgrimage を使い、処理の流れを追うと Shikoku 88-temple pilgrimage が出力されます。"
           },
           {
@@ -248,7 +248,7 @@ export const FINAL_MISSIONS = {
               "Error"
             ],
             answer: "Sanriku ria coast",
-            hint: "配列・オブジェクトの処理を順に追います。",
+            hint: "filter で score > 1 を満たす要素だけになり、map で name に変わります。",
             explanation: "表示データにある Sanriku ria coast を使い、処理の流れを追うと Sanriku ria coast が出力されます。"
           },
           {
@@ -267,7 +267,7 @@ export const FINAL_MISSIONS = {
               "Error"
             ],
             answer: "6",
-            hint: "配列・オブジェクトの処理を順に追います。",
+            hint: "values の 1, 2, 3 を reduce で合計しています。初期値は0です。",
             explanation: "表示データにある Toyota Production System kanban を使い、処理の流れを追うと 6 が出力されます。"
           }
         ]
@@ -305,7 +305,7 @@ export const FINAL_MISSIONS = {
                   "コメントがない"
                 ],
                 answer: "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
-                hint: "データ側のキーと検索キーを見比べます。",
+                hint: "data 側のキー名と、検索に使っている key の文字列を見比べます。表記ゆれや余分な文字があると見つかりません。",
                 explanation: "Japan Standard Time UTC+9 date rollover のデータは存在しますが、キー表記が揃っていません。"
               },
               {
@@ -319,7 +319,7 @@ export const FINAL_MISSIONS = {
                   "エラーを無視する"
                 ],
                 answer: "key = key.lower() のように、検索前にキー表記を揃える",
-                hint: "データを消さずに比較条件を揃えます。",
+                hint: "データを消すのではなく、検索前の key を data 側のキーと同じ形にそろえる修正を選びます。",
                 explanation: "正規化してから検索すると、表記揺れに強くなります。"
               },
               {
@@ -333,7 +333,7 @@ export const FINAL_MISSIONS = {
                   "常に最初の項目だけを返す"
                 ],
                 answer: "同じ事実データを、入力表記の揺れで見失わずに取得できる",
-                hint: "入力と保存データの表記差を吸収します。",
+                hint: "入力や表示のゆれを吸収すると、同じ事実データを安全に再利用できるかを考えます。",
                 explanation: "キーの正規化はローカライズされた検索や表示で起きやすい不一致を減らします。"
               }
             ]
@@ -359,7 +359,7 @@ export const FINAL_MISSIONS = {
                   "コメントがない"
                 ],
                 answer: "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
-                hint: "データ側のキーと検索キーを見比べます。",
+                hint: "data 側のキー名と、検索に使っている key の文字列を見比べます。表記ゆれや余分な文字があると見つかりません。",
                 explanation: "Japanese postal code format のデータは存在しますが、キー表記が揃っていません。"
               },
               {
@@ -373,7 +373,7 @@ export const FINAL_MISSIONS = {
                   "エラーを無視する"
                 ],
                 answer: "key = key.lower() のように、検索前にキー表記を揃える",
-                hint: "データを消さずに比較条件を揃えます。",
+                hint: "データを消すのではなく、検索前の key を data 側のキーと同じ形にそろえる修正を選びます。",
                 explanation: "正規化してから検索すると、表記揺れに強くなります。"
               },
               {
@@ -387,7 +387,7 @@ export const FINAL_MISSIONS = {
                   "常に最初の項目だけを返す"
                 ],
                 answer: "同じ事実データを、入力表記の揺れで見失わずに取得できる",
-                hint: "入力と保存データの表記差を吸収します。",
+                hint: "入力や表示のゆれを吸収すると、同じ事実データを安全に再利用できるかを考えます。",
                 explanation: "キーの正規化はローカライズされた検索や表示で起きやすい不一致を減らします。"
               }
             ]
@@ -413,7 +413,7 @@ export const FINAL_MISSIONS = {
                   "コメントがない"
                 ],
                 answer: "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
-                hint: "データ側のキーと検索キーを見比べます。",
+                hint: "data 側のキー名と、検索に使っている key の文字列を見比べます。表記ゆれや余分な文字があると見つかりません。",
                 explanation: "JIS prefecture codes のデータは存在しますが、キー表記が揃っていません。"
               },
               {
@@ -427,7 +427,7 @@ export const FINAL_MISSIONS = {
                   "エラーを無視する"
                 ],
                 answer: "key = key.lower() のように、検索前にキー表記を揃える",
-                hint: "データを消さずに比較条件を揃えます。",
+                hint: "データを消すのではなく、検索前の key を data 側のキーと同じ形にそろえる修正を選びます。",
                 explanation: "正規化してから検索すると、表記揺れに強くなります。"
               },
               {
@@ -441,7 +441,7 @@ export const FINAL_MISSIONS = {
                   "常に最初の項目だけを返す"
                 ],
                 answer: "同じ事実データを、入力表記の揺れで見失わずに取得できる",
-                hint: "入力と保存データの表記差を吸収します。",
+                hint: "入力や表示のゆれを吸収すると、同じ事実データを安全に再利用できるかを考えます。",
                 explanation: "キーの正規化はローカライズされた検索や表示で起きやすい不一致を減らします。"
               }
             ]
@@ -477,7 +477,7 @@ export const FINAL_MISSIONS = {
                   "コメントがない"
                 ],
                 answer: "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
-                hint: "データ側のキーと検索キーを見比べます。",
+                hint: "data 側のキー名と、検索に使っている key の文字列を見比べます。表記ゆれや余分な文字があると見つかりません。",
                 explanation: "Japanese telephone-number formatting のデータは存在しますが、キー表記が揃っていません。"
               },
               {
@@ -491,7 +491,7 @@ export const FINAL_MISSIONS = {
                   "エラーを無視する"
                 ],
                 answer: "const normalizedKey = key.toLowerCase(); のように、検索前にキー表記を揃える",
-                hint: "データを消さずに比較条件を揃えます。",
+                hint: "データを消すのではなく、検索前の key を data 側のキーと同じ形にそろえる修正を選びます。",
                 explanation: "正規化してから検索すると、表記揺れに強くなります。"
               },
               {
@@ -505,7 +505,7 @@ export const FINAL_MISSIONS = {
                   "常に最初の項目だけを返す"
                 ],
                 answer: "同じ事実データを、入力表記の揺れで見失わずに取得できる",
-                hint: "入力と保存データの表記差を吸収します。",
+                hint: "入力や表示のゆれを吸収すると、同じ事実データを安全に再利用できるかを考えます。",
                 explanation: "キーの正規化はローカライズされた検索や表示で起きやすい不一致を減らします。"
               }
             ]
@@ -531,7 +531,7 @@ export const FINAL_MISSIONS = {
                   "コメントがない"
                 ],
                 answer: "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
-                hint: "データ側のキーと検索キーを見比べます。",
+                hint: "data 側のキー名と、検索に使っている key の文字列を見比べます。表記ゆれや余分な文字があると見つかりません。",
                 explanation: "Japanese vertical writing/tategaki のデータは存在しますが、キー表記が揃っていません。"
               },
               {
@@ -545,7 +545,7 @@ export const FINAL_MISSIONS = {
                   "エラーを無視する"
                 ],
                 answer: "const normalizedKey = key.toLowerCase(); のように、検索前にキー表記を揃える",
-                hint: "データを消さずに比較条件を揃えます。",
+                hint: "データを消すのではなく、検索前の key を data 側のキーと同じ形にそろえる修正を選びます。",
                 explanation: "正規化してから検索すると、表記揺れに強くなります。"
               },
               {
@@ -559,7 +559,7 @@ export const FINAL_MISSIONS = {
                   "常に最初の項目だけを返す"
                 ],
                 answer: "同じ事実データを、入力表記の揺れで見失わずに取得できる",
-                hint: "入力と保存データの表記差を吸収します。",
+                hint: "入力や表示のゆれを吸収すると、同じ事実データを安全に再利用できるかを考えます。",
                 explanation: "キーの正規化はローカライズされた検索や表示で起きやすい不一致を減らします。"
               }
             ]
@@ -585,7 +585,7 @@ export const FINAL_MISSIONS = {
                   "コメントがない"
                 ],
                 answer: "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
-                hint: "データ側のキーと検索キーを見比べます。",
+                hint: "data 側のキー名と、検索に使っている key の文字列を見比べます。表記ゆれや余分な文字があると見つかりません。",
                 explanation: "Japanese fiscal year beginning in April のデータは存在しますが、キー表記が揃っていません。"
               },
               {
@@ -599,7 +599,7 @@ export const FINAL_MISSIONS = {
                   "エラーを無視する"
                 ],
                 answer: "const normalizedKey = key.toLowerCase(); のように、検索前にキー表記を揃える",
-                hint: "データを消さずに比較条件を揃えます。",
+                hint: "データを消すのではなく、検索前の key を data 側のキーと同じ形にそろえる修正を選びます。",
                 explanation: "正規化してから検索すると、表記揺れに強くなります。"
               },
               {
@@ -613,7 +613,7 @@ export const FINAL_MISSIONS = {
                   "常に最初の項目だけを返す"
                 ],
                 answer: "同じ事実データを、入力表記の揺れで見失わずに取得できる",
-                hint: "入力と保存データの表記差を吸収します。",
+                hint: "入力や表示のゆれを吸収すると、同じ事実データを安全に再利用できるかを考えます。",
                 explanation: "キーの正規化はローカライズされた検索や表示で起きやすい不一致を減らします。"
               }
             ]

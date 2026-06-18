@@ -11,7 +11,7 @@ export const CHALLENGES = {
         questionType: "fill-blank",
         title: "Emperor constitutional role: dict-access",
         description: "Emperor constitutional role をコード内データとして使い、dict-access を確認します。",
-        hint: "空欄には Python の構文として必要な最小要素を入れます。",
+        hint: "辞書 fact には role と topic があります。表示したい symbol はどちらのキーに入っているか見ます。",
         code: "fact = {\"role\": \"symbol\", \"topic\": \"Emperor\"}\nprint(fact[___BLANK___])",
         blank: "\"role\"",
         explanation: "辞書の \"role\" キーを読むので symbol が表示されます。 Emperor constitutional role は問題文とコード内データに示されています。"
@@ -24,7 +24,7 @@ export const CHALLENGES = {
         questionType: "fill-blank",
         title: "National Diet two chambers: list-len",
         description: "National Diet two chambers をコード内データとして使い、list-len を確認します。",
-        hint: "空欄には Python の構文として必要な最小要素を入れます。",
+        hint: "二院制なので items には2つ入っています。リストの要素数を返す関数を使います。",
         code: "items = [\"House of Representatives\", \"House of Councillors\"]\nprint(___BLANK___(items))",
         blank: "len",
         explanation: "len() はリストの要素数を返し、二院なので 2 です。 National Diet two chambers は問題文とコード内データに示されています。"
@@ -37,7 +37,7 @@ export const CHALLENGES = {
         questionType: "fill-blank",
         title: "Hideki Yukawa Nobel Prize: tuple-unpack",
         description: "Hideki Yukawa Nobel Prize をコード内データとして使い、tuple-unpack を確認します。",
-        hint: "空欄には Python の構文として必要な最小要素を入れます。",
+        hint: "record の3番目を受け取る変数名が、次の print() で使われています。",
         code: "record = (\"Hideki Yukawa\", 1949, \"Physics\")\nname, year, ___BLANK___ = record\nprint(prize)",
         blank: "prize",
         explanation: "タプルの3番目が prize に入り Physics が表示されます。 Hideki Yukawa Nobel Prize は問題文とコード内データに示されています。"
@@ -50,7 +50,7 @@ export const CHALLENGES = {
         questionType: "fill-blank",
         title: "Nisshoki/Hinomaru: string-equality",
         description: "Nisshoki/Hinomaru をコード内データとして使い、string-equality を確認します。",
-        hint: "空欄には Python の構文として必要な最小要素を入れます。",
+        hint: "文字列が同じか調べる問題です。Pythonで等しいことを比べる演算子を入れます。",
         code: "alias = \"Hinomaru\"\nprint(alias ___BLANK___ \"Hinomaru\")",
         blank: "==",
         explanation: "文字列が等しいため True です。 Nisshoki/Hinomaru は問題文とコード内データに示されています。"
@@ -63,7 +63,7 @@ export const CHALLENGES = {
         questionType: "fill-blank",
         title: "47 prefectures: numeric-comparison",
         description: "47 prefectures をコード内データとして使い、numeric-comparison を確認します。",
-        hint: "空欄には Python の構文として必要な最小要素を入れます。",
+        hint: "prefectures は 47 です。47以上かどうかを True にする比較演算子を選びます。",
         code: "prefectures = 47\nprint(prefectures ___BLANK___ 47)",
         blank: ">=",
         explanation: "47 は 47 以上なので True です。 47 prefectures は問題文とコード内データに示されています。"
@@ -76,7 +76,7 @@ export const CHALLENGES = {
         questionType: "fill-blank",
         title: "one-yen coin: numeric-type",
         description: "one-yen coin をコード内データとして使い、numeric-type を確認します。",
-        hint: "空欄には Python の構文として必要な最小要素を入れます。",
+        hint: "type(value_yen).__name__ を int にしたいので、文字列ではなく数値の 1 を入れます。",
         code: "value_yen = ___BLANK___\nprint(type(value_yen).__name__)",
         blank: "1",
         explanation: "引用符なしの 1 は int です。 one-yen coin は問題文とコード内データに示されています。"
@@ -89,7 +89,7 @@ export const CHALLENGES = {
         questionType: "fill-blank",
         title: "Tokaido Shinkansen 1964: f-string",
         description: "Tokaido Shinkansen 1964 をコード内データとして使い、f-string を確認します。",
-        hint: "空欄には Python の構文として必要な最小要素を入れます。",
+        hint: "f文字列の { } の中には、上で定義した year という変数名をそのまま入れます。",
         code: "line = \"Tokaido Shinkansen\"\nyear = 1964\nprint(f\"{line}: {___BLANK___}\")",
         blank: "year",
         explanation: "f-string の {year} に 1964 が入ります。 Tokaido Shinkansen 1964 は問題文とコード内データに示されています。"
@@ -102,7 +102,7 @@ export const CHALLENGES = {
         questionType: "fill-blank",
         title: "QR Code: string-index-or-slice",
         description: "QR Code をコード内データとして使い、string-index-or-slice を確認します。",
-        hint: "空欄には Python の構文として必要な最小要素を入れます。",
+        hint: "QR Code の先頭2文字だけを取り出します。Pythonのスライスは start を省略できます。",
         code: "name = \"QR Code\"\nprint(name[___BLANK___])",
         blank: ":2",
         explanation: "[:2] は先頭2文字 QR を返します。 QR Code は問題文とコード内データに示されています。"
@@ -115,7 +115,7 @@ export const CHALLENGES = {
         questionType: "fill-blank",
         title: "Horyu-ji World Heritage: list-index",
         description: "Horyu-ji World Heritage をコード内データとして使い、list-index を確認します。",
-        hint: "空欄には Python の構文として必要な最小要素を入れます。",
+        hint: "Horyu-ji はリストの最初の要素です。Pythonのリスト番号は0から始まります。",
         code: "sites = [\"Horyu-ji\", \"Himeji\", \"Yakushima\"]\nprint(sites[___BLANK___])",
         blank: "0",
         explanation: "リストの最初は index 0 です。 Horyu-ji World Heritage は問題文とコード内データに示されています。"
@@ -128,7 +128,7 @@ export const CHALLENGES = {
         questionType: "fill-blank",
         title: "sakura as cultural symbol, not statutory national flower: membership",
         description: "sakura as cultural symbol, not statutory national flower（伝承・文化的関連として扱い、断定しません） をコード内データとして使い、membership を確認します。",
-        hint: "空欄には Python の構文として必要な最小要素を入れます。",
+        hint: "sakura が symbols に含まれるか調べます。リスト内にあるか確認する演算子です。",
         code: "symbols = [\"sakura\", \"momiji\", \"crane\"]\nprint(\"sakura\" ___BLANK___ symbols)",
         blank: "in",
         explanation: "in はリストに含まれるかを調べます。 sakura as cultural symbol, not statutory national flower は問題文とコード内データに示されています。"

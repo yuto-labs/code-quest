@@ -20,7 +20,7 @@ export const EXECUTE_CHALLENGES = {
           "Error"
         ],
         answer: "6",
-        hint: "コードの条件と添字を順に追います。",
+        hint: "record[\"values\"] は [1, 2, 3] です。sum() はこの合計を出します。",
         explanation: "表示データにある Yakushima World Heritage criteria/context を使い、処理の流れを追うと 6 が出力されます。"
       },
       {
@@ -39,7 +39,7 @@ export const EXECUTE_CHALLENGES = {
           "Error"
         ],
         answer: "Shirakami-Sanchi beech forest",
-        hint: "コードの条件と添字を順に追います。",
+        hint: "enumerate(route) で index が 1 のときだけ print します。route[1] の値を見ます。",
         explanation: "表示データにある Shirakami-Sanchi beech forest を使い、処理の流れを追うと Shirakami-Sanchi beech forest が出力されます。"
       },
       {
@@ -58,7 +58,7 @@ export const EXECUTE_CHALLENGES = {
           "Error"
         ],
         answer: "National Diet Building",
-        hint: "コードの条件と添字を順に追います。",
+        hint: "score が 2 の item だけが条件 score > 1 を通ります。その name が result[0] です。",
         explanation: "表示データにある National Diet Building を使い、処理の流れを追うと National Diet Building が出力されます。"
       },
       {
@@ -81,7 +81,7 @@ export const EXECUTE_CHALLENGES = {
           2,
           3
         ],
-        hint: "変数を作り、結合してから表示します。",
+        hint: "先に mission と target を作り、その2つを使って result を作り、最後に print します。",
         explanation: "Hayabusa と Itokawa を順に使うため、定義、結合、表示の順に並べます。"
       },
       {
@@ -100,7 +100,7 @@ export const EXECUTE_CHALLENGES = {
           "Error"
         ],
         answer: "Hayabusa2 and Ryugu",
-        hint: "コードの条件と添字を順に追います。",
+        hint: "route の真ん中、つまり index == 1 の place だけが表示されます。",
         explanation: "表示データにある Hayabusa2 and Ryugu を使い、処理の流れを追うと Hayabusa2 and Ryugu が出力されます。"
       },
       {
@@ -119,7 +119,7 @@ export const EXECUTE_CHALLENGES = {
           "Error"
         ],
         answer: "Noh role structure",
-        hint: "コードの条件と添字を順に追います。",
+        hint: "条件 score > 1 を満たすのは score が2の要素だけです。その name を追います。",
         explanation: "表示データにある Noh role structure を使い、処理の流れを追うと Noh role structure が出力されます。"
       },
       {
@@ -138,7 +138,7 @@ export const EXECUTE_CHALLENGES = {
           "Error"
         ],
         answer: "6",
-        hint: "コードの条件と添字を順に追います。",
+        hint: "record[\"values\"] の 1, 2, 3 を合計します。表示されるのは数値の合計です。",
         explanation: "表示データにある Matsuo Basho and Oku no Hosomichi を使い、処理の流れを追うと 6 が出力されます。"
       }
     ],
@@ -159,7 +159,7 @@ export const EXECUTE_CHALLENGES = {
           "Error"
         ],
         answer: "firearms arrival at Tanegashima",
-        hint: "配列・オブジェクトの処理を順に追います。",
+        hint: "route オブジェクトの to プロパティをそのまま console.log しています。",
         explanation: "表示データにある firearms arrival at Tanegashima を使い、処理の流れを追うと firearms arrival at Tanegashima が出力されます。"
       },
       {
@@ -178,7 +178,7 @@ export const EXECUTE_CHALLENGES = {
           "Error"
         ],
         answer: "Perry expedition and opening sequence",
-        hint: "配列・オブジェクトの処理を順に追います。",
+        hint: "filter で score > 1 の要素だけ残し、map で name だけ取り出します。",
         explanation: "表示データにある Perry expedition and opening sequence を使い、処理の流れを追うと Perry expedition and opening sequence が出力されます。"
       },
       {
@@ -197,7 +197,7 @@ export const EXECUTE_CHALLENGES = {
           "Error"
         ],
         answer: "6",
-        hint: "配列・オブジェクトの処理を順に追います。",
+        hint: "record.values は [1, 2, 3] です。reduce は左から順に足し算しています。",
         explanation: "表示データにある Japanese washi traditions を使い、処理の流れを追うと 6 が出力されます。"
       },
       {
@@ -216,7 +216,7 @@ export const EXECUTE_CHALLENGES = {
           "Error"
         ],
         answer: "Ise Jingu Shikinen Sengu",
-        hint: "配列・オブジェクトの処理を順に追います。",
+        hint: "console.log(route.to) なので、from ではなく to の文字列が出ます。",
         explanation: "表示データにある Ise Jingu Shikinen Sengu を使い、処理の流れを追うと Ise Jingu Shikinen Sengu が出力されます。"
       },
       {
@@ -235,7 +235,7 @@ export const EXECUTE_CHALLENGES = {
           "Error"
         ],
         answer: "Tokyo Skytree",
-        hint: "配列・オブジェクトの処理を順に追います。",
+        hint: "score が2の要素だけ filter を通り、その name が result[0] になります。",
         explanation: "表示データにある Tokyo Skytree を使い、処理の流れを追うと Tokyo Skytree が出力されます。"
       },
       {
@@ -254,7 +254,7 @@ export const EXECUTE_CHALLENGES = {
           "Error"
         ],
         answer: "6",
-        hint: "配列・オブジェクトの処理を順に追います。",
+        hint: "reduce の初期値は0です。1、2、3を順に足した合計を考えます。",
         explanation: "表示データにある Yagi-Uda antenna を使い、処理の流れを追うと 6 が出力されます。"
       },
       {
@@ -273,7 +273,7 @@ export const EXECUTE_CHALLENGES = {
           "Error"
         ],
         answer: "Seikan Tunnel",
-        hint: "配列・オブジェクトの処理を順に追います。",
+        hint: "route.to に入っている文字列をそのまま表示します。",
         explanation: "表示データにある Seikan Tunnel を使い、処理の流れを追うと Seikan Tunnel が出力されます。"
       }
     ],

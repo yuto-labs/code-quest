@@ -18,6 +18,7 @@ const BASE_SCORE = 100;
 export default function ChallengeScreen({
   country, language, world = 'decode', onBack, onComplete,
   initialIdx = 0, onSaveIdx, onSaveScore, onMistake, mission = null,
+  initialLives = MAX_HEARTS, onLivesChange, onRestart,
 }) {
   const isPC = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   const questions = useMemo(
@@ -31,10 +32,10 @@ export default function ChallengeScreen({
   const [showExplanation, setShowExplanation] = useState(false);
 
   // Game state
-  const [hearts, setHearts]     = useState(MAX_HEARTS);
+  const [hearts, setHearts]     = useState(initialLives);
   const [score, setScore]       = useState(0);
   const [combo, setCombo]       = useState(0);
-  const [gameOver, setGameOver] = useState(false);
+  const [gameOver, setGameOver] = useState(initialLives <= 0);
 
   // Effect triggers
   const [screenEffect, setScreenEffect]         = useState(null);
@@ -170,6 +171,7 @@ export default function ChallengeScreen({
     setDebugStepAnswers([]);
     setOrderingSelection([]);
     onSaveIdx?.(0, { questionId: questions[0]?.id, debugStepIndex: 0, debugAnswers: [] });
+    onRestart?.();
   };
 
   const handleBack = () => {
@@ -226,7 +228,7 @@ export default function ChallengeScreen({
     ];
 
     return (
-      <div style={{ ...styles.wrap, overflowY: 'auto' }} className="fade-in">
+      <div style={{ ...styles.wrap, display: 'block', overflowY: 'auto' }} className="fade-in">
         <WireframeBackground countryId={country.id} />
 
         {/* Stars — only on fresh clear */}
@@ -252,8 +254,13 @@ export default function ChallengeScreen({
 
         <div style={{
           ...styles.complete,
+          position: 'relative',
+          zIndex: 1,
           justifyContent: 'flex-start',
           paddingTop: 'clamp(32px, 10vh, 72px)',
+          paddingBottom: 'env(safe-area-inset-bottom, 24px)',
+          minHeight: '100dvh',
+          flex: 'none',
         }}>
           {/* Country emoji */}
           <div style={{
@@ -418,6 +425,7 @@ export default function ChallengeScreen({
     schedule(() => setShakingHeartIdx(-1), 500);
     if (newHearts <= 0) schedule(() => setGameOver(true), 750);
     if (q?.id) onMistake?.(q.id);
+    onLivesChange?.(newHearts);
   };
 
   const handleSubmit = () => {
@@ -1283,6 +1291,8 @@ const styles = {
     flex: 1,
     textAlign: 'center',
     padding: 20,
+    position: 'relative',
+    zIndex: 1,
   },
   completeTitle: {
     fontSize: 'clamp(18px, 5vw, 32px)',

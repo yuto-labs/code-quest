@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/refs */
 import { useState, useEffect, useRef } from 'react';
 import TitleScreen from './screens/TitleScreen';
 import HomeScreen from './screens/HomeScreen';
@@ -15,7 +16,7 @@ import { DEBUG_CHALLENGES } from './data/debug_challenges';
 import { useAuth } from './hooks/useAuth';
 import { loadCloudProgress, saveCloudProgress, mergeProgressData } from './lib/sync';
 import { buildProgressKey, migrateProgressKeys } from './utils/progress';
-import { emptyMeta, sanitizeMeta } from './utils/metadata';
+import { emptyMeta, sanitizeMeta, MAX_LIVES } from './utils/metadata';
 import { getFinalMission } from './data/final_missions';
 
 const WORLD_CHALLENGES = { decode: CHALLENGES, execute: EXECUTE_CHALLENGES, debug: DEBUG_CHALLENGES };
@@ -32,6 +33,82 @@ function loadFromLocal(key) {
 function saveToLocal(key, val) {
   localStorage.setItem(key, JSON.stringify(val));
 }
+
+// ── Attempt helpers (BUG_D) ──────────────────────────────────────────────────
+
+function buildAttemptId(worldId, countryId, langId, missionId = null) {
+  return missionId
+    ? `${worldId}_${countryId}_${langId}_m_${missionId}`
+    : `${worldId}_${countryId}_${langId}`;
+}
+
+function getInitialLives(meta, attemptId) {
+  const attempt = meta?.attempts?.[attemptId];
+  if (!attempt || attempt.status === 'completed') return MAX_LIVES;
+  return typeof attempt.remainingLives === 'number' ? attempt.remainingLives : MAX_LIVES;
+}
+
+function updateAttemptLives(meta, attemptId, remainingLives, worldId, countryId, langId, missionId = null) {
+  const now = new Date().toISOString();
+  const existing = meta?.attempts?.[attemptId] || {};
+  return {
+    ...meta,
+    attempts: {
+      ...(meta.attempts || {}),
+      [attemptId]: {
+        ...existing,
+        worldId,
+        countryId,
+        languageId: langId,
+        missionId: missionId || null,
+        remainingLives,
+        maxLives: MAX_LIVES,
+        startedAt: existing.startedAt || now,
+        updatedAt: now,
+        status: remainingLives <= 0 ? 'failed' : 'active',
+        revision: (existing.revision || 0) + 1,
+      },
+    },
+  };
+}
+
+function resetAttemptLives(meta, attemptId) {
+  const now = new Date().toISOString();
+  const existing = meta?.attempts?.[attemptId] || {};
+  return {
+    ...meta,
+    attempts: {
+      ...(meta.attempts || {}),
+      [attemptId]: {
+        ...existing,
+        remainingLives: MAX_LIVES,
+        status: 'active',
+        updatedAt: now,
+        revision: (existing.revision || 0) + 1,
+      },
+    },
+  };
+}
+
+function completeAttempt(meta, attemptId) {
+  const now = new Date().toISOString();
+  const existing = meta?.attempts?.[attemptId] || {};
+  return {
+    ...meta,
+    attempts: {
+      ...(meta.attempts || {}),
+      [attemptId]: {
+        ...existing,
+        remainingLives: MAX_LIVES,
+        status: 'completed',
+        updatedAt: now,
+        revision: (existing.revision || 0) + 1,
+      },
+    },
+  };
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 
 export default function App() {
   const [screen, setScreen]       = useState('title');
@@ -52,8 +129,9 @@ export default function App() {
   const [migrationDone, setMigrationDone] = useState(() => localStorage.getItem('cq_migrated') === 'true');
 
   const saveDebounceTimerRef = useRef(null);
-  const syncIntervalRef = useRef(null);
-  const rewardTimerRef = useRef(null);
+  const saveRevisionRef      = useRef(0);   // monotonic revision for BUG_C
+  const syncIntervalRef      = useRef(null);
+  const rewardTimerRef       = useRef(null);
 
   const showReward = (type, message) => {
     clearTimeout(rewardTimerRef.current);
@@ -85,9 +163,10 @@ export default function App() {
 
   const { user, loading: authLoading, sendOtp, verifyOtp, signOut } = useAuth();
 
-  const latestRef = useRef({ progress, quizProgress, scores, meta, user, isUserDataLoading });
+  // latestRef always reflects current render values — safe to read in async callbacks
+  const latestRef = useRef({ progress, quizProgress, scores, meta, mistakes, user, isUserDataLoading });
   useEffect(() => {
-    latestRef.current = { progress, quizProgress, scores, meta, user, isUserDataLoading };
+    latestRef.current = { progress, quizProgress, scores, meta, mistakes, user, isUserDataLoading };
   });
 
   // クラウドから pull して merge する（常に最新の ref 経由で state を読む）
@@ -245,13 +324,19 @@ export default function App() {
     return () => clearInterval(syncIntervalRef.current);
   }, [user?.id]);
 
-  const syncToCloud = (p, qp, sc, mt = meta) => {
-    const targetUid = user?.id;
+  // BUG_C: syncToCloud reads from latestRef in the 1s callback so it always
+  // saves the most recent state, not the closure-captured state at call time.
+  // The monotonic revision counter ensures a superseded debounce never wins.
+  const syncToCloud = () => {
+    const targetUid = latestRef.current.user?.id;
     if (!targetUid || latestRef.current.isUserDataLoading) return;
 
+    const revision = ++saveRevisionRef.current;
     clearTimeout(saveDebounceTimerRef.current);
     saveDebounceTimerRef.current = setTimeout(async () => {
-      if (latestRef.current.user?.id !== targetUid) return;
+      if (revision < saveRevisionRef.current) return; // superseded by a newer call
+      const { progress: p, quizProgress: qp, scores: sc, meta: mt, user: u } = latestRef.current;
+      if (u?.id !== targetUid) return;
 
       setSyncing(true);
       showReward('saving', 'SAVING...');
@@ -272,33 +357,34 @@ export default function App() {
 
   const saveScore = (worldId, countryId, langId, newScore) => {
     const key = `${worldId}_${countryId}_${langId}`;
-    const uid = user?.id;
-    if (newScore > (scores[key] || 0)) {
-      const next = { ...scores, [key]: newScore };
+    const uid = latestRef.current.user?.id;
+    const { scores: sc } = latestRef.current;
+    if (newScore > (sc[key] || 0)) {
+      const next = { ...sc, [key]: newScore };
       setScores(next);
       saveToLocal(getStorageKey(uid, 'scores'), next);
-      syncToCloud(progress, quizProgress, next);
+      syncToCloud();
     }
   };
 
-  const saveMeta = (nextMeta, p = progress, qp = quizProgress, sc = scores) => {
-    const uid = user?.id;
+  const saveMeta = (nextMeta) => {
+    const uid = latestRef.current.user?.id;
     const clean = sanitizeMeta(nextMeta);
     setMeta(clean);
     saveToLocal(getStorageKey(uid, 'meta'), clean);
-    syncToCloud(p, qp, sc, clean);
+    syncToCloud();
   };
 
   const saveResume = (patch) => {
-    const nextMeta = {
-      ...meta,
+    const { meta: mt } = latestRef.current;
+    saveMeta({
+      ...mt,
       resume: {
-        ...(meta.resume || {}),
+        ...(mt.resume || {}),
         ...patch,
         updatedAt: new Date().toISOString(),
       },
-    };
-    saveMeta(nextMeta);
+    });
   };
 
   const resolveResume = () => {
@@ -321,7 +407,7 @@ export default function App() {
     if (!target) return;
     setWorld(target.worldId);
     setCountry(target.countryObj);
-    setLanguage({ id: target.languageId, name: target.languageId.toUpperCase(), emoji: target.languageId === 'javascript' ? '笞｡' : '錐' });
+    setLanguage({ id: target.languageId, name: target.languageId.toUpperCase(), emoji: target.languageId === 'javascript' ? '笞｡' : '錐' });
     if (target.screen === 'map') {
       setScreen('map');
       return;
@@ -335,12 +421,13 @@ export default function App() {
 
   const saveQuizIdx = (worldId, countryId, langId, idx, resumePatch = {}) => {
     const key = `${worldId}_${countryId}_${langId}`;
-    const uid = user?.id;
-    const next = { ...quizProgress, [key]: idx };
+    const uid = latestRef.current.user?.id;
+    const { quizProgress: qp, meta: mt } = latestRef.current;
+    const next = { ...qp, [key]: idx };
     setQuizProgress(next);
     saveToLocal(getStorageKey(uid, 'quiz'), next);
     const nextMeta = {
-      ...meta,
+      ...mt,
       resume: {
         worldId,
         countryId,
@@ -353,7 +440,7 @@ export default function App() {
     };
     setMeta(nextMeta);
     saveToLocal(getStorageKey(uid, 'meta'), nextMeta);
-    syncToCloud(progress, next, scores, nextMeta);
+    syncToCloud();
   };
 
   const handleResetData = async () => {
@@ -376,76 +463,87 @@ export default function App() {
   };
 
   const handleComplete = (worldId, countryId, langId) => {
-    const uid = user?.id;
+    const uid = latestRef.current.user?.id;
+    const { progress: p, quizProgress: qp, meta: mt } = latestRef.current;
     const key = `${worldId}_${countryId}_${langId}`;
-    const nextProgress = { ...progress, [key]: true };
+    const nextProgress = { ...p, [key]: true };
     setProgress(nextProgress);
     saveToLocal(getStorageKey(uid, 'progress'), nextProgress);
 
-    const nextQuiz = { ...quizProgress };
+    const nextQuiz = { ...qp };
     delete nextQuiz[key];
     setQuizProgress(nextQuiz);
     saveToLocal(getStorageKey(uid, 'quiz'), nextQuiz);
 
-    const nextMeta = {
-      ...meta,
-      resume: {
-        worldId,
-        countryId,
-        languageId: langId,
-        screen: 'map',
-        updatedAt: new Date().toISOString(),
+    const attemptId = buildAttemptId(worldId, countryId, langId);
+    const nextMeta = completeAttempt(
+      {
+        ...mt,
+        resume: {
+          worldId,
+          countryId,
+          languageId: langId,
+          screen: 'map',
+          updatedAt: new Date().toISOString(),
+        },
       },
-    };
+      attemptId,
+    );
     setMeta(nextMeta);
     saveToLocal(getStorageKey(uid, 'meta'), nextMeta);
-    syncToCloud(nextProgress, nextQuiz, scores, nextMeta);
+    syncToCloud();
     showReward('stage-unlocked', 'STAGE CLEARED');
     setScreen('map');
   };
 
   const handleFinalMissionComplete = (mission) => {
-    const uid = user?.id;
-    const nextMeta = {
-      ...meta,
-      finalMissions: {
-        ...(meta.finalMissions || {}),
-        [mission.id]: {
-          completedAt: new Date().toISOString(),
+    const uid = latestRef.current.user?.id;
+    const { meta: mt } = latestRef.current;
+    const attemptId = buildAttemptId(mission.worldId, mission.countryId, mission.languageId, mission.id);
+    const nextMeta = completeAttempt(
+      {
+        ...mt,
+        finalMissions: {
+          ...(mt.finalMissions || {}),
+          [mission.id]: {
+            completedAt: new Date().toISOString(),
+            worldId: mission.worldId,
+            countryId: mission.countryId,
+            languageId: mission.languageId,
+          },
+        },
+        resume: {
           worldId: mission.worldId,
           countryId: mission.countryId,
           languageId: mission.languageId,
+          screen: 'language',
+          updatedAt: new Date().toISOString(),
         },
       },
-      resume: {
-        worldId: mission.worldId,
-        countryId: mission.countryId,
-        languageId: mission.languageId,
-        screen: 'language',
-        updatedAt: new Date().toISOString(),
-      },
-    };
+      attemptId,
+    );
     setMeta(nextMeta);
     saveToLocal(getStorageKey(uid, 'meta'), nextMeta);
-    syncToCloud(progress, quizProgress, scores, nextMeta);
+    syncToCloud();
     showReward('language-emblem', 'FINAL MISSION CLEARED');
     setScreen('language');
   };
 
   const saveMistake = (worldId, countryId, langId, questionId) => {
     const key = `${worldId}_${countryId}_${langId}`;
-    const uid = user?.id;
-    const existing = mistakes[key] || [];
-    const next = existing.includes(questionId) ? mistakes : { ...mistakes, [key]: [...existing, questionId] };
-    const currentReview = meta.review?.[questionId] || {};
+    const uid = latestRef.current.user?.id;
+    const { mistakes: mk, meta: mt } = latestRef.current;
+    const existing = mk[key] || [];
+    const nextMistakes = existing.includes(questionId) ? mk : { ...mk, [key]: [...existing, questionId] };
+    const currentReview = mt.review?.[questionId] || {};
     const now = new Date().toISOString();
     const nextMeta = {
-      ...meta,
+      ...mt,
       review: {
-        ...(meta.review || {}),
+        ...(mt.review || {}),
         [questionId]: {
           ...currentReview,
-          wrongCount: Math.max((currentReview.wrongCount || 0) + 1, currentReview.wrongCount || 0),
+          wrongCount: (currentReview.wrongCount || 0) + 1,
           hintCount: currentReview.hintCount || 0,
           lastWrongAt: now,
           lastReviewedAt: currentReview.lastReviewedAt || '',
@@ -455,11 +553,11 @@ export default function App() {
         },
       },
     };
-    setMistakes(next);
+    setMistakes(nextMistakes);
     setMeta(nextMeta);
-    saveToLocal(getStorageKey(uid, 'mistakes'), next);
+    saveToLocal(getStorageKey(uid, 'mistakes'), nextMistakes);
     saveToLocal(getStorageKey(uid, 'meta'), nextMeta);
-    syncToCloud(progress, quizProgress, scores, nextMeta);
+    syncToCloud();
   };
 
   if (authLoading || isUserDataLoading) {
@@ -569,46 +667,84 @@ export default function App() {
         />
       )}
 
-      {screen === 'challenge' && country && language && (
-        <ChallengeScreen
-          country={country}
-          language={language}
-          world={world}
-          initialIdx={quizProgress[`${world}_${country.id}_${language.id}`] || 0}
-          onSaveIdx={(idx, resumePatch) => saveQuizIdx(world, country.id, language.id, idx, resumePatch)}
-          onSaveScore={(s) => saveScore(world, country.id, language.id, s)}
-          onMistake={(qId) => saveMistake(world, country.id, language.id, qId)}
-          onBack={() => setScreen('language')}
-          onComplete={(cId) => handleComplete(world, cId, language.id)}
-        />
-      )}
+      {screen === 'challenge' && country && language && (() => {
+        const attemptId = buildAttemptId(world, country.id, language.id);
+        return (
+          <ChallengeScreen
+            key={`${world}_${country.id}_${language.id}`}
+            country={country}
+            language={language}
+            world={world}
+            initialIdx={quizProgress[`${world}_${country.id}_${language.id}`] || 0}
+            initialLives={getInitialLives(meta, attemptId)}
+            onSaveIdx={(idx, resumePatch) => saveQuizIdx(world, country.id, language.id, idx, resumePatch)}
+            onSaveScore={(s) => saveScore(world, country.id, language.id, s)}
+            onMistake={(qId) => saveMistake(world, country.id, language.id, qId)}
+            onLivesChange={(lives) => {
+              const { meta: mt } = latestRef.current;
+              const nextMeta = updateAttemptLives(mt, attemptId, lives, world, country.id, language.id);
+              setMeta(nextMeta);
+              saveToLocal(getStorageKey(latestRef.current.user?.id, 'meta'), nextMeta);
+              syncToCloud();
+            }}
+            onRestart={() => {
+              const { meta: mt } = latestRef.current;
+              const nextMeta = resetAttemptLives(mt, attemptId);
+              setMeta(nextMeta);
+              saveToLocal(getStorageKey(latestRef.current.user?.id, 'meta'), nextMeta);
+              syncToCloud();
+            }}
+            onBack={() => setScreen('language')}
+            onComplete={(cId) => handleComplete(world, cId, language.id)}
+          />
+        );
+      })()}
 
-      {screen === 'finalMission' && country && language && (
-        <ChallengeScreen
-          country={country}
-          language={language}
-          world={world}
-          mission={getFinalMission(world, country.id, language.id)}
-          initialIdx={meta.resume?.screen === 'finalMission' && meta.resume?.missionId === getFinalMission(world, country.id, language.id)?.id
-            ? (meta.resume.questionIndexFallback || 0)
-            : 0}
-          onSaveIdx={(idx, resumePatch) => saveResume({
-            worldId: world,
-            countryId: country.id,
-            languageId: language.id,
-            questionIndexFallback: idx,
-            screen: 'finalMission',
-            ...resumePatch,
-          })}
-          onSaveScore={(s) => saveScore(world, country.id, language.id, s)}
-          onMistake={(qId) => saveMistake(world, country.id, language.id, qId)}
-          onBack={() => setScreen('language')}
-          onComplete={() => {
-            const mission = getFinalMission(world, country.id, language.id);
-            if (mission) handleFinalMissionComplete({ ...mission, worldId: world, countryId: country.id, languageId: language.id });
-          }}
-        />
-      )}
+      {screen === 'finalMission' && country && language && (() => {
+        const mission = getFinalMission(world, country.id, language.id);
+        const attemptId = buildAttemptId(world, country.id, language.id, mission?.id);
+        return (
+          <ChallengeScreen
+            key={`${world}_${country.id}_${language.id}_final`}
+            country={country}
+            language={language}
+            world={world}
+            mission={mission}
+            initialIdx={meta.resume?.screen === 'finalMission' && meta.resume?.missionId === mission?.id
+              ? (meta.resume.questionIndexFallback || 0)
+              : 0}
+            initialLives={getInitialLives(meta, attemptId)}
+            onSaveIdx={(idx, resumePatch) => saveResume({
+              worldId: world,
+              countryId: country.id,
+              languageId: language.id,
+              questionIndexFallback: idx,
+              screen: 'finalMission',
+              ...resumePatch,
+            })}
+            onSaveScore={(s) => saveScore(world, country.id, language.id, s)}
+            onMistake={(qId) => saveMistake(world, country.id, language.id, qId)}
+            onLivesChange={(lives) => {
+              const { meta: mt } = latestRef.current;
+              const nextMeta = updateAttemptLives(mt, attemptId, lives, world, country.id, language.id, mission?.id);
+              setMeta(nextMeta);
+              saveToLocal(getStorageKey(latestRef.current.user?.id, 'meta'), nextMeta);
+              syncToCloud();
+            }}
+            onRestart={() => {
+              const { meta: mt } = latestRef.current;
+              const nextMeta = resetAttemptLives(mt, attemptId);
+              setMeta(nextMeta);
+              saveToLocal(getStorageKey(latestRef.current.user?.id, 'meta'), nextMeta);
+              syncToCloud();
+            }}
+            onBack={() => setScreen('language')}
+            onComplete={() => {
+              if (mission) handleFinalMissionComplete({ ...mission, worldId: world, countryId: country.id, languageId: language.id });
+            }}
+          />
+        );
+      })()}
     </>
   );
 }

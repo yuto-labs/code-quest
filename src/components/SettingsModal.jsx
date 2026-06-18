@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function SettingsModal({ user, syncing, onSendOtp, onVerifyOtp, onSignOut, onRefreshSync, onClose, onResetData, syncError, cloudStats, localStats }) {
+export default function SettingsModal({ user, syncing, onSendOtp, onVerifyOtp, onRefreshSync, onClose, syncError, cloudStats, localStats }) {
   const [step, setStep] = useState('email');
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');

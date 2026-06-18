@@ -4,6 +4,8 @@ import { EXECUTE_LANGUAGES } from '../data/execute_challenges';
 import { DEBUG_LANGUAGES } from '../data/debug_challenges';
 import { AVAILABLE_STAGES, WORLD_META } from '../utils/stageData';
 import { buildProgressKey, getLanguageEmblemTier, getCountrySealTier } from '../utils/progress';
+import { getFinalMission } from '../data/final_missions';
+import { isFinalMissionCleared } from '../utils/metadata';
 
 const GEO_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
 
@@ -23,7 +25,7 @@ const TIER_META = {
   gold:   { label: 'GOLD',     color: '#ffd700',     glyph: '🥇' },
 };
 
-export default function LanguageScreen({ country, world = 'decode', progress, onSelectLanguage, onBack }) {
+export default function LanguageScreen({ country, world = 'decode', progress, meta = {}, onSelectLanguage, onSelectFinalMission, onBack }) {
   const langs = WORLD_LANGUAGES[world] || LANGUAGES;
   const worldMeta = WORLD_META[world];
   const p = progress || {};
@@ -117,13 +119,16 @@ export default function LanguageScreen({ country, world = 'decode', progress, on
             const stages = (AVAILABLE_STAGES[world] || {})[country.id] || [];
             const hasContent = stages.includes(lang.id);
             const isCleared = !!p[buildProgressKey(world, country.id, lang.id)];
-            const emblemTier = getLanguageEmblemTier(p, lang.id);
+            const emblemTier = getLanguageEmblemTier(p, lang.id, meta);
             const emblemMeta = TIER_META[emblemTier];
             const isAvailable = lang.available && hasContent;
+            const mission = getFinalMission(world, country.id, lang.id);
+            const missionUnlocked = Boolean(mission && isCleared);
+            const missionCleared = Boolean(mission && isFinalMissionCleared(meta, mission.id));
 
             return (
+              <div key={lang.id} style={styles.langStack}>
               <button
-                key={lang.id}
                 style={{
                   ...styles.langBtn,
                   ...(isAvailable ? styles.langBtnActive : styles.langBtnLocked),
@@ -146,6 +151,24 @@ export default function LanguageScreen({ country, world = 'decode', progress, on
                   </span>
                 )}
               </button>
+              {mission && (
+                <button
+                  style={{
+                    ...styles.finalBtn,
+                    opacity: missionUnlocked ? 1 : 0.48,
+                    borderColor: missionCleared ? '#ffd700' : missionUnlocked ? 'var(--accent2)' : '#444',
+                    color: missionCleared ? '#ffd700' : missionUnlocked ? 'var(--accent2)' : '#666',
+                  }}
+                  onClick={() => missionUnlocked && onSelectFinalMission?.(mission, lang)}
+                  disabled={!missionUnlocked}
+                >
+                  <span>{missionCleared ? 'FINAL CLEAR' : 'FINAL MISSION'}</span>
+                  <span style={styles.finalSub}>
+                    {missionUnlocked ? mission.title : 'Clear the normal stage to unlock'}
+                  </span>
+                </button>
+              )}
+              </div>
             );
           })}
         </div>
@@ -257,6 +280,27 @@ const styles = {
     transition: 'all 0.15s',
     width: '100%',
     minHeight: 64,
+  },
+  langStack: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 8,
+  },
+  finalBtn: {
+    fontFamily: 'var(--pixel-font)',
+    background: 'rgba(255,221,0,0.06)',
+    border: '2px solid',
+    padding: '10px 14px',
+    cursor: 'pointer',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 5,
+    textAlign: 'left',
+  },
+  finalSub: {
+    fontSize: 8,
+    color: 'var(--text-dim)',
+    lineHeight: 1.6,
   },
   langBtnActive: {
     background: 'var(--panel)',

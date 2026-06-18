@@ -9,9 +9,15 @@ import {
   analyzeQuestionSet,
   buildFactLookups,
   validateAssignmentRecord,
+  validateCloudMetadata,
+  validateFinalMission,
+  validateProgressPayload,
   validateQuestion,
 } from './validate-questions.mjs';
 import { validateCountryFacts } from '../src/data/country_facts.js';
+import { buildFinalMissionId, getFinalMission } from '../src/data/final_missions.js';
+import { getLanguageEmblemTier } from '../src/utils/progress.js';
+import { emptyMeta, mergeMeta, mergeReview, packProgress, unpackProgress } from '../src/utils/metadata.js';
 
 const RED   = '\x1b[31m';
 const GREEN = '\x1b[32m';
@@ -69,6 +75,10 @@ function expectAnalysisError(label, records, rule) {
   analyzeQuestionSet(records, errors, warnings, buildFactLookups());
   const found = errors.some(e => e.rule === rule);
   return { label, rule, pass: found, errors: [...errors, ...warnings] };
+}
+
+function expectGeneric(label, pass, rule = 'generic') {
+  return { label, rule, pass, errors: [] };
 }
 
 // Tests --------------------------------------------------------------------
@@ -163,6 +173,103 @@ tests.push(expectNoError(
   { id: 'test_9', title: 'T', questionType: 'fill-blank', blank: 'x', code: 'x = ___BLANK___', hint: 'h', explanation: 'e' },
   'fill-blank:missing-answer-or-blank'
 ));
+
+// 19. pack/unpack preserves flat progress
+{
+  const packed = packProgress({ decode_JP_python: true }, { resume: { worldId: 'decode' } });
+  const unpacked = unpackProgress(packed);
+  tests.push(expectGeneric(
+    'pack/unpack preserves flat progress and separates __cq_meta',
+    unpacked.progress.decode_JP_python === true && !('__cq_meta' in unpacked.progress) && unpacked.meta.resume.worldId === 'decode'
+  ));
+}
+
+// 20. old row without __cq_meta remains valid
+{
+  const unpacked = unpackProgress({ decode_JP_python: true });
+  tests.push(expectGeneric(
+    'old row without __cq_meta produces empty defaults',
+    unpacked.progress.decode_JP_python === true && unpacked.meta.version === 1
+  ));
+}
+
+// 21. metadata merge commutative/idempotent
+{
+  const a = { review: { q1: { wrongCount: 1, hintCount: 0, lastWrongAt: '2026-01-01T00:00:00.000Z', mistakeTags: ['debug'] } } };
+  const b = { review: { q1: { wrongCount: 2, hintCount: 1, lastWrongAt: '2026-01-02T00:00:00.000Z', mistakeTags: ['decode'] } } };
+  const ab = mergeMeta(a, b);
+  const ba = mergeMeta(b, a);
+  const aa = mergeMeta(a, a);
+  tests.push(expectGeneric(
+    'metadata merge is commutative/idempotent for review data',
+    JSON.stringify(ab.review) === JSON.stringify(ba.review) && aa.review.q1.wrongCount === 1
+  ));
+}
+
+// 22. review union across devices
+{
+  const merged = mergeReview(
+    { q1: { wrongCount: 1, hintCount: 0, mistakeTags: ['decode'] } },
+    { q1: { wrongCount: 0, hintCount: 2, mistakeTags: ['debug'] } }
+  );
+  tests.push(expectGeneric(
+    'review union across devices keeps max counts and tag union',
+    merged.q1.wrongCount === 1 && merged.q1.hintCount === 2 && merged.q1.mistakeTags.join(',') === 'debug,decode'
+  ));
+}
+
+// 23. invalid resume fallback
+{
+  const { errors, warnings } = validateCloudMetadata({ resume: { questionIndexFallback: 2 }, review: {}, finalMissions: {} });
+  tests.push(expectGeneric(
+    'invalid resume metadata is rejected and index-only fallback warned',
+    errors.some(e => e.rule === 'invalid-resume-metadata') && warnings.some(w => w.rule === 'resume-index-only-fallback'),
+    'invalid-resume-metadata'
+  ));
+}
+
+// 24. reset clears metadata
+{
+  const cleared = emptyMeta();
+  tests.push(expectGeneric(
+    'reset clears metadata containers',
+    Object.keys(cleared.resume).length === 0 && Object.keys(cleared.review).length === 0 && Object.keys(cleared.finalMissions).length === 0
+  ));
+}
+
+// 25. final mission unlock false/true and completion affects derived emblem
+{
+  const missionId = buildFinalMissionId('decode', 'JP', 'python');
+  const noTier = getLanguageEmblemTier({ decode_JP_python: true }, 'python', emptyMeta());
+  const yesTier = getLanguageEmblemTier({ decode_JP_python: true }, 'python', {
+    finalMissions: { [missionId]: { completedAt: '2026-01-01T00:00:00.000Z' } },
+  });
+  tests.push(expectGeneric(
+    'final completion affects derived emblem',
+    noTier === 'none' && yesTier === 'bronze'
+  ));
+}
+
+// 26. reserved keys excluded from country counts
+{
+  const { errors } = validateProgressPayload({ __cq_meta: true });
+  tests.push(expectGeneric(
+    'reserved keys cannot be treated as country progress',
+    errors.some(e => e.rule === 'reserved-metadata-treated-as-stage-progress'),
+    'reserved-metadata-treated-as-stage-progress'
+  ));
+}
+
+// 27. DEBUG final context persistence
+{
+  const mission = { ...getFinalMission('debug', 'JP', 'python'), worldId: 'debug', countryId: 'JP', languageId: 'python' };
+  const { errors } = validateFinalMission(mission);
+  tests.push(expectGeneric(
+    'DEBUG final has valid 3-step shared context',
+    !errors.some(e => e.rule === 'debug-final-missing-shared-context'),
+    'debug-final-missing-shared-context'
+  ));
+}
 
 // 10. bonus: valid debug-step (3 steps) passes step-count check
 tests.push(expectNoError(

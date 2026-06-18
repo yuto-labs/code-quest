@@ -34,7 +34,7 @@ const LANG_META = {
   javascript: { name: 'JAVASCRIPT', emoji: '⚡' },
 };
 
-export default function ProgressScreen({ progress, quizProgress, scores = {}, mistakes = {}, onBack }) {
+export default function ProgressScreen({ progress, quizProgress, scores = {}, mistakes = {}, meta = {}, onBack }) {
   const [activeWorld, setActiveWorld] = useState('decode');
   const p = progress || {};
   const qp = quizProgress || {};
@@ -77,6 +77,7 @@ export default function ProgressScreen({ progress, quizProgress, scores = {}, mi
         </div>
       </div>
 
+      <div style={styles.scrollBody}>
       {/* Per-language × per-world summary */}
       <div style={styles.section}>
         <div style={styles.sectionLabel}>// WORLD × LANGUAGE STATS</div>
@@ -128,7 +129,7 @@ export default function ProgressScreen({ progress, quizProgress, scores = {}, mi
         <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
           {ALL_LANGS.map(langId => {
             const meta = LANG_META[langId] || { name: langId.toUpperCase(), emoji: '📄' };
-            const tier = getLanguageEmblemTier(p, langId);
+            const tier = getLanguageEmblemTier(p, langId, meta);
             const tierMeta = EMBLEM_TIERS[tier];
             return (
               <div key={langId} style={{
@@ -193,7 +194,8 @@ export default function ProgressScreen({ progress, quizProgress, scores = {}, mi
           })
           .filter(Boolean);
 
-        if (reviewEntries.length === 0) return null;
+        const cloudReview = Object.entries(meta.review || {}).filter(([, item]) => item?.reviewDue);
+        if (reviewEntries.length === 0 && cloudReview.length === 0) return null;
         return (
           <div style={styles.section}>
             <div style={styles.sectionLabel}>// REVIEW QUEUE — 要復習</div>
@@ -208,6 +210,17 @@ export default function ProgressScreen({ progress, quizProgress, scores = {}, mi
                   </div>
                 </div>
                 <span style={{ fontSize: 9, color: '#ff4466' }}>⚠ {ids.length}</span>
+              </div>
+            ))}
+            {cloudReview.map(([questionId, item]) => (
+              <div key={questionId} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 0', borderBottom: '1px solid var(--border2)' }}>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 10, color: 'var(--text)' }}>{questionId}</div>
+                  <div style={{ fontSize: 8, color: 'var(--text-dim)' }}>
+                    wrong {item.wrongCount || 0} / hints {item.hintCount || 0}
+                  </div>
+                </div>
+                <span style={{ fontSize: 9, color: '#ff4466' }}>REVIEW</span>
               </div>
             ))}
           </div>
@@ -289,52 +302,23 @@ export default function ProgressScreen({ progress, quizProgress, scores = {}, mi
           );
         })}
       </div>
+      </div>
     </div>
   );
 }
-
-function StatCard({ label, value, color }) {
-  return (
-    <div style={statStyles.wrap}>
-      <div style={{ ...statStyles.value, color }}>{value}</div>
-      <div style={statStyles.label}>{label}</div>
-    </div>
-  );
-}
-
-const statStyles = {
-  wrap: {
-    flex: 1,
-    background: 'var(--panel)',
-    border: '1px solid rgba(0,102,255,0.4)',
-    padding: '14px 6px',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: 8,
-  },
-  value: {
-    fontSize: 'clamp(13px, 3.8vw, 17px)',
-    fontFamily: 'var(--pixel-font)',
-    lineHeight: 1.2,
-    textAlign: 'center',
-  },
-  label: {
-    fontSize: 'clamp(6px, 1.8vw, 8px)',
-    color: '#7799bb',
-    textAlign: 'center',
-    letterSpacing: 1,
-  },
-};
 
 const styles = {
   wrap: {
-    width: '100%',
-    minHeight: '100dvh',
+    position: 'fixed',
+    top: 'calc(var(--vv-offset, 0px) + env(safe-area-inset-top, 0px))',
+    left: 0,
+    right: 0,
+    bottom: 0,
     background: 'var(--bg)',
     display: 'flex',
     flexDirection: 'column',
-    paddingBottom: 'env(safe-area-inset-bottom, 16px)',
+    overflow: 'hidden',
+    minHeight: 0,
   },
   header: {
     padding: '16px 20px',
@@ -343,6 +327,15 @@ const styles = {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 16,
+    flexShrink: 0,
+  },
+  scrollBody: {
+    flex: 1,
+    minHeight: 0,
+    overflowY: 'auto',
+    overflowX: 'hidden',
+    WebkitOverflowScrolling: 'touch',
+    paddingBottom: 'env(safe-area-inset-bottom, 16px)',
   },
   backBtn: {
     fontFamily: 'var(--pixel-font)',

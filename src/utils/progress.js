@@ -1,6 +1,8 @@
-import { COUNTRIES } from '../data/countries';
-import { AVAILABLE_STAGES } from './stageData';
-import { COUNTRY_CONCEPT_MAP } from '../data/worlds';
+import { COUNTRIES } from '../data/countries.js';
+import { AVAILABLE_STAGES } from './stageData.js';
+import { COUNTRY_CONCEPT_MAP } from '../data/worlds.js';
+import { buildFinalMissionId } from '../data/final_missions.js';
+import { META_KEY, isFinalMissionCleared, stripMeta } from './metadata.js';
 
 // Key formats:
 //   legacy:  'JP_python'            (2-part: country_lang)
@@ -11,6 +13,7 @@ export function buildProgressKey(worldId, countryId, languageId) {
 }
 
 export function parseProgressKey(key) {
+  if (key === META_KEY) return { worldId: '', countryId: '', languageId: '' };
   const parts = key.split('_');
   if (parts.length >= 3) {
     // current format: world_country_lang (lang may itself contain underscores)
@@ -25,6 +28,7 @@ export function parseProgressKey(key) {
 export function migrateProgressKeys(data) {
   const seen = new Map();
   for (const [k, v] of Object.entries(data || {})) {
+    if (k === META_KEY) continue;
     const { worldId, countryId, languageId } = parseProgressKey(k);
     const norm = buildProgressKey(worldId, countryId, languageId);
     if (!seen.has(norm) || v) seen.set(norm, v);
@@ -35,7 +39,7 @@ export function migrateProgressKeys(data) {
 // Returns Set of countryIds cleared for the given world (at least one language stage cleared).
 function getClearedCountrySet(progress, world) {
   const cleared = new Set();
-  for (const [key, val] of Object.entries(progress || {})) {
+  for (const [key, val] of Object.entries(stripMeta(progress) || {})) {
     if (!val) continue;
     const { worldId, countryId } = parseProgressKey(key);
     if (worldId === world) cleared.add(countryId);
@@ -130,7 +134,7 @@ export function getConceptBestScores(scores, conceptId, languageId = 'python') {
 // Language Emblem tier for a given language.
 // Tier = highest world where at least one country is cleared.
 // 'none' | 'bronze' (any decode) | 'silver' (any execute) | 'gold' (any debug)
-export function getLanguageEmblemTier(progress, languageId) {
+export function getLanguageEmblemTier(progress, languageId, meta = {}) {
   const worldTiers = [
     { worldId: 'debug',   tier: 'gold'   },
     { worldId: 'execute', tier: 'silver' },
@@ -138,10 +142,11 @@ export function getLanguageEmblemTier(progress, languageId) {
   ];
   for (const { worldId, tier } of worldTiers) {
     const stages = AVAILABLE_STAGES[worldId] || {};
-    const hasAnyCleared = Object.keys(stages).some(
-      countryId => (stages[countryId] || []).includes(languageId)
-        && !!progress[buildProgressKey(worldId, countryId, languageId)]
-    );
+    const hasAnyCleared = Object.keys(stages).some(countryId => {
+      if (!(stages[countryId] || []).includes(languageId)) return false;
+      if (!progress[buildProgressKey(worldId, countryId, languageId)]) return false;
+      return isFinalMissionCleared(meta, buildFinalMissionId(worldId, countryId, languageId));
+    });
     if (hasAnyCleared) return tier;
   }
   return 'none';

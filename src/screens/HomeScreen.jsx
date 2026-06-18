@@ -3,7 +3,7 @@ import SettingsModal from '../components/SettingsModal';
 import { getWorldStats } from '../utils/progress';
 import { WORLD_META, WORLD_IDS } from '../utils/stageData';
 
-export default function HomeScreen({ onNavigate, progress, user, syncing, onSendOtp, onVerifyOtp, onSignOut, onRefreshSync, onResetData, syncError, cloudStats }) {
+export default function HomeScreen({ onNavigate, progress, resume, onContinue, user, syncing, onSendOtp, onVerifyOtp, onSignOut, onRefreshSync, onResetData, syncError, cloudStats }) {
   const [showSettings, setShowSettings] = useState(false);
 
   const worldStats = getWorldStats(progress || {});
@@ -50,6 +50,17 @@ export default function HomeScreen({ onNavigate, progress, user, syncing, onSend
           );
         })}
       </div>
+
+      {resume && (
+        <button style={styles.continueBtn} onClick={onContinue}>
+          <span style={styles.continueLabel}>CONTINUE</span>
+          <span style={styles.continueSub}>
+            {resume.worldId?.toUpperCase()} / {resume.countryId} / {resume.languageId}
+            {resume.screen === 'challenge' ? ` / Q${(resume.questionIndex ?? 0) + 1}` : ' / MAP'}
+            {Number.isInteger(resume.debugStepIndex) ? ` / DEBUG STEP ${resume.debugStepIndex + 1}` : ''}
+          </span>
+        </button>
+      )}
 
       {/* メニュー */}
       <div style={styles.menu}>
@@ -173,6 +184,22 @@ const styles = {
     width: '100%',
     maxWidth: 480,
   },
+  continueBtn: {
+    fontFamily: 'var(--pixel-font)',
+    width: '100%',
+    maxWidth: 480,
+    background: 'rgba(255,221,0,0.08)',
+    border: '2px solid var(--accent2)',
+    color: 'var(--accent2)',
+    cursor: 'pointer',
+    padding: '14px 18px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 6,
+    textAlign: 'left',
+  },
+  continueLabel: { fontSize: 12, letterSpacing: 1 },
+  continueSub: { fontSize: 8, color: 'var(--text)', lineHeight: 1.8 },
   menuBtn: {
     fontFamily: 'var(--pixel-font)',
     display: 'flex',

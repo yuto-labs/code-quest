@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { mergeMeta, packProgress, unpackProgress } from '../utils/metadata';
 
 export async function loadCloudProgress(userId) {
   // .limit(1) + order で重複行があっても最新を取得（.single()は複数行でエラーになる）
@@ -11,13 +12,18 @@ export async function loadCloudProgress(userId) {
 
   if (error) throw error;
   if (!data || data.length === 0) return null;
-  return data[0];
+  const unpacked = unpackProgress(data[0].progress || {});
+  return {
+    ...data[0],
+    progress: unpacked.progress,
+    meta: unpacked.meta,
+  };
 }
 
-export async function saveCloudProgress(userId, progress, quizProgress, scores) {
+export async function saveCloudProgress(userId, progress, quizProgress, scores, meta = {}) {
   const { error } = await supabase.from('user_progress').upsert({
     user_id: userId,
-    progress,
+    progress: packProgress(progress, meta),
     quiz_progress: quizProgress,
     scores,
     updated_at: new Date().toISOString(),
@@ -46,5 +52,6 @@ export function mergeProgressData(local, cloud) {
     progress: mergedProgress,
     quizProgress: mergedQuiz,
     scores: mergedScores,
+    meta: mergeMeta(local.meta, cloud.meta),
   };
 }

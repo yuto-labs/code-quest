@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { PYTHON_REFERENCE } from '../data/reference';
 import { getConceptCoreStatus, getConceptBestScores } from '../utils/progress';
-import { WORLD_META } from '../utils/stageData';
+import { WORLD_META, WORLD_IDS } from '../utils/stageData';
 
 // Reference topic id → CONCEPTS.python id (null = not mapped)
 const REFERENCE_CONCEPT_MAP = {
@@ -21,6 +21,7 @@ const REFERENCE_CONCEPT_MAP = {
 };
 
 const WORLD_ORDER = ['decode', 'execute', 'debug'];
+const LAYERS = ['all', '0', '1', '2', '3'];
 
 function ConceptCore({ conceptId, progress, scores, size = 'sm' }) {
   if (!conceptId) return null;
@@ -70,8 +71,60 @@ function ConceptCore({ conceptId, progress, scores, size = 'sm' }) {
   );
 }
 
-export default function ReferenceScreen({ onBack, progress, scores, onNavigate }) {
+export default function ReferenceScreen({ onBack, progress, scores, review = {}, onNavigate }) {
   const [selected, setSelected] = useState(null);
+  const [query, setQuery] = useState('');
+  const [languageFilter, setLanguageFilter] = useState('python');
+  const [worldFilter, setWorldFilter] = useState('all');
+  const [progressFilter, setProgressFilter] = useState('all');
+  const [reviewFilter, setReviewFilter] = useState('all');
+  const [layerFilter, setLayerFilter] = useState('all');
+
+  const filteredTopics = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return PYTHON_REFERENCE.filter(topic => {
+      const conceptId = REFERENCE_CONCEPT_MAP[topic.id] ?? null;
+      const searchable = [
+        topic.title,
+        topic.summary,
+        topic.aliases?.join(' '),
+        topic.keywords?.join(' '),
+        conceptId,
+        ...(topic.sections || []).flatMap(section => [section.heading, section.text, section.code]),
+      ].filter(Boolean).join(' ').toLowerCase();
+      if (q && !searchable.includes(q)) return false;
+      if (languageFilter !== 'all' && languageFilter !== 'python') return false;
+      const status = conceptId ? getConceptCoreStatus(progress || {}, conceptId, languageFilter === 'all' ? 'python' : languageFilter) : null;
+      if (worldFilter !== 'all' && status?.[worldFilter] === null) return false;
+      if (progressFilter !== 'all') {
+        const worlds = worldFilter === 'all' ? WORLD_IDS : [worldFilter];
+        const values = worlds.map(wid => status?.[wid]).filter(v => v !== null && v !== undefined);
+        const cleared = values.filter(Boolean).length;
+        const total = values.length;
+        if (progressFilter === 'not-started' && cleared !== 0) return false;
+        if (progressFilter === 'in-progress' && !(cleared > 0 && cleared < total)) return false;
+        if (progressFilter === 'cleared' && !(total > 0 && cleared === total)) return false;
+      }
+      if (reviewFilter === 'review-needed') {
+        const needsReview = Object.values(review || {}).some(item => item?.reviewDue && (item?.mistakeTags || []).includes(conceptId));
+        if (!needsReview) return false;
+      }
+      if (layerFilter !== 'all') {
+        const layer = conceptId ? Math.min(Object.values(status || {}).filter(Boolean).length, 3) : 0;
+        if (String(layer) !== layerFilter) return false;
+      }
+      return true;
+    });
+  }, [query, languageFilter, worldFilter, progressFilter, reviewFilter, layerFilter, progress, review]);
+
+  const clearFilters = () => {
+    setQuery('');
+    setLanguageFilter('python');
+    setWorldFilter('all');
+    setProgressFilter('all');
+    setReviewFilter('all');
+    setLayerFilter('all');
+  };
 
   if (selected) {
     return (
@@ -96,8 +149,43 @@ export default function ReferenceScreen({ onBack, progress, scores, onNavigate }
         </div>
       </div>
 
+      <div style={styles.filters}>
+        <input
+          style={styles.search}
+          value={query}
+          onChange={e => setQuery(e.target.value)}
+          placeholder="Search reference"
+          aria-label="Search reference"
+        />
+        <select style={styles.select} value={languageFilter} onChange={e => setLanguageFilter(e.target.value)} aria-label="Language filter">
+          <option value="python">Python</option>
+          <option value="all">All languages</option>
+        </select>
+        <select style={styles.select} value={worldFilter} onChange={e => setWorldFilter(e.target.value)} aria-label="World filter">
+          <option value="all">All worlds</option>
+          {WORLD_IDS.map(wid => <option key={wid} value={wid}>{WORLD_META[wid].label}</option>)}
+        </select>
+        <select style={styles.select} value={progressFilter} onChange={e => setProgressFilter(e.target.value)} aria-label="Progress filter">
+          <option value="all">All progress</option>
+          <option value="not-started">Not started</option>
+          <option value="in-progress">In progress</option>
+          <option value="cleared">Cleared</option>
+        </select>
+        <select style={styles.select} value={reviewFilter} onChange={e => setReviewFilter(e.target.value)} aria-label="Review filter">
+          <option value="all">All review</option>
+          <option value="review-needed">Review needed</option>
+        </select>
+        <select style={styles.select} value={layerFilter} onChange={e => setLayerFilter(e.target.value)} aria-label="Concept Core layer filter">
+          {LAYERS.map(layer => <option key={layer} value={layer}>{layer === 'all' ? 'All layers' : `Layer ${layer}`}</option>)}
+        </select>
+        <button style={styles.clearBtn} onClick={clearFilters}>CLEAR</button>
+      </div>
+
       <div style={styles.grid}>
-        {PYTHON_REFERENCE.map((topic) => {
+        {filteredTopics.length === 0 && (
+          <div style={styles.empty}>No reference entries match the current filters.</div>
+        )}
+        {filteredTopics.map((topic) => {
           const conceptId = REFERENCE_CONCEPT_MAP[topic.id] ?? null;
           return (
             <button
@@ -282,6 +370,47 @@ const styles = {
     color: 'var(--text-dim)',
     letterSpacing: 1,
     flexShrink: 0,
+  },
+  filters: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+    gap: 8,
+    padding: '12px 20px',
+    borderBottom: '1px solid var(--border2)',
+    flexShrink: 0,
+  },
+  search: {
+    fontFamily: 'var(--pixel-font)',
+    fontSize: 10,
+    background: 'var(--panel)',
+    color: 'var(--text)',
+    border: '1px solid var(--border2)',
+    padding: '10px',
+    minWidth: 0,
+  },
+  select: {
+    fontFamily: 'var(--pixel-font)',
+    fontSize: 9,
+    background: 'var(--panel)',
+    color: 'var(--text)',
+    border: '1px solid var(--border2)',
+    padding: '8px',
+    minWidth: 0,
+  },
+  clearBtn: {
+    fontFamily: 'var(--pixel-font)',
+    fontSize: 9,
+    background: 'transparent',
+    color: 'var(--accent2)',
+    border: '1px solid var(--accent2)',
+    padding: '8px 10px',
+    cursor: 'pointer',
+  },
+  empty: {
+    fontSize: 10,
+    color: 'var(--text-dim)',
+    padding: 20,
+    textAlign: 'center',
   },
   grid: {
     display: 'flex',

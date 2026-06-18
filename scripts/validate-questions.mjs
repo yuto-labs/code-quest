@@ -18,7 +18,8 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 let CHALLENGES, LANGUAGES, EXECUTE_CHALLENGES, EXECUTE_LANGUAGES,
     DEBUG_CHALLENGES, DEBUG_LANGUAGES, COUNTRIES, CONCEPTS,
     COUNTRY_FACTS, COUNTRY_FACTS_BY_ID, validateCountryFacts,
-    QUESTION_ASSIGNMENTS, COGNITIVE_TASKS;
+    QUESTION_ASSIGNMENTS, COGNITIVE_TASKS, listFinalMissions,
+    META_KEY, packProgress, unpackProgress;
 
 function dataUrl(rel) {
   return pathToFileURL(path.join(ROOT, rel)).href;
@@ -32,6 +33,8 @@ try {
   ({ CONCEPTS } = await import(dataUrl('src/data/worlds.js')));
   ({ COUNTRY_FACTS, COUNTRY_FACTS_BY_ID, validateCountryFacts } = await import(dataUrl('src/data/country_facts.js')));
   ({ QUESTION_ASSIGNMENTS, COGNITIVE_TASKS } = await import(dataUrl('src/data/question_assignments.js')));
+  ({ listFinalMissions } = await import(dataUrl('src/data/final_missions.js')));
+  ({ META_KEY, packProgress, unpackProgress } = await import(dataUrl('src/utils/metadata.js')));
 } catch (err) {
   console.error('Failed to import data files:', err.message);
   process.exit(1);
@@ -415,6 +418,93 @@ function validateDebugStep(q, loc, errors, warnings) {
   }
 }
 
+export function validateCloudMetadata(meta, ctx = {}) {
+  const errors = [];
+  const warnings = [];
+  const loc = ctx.loc || '[cloud-meta]';
+  if (!meta || typeof meta !== 'object' || Array.isArray(meta)) {
+    errors.push({ loc, rule: 'malformed-review-metadata', msg: 'metadata must be an object' });
+    return { errors, warnings };
+  }
+  const resume = meta.resume || {};
+  if (Object.keys(resume).length > 0) {
+    for (const field of ['worldId', 'countryId', 'languageId', 'screen', 'updatedAt']) {
+      if (!resume[field]) errors.push({ loc, rule: 'invalid-resume-metadata', msg: `resume missing ${field}` });
+    }
+    if (resume.questionId === undefined && resume.questionIndexFallback !== undefined) {
+      warnings.push({ loc, rule: 'resume-index-only-fallback', msg: 'resume uses index fallback without questionId' });
+    }
+    if (resume.worldId && !WORLD_SOURCES.some(w => w.worldId === resume.worldId)) {
+      errors.push({ loc, rule: 'unknown-resume-target', msg: `unknown resume world "${resume.worldId}"` });
+    }
+    if (resume.countryId && !VALID_COUNTRY_IDS.has(resume.countryId)) {
+      errors.push({ loc, rule: 'unknown-resume-target', msg: `unknown resume country "${resume.countryId}"` });
+    }
+  }
+  for (const [questionId, item] of Object.entries(meta.review || {})) {
+    if (!item || typeof item !== 'object' || Array.isArray(item)) {
+      errors.push({ loc, rule: 'malformed-review-metadata', msg: `review item ${questionId} must be an object` });
+      continue;
+    }
+    for (const countKey of ['wrongCount', 'hintCount']) {
+      if (item[countKey] !== undefined && (!Number.isInteger(item[countKey]) || item[countKey] < 0)) {
+        errors.push({ loc, rule: 'malformed-review-metadata', msg: `${questionId}.${countKey} must be a non-negative integer` });
+      }
+    }
+    if (item.mistakeTags !== undefined && !Array.isArray(item.mistakeTags)) {
+      errors.push({ loc, rule: 'malformed-review-metadata', msg: `${questionId}.mistakeTags must be an array` });
+    }
+  }
+  return { errors, warnings };
+}
+
+export function validateProgressPayload(progress) {
+  const errors = [];
+  const warnings = [];
+  const unpacked = unpackProgress(progress || {});
+  for (const [key, value] of Object.entries(progress || {})) {
+    if (key === META_KEY && value === true) {
+      errors.push({ loc: '[progress]', rule: 'reserved-metadata-treated-as-stage-progress', msg: `${META_KEY} cannot be a stage progress boolean` });
+    }
+  }
+  const metaIssues = validateCloudMetadata(unpacked.meta, { loc: '[progress.__cq_meta]' });
+  return { errors: [...errors, ...metaIssues.errors], warnings: [...warnings, ...metaIssues.warnings] };
+}
+
+export function validateFinalMission(mission) {
+  const errors = [];
+  const warnings = [];
+  const loc = `[final_missions.js] ${mission?.id ?? '(missing id)'}`;
+  if (!mission?.id || !mission.id.startsWith(`final_${mission.worldId}*${mission.countryId}*${mission.languageId}`)) {
+    errors.push({ loc, rule: 'final-mission-missing-stable-ids', msg: 'Final mission id must be final_{worldId}*{countryId}*{languageId}' });
+  }
+  if (!['DECODE_FINAL', 'EXECUTE_FINAL', 'DEBUG_FINAL'].includes(mission?.type)) {
+    errors.push({ loc, rule: 'invalid-final-mission-type', msg: `Invalid final mission type "${mission?.type}"` });
+  }
+  if (!mission?.worldId || !mission?.countryId || !mission?.languageId) {
+    errors.push({ loc, rule: 'invalid-final-mission-link', msg: 'Final mission must include worldId, countryId, and languageId' });
+  }
+  if (!mission?.unlock || mission.unlock.requiresStageClear !== true) {
+    errors.push({ loc, rule: 'invalid-final-mission-unlock-config', msg: 'Final mission must declare unlock.requiresStageClear=true' });
+  }
+  if (!Array.isArray(mission?.questions) || mission.questions.length === 0) {
+    warnings.push({ loc, rule: 'final-mission-no-verification-content', msg: 'Final mission has no verification content' });
+    return { errors, warnings };
+  }
+  if (mission.type === 'DEBUG_FINAL') {
+    const q = mission.questions.find(item => item.questionType === 'debug-step');
+    if (!q) {
+      errors.push({ loc, rule: 'debug-final-missing-shared-context', msg: 'DEBUG final must include a debug-step question' });
+    } else {
+      validateDebugStep(q, loc, errors, warnings);
+      if (errors.some(e => e.rule.startsWith('debug-step:'))) {
+        errors.push({ loc, rule: 'debug-final-missing-shared-context', msg: 'DEBUG final must have valid 3-step shared context' });
+      }
+    }
+  }
+  return { errors, warnings };
+}
+
 export function validateAssignmentRecord(record, ctx = {}) {
   const errors = [];
   const warnings = [];
@@ -679,6 +769,28 @@ export function runValidation() {
       msg: issue.msg,
     });
   }
+
+  const finalMissions = listFinalMissions();
+  const finalMissionKeys = new Set(finalMissions.map(m => `${m.worldId}_${m.countryId}_${m.languageId}`));
+  for (const mission of finalMissions) {
+    const { errors, warnings } = validateFinalMission(mission);
+    allErrors.push(...errors);
+    allWarnings.push(...warnings);
+  }
+  for (const { worldId, challenges } of WORLD_SOURCES) {
+    for (const [countryId, langMap] of Object.entries(challenges)) {
+      for (const [languageId, questions] of Object.entries(langMap)) {
+        if (Array.isArray(questions) && questions.length > 0 && !finalMissionKeys.has(`${worldId}_${countryId}_${languageId}`)) {
+          allWarnings.push({ loc: `[${worldId}] ${countryId}/${languageId}`, rule: 'content-world-language-no-final-mission',
+            msg: 'Content path has no final mission yet' });
+        }
+      }
+    }
+  }
+
+  const reservedCheck = validateProgressPayload(packProgress({}, { version: 1, resume: {}, review: {}, finalMissions: {} }));
+  allErrors.push(...reservedCheck.errors);
+  allWarnings.push(...reservedCheck.warnings);
 
   return { errors: allErrors, warnings: allWarnings, counts };
 }

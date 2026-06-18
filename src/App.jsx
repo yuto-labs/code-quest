@@ -7,9 +7,18 @@ import LanguageScreen from './screens/LanguageScreen';
 import ChallengeScreen from './screens/ChallengeScreen';
 import ReferenceScreen from './screens/ReferenceScreen';
 import ProgressScreen from './screens/ProgressScreen';
+import RewardToast from './components/RewardToast';
+import { COUNTRIES } from './data/countries';
+import { CHALLENGES } from './data/challenges';
+import { EXECUTE_CHALLENGES } from './data/execute_challenges';
+import { DEBUG_CHALLENGES } from './data/debug_challenges';
 import { useAuth } from './hooks/useAuth';
 import { loadCloudProgress, saveCloudProgress, mergeProgressData } from './lib/sync';
-import { migrateProgressKeys } from './utils/progress';
+import { buildProgressKey, migrateProgressKeys } from './utils/progress';
+import { emptyMeta, sanitizeMeta } from './utils/metadata';
+import { getFinalMission } from './data/final_missions';
+
+const WORLD_CHALLENGES = { decode: CHALLENGES, execute: EXECUTE_CHALLENGES, debug: DEBUG_CHALLENGES };
 
 const getStorageKey = (uid, type) => {
   const prefix = uid ? `cq_${uid}` : 'cq_guest';
@@ -33,15 +42,24 @@ export default function App() {
   const [quizProgress, setQuizProgress] = useState({});
   const [scores, setScores]       = useState({});
   const [mistakes, setMistakes]   = useState({});
+  const [meta, setMeta]           = useState(emptyMeta);
   const [syncing, setSyncing]     = useState(false);
   const [syncError, setSyncError] = useState('');
   const [savedToast, setSavedToast] = useState(false);
   const [cloudStats, setCloudStats] = useState(null); // null = 未確認, 0 = データなし, N = N件
+  const [reward, setReward] = useState(null);
   const [isUserDataLoading, setIsUserDataLoading] = useState(true);
   const [migrationDone, setMigrationDone] = useState(() => localStorage.getItem('cq_migrated') === 'true');
 
   const saveDebounceTimerRef = useRef(null);
   const syncIntervalRef = useRef(null);
+  const rewardTimerRef = useRef(null);
+
+  const showReward = (type, message) => {
+    clearTimeout(rewardTimerRef.current);
+    setReward({ type, message });
+    rewardTimerRef.current = setTimeout(() => setReward(null), 1200);
+  };
 
   // iOS keyboard: track visualViewport offset to prevent fixed screens jumping
   useEffect(() => {
@@ -67,37 +85,43 @@ export default function App() {
 
   const { user, loading: authLoading, sendOtp, verifyOtp, signOut } = useAuth();
 
-  const latestRef = useRef(null);
-  latestRef.current = { progress, quizProgress, scores, user, isUserDataLoading };
+  const latestRef = useRef({ progress, quizProgress, scores, meta, user, isUserDataLoading });
+  useEffect(() => {
+    latestRef.current = { progress, quizProgress, scores, meta, user, isUserDataLoading };
+  });
 
   // クラウドから pull して merge する（常に最新の ref 経由で state を読む）
   const pullFromCloudRef = useRef(null);
-  pullFromCloudRef.current = async (uid) => {
-    if (latestRef.current.isUserDataLoading) return;
-    const cloud = await loadCloudProgress(uid);
-    if (latestRef.current.user?.id !== uid) return;
-
-    const { progress: lp, quizProgress: lqp, scores: ls } = latestRef.current;
-
-    if (!cloud) {
-      // クラウドにデータなし → ローカルデータを初回アップロード
-      await saveCloudProgress(uid, lp, lqp, ls);
+  useEffect(() => {
+    pullFromCloudRef.current = async (uid) => {
+      if (latestRef.current.isUserDataLoading) return;
+      const cloud = await loadCloudProgress(uid);
       if (latestRef.current.user?.id !== uid) return;
-      setCloudStats(Object.keys(lp).length);
-      return;
-    }
 
-    const cloudCount = Object.keys(cloud.progress || {}).length;
-    setCloudStats(cloudCount);
-    const merged = mergeProgressData({ progress: lp, quizProgress: lqp, scores: ls }, cloud);
-    setProgress(merged.progress);
-    setQuizProgress(merged.quizProgress);
-    setScores(merged.scores);
-    saveToLocal(getStorageKey(uid, 'progress'), merged.progress);
-    saveToLocal(getStorageKey(uid, 'quiz'), merged.quizProgress);
-    saveToLocal(getStorageKey(uid, 'scores'), merged.scores);
-    await saveCloudProgress(uid, merged.progress, merged.quizProgress, merged.scores);
-  };
+      const { progress: lp, quizProgress: lqp, scores: ls, meta: lm } = latestRef.current;
+
+      if (!cloud) {
+        // クラウドにデータなし → ローカルデータを初回アップロード
+        await saveCloudProgress(uid, lp, lqp, ls, lm);
+        if (latestRef.current.user?.id !== uid) return;
+        setCloudStats(Object.keys(lp).length);
+        return;
+      }
+
+      const cloudCount = Object.keys(cloud.progress || {}).length;
+      setCloudStats(cloudCount);
+      const merged = mergeProgressData({ progress: lp, quizProgress: lqp, scores: ls, meta: lm }, cloud);
+      setProgress(merged.progress);
+      setQuizProgress(merged.quizProgress);
+      setScores(merged.scores);
+      setMeta(merged.meta);
+      saveToLocal(getStorageKey(uid, 'progress'), merged.progress);
+      saveToLocal(getStorageKey(uid, 'quiz'), merged.quizProgress);
+      saveToLocal(getStorageKey(uid, 'scores'), merged.scores);
+      saveToLocal(getStorageKey(uid, 'meta'), merged.meta);
+      await saveCloudProgress(uid, merged.progress, merged.quizProgress, merged.scores, merged.meta);
+    };
+  });
 
   const triggerSync = async () => {
     const { user: u, isUserDataLoading: loading } = latestRef.current;
@@ -126,6 +150,7 @@ export default function App() {
         const pKey = getStorageKey(uid, 'progress');
         const qKey = getStorageKey(uid, 'quiz');
         const sKey = getStorageKey(uid, 'scores');
+        const mKey = getStorageKey(uid, 'meta');
         setMistakes(loadFromLocal(getStorageKey(uid, 'mistakes')));
 
         // マイグレーション (ログイン時かつ未完了のみ)
@@ -152,6 +177,7 @@ export default function App() {
         const rawP = loadFromLocal(pKey);
         const rawQ = loadFromLocal(qKey);
         const rawS = loadFromLocal(sKey);
+        const localMeta = sanitizeMeta(loadFromLocal(mKey));
         const localP = migrateProgressKeys(rawP);
         const localQ = migrateProgressKeys(rawQ);
         const localS = migrateProgressKeys(rawS);
@@ -164,29 +190,32 @@ export default function App() {
           if (latestRef.current.user?.id !== uid) return;
 
           if (cloud) {
-            const merged = mergeProgressData({ progress: localP, quizProgress: localQ, scores: localS }, cloud);
+            const merged = mergeProgressData({ progress: localP, quizProgress: localQ, scores: localS, meta: localMeta }, cloud);
             saveToLocal(pKey, merged.progress);
             saveToLocal(qKey, merged.quizProgress);
             saveToLocal(sKey, merged.scores);
-            await saveCloudProgress(uid, merged.progress, merged.quizProgress, merged.scores);
+            saveToLocal(mKey, merged.meta);
+            await saveCloudProgress(uid, merged.progress, merged.quizProgress, merged.scores, merged.meta);
             if (latestRef.current.user?.id !== uid) return;
-            setProgress(merged.progress); setQuizProgress(merged.quizProgress); setScores(merged.scores);
+            setProgress(merged.progress); setQuizProgress(merged.quizProgress); setScores(merged.scores); setMeta(merged.meta);
             setCloudStats(Object.keys(merged.progress || {}).length);
           } else {
-            await saveCloudProgress(uid, localP, localQ, localS);
+            await saveCloudProgress(uid, localP, localQ, localS, localMeta);
             if (latestRef.current.user?.id !== uid) return;
-            setProgress(localP); setQuizProgress(localQ); setScores(localS);
+            setProgress(localP); setQuizProgress(localQ); setScores(localS); setMeta(localMeta);
           }
         } else {
-          setProgress(localP); setQuizProgress(localQ); setScores(localS);
+          setProgress(localP); setQuizProgress(localQ); setScores(localS); setMeta(localMeta);
         }
       } catch (e) {
         console.error("InitData Error:", e);
         const pKey = getStorageKey(uid, 'progress');
         const qKey = getStorageKey(uid, 'quiz');
         const sKey = getStorageKey(uid, 'scores');
+        const mKey = getStorageKey(uid, 'meta');
         if (latestRef.current.user?.id === uid) {
           setProgress(loadFromLocal(pKey)); setQuizProgress(loadFromLocal(qKey)); setScores(loadFromLocal(sKey));
+          setMeta(sanitizeMeta(loadFromLocal(mKey)));
         }
       } finally {
         if (latestRef.current.user?.id === uid) {
@@ -216,7 +245,7 @@ export default function App() {
     return () => clearInterval(syncIntervalRef.current);
   }, [user?.id]);
 
-  const syncToCloud = (p, qp, sc) => {
+  const syncToCloud = (p, qp, sc, mt = meta) => {
     const targetUid = user?.id;
     if (!targetUid || latestRef.current.isUserDataLoading) return;
 
@@ -225,13 +254,16 @@ export default function App() {
       if (latestRef.current.user?.id !== targetUid) return;
 
       setSyncing(true);
+      showReward('saving', 'SAVING...');
       setSyncError('');
       try {
-        await saveCloudProgress(targetUid, p, qp, sc);
+        await saveCloudProgress(targetUid, p, qp, sc, mt);
         setSavedToast(true);
+        showReward('saved', 'SAVED');
         setTimeout(() => setSavedToast(false), 1500);
       } catch (e) {
         setSyncError(e?.message || '保存エラー');
+        showReward('error', 'SYNC ERROR');
       } finally {
         setSyncing(false);
       }
@@ -249,13 +281,79 @@ export default function App() {
     }
   };
 
-  const saveQuizIdx = (worldId, countryId, langId, idx) => {
+  const saveMeta = (nextMeta, p = progress, qp = quizProgress, sc = scores) => {
+    const uid = user?.id;
+    const clean = sanitizeMeta(nextMeta);
+    setMeta(clean);
+    saveToLocal(getStorageKey(uid, 'meta'), clean);
+    syncToCloud(p, qp, sc, clean);
+  };
+
+  const saveResume = (patch) => {
+    const nextMeta = {
+      ...meta,
+      resume: {
+        ...(meta.resume || {}),
+        ...patch,
+        updatedAt: new Date().toISOString(),
+      },
+    };
+    saveMeta(nextMeta);
+  };
+
+  const resolveResume = () => {
+    const resume = meta.resume || {};
+    if (!resume.worldId || !resume.countryId || !resume.languageId) return null;
+    const countryObj = COUNTRIES.find(c => c.id === resume.countryId);
+    const questions = (WORLD_CHALLENGES[resume.worldId] || {})[resume.countryId]?.[resume.languageId] || [];
+    if (!countryObj) return null;
+    if (resume.screen === 'map' || questions.length === 0) {
+      return { ...resume, countryObj, questionIndex: 0, screen: 'map' };
+    }
+    const byId = questions.findIndex(q => q.id === resume.questionId);
+    const fallback = Number.isInteger(resume.questionIndexFallback) ? resume.questionIndexFallback : 0;
+    const questionIndex = byId >= 0 ? byId : Math.min(Math.max(fallback, 0), Math.max(questions.length - 1, 0));
+    return { ...resume, countryObj, questionIndex, questions, screen: resume.screen === 'finalMission' ? 'finalMission' : 'challenge' };
+  };
+
+  const handleContinue = () => {
+    const target = resolveResume();
+    if (!target) return;
+    setWorld(target.worldId);
+    setCountry(target.countryObj);
+    setLanguage({ id: target.languageId, name: target.languageId.toUpperCase(), emoji: target.languageId === 'javascript' ? '笞｡' : '錐' });
+    if (target.screen === 'map') {
+      setScreen('map');
+      return;
+    }
+    const key = buildProgressKey(target.worldId, target.countryId, target.languageId);
+    const nextQuiz = { ...quizProgress, [key]: target.questionIndex };
+    setQuizProgress(nextQuiz);
+    saveToLocal(getStorageKey(user?.id, 'quiz'), nextQuiz);
+    setScreen(target.screen === 'finalMission' ? 'finalMission' : 'challenge');
+  };
+
+  const saveQuizIdx = (worldId, countryId, langId, idx, resumePatch = {}) => {
     const key = `${worldId}_${countryId}_${langId}`;
     const uid = user?.id;
     const next = { ...quizProgress, [key]: idx };
     setQuizProgress(next);
     saveToLocal(getStorageKey(uid, 'quiz'), next);
-    syncToCloud(progress, next, scores);
+    const nextMeta = {
+      ...meta,
+      resume: {
+        worldId,
+        countryId,
+        languageId: langId,
+        questionIndexFallback: idx,
+        screen: 'challenge',
+        ...resumePatch,
+        updatedAt: new Date().toISOString(),
+      },
+    };
+    setMeta(nextMeta);
+    saveToLocal(getStorageKey(uid, 'meta'), nextMeta);
+    syncToCloud(progress, next, scores, nextMeta);
   };
 
   const handleResetData = async () => {
@@ -265,13 +363,15 @@ export default function App() {
     localStorage.removeItem(getStorageKey(uid, 'quiz'));
     localStorage.removeItem(getStorageKey(uid, 'scores'));
     localStorage.removeItem(getStorageKey(uid, 'mistakes'));
+    localStorage.removeItem(getStorageKey(uid, 'meta'));
     setProgress({});
     setQuizProgress({});
     setScores({});
     setMistakes({});
+    setMeta(emptyMeta());
     setCloudStats(0);
     if (uid) {
-      try { await saveCloudProgress(uid, {}, {}, {}); } catch (_) { /* silent */ }
+      try { await saveCloudProgress(uid, {}, {}, {}, emptyMeta()); } catch { /* silent */ }
     }
   };
 
@@ -287,18 +387,79 @@ export default function App() {
     setQuizProgress(nextQuiz);
     saveToLocal(getStorageKey(uid, 'quiz'), nextQuiz);
 
-    syncToCloud(nextProgress, nextQuiz, scores);
+    const nextMeta = {
+      ...meta,
+      resume: {
+        worldId,
+        countryId,
+        languageId: langId,
+        screen: 'map',
+        updatedAt: new Date().toISOString(),
+      },
+    };
+    setMeta(nextMeta);
+    saveToLocal(getStorageKey(uid, 'meta'), nextMeta);
+    syncToCloud(nextProgress, nextQuiz, scores, nextMeta);
+    showReward('stage-unlocked', 'STAGE CLEARED');
     setScreen('map');
+  };
+
+  const handleFinalMissionComplete = (mission) => {
+    const uid = user?.id;
+    const nextMeta = {
+      ...meta,
+      finalMissions: {
+        ...(meta.finalMissions || {}),
+        [mission.id]: {
+          completedAt: new Date().toISOString(),
+          worldId: mission.worldId,
+          countryId: mission.countryId,
+          languageId: mission.languageId,
+        },
+      },
+      resume: {
+        worldId: mission.worldId,
+        countryId: mission.countryId,
+        languageId: mission.languageId,
+        screen: 'language',
+        updatedAt: new Date().toISOString(),
+      },
+    };
+    setMeta(nextMeta);
+    saveToLocal(getStorageKey(uid, 'meta'), nextMeta);
+    syncToCloud(progress, quizProgress, scores, nextMeta);
+    showReward('language-emblem', 'FINAL MISSION CLEARED');
+    setScreen('language');
   };
 
   const saveMistake = (worldId, countryId, langId, questionId) => {
     const key = `${worldId}_${countryId}_${langId}`;
     const uid = user?.id;
     const existing = mistakes[key] || [];
-    if (existing.includes(questionId)) return;
-    const next = { ...mistakes, [key]: [...existing, questionId] };
+    const next = existing.includes(questionId) ? mistakes : { ...mistakes, [key]: [...existing, questionId] };
+    const currentReview = meta.review?.[questionId] || {};
+    const now = new Date().toISOString();
+    const nextMeta = {
+      ...meta,
+      review: {
+        ...(meta.review || {}),
+        [questionId]: {
+          ...currentReview,
+          wrongCount: Math.max((currentReview.wrongCount || 0) + 1, currentReview.wrongCount || 0),
+          hintCount: currentReview.hintCount || 0,
+          lastWrongAt: now,
+          lastReviewedAt: currentReview.lastReviewedAt || '',
+          reviewDue: true,
+          mistakeTags: [...new Set([...(currentReview.mistakeTags || []), worldId])].sort(),
+          resolvedAt: currentReview.resolvedAt || '',
+        },
+      },
+    };
     setMistakes(next);
+    setMeta(nextMeta);
     saveToLocal(getStorageKey(uid, 'mistakes'), next);
+    saveToLocal(getStorageKey(uid, 'meta'), nextMeta);
+    syncToCloud(progress, quizProgress, scores, nextMeta);
   };
 
   if (authLoading || isUserDataLoading) {
@@ -312,6 +473,7 @@ export default function App() {
   return (
     <>
       <div className="scanlines" />
+      <RewardToast reward={reward} />
 
       {/* Saved toast */}
       {savedToast && (
@@ -341,6 +503,8 @@ export default function App() {
       {screen === 'home' && (
         <HomeScreen
           progress={progress}
+          resume={resolveResume()}
+          onContinue={handleContinue}
           onNavigate={(s) => setScreen(s === 'map' ? 'world' : s)}
           user={user}
           syncing={syncing}
@@ -376,6 +540,8 @@ export default function App() {
           onBack={() => setScreen('home')}
           progress={progress}
           scores={scores}
+          meta={meta}
+          review={meta.review}
           onNavigate={(worldId) => { setWorld(worldId); setScreen('map'); }}
         />
       )}
@@ -386,6 +552,7 @@ export default function App() {
           quizProgress={quizProgress}
           scores={scores}
           mistakes={mistakes}
+          meta={meta}
           onBack={() => setScreen('home')}
         />
       )}
@@ -395,7 +562,9 @@ export default function App() {
           country={country}
           world={world}
           progress={progress}
+          meta={meta}
           onSelectLanguage={(l) => { setLanguage(l); setScreen('challenge'); }}
+          onSelectFinalMission={(mission, lang) => { setLanguage(lang); setScreen('finalMission'); }}
           onBack={() => setScreen('map')}
         />
       )}
@@ -406,11 +575,38 @@ export default function App() {
           language={language}
           world={world}
           initialIdx={quizProgress[`${world}_${country.id}_${language.id}`] || 0}
-          onSaveIdx={(idx) => saveQuizIdx(world, country.id, language.id, idx)}
+          onSaveIdx={(idx, resumePatch) => saveQuizIdx(world, country.id, language.id, idx, resumePatch)}
           onSaveScore={(s) => saveScore(world, country.id, language.id, s)}
           onMistake={(qId) => saveMistake(world, country.id, language.id, qId)}
           onBack={() => setScreen('language')}
           onComplete={(cId) => handleComplete(world, cId, language.id)}
+        />
+      )}
+
+      {screen === 'finalMission' && country && language && (
+        <ChallengeScreen
+          country={country}
+          language={language}
+          world={world}
+          mission={getFinalMission(world, country.id, language.id)}
+          initialIdx={meta.resume?.screen === 'finalMission' && meta.resume?.missionId === getFinalMission(world, country.id, language.id)?.id
+            ? (meta.resume.questionIndexFallback || 0)
+            : 0}
+          onSaveIdx={(idx, resumePatch) => saveResume({
+            worldId: world,
+            countryId: country.id,
+            languageId: language.id,
+            questionIndexFallback: idx,
+            screen: 'finalMission',
+            ...resumePatch,
+          })}
+          onSaveScore={(s) => saveScore(world, country.id, language.id, s)}
+          onMistake={(qId) => saveMistake(world, country.id, language.id, qId)}
+          onBack={() => setScreen('language')}
+          onComplete={() => {
+            const mission = getFinalMission(world, country.id, language.id);
+            if (mission) handleFinalMissionComplete({ ...mission, worldId: world, countryId: country.id, languageId: language.id });
+          }}
         />
       )}
     </>

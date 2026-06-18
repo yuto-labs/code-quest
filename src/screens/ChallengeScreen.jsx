@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
+/* eslint-disable react-hooks/refs, react-hooks/set-state-in-effect */
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { CHALLENGES } from '../data/challenges';
 import { EXECUTE_CHALLENGES } from '../data/execute_challenges';
 import { DEBUG_CHALLENGES } from '../data/debug_challenges';
@@ -15,10 +16,13 @@ const BASE_SCORE = 100;
 
 export default function ChallengeScreen({
   country, language, world = 'decode', onBack, onComplete,
-  initialIdx = 0, onSaveIdx, onSaveScore, onMistake,
+  initialIdx = 0, onSaveIdx, onSaveScore, onMistake, mission = null,
 }) {
   const isPC = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-  const questions = (WORLD_CHALLENGES[world] ?? CHALLENGES)[country.id]?.[language.id] || [];
+  const questions = useMemo(
+    () => mission?.questions || (WORLD_CHALLENGES[world] ?? CHALLENGES)[country.id]?.[language.id] || [],
+    [country.id, language.id, mission?.questions, world],
+  );
   const [idx, setIdx]       = useState(initialIdx);
   const [answer, setAnswer] = useState('');
   const [status, setStatus] = useState('idle');
@@ -112,6 +116,18 @@ export default function ChallengeScreen({
     }));
   }, [world, country.id, language.id, idx, questions, debugStepIdx, debugStepAnswers]);
 
+  useEffect(() => {
+    const q = questions[idx];
+    if (!q) return;
+    onSaveIdx?.(idx, {
+      questionId: q.id,
+      debugStepIndex: q.questionType === 'debug-step' ? debugStepIdx : undefined,
+      debugAnswers: q.questionType === 'debug-step' ? debugStepAnswers : undefined,
+      screen: mission ? 'finalMission' : 'challenge',
+      missionId: mission?.id,
+    });
+  }, [idx, debugStepIdx, debugStepAnswers, mission, onSaveIdx, questions]);
+
   // Enterキーを document レベルで捕捉（input が disabled でも発火）
   const enterActionRef = useRef(null);
   useEffect(() => {
@@ -141,7 +157,7 @@ export default function ChallengeScreen({
     setDebugStepIdx(0);
     setDebugStepAnswers([]);
     setOrderingSelection([]);
-    onSaveIdx?.(0);
+    onSaveIdx?.(0, { questionId: questions[0]?.id, debugStepIndex: 0, debugAnswers: [] });
   };
 
   const handleBack = () => {
@@ -291,7 +307,7 @@ export default function ChallengeScreen({
   };
 
   const handleSubmit = () => {
-    let correct = false;
+    let correct;
     if (qType === 'fill-blank') {
       correct = answer.trim() === (q.blank ?? q.answer ?? '').trim();
     } else if (qType === 'multiple-blanks') {
@@ -327,7 +343,7 @@ export default function ChallengeScreen({
     }
     const nextIdx = idx + 1;
     setIdx(nextIdx);
-    onSaveIdx?.(nextIdx);
+    onSaveIdx?.(nextIdx, { questionId: questions[nextIdx]?.id });
   };
 
   const handleRetry = () => {
@@ -493,8 +509,9 @@ export default function ChallengeScreen({
 
       {/* メインコンテンツ */}
       <div style={styles.content}>
-        <div style={styles.questionNum}>QUESTION {idx + 1}</div>
-        <div style={styles.title}>{q.title}</div>
+        <div style={styles.questionNum}>{mission ? 'FINAL MISSION' : `QUESTION ${idx + 1}`}</div>
+        <div style={styles.title}>{mission?.title || q.title}</div>
+        {mission && <div style={styles.missionBadge}>{mission.type}</div>}
 
         {/* debug-step ステップ進捗ヘッダー */}
         {isDebugStep && (
@@ -823,6 +840,15 @@ const styles = {
   title: {
     fontSize: 'clamp(13px, 3.5vw, 17px)',
     color: 'var(--accent2)',
+  },
+  missionBadge: {
+    alignSelf: 'flex-start',
+    fontFamily: 'var(--pixel-font)',
+    fontSize: 8,
+    color: 'var(--accent)',
+    border: '1px solid var(--accent)',
+    padding: '4px 8px',
+    letterSpacing: 1,
   },
   description: {
     fontSize: 'clamp(11px, 3vw, 13px)',

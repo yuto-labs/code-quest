@@ -1,6 +1,6 @@
-import { CHALLENGES, LANGUAGES } from '../data/challenges';
-import { EXECUTE_CHALLENGES, EXECUTE_LANGUAGES } from '../data/execute_challenges';
-import { DEBUG_CHALLENGES, DEBUG_LANGUAGES } from '../data/debug_challenges';
+import { CHALLENGES, LANGUAGES } from '../data/challenges.js';
+import { EXECUTE_CHALLENGES, EXECUTE_LANGUAGES } from '../data/execute_challenges.js';
+import { DEBUG_CHALLENGES, DEBUG_LANGUAGES } from '../data/debug_challenges.js';
 
 function deriveStages(challenges, languages) {
   const availLangs = languages.filter(l => l.available).map(l => l.id);

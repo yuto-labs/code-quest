@@ -208,3 +208,51 @@ input, select, textarea {
   76%,100% { opacity: 1; }
 }
 .pip-blink { animation: pipBlink 4s ease-in-out infinite; }
+
+.reward-toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 24px);
+  transform: translateX(-50%);
+  z-index: 10000;
+  background: #061528;
+  border: 2px solid var(--accent2);
+  color: var(--accent2);
+  font-family: var(--pixel-font);
+  padding: 10px 14px;
+  min-width: min(420px, calc(100vw - 32px));
+  pointer-events: none;
+  animation: rewardPop 0.9s ease forwards;
+  box-shadow: 0 0 18px rgba(255,221,0,0.28);
+}
+
+.reward-toast__type {
+  font-size: 8px;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.reward-toast__text {
+  font-size: 10px;
+  line-height: 1.7;
+}
+
+@keyframes rewardPop {
+  0% { opacity: 0; transform: translateX(-50%) translateY(12px) scale(0.98); }
+  20% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+  80% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-8px) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .reward-toast {
+    animation: none;
+  }
+}

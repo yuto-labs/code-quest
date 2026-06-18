@@ -10,224 +10,547 @@ export const DEBUG_CHALLENGES = {
   JP: {
     python: [
       {
-        id: 'dbg_jp_py_1',
-        worldId: 'debug',
-        conceptId: 'variables',
-        questionType: 'debug-step',
-        title: '変数名の大文字・小文字バグ',
+        id: "jp_py_b01",
+        worldId: "debug",
+        languageId: "python",
+        conceptId: "variables",
+        questionType: "debug-step",
+        title: "kanji-hiragana-katakana search: unicode-normalization",
+        description: "kanji-hiragana-katakana search をコード内データとして使い、unicode-normalization を確認します。",
+        code: "data = {\"kanjihi\": \"kanji-hiragana-katakana search\"}\nkey = \"kanji-hi\"\nprint(data[key])",
         steps: [
           {
             stepNum: 1,
-            stepTitle: '🔍 バグの特定',
-            prompt: '東京の名前を表示しようとしていますが、エラーが発生します。問題のある箇所は？',
-            code: `city = "Tokyo"
-print(City)`,
-            question: 'エラーの原因を選べ',
+            stepTitle: "原因を特定",
+            prompt: "kanji-hiragana-katakana search をコード内データとして使い、unicode-normalization を確認します。",
+            question: "この不具合の主な原因はどれですか。",
             options: [
-              'print() の使い方が間違っている',
-              'city と City は異なる変数名（大文字・小文字の違い）',
-              '"Tokyo" は文字列として定義できない',
-              'city 変数は存在しない',
+              "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
+              "配列の長さが長すぎる",
+              "コメントがない"
             ],
-            answer: 'city と City は異なる変数名（大文字・小文字の違い）',
-            hint: 'Python は大文字・小文字を区別します',
+            answer: "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
+            hint: "データ側のキーと検索キーを見比べます。",
+            explanation: "kanji-hiragana-katakana search のデータは存在しますが、キー表記が揃っていません。"
           },
           {
             stepNum: 2,
-            stepTitle: '🔧 修正方法',
-            prompt: '正しく修正するには？',
-            question: '最も適切な修正を選べ',
+            stepTitle: "修正を選ぶ",
+            prompt: "Step 1 の原因を踏まえて、最も安全な修正を選びます。",
+            question: "正しい修正はどれですか。",
             options: [
-              'print(CITY) に変更する',
-              'print(City) → print(city) に変更する',
-              'city = "Tokyo" → City = "Tokyo" に変更する（どちらでも良い）',
-              '"Tokyo" を "tokyo" に変更する',
+              "key = key.lower() のように、検索前にキー表記を揃える",
+              "データを空にする",
+              "エラーを無視する"
             ],
-            answer: 'print(City) → print(city) に変更する',
-            hint: '定義された変数名に合わせる',
+            answer: "key = key.lower() のように、検索前にキー表記を揃える",
+            hint: "データを消さずに比較条件を揃えます。",
+            explanation: "正規化してから検索すると、表記揺れに強くなります。"
           },
           {
             stepNum: 3,
-            stepTitle: '💡 理由・影響',
-            prompt: 'なぜ NameError が発生するのか説明を選べ',
-            question: '正しい説明はどれ？',
+            stepTitle: "理由と影響",
+            prompt: "修正後の影響を確認します。",
+            question: "この修正の理由または影響として正しいものはどれですか。",
             options: [
-              'Python は予約語として City を使用しているため',
-              'Python は大文字・小文字を区別するため、city と City は別の変数として扱われる',
-              'print() は大文字の変数名を扱えない',
-              'グローバル変数には大文字が使えない',
+              "同じ事実データを、入力表記の揺れで見失わずに取得できる",
+              "事実データが不要になる",
+              "常に最初の項目だけを返す"
             ],
-            answer: 'Python は大文字・小文字を区別するため、city と City は別の変数として扱われる',
-            explanation: 'Python は case-sensitive です。city, City, CITY はすべて異なる変数名として扱われます。',
-          },
-        ],
+            answer: "同じ事実データを、入力表記の揺れで見失わずに取得できる",
+            hint: "入力と保存データの表記差を吸収します。",
+            explanation: "キーの正規化はローカライズされた検索や表示で起きやすい不一致を減らします。"
+          }
+        ]
       },
       {
-        id: 'dbg_jp_py_2',
-        worldId: 'debug',
-        conceptId: 'conditions',
-        questionType: 'debug-step',
-        title: '型エラー: 文字列と数値の混在',
+        id: "jp_py_b02",
+        worldId: "debug",
+        languageId: "python",
+        conceptId: "conditions",
+        questionType: "debug-step",
+        title: "Japanese era conversion: boundary-condition",
+        description: "Japanese era conversion をコード内データとして使い、boundary-condition を確認します。",
+        code: "data = {\"japanese\": \"Japanese era conversion\"}\nkey = \"Japanese\"\nprint(data[key])",
         steps: [
           {
             stepNum: 1,
-            stepTitle: '🔍 バグの特定',
-            prompt: '富士山の高さと説明を結合しようとしています。エラーは？',
-            code: `height = 3776
-message = "富士山の高さは " + height + " m です"
-print(message)`,
-            question: 'このコードで発生するエラーは？',
+            stepTitle: "原因を特定",
+            prompt: "Japanese era conversion をコード内データとして使い、boundary-condition を確認します。",
+            question: "この不具合の主な原因はどれですか。",
             options: [
-              'SyntaxError: 文の書き方が間違っている',
-              'TypeError: str と int は + で結合できない',
-              'NameError: height が未定義',
-              'エラーは発生しない',
+              "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
+              "配列の長さが長すぎる",
+              "コメントがない"
             ],
-            answer: 'TypeError: str と int は + で結合できない',
-            hint: '文字列と整数を + で結合しようとしています',
+            answer: "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
+            hint: "データ側のキーと検索キーを見比べます。",
+            explanation: "Japanese era conversion のデータは存在しますが、キー表記が揃っていません。"
           },
           {
             stepNum: 2,
-            stepTitle: '🔧 修正方法',
-            prompt: 'このエラーを修正する方法を選べ',
-            question: '正しい修正はどれ？',
+            stepTitle: "修正を選ぶ",
+            prompt: "Step 1 の原因を踏まえて、最も安全な修正を選びます。",
+            question: "正しい修正はどれですか。",
             options: [
-              'height を削除する',
-              'str(height) に変換してから結合する',
-              'height = "3776" に変更する（数値として使えなくなる）',
-              '"富士山の高さは" と height を別々に print() する',
+              "key = key.lower() のように、検索前にキー表記を揃える",
+              "データを空にする",
+              "エラーを無視する"
             ],
-            answer: 'str(height) に変換してから結合する',
-            hint: 'str() で整数を文字列に変換できます',
-            explanation: '"富士山の高さは " + str(height) + " m です" または f"富士山の高さは {height} m です" が正解。',
+            answer: "key = key.lower() のように、検索前にキー表記を揃える",
+            hint: "データを消さずに比較条件を揃えます。",
+            explanation: "正規化してから検索すると、表記揺れに強くなります。"
           },
           {
             stepNum: 3,
-            stepTitle: '💡 理由・影響',
-            prompt: 'Python がこのエラーを出す設計理由を理解しましょう',
-            question: 'Python が str + int を自動変換しない理由は？',
+            stepTitle: "理由と影響",
+            prompt: "修正後の影響を確認します。",
+            question: "この修正の理由または影響として正しいものはどれですか。",
             options: [
-              'Python は数値演算が苦手だから',
-              'Python は暗黙的な型変換を避け、意図しないバグを防ぐ設計になっているから',
-              '+ 演算子は文字列専用だから',
-              'Python のバージョンが古いから',
+              "同じ事実データを、入力表記の揺れで見失わずに取得できる",
+              "事実データが不要になる",
+              "常に最初の項目だけを返す"
             ],
-            answer: 'Python は暗黙的な型変換を避け、意図しないバグを防ぐ設計になっているから',
-            explanation: 'JavaScript などは "3" + 3 = "33" と自動変換しますが、Python は明示的な型変換を要求します。これにより予期せぬ挙動を防ぎます。',
-          },
-        ],
+            answer: "同じ事実データを、入力表記の揺れで見失わずに取得できる",
+            hint: "入力と保存データの表記差を吸収します。",
+            explanation: "キーの正規化はローカライズされた検索や表示で起きやすい不一致を減らします。"
+          }
+        ]
       },
       {
-        id: 'dbg_jp_py_3',
-        worldId: 'debug',
-        conceptId: 'lists',
-        questionType: 'debug-step',
-        title: 'リストの範囲外アクセス',
+        id: "jp_py_b03",
+        worldId: "debug",
+        languageId: "python",
+        conceptId: "lists",
+        questionType: "debug-step",
+        title: "Japanese address order: parsing-order",
+        description: "Japanese address order をコード内データとして使い、parsing-order を確認します。",
+        code: "data = {\"japanese\": \"Japanese address order\"}\nkey = \"Japanese\"\nprint(data[key])",
         steps: [
           {
             stepNum: 1,
-            stepTitle: '🔍 バグの特定',
-            prompt: '新幹線の停車駅リストから5番目の駅にアクセスしようとしています',
-            code: `stations = ["Tokyo", "Nagoya", "Kyoto", "Osaka"]
-print(stations[4])`,
-            question: '何が起きますか？',
+            stepTitle: "原因を特定",
+            prompt: "Japanese address order をコード内データとして使い、parsing-order を確認します。",
+            question: "この不具合の主な原因はどれですか。",
             options: [
-              '"Osaka" が表示される',
-              'IndexError: list index out of range',
-              'None が表示される',
-              '"Tokyo" が表示される',
+              "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
+              "配列の長さが長すぎる",
+              "コメントがない"
             ],
-            answer: 'IndexError: list index out of range',
-            hint: 'リストのインデックスは 0 から始まります。4 要素のリストの最大インデックスは？',
+            answer: "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
+            hint: "データ側のキーと検索キーを見比べます。",
+            explanation: "Japanese address order のデータは存在しますが、キー表記が揃っていません。"
           },
           {
             stepNum: 2,
-            stepTitle: '🔧 修正方法',
-            prompt: '最後の要素（大阪）にアクセスする最も安全な方法は？',
-            question: '正しい方法を選べ',
+            stepTitle: "修正を選ぶ",
+            prompt: "Step 1 の原因を踏まえて、最も安全な修正を選びます。",
+            question: "正しい修正はどれですか。",
             options: [
-              'stations[4]（変更なし）',
-              'stations[3]',
-              'stations[-1]',
-              'stations[len(stations)]',
+              "key = key.lower() のように、検索前にキー表記を揃える",
+              "データを空にする",
+              "エラーを無視する"
             ],
-            answer: 'stations[-1]',
-            hint: '-1 は最後の要素を指します',
-            explanation: 'stations[3] でも動きますが、stations[-1] はリストの長さに関わらず最後の要素を返す安全な書き方です。',
+            answer: "key = key.lower() のように、検索前にキー表記を揃える",
+            hint: "データを消さずに比較条件を揃えます。",
+            explanation: "正規化してから検索すると、表記揺れに強くなります。"
           },
           {
             stepNum: 3,
-            stepTitle: '💡 理由・影響',
-            prompt: 'stations[-1] が保守性に優れる理由を選べ',
-            question: '-1 インデックスを使う利点はどれ？',
+            stepTitle: "理由と影響",
+            prompt: "修正後の影響を確認します。",
+            question: "この修正の理由または影響として正しいものはどれですか。",
             options: [
-              '実行速度が速いから',
-              'リストに要素を追加・削除しても常に最後の要素を指すため、コードの修正が不要',
-              'Python の推奨構文だから',
-              '負のインデックスはエラーにならないから',
+              "同じ事実データを、入力表記の揺れで見失わずに取得できる",
+              "事実データが不要になる",
+              "常に最初の項目だけを返す"
             ],
-            answer: 'リストに要素を追加・削除しても常に最後の要素を指すため、コードの修正が不要',
-            explanation: 'stations[-1] は len(stations) - 1 と同等です。stations に要素が増減しても末尾要素を確実に取得できます。stations[3] は要素数が変わった瞬間に壊れます。',
-          },
-        ],
+            answer: "同じ事実データを、入力表記の揺れで見失わずに取得できる",
+            hint: "入力と保存データの表記差を吸収します。",
+            explanation: "キーの正規化はローカライズされた検索や表示で起きやすい不一致を減らします。"
+          }
+        ]
       },
       {
-        id: 'dbg_jp_py_4',
-        worldId: 'debug',
-        conceptId: 'functions',
-        questionType: 'debug-step',
-        title: '関数の返り値バグ',
+        id: "jp_py_b04",
+        worldId: "debug",
+        languageId: "python",
+        conceptId: "variables",
+        questionType: "debug-step",
+        title: "Japanese yen display: number-formatting",
+        description: "Japanese yen display をコード内データとして使い、number-formatting を確認します。",
+        code: "data = {\"japanese\": \"Japanese yen display\"}\nkey = \"Japanese\"\nprint(data[key])",
         steps: [
           {
             stepNum: 1,
-            stepTitle: '🔍 バグの特定',
-            prompt: '東京の人口を万人単位で返す関数にバグがあります',
-            code: `def get_population_man(city_pop):
-    result = city_pop / 10000
-    print(result)
-
-pop = get_population_man(13960000)
-print(f"東京の人口: {pop}万人")`,
-            question: '何が表示されますか？',
+            stepTitle: "原因を特定",
+            prompt: "Japanese yen display をコード内データとして使い、number-formatting を確認します。",
+            question: "この不具合の主な原因はどれですか。",
             options: [
-              '東京の人口: 1396.0万人',
-              '1396.0\n東京の人口: None万人',
-              '東京の人口: 0万人',
-              'Error',
+              "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
+              "配列の長さが長すぎる",
+              "コメントがない"
             ],
-            answer: '1396.0\n東京の人口: None万人',
-            hint: '関数が return せずに print() しています。戻り値は？',
+            answer: "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
+            hint: "データ側のキーと検索キーを見比べます。",
+            explanation: "Japanese yen display のデータは存在しますが、キー表記が揃っていません。"
           },
           {
             stepNum: 2,
-            stepTitle: '🔧 修正方法',
-            prompt: '関数を正しく修正するには？',
-            question: '正しい修正を選べ',
+            stepTitle: "修正を選ぶ",
+            prompt: "Step 1 の原因を踏まえて、最も安全な修正を選びます。",
+            question: "正しい修正はどれですか。",
             options: [
-              'print(result) → return result に変更する',
-              'return の前に print を追加する（両方残す）',
-              'pop の代わりに result を使う',
-              '関数を使わずに計算する',
+              "key = key.lower() のように、検索前にキー表記を揃える",
+              "データを空にする",
+              "エラーを無視する"
             ],
-            answer: 'print(result) → return result に変更する',
-            explanation: '関数で計算結果を外部で使うには return が必要です。return なしの関数は None を返します。',
+            answer: "key = key.lower() のように、検索前にキー表記を揃える",
+            hint: "データを消さずに比較条件を揃えます。",
+            explanation: "正規化してから検索すると、表記揺れに強くなります。"
           },
           {
             stepNum: 3,
-            stepTitle: '💡 理由・影響',
-            prompt: 'return と print の役割の違いを確認しましょう',
-            question: 'return が必要になるのはどんな場面？',
+            stepTitle: "理由と影響",
+            prompt: "修正後の影響を確認します。",
+            question: "この修正の理由または影響として正しいものはどれですか。",
             options: [
-              '計算結果を変数に代入したり、他の関数に渡したり、計算に使いたい場合',
-              'ただ画面に表示したいだけの場合',
-              '関数を再帰的に呼び出す場合のみ',
-              'エラーを防ぎたい場合',
+              "同じ事実データを、入力表記の揺れで見失わずに取得できる",
+              "事実データが不要になる",
+              "常に最初の項目だけを返す"
             ],
-            answer: '計算結果を変数に代入したり、他の関数に渡したり、計算に使いたい場合',
-            explanation: 'print() は画面表示のみで値を返しません。pop = func() と代入するには func() が return で値を返す必要があります。表示だけが目的なら関数内 print() でも良いですが、再利用性が低下します。',
-          },
-        ],
+            answer: "同じ事実データを、入力表記の揺れで見失わずに取得できる",
+            hint: "入力と保存データの表記差を吸収します。",
+            explanation: "キーの正規化はローカライズされた検索や表示で起きやすい不一致を減らします。"
+          }
+        ]
       },
+      {
+        id: "jp_py_b05",
+        worldId: "debug",
+        languageId: "python",
+        conceptId: "dicts",
+        questionType: "debug-step",
+        title: "station names in Japanese and romaji: normalized-key-lookup",
+        description: "station names in Japanese and romaji をコード内データとして使い、normalized-key-lookup を確認します。",
+        code: "data = {\"station\": \"station names in Japanese and romaji\"}\nkey = \"station \"\nprint(data[key])",
+        steps: [
+          {
+            stepNum: 1,
+            stepTitle: "原因を特定",
+            prompt: "station names in Japanese and romaji をコード内データとして使い、normalized-key-lookup を確認します。",
+            question: "この不具合の主な原因はどれですか。",
+            options: [
+              "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
+              "配列の長さが長すぎる",
+              "コメントがない"
+            ],
+            answer: "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
+            hint: "データ側のキーと検索キーを見比べます。",
+            explanation: "station names in Japanese and romaji のデータは存在しますが、キー表記が揃っていません。"
+          },
+          {
+            stepNum: 2,
+            stepTitle: "修正を選ぶ",
+            prompt: "Step 1 の原因を踏まえて、最も安全な修正を選びます。",
+            question: "正しい修正はどれですか。",
+            options: [
+              "key = key.lower() のように、検索前にキー表記を揃える",
+              "データを空にする",
+              "エラーを無視する"
+            ],
+            answer: "key = key.lower() のように、検索前にキー表記を揃える",
+            hint: "データを消さずに比較条件を揃えます。",
+            explanation: "正規化してから検索すると、表記揺れに強くなります。"
+          },
+          {
+            stepNum: 3,
+            stepTitle: "理由と影響",
+            prompt: "修正後の影響を確認します。",
+            question: "この修正の理由または影響として正しいものはどれですか。",
+            options: [
+              "同じ事実データを、入力表記の揺れで見失わずに取得できる",
+              "事実データが不要になる",
+              "常に最初の項目だけを返す"
+            ],
+            answer: "同じ事実データを、入力表記の揺れで見失わずに取得できる",
+            hint: "入力と保存データの表記差を吸収します。",
+            explanation: "キーの正規化はローカライズされた検索や表示で起きやすい不一致を減らします。"
+          }
+        ]
+      }
+    ],
+    javascript: [
+      {
+        id: "jp_js_b01",
+        worldId: "debug",
+        languageId: "javascript",
+        conceptId: "variables",
+        questionType: "debug-step",
+        title: "Ono no Komachi and traditional three beauties claim: fact-status-modeling",
+        description: "Ono no Komachi and traditional three beauties claim（伝承・文化的関連として扱い、断定しません） をコード内データとして使い、fact-status-modeling を確認します。",
+        code: "const data = { \"ononok\": \"Ono no Komachi and traditional three beauties claim\" };\nconst key = \"Ono no K\";\nconsole.log(data[key]);",
+        steps: [
+          {
+            stepNum: 1,
+            stepTitle: "原因を特定",
+            prompt: "Ono no Komachi and traditional three beauties claim（伝承・文化的関連として扱い、断定しません） をコード内データとして使い、fact-status-modeling を確認します。",
+            question: "この不具合の主な原因はどれですか。",
+            options: [
+              "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
+              "配列の長さが長すぎる",
+              "コメントがない"
+            ],
+            answer: "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
+            hint: "データ側のキーと検索キーを見比べます。",
+            explanation: "Ono no Komachi and traditional three beauties claim のデータは存在しますが、キー表記が揃っていません。"
+          },
+          {
+            stepNum: 2,
+            stepTitle: "修正を選ぶ",
+            prompt: "Step 1 の原因を踏まえて、最も安全な修正を選びます。",
+            question: "正しい修正はどれですか。",
+            options: [
+              "const normalizedKey = key.toLowerCase(); のように、検索前にキー表記を揃える",
+              "データを空にする",
+              "エラーを無視する"
+            ],
+            answer: "const normalizedKey = key.toLowerCase(); のように、検索前にキー表記を揃える",
+            hint: "データを消さずに比較条件を揃えます。",
+            explanation: "正規化してから検索すると、表記揺れに強くなります。"
+          },
+          {
+            stepNum: 3,
+            stepTitle: "理由と影響",
+            prompt: "修正後の影響を確認します。",
+            question: "この修正の理由または影響として正しいものはどれですか。",
+            options: [
+              "同じ事実データを、入力表記の揺れで見失わずに取得できる",
+              "事実データが不要になる",
+              "常に最初の項目だけを返す"
+            ],
+            answer: "同じ事実データを、入力表記の揺れで見失わずに取得できる",
+            hint: "入力と保存データの表記差を吸収します。",
+            explanation: "キーの正規化はローカライズされた検索や表示で起きやすい不一致を減らします。"
+          }
+        ]
+      },
+      {
+        id: "jp_js_b02",
+        worldId: "debug",
+        languageId: "javascript",
+        conceptId: "variables",
+        questionType: "debug-step",
+        title: "Japanese personal-name order: display-order",
+        description: "Japanese personal-name order をコード内データとして使い、display-order を確認します。",
+        code: "const data = { \"japanese\": \"Japanese personal-name order\" };\nconst key = \"Japanese\";\nconsole.log(data[key]);",
+        steps: [
+          {
+            stepNum: 1,
+            stepTitle: "原因を特定",
+            prompt: "Japanese personal-name order をコード内データとして使い、display-order を確認します。",
+            question: "この不具合の主な原因はどれですか。",
+            options: [
+              "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
+              "配列の長さが長すぎる",
+              "コメントがない"
+            ],
+            answer: "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
+            hint: "データ側のキーと検索キーを見比べます。",
+            explanation: "Japanese personal-name order のデータは存在しますが、キー表記が揃っていません。"
+          },
+          {
+            stepNum: 2,
+            stepTitle: "修正を選ぶ",
+            prompt: "Step 1 の原因を踏まえて、最も安全な修正を選びます。",
+            question: "正しい修正はどれですか。",
+            options: [
+              "const normalizedKey = key.toLowerCase(); のように、検索前にキー表記を揃える",
+              "データを空にする",
+              "エラーを無視する"
+            ],
+            answer: "const normalizedKey = key.toLowerCase(); のように、検索前にキー表記を揃える",
+            hint: "データを消さずに比較条件を揃えます。",
+            explanation: "正規化してから検索すると、表記揺れに強くなります。"
+          },
+          {
+            stepNum: 3,
+            stepTitle: "理由と影響",
+            prompt: "修正後の影響を確認します。",
+            question: "この修正の理由または影響として正しいものはどれですか。",
+            options: [
+              "同じ事実データを、入力表記の揺れで見失わずに取得できる",
+              "事実データが不要になる",
+              "常に最初の項目だけを返す"
+            ],
+            answer: "同じ事実データを、入力表記の揺れで見失わずに取得できる",
+            hint: "入力と保存データの表記差を吸収します。",
+            explanation: "キーの正規化はローカライズされた検索や表示で起きやすい不一致を減らします。"
+          }
+        ]
+      },
+      {
+        id: "jp_js_b03",
+        worldId: "debug",
+        languageId: "javascript",
+        conceptId: "variables",
+        questionType: "debug-step",
+        title: "full-width and half-width characters: input-normalization",
+        description: "full-width and half-width characters をコード内データとして使い、input-normalization を確認します。",
+        code: "const data = { \"fullwid\": \"full-width and half-width characters\" };\nconst key = \"full-wid\";\nconsole.log(data[key]);",
+        steps: [
+          {
+            stepNum: 1,
+            stepTitle: "原因を特定",
+            prompt: "full-width and half-width characters をコード内データとして使い、input-normalization を確認します。",
+            question: "この不具合の主な原因はどれですか。",
+            options: [
+              "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
+              "配列の長さが長すぎる",
+              "コメントがない"
+            ],
+            answer: "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
+            hint: "データ側のキーと検索キーを見比べます。",
+            explanation: "full-width and half-width characters のデータは存在しますが、キー表記が揃っていません。"
+          },
+          {
+            stepNum: 2,
+            stepTitle: "修正を選ぶ",
+            prompt: "Step 1 の原因を踏まえて、最も安全な修正を選びます。",
+            question: "正しい修正はどれですか。",
+            options: [
+              "const normalizedKey = key.toLowerCase(); のように、検索前にキー表記を揃える",
+              "データを空にする",
+              "エラーを無視する"
+            ],
+            answer: "const normalizedKey = key.toLowerCase(); のように、検索前にキー表記を揃える",
+            hint: "データを消さずに比較条件を揃えます。",
+            explanation: "正規化してから検索すると、表記揺れに強くなります。"
+          },
+          {
+            stepNum: 3,
+            stepTitle: "理由と影響",
+            prompt: "修正後の影響を確認します。",
+            question: "この修正の理由または影響として正しいものはどれですか。",
+            options: [
+              "同じ事実データを、入力表記の揺れで見失わずに取得できる",
+              "事実データが不要になる",
+              "常に最初の項目だけを返す"
+            ],
+            answer: "同じ事実データを、入力表記の揺れで見失わずに取得できる",
+            hint: "入力と保存データの表記差を吸収します。",
+            explanation: "キーの正規化はローカライズされた検索や表示で起きやすい不一致を減らします。"
+          }
+        ]
+      },
+      {
+        id: "jp_js_b04",
+        worldId: "debug",
+        languageId: "javascript",
+        conceptId: "arrays",
+        questionType: "debug-step",
+        title: "gojuon ordering: Intl-Collator",
+        description: "gojuon ordering をコード内データとして使い、Intl-Collator を確認します。",
+        code: "const data = { \"gojuono\": \"gojuon ordering\" };\nconst key = \"gojuon o\";\nconsole.log(data[key]);",
+        steps: [
+          {
+            stepNum: 1,
+            stepTitle: "原因を特定",
+            prompt: "gojuon ordering をコード内データとして使い、Intl-Collator を確認します。",
+            question: "この不具合の主な原因はどれですか。",
+            options: [
+              "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
+              "配列の長さが長すぎる",
+              "コメントがない"
+            ],
+            answer: "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
+            hint: "データ側のキーと検索キーを見比べます。",
+            explanation: "gojuon ordering のデータは存在しますが、キー表記が揃っていません。"
+          },
+          {
+            stepNum: 2,
+            stepTitle: "修正を選ぶ",
+            prompt: "Step 1 の原因を踏まえて、最も安全な修正を選びます。",
+            question: "正しい修正はどれですか。",
+            options: [
+              "const normalizedKey = key.toLowerCase(); のように、検索前にキー表記を揃える",
+              "データを空にする",
+              "エラーを無視する"
+            ],
+            answer: "const normalizedKey = key.toLowerCase(); のように、検索前にキー表記を揃える",
+            hint: "データを消さずに比較条件を揃えます。",
+            explanation: "正規化してから検索すると、表記揺れに強くなります。"
+          },
+          {
+            stepNum: 3,
+            stepTitle: "理由と影響",
+            prompt: "修正後の影響を確認します。",
+            question: "この修正の理由または影響として正しいものはどれですか。",
+            options: [
+              "同じ事実データを、入力表記の揺れで見失わずに取得できる",
+              "事実データが不要になる",
+              "常に最初の項目だけを返す"
+            ],
+            answer: "同じ事実データを、入力表記の揺れで見失わずに取得できる",
+            hint: "入力と保存データの表記差を吸収します。",
+            explanation: "キーの正規化はローカライズされた検索や表示で起きやすい不一致を減らします。"
+          }
+        ]
+      },
+      {
+        id: "jp_js_b05",
+        worldId: "debug",
+        languageId: "javascript",
+        conceptId: "variables",
+        questionType: "debug-step",
+        title: "to-do-fu-ken suffix handling: suffix-parsing",
+        description: "to-do-fu-ken suffix handling をコード内データとして使い、suffix-parsing を確認します。",
+        code: "const data = { \"todofu\": \"to-do-fu-ken suffix handling\" };\nconst key = \"to-do-fu\";\nconsole.log(data[key]);",
+        steps: [
+          {
+            stepNum: 1,
+            stepTitle: "原因を特定",
+            prompt: "to-do-fu-ken suffix handling をコード内データとして使い、suffix-parsing を確認します。",
+            question: "この不具合の主な原因はどれですか。",
+            options: [
+              "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
+              "配列の長さが長すぎる",
+              "コメントがない"
+            ],
+            answer: "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
+            hint: "データ側のキーと検索キーを見比べます。",
+            explanation: "to-do-fu-ken suffix handling のデータは存在しますが、キー表記が揃っていません。"
+          },
+          {
+            stepNum: 2,
+            stepTitle: "修正を選ぶ",
+            prompt: "Step 1 の原因を踏まえて、最も安全な修正を選びます。",
+            question: "正しい修正はどれですか。",
+            options: [
+              "const normalizedKey = key.toLowerCase(); のように、検索前にキー表記を揃える",
+              "データを空にする",
+              "エラーを無視する"
+            ],
+            answer: "const normalizedKey = key.toLowerCase(); のように、検索前にキー表記を揃える",
+            hint: "データを消さずに比較条件を揃えます。",
+            explanation: "正規化してから検索すると、表記揺れに強くなります。"
+          },
+          {
+            stepNum: 3,
+            stepTitle: "理由と影響",
+            prompt: "修正後の影響を確認します。",
+            question: "この修正の理由または影響として正しいものはどれですか。",
+            options: [
+              "同じ事実データを、入力表記の揺れで見失わずに取得できる",
+              "事実データが不要になる",
+              "常に最初の項目だけを返す"
+            ],
+            answer: "同じ事実データを、入力表記の揺れで見失わずに取得できる",
+            hint: "入力と保存データの表記差を吸収します。",
+            explanation: "キーの正規化はローカライズされた検索や表示で起きやすい不一致を減らします。"
+          }
+        ]
+      }
     ],
   },
   US: {
@@ -1089,5 +1412,5 @@ print(describe(*info))`,
 
 export const DEBUG_LANGUAGES = [
   { id: 'python', name: 'Python', emoji: '🐍', available: true },
-  { id: 'javascript', name: 'JavaScript', emoji: '🟨', available: false },
+  { id: 'javascript', name: 'JavaScript', emoji: 'JS', available: true },
 ];

@@ -15,6 +15,12 @@ const WORLD_CHALLENGES = {
 const MAX_HEARTS = 3;
 const BASE_SCORE = 100;
 
+function clampInitialQuestionIndex(initialIdx, questionCount) {
+  if (questionCount <= 0) return 0;
+  if (!Number.isInteger(initialIdx)) return 0;
+  return Math.min(Math.max(initialIdx, 0), questionCount - 1);
+}
+
 export default function ChallengeScreen({
   country, language, world = 'decode', onBack, onComplete,
   initialIdx = 0, onSaveIdx, onSaveScore, onMistake, mission = null,
@@ -25,7 +31,7 @@ export default function ChallengeScreen({
     () => mission?.questions || (WORLD_CHALLENGES[world] ?? CHALLENGES)[country.id]?.[language.id] || [],
     [country.id, language.id, mission?.questions, world],
   );
-  const [idx, setIdx]       = useState(initialIdx);
+  const [idx, setIdx]       = useState(() => clampInitialQuestionIndex(initialIdx, questions.length));
   const [answer, setAnswer] = useState('');
   const [status, setStatus] = useState('idle');
   const [showHint, setShowHint] = useState(false);
@@ -75,6 +81,11 @@ export default function ChallengeScreen({
   };
 
   useEffect(() => () => clearTimers(), []);
+
+  useEffect(() => {
+    if (clearedJustNow.current) return;
+    setIdx((currentIdx) => clampInitialQuestionIndex(currentIdx, questions.length));
+  }, [questions.length]);
 
   useEffect(() => {
     setAnswer('');
@@ -215,7 +226,13 @@ export default function ChallengeScreen({
   // ── クリア画面 ────────────────────────────────
   if (!questions[idx]) {
     const isNewClear = clearedJustNow.current;
-    const handleReturn = () => { onSaveScore?.(score); onComplete(country.id); };
+    const handleReturn = () => {
+      onSaveScore?.(score);
+      onComplete(country.id, {
+        completedChildCount: questions.length,
+        targetChildCount: mission?.targetChildCount || questions.length,
+      });
+    };
     enterActionRef.current = handleReturn;
 
     const STARS = [

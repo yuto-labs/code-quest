@@ -367,39 +367,22 @@ export default function App() {
     }
   };
 
-  const saveMeta = (nextMeta) => {
-    const uid = latestRef.current.user?.id;
-    const clean = sanitizeMeta(nextMeta);
-    setMeta(clean);
-    saveToLocal(getStorageKey(uid, 'meta'), clean);
-    syncToCloud();
-  };
-
-  const saveResume = (patch) => {
-    const { meta: mt } = latestRef.current;
-    saveMeta({
-      ...mt,
-      resume: {
-        ...(mt.resume || {}),
-        ...patch,
-        updatedAt: new Date().toISOString(),
-      },
-    });
-  };
-
   const resolveResume = () => {
     const resume = meta.resume || {};
     if (!resume.worldId || !resume.countryId || !resume.languageId) return null;
     const countryObj = COUNTRIES.find(c => c.id === resume.countryId);
-    const questions = (WORLD_CHALLENGES[resume.worldId] || {})[resume.countryId]?.[resume.languageId] || [];
     if (!countryObj) return null;
+    const mission = resume.screen === 'finalMission'
+      ? getFinalMission(resume.worldId, resume.countryId, resume.languageId)
+      : null;
+    const questions = mission?.questions || (WORLD_CHALLENGES[resume.worldId] || {})[resume.countryId]?.[resume.languageId] || [];
     if (resume.screen === 'map' || questions.length === 0) {
       return { ...resume, countryObj, questionIndex: 0, screen: 'map' };
     }
     const byId = questions.findIndex(q => q.id === resume.questionId);
     const fallback = Number.isInteger(resume.questionIndexFallback) ? resume.questionIndexFallback : 0;
     const questionIndex = byId >= 0 ? byId : Math.min(Math.max(fallback, 0), Math.max(questions.length - 1, 0));
-    return { ...resume, countryObj, questionIndex, questions, screen: resume.screen === 'finalMission' ? 'finalMission' : 'challenge' };
+    return { ...resume, countryObj, questionIndex, questions, mission, screen: resume.screen === 'finalMission' ? 'finalMission' : 'challenge' };
   };
 
   const handleContinue = () => {
@@ -496,20 +479,66 @@ export default function App() {
     setScreen('map');
   };
 
-  const handleFinalMissionComplete = (mission) => {
+  const saveFinalMissionProgress = (mission, childIndex, resumePatch = {}) => {
+    const { meta: mt } = latestRef.current;
+    const uid = latestRef.current.user?.id;
+    const existing = mt.finalMissions?.[mission.id] || {};
+    const targetChildCount = mission.targetChildCount || mission.childQuestionIds?.length || 3;
+    const nextMeta = {
+      ...mt,
+      finalMissions: {
+        ...(mt.finalMissions || {}),
+        [mission.id]: {
+          ...existing,
+          missionId: mission.id,
+          worldId: mission.worldId,
+          countryId: mission.countryId,
+          languageId: mission.languageId,
+          currentChildIndex: childIndex,
+          completedChildCount: Math.max(existing.completedChildCount || 0, Math.min(childIndex, targetChildCount)),
+          targetChildCount,
+          updatedAt: new Date().toISOString(),
+        },
+      },
+      resume: {
+        worldId: mission.worldId,
+        countryId: mission.countryId,
+        languageId: mission.languageId,
+        questionIndexFallback: childIndex,
+        screen: 'finalMission',
+        ...resumePatch,
+        updatedAt: new Date().toISOString(),
+      },
+    };
+    setMeta(nextMeta);
+    saveToLocal(getStorageKey(uid, 'meta'), nextMeta);
+    syncToCloud();
+  };
+
+  const handleFinalMissionComplete = (mission, completion = {}) => {
     const uid = latestRef.current.user?.id;
     const { meta: mt } = latestRef.current;
     const attemptId = buildAttemptId(mission.worldId, mission.countryId, mission.languageId, mission.id);
+    const targetChildCount = mission.targetChildCount || mission.childQuestionIds?.length || 3;
+    const completedChildCount = Math.min(completion.completedChildCount || mission.questions?.length || 0, targetChildCount);
+    const isComplete = completedChildCount >= targetChildCount;
+    const existingFinal = mt.finalMissions?.[mission.id] || {};
     const nextMeta = completeAttempt(
       {
         ...mt,
         finalMissions: {
           ...(mt.finalMissions || {}),
           [mission.id]: {
-            completedAt: new Date().toISOString(),
+            ...existingFinal,
+            missionId: mission.id,
             worldId: mission.worldId,
             countryId: mission.countryId,
             languageId: mission.languageId,
+            completedAt: isComplete ? (existingFinal.completedAt || new Date().toISOString()) : existingFinal.completedAt,
+            completedChildCount,
+            targetChildCount,
+            currentChildIndex: completedChildCount,
+            updatedAt: new Date().toISOString(),
           },
         },
         resume: {
@@ -525,7 +554,7 @@ export default function App() {
     setMeta(nextMeta);
     saveToLocal(getStorageKey(uid, 'meta'), nextMeta);
     syncToCloud();
-    showReward('language-emblem', 'FINAL MISSION CLEARED');
+    showReward(isComplete ? 'language-emblem' : 'final-mission-progress', isComplete ? 'FINAL MISSION CLEARED' : `FINAL ${completedChildCount}/${targetChildCount}`);
     setScreen('language');
   };
 
@@ -714,14 +743,6 @@ export default function App() {
               ? (meta.resume.questionIndexFallback || 0)
               : 0}
             initialLives={getInitialLives(meta, attemptId)}
-            onSaveIdx={(idx, resumePatch) => saveResume({
-              worldId: world,
-              countryId: country.id,
-              languageId: language.id,
-              questionIndexFallback: idx,
-              screen: 'finalMission',
-              ...resumePatch,
-            })}
             onSaveScore={(s) => saveScore(world, country.id, language.id, s)}
             onMistake={(qId) => saveMistake(world, country.id, language.id, qId)}
             onLivesChange={(lives) => {
@@ -739,8 +760,13 @@ export default function App() {
               syncToCloud();
             }}
             onBack={() => setScreen('language')}
-            onComplete={() => {
-              if (mission) handleFinalMissionComplete({ ...mission, worldId: world, countryId: country.id, languageId: language.id });
+            onSaveIdx={(idx, resumePatch) => {
+              if (mission) {
+                saveFinalMissionProgress({ ...mission, worldId: world, countryId: country.id, languageId: language.id }, idx, resumePatch);
+              }
+            }}
+            onComplete={(_, completion) => {
+              if (mission) handleFinalMissionComplete({ ...mission, worldId: world, countryId: country.id, languageId: language.id }, completion);
             }}
           />
         );

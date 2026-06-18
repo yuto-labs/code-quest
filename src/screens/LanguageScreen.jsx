@@ -125,6 +125,9 @@ export default function LanguageScreen({ country, world = 'decode', progress, me
             const mission = getFinalMission(world, country.id, lang.id);
             const missionUnlocked = Boolean(mission && isCleared);
             const missionCleared = Boolean(mission && isFinalMissionCleared(meta, mission.id));
+            const missionStatus = mission ? (meta.finalMissions?.[mission.id] || {}) : {};
+            const targetChildCount = mission?.targetChildCount || mission?.childQuestionIds?.length || 3;
+            const completedChildCount = Math.min(missionStatus.completedChildCount || 0, targetChildCount);
 
             return (
               <div key={lang.id} style={styles.langStack}>
@@ -164,7 +167,7 @@ export default function LanguageScreen({ country, world = 'decode', progress, me
                 >
                   <span>{missionCleared ? 'FINAL CLEAR' : 'FINAL MISSION'}</span>
                   <span style={styles.finalSub}>
-                    {missionUnlocked ? mission.title : 'Clear the normal stage to unlock'}
+                    {missionUnlocked ? `${mission.title} [${completedChildCount}/${targetChildCount}]` : 'Clear the normal stage to unlock'}
                   </span>
                 </button>
               )}

@@ -19,7 +19,7 @@ let CHALLENGES, LANGUAGES, EXECUTE_CHALLENGES, EXECUTE_LANGUAGES,
     DEBUG_CHALLENGES, DEBUG_LANGUAGES, COUNTRIES, CONCEPTS,
     COUNTRY_FACTS, COUNTRY_FACTS_BY_ID, validateCountryFacts,
     QUESTION_ASSIGNMENTS, COGNITIVE_TASKS, listFinalMissions,
-    META_KEY, packProgress, unpackProgress;
+    QUESTION_COUNT_TARGETS, META_KEY, packProgress, unpackProgress;
 
 function dataUrl(rel) {
   return pathToFileURL(path.join(ROOT, rel)).href;
@@ -34,6 +34,7 @@ try {
   ({ COUNTRY_FACTS, COUNTRY_FACTS_BY_ID, validateCountryFacts } = await import(dataUrl('src/data/country_facts.js')));
   ({ QUESTION_ASSIGNMENTS, COGNITIVE_TASKS } = await import(dataUrl('src/data/question_assignments.js')));
   ({ listFinalMissions } = await import(dataUrl('src/data/final_missions.js')));
+  ({ QUESTION_COUNT_TARGETS } = await import(dataUrl('src/data/question_targets.js')));
   ({ META_KEY, packProgress, unpackProgress } = await import(dataUrl('src/utils/metadata.js')));
 } catch (err) {
   console.error('Failed to import data files:', err.message);
@@ -475,8 +476,14 @@ export function validateFinalMission(mission) {
   const errors = [];
   const warnings = [];
   const loc = `[final_missions.js] ${mission?.id ?? '(missing id)'}`;
-  if (!mission?.id || !mission.id.startsWith(`final_${mission.worldId}*${mission.countryId}*${mission.languageId}`)) {
-    errors.push({ loc, rule: 'final-mission-missing-stable-ids', msg: 'Final mission id must be final_{worldId}*{countryId}*{languageId}' });
+  const expectedMissionId = `final_${mission?.worldId}_${mission?.countryId}_${mission?.languageId}`;
+  const targetChildCount = QUESTION_COUNT_TARGETS.final[mission?.worldId] || 3;
+  const expectedChildIds = Array.from(
+    { length: targetChildCount },
+    (_, index) => `${expectedMissionId}_${String(index + 1).padStart(2, '0')}`,
+  );
+  if (!mission?.id || mission.id !== expectedMissionId) {
+    errors.push({ loc, rule: 'final-mission-missing-stable-ids', msg: 'Final mission id must be final_{worldId}_{countryId}_{languageId}' });
   }
   if (!['DECODE_FINAL', 'EXECUTE_FINAL', 'DEBUG_FINAL'].includes(mission?.type)) {
     errors.push({ loc, rule: 'invalid-final-mission-type', msg: `Invalid final mission type "${mission?.type}"` });
@@ -487,10 +494,29 @@ export function validateFinalMission(mission) {
   if (!mission?.unlock || mission.unlock.requiresStageClear !== true) {
     errors.push({ loc, rule: 'invalid-final-mission-unlock-config', msg: 'Final mission must declare unlock.requiresStageClear=true' });
   }
+  if (!Array.isArray(mission?.childQuestionIds) || mission.childQuestionIds.length !== targetChildCount) {
+    errors.push({ loc, rule: 'invalid-final-mission-child-order', msg: `Final mission must expose ${targetChildCount} ordered child IDs` });
+  } else if (mission.childQuestionIds.some((id, index) => id !== expectedChildIds[index])) {
+    errors.push({ loc, rule: 'invalid-final-mission-child-order', msg: `childQuestionIds must be ${expectedChildIds.join(', ')}` });
+  }
   if (!Array.isArray(mission?.questions) || mission.questions.length === 0) {
     warnings.push({ loc, rule: 'final-mission-no-verification-content', msg: 'Final mission has no verification content' });
     return { errors, warnings };
   }
+  if (mission.questions.length < targetChildCount) {
+    warnings.push({ loc, rule: 'final-target-count-shortage', msg: `Final mission has ${mission.questions.length}/${targetChildCount} child question(s)` });
+  }
+  const seenChildIds = new Set();
+  mission.questions.forEach((q, index) => {
+    if (seenChildIds.has(q.id)) {
+      errors.push({ loc, rule: 'duplicate-final-child-id', msg: `Duplicate final child id "${q.id}"` });
+    }
+    seenChildIds.add(q.id);
+    const expectedId = expectedChildIds[index];
+    if (q.id !== expectedId) {
+      errors.push({ loc, rule: 'invalid-final-child-id-order', msg: `Child ${index + 1} must be "${expectedId}", found "${q.id}"` });
+    }
+  });
   if (mission.type === 'DEBUG_FINAL') {
     const q = mission.questions.find(item => item.questionType === 'debug-step');
     if (!q) {
@@ -749,7 +775,45 @@ export function runValidation() {
           counts[worldId][countryId][languageId][qType] =
             (counts[worldId][countryId][languageId][qType] || 0) + 1;
         }
+        const target = QUESTION_COUNT_TARGETS.regular[worldId];
+        if (target && questions.length < target) {
+          allWarnings.push({ loc: `[${sourceFile}] ${countryId}/${languageId}`, rule: 'regular-target-count-shortage',
+            msg: `Regular question count is ${questions.length}/${target}` });
+        }
       }
+    }
+  }
+
+  const finalMissions = listFinalMissions();
+  for (const mission of finalMissions) {
+    const { errors, warnings } = validateFinalMission(mission);
+    allErrors.push(...errors);
+    allWarnings.push(...warnings);
+
+    for (const q of mission.questions || []) {
+      const loc = `[final_missions.js] ${mission.countryId}/${mission.languageId} id=${q.id ?? '(no id)'}`;
+      seenQuestionIds.add(q.id);
+      const assignment = assignmentMap.get(q.id);
+      const ctx = {
+        worldId: mission.worldId,
+        countryId: mission.countryId,
+        languageId: mission.languageId,
+        sourceFile: 'final_missions.js',
+        allIds,
+        assignment,
+        factLookups,
+      };
+      const questionIssues = validateQuestion(q, ctx);
+      allErrors.push(...questionIssues.errors);
+      allWarnings.push(...questionIssues.warnings);
+      questionRecords.push({
+        q,
+        loc,
+        worldId: mission.worldId,
+        countryId: mission.countryId,
+        languageId: mission.languageId,
+        metadata: mergedMetadata(q, assignment),
+      });
     }
   }
 
@@ -770,13 +834,7 @@ export function runValidation() {
     });
   }
 
-  const finalMissions = listFinalMissions();
   const finalMissionKeys = new Set(finalMissions.map(m => `${m.worldId}_${m.countryId}_${m.languageId}`));
-  for (const mission of finalMissions) {
-    const { errors, warnings } = validateFinalMission(mission);
-    allErrors.push(...errors);
-    allWarnings.push(...warnings);
-  }
   for (const { worldId, challenges } of WORLD_SOURCES) {
     for (const [countryId, langMap] of Object.entries(challenges)) {
       for (const [languageId, questions] of Object.entries(langMap)) {
@@ -792,7 +850,17 @@ export function runValidation() {
   allErrors.push(...reservedCheck.errors);
   allWarnings.push(...reservedCheck.warnings);
 
-  return { errors: allErrors, warnings: allWarnings, counts };
+  const finalCounts = {};
+  for (const mission of finalMissions) {
+    finalCounts[mission.worldId] ??= {};
+    finalCounts[mission.worldId][mission.countryId] ??= {};
+    finalCounts[mission.worldId][mission.countryId][mission.languageId] = {
+      actual: mission.questions?.length || 0,
+      target: QUESTION_COUNT_TARGETS.final[mission.worldId] || 3,
+    };
+  }
+
+  return { errors: allErrors, warnings: allWarnings, counts, finalCounts };
 }
 
 // ---------------------------------------------------------------------------
@@ -811,12 +879,13 @@ function printCounts(counts) {
   const totals = {};
   for (const [worldId, countries] of Object.entries(counts)) {
     let worldTotal = 0;
+    const target = QUESTION_COUNT_TARGETS.regular[worldId] || '?';
     console.log(`  [${worldId.toUpperCase()}]`);
     for (const [countryId, langs] of Object.entries(countries)) {
       for (const [langId, types] of Object.entries(langs)) {
         const typeStr = Object.entries(types).map(([t, n]) => `${t}:${n}`).join(' ');
         const total = Object.values(types).reduce((a, b) => a + b, 0);
-        console.log(`    ${countryId}/${langId}  ${total}q  [${typeStr}]`);
+        console.log(`    ${countryId}/${langId}  ${total}/${target}q  [${typeStr}]`);
         worldTotal += total;
       }
     }
@@ -826,6 +895,19 @@ function printCounts(counts) {
   console.log(`  TOTALS: ${Object.entries(totals).map(([w, n]) => `${w}=${n}`).join('  ')}`);
   const grand = Object.values(totals).reduce((a, b) => a + b, 0);
   console.log(`  GRAND TOTAL: ${grand} questions`);
+}
+
+function printFinalCounts(finalCounts) {
+  console.log('\nFINAL MISSION COUNTS BY WORLD / COUNTRY / LANGUAGE\n');
+  for (const [worldId, countries] of Object.entries(finalCounts)) {
+    console.log(`  [${worldId.toUpperCase()} FINAL]`);
+    for (const [countryId, langs] of Object.entries(countries)) {
+      for (const [langId, count] of Object.entries(langs)) {
+        console.log(`    ${countryId}/${langId}  ${count.actual}/${count.target} child question(s)`);
+      }
+    }
+    console.log('');
+  }
 }
 
 const RED   = '\x1b[31m';
@@ -841,8 +923,9 @@ const isMain = process.argv[1] === fileURLToPath(import.meta.url);
 
 if (isMain) {
   console.log(`${BOLD}🔍 Code Quest — Question Validator${RESET}`);
-  const { errors, warnings, counts } = runValidation();
+  const { errors, warnings, counts, finalCounts } = runValidation();
   printCounts(counts);
+  printFinalCounts(finalCounts);
   printIssues('⚠️  WARNINGS', warnings, YELLOW);
   printIssues('❌ ERRORS',   errors,   RED);
 

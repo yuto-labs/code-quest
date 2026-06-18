@@ -271,6 +271,66 @@ tests.push(expectNoError(
   ));
 }
 
+// 28. Final mission child IDs must be stable and ordered
+{
+  const mission = {
+    ...getFinalMission('decode', 'JP', 'python'),
+    id: 'final_decode_JP_python',
+    worldId: 'decode',
+    countryId: 'JP',
+    languageId: 'python',
+    childQuestionIds: ['final_decode_JP_python_01', 'final_decode_JP_python_02', 'final_decode_JP_python_03'],
+    questions: [
+      { ...getFinalMission('decode', 'JP', 'python').questions[0], id: 'final_decode_JP_python_02' },
+    ],
+  };
+  const { errors } = validateFinalMission(mission);
+  tests.push(expectGeneric(
+    'invalid final child order is a structural error',
+    errors.some(e => e.rule === 'invalid-final-child-id-order'),
+    'invalid-final-child-id-order'
+  ));
+}
+
+// 29. Final target shortages are warnings only
+{
+  const base = getFinalMission('decode', 'JP', 'python');
+  const mission = {
+    ...base,
+    worldId: 'decode',
+    countryId: 'JP',
+    languageId: 'python',
+    questions: base.questions.slice(0, 1),
+  };
+  const { errors, warnings } = validateFinalMission(mission);
+  tests.push(expectGeneric(
+    'final target shortage warns but does not error',
+    errors.length === 0 && warnings.some(w => w.rule === 'final-target-count-shortage'),
+    'final-target-count-shortage'
+  ));
+}
+
+// 30. Duplicate final child IDs are structural errors
+{
+  const base = getFinalMission('decode', 'JP', 'python');
+  const mission = {
+    ...base,
+    worldId: 'decode',
+    countryId: 'JP',
+    languageId: 'python',
+    questions: [
+      { ...base.questions[0], id: 'final_decode_JP_python_01' },
+      { ...base.questions[0], id: 'final_decode_JP_python_01' },
+    ],
+  };
+  const { errors } = validateFinalMission(mission);
+  tests.push(expectGeneric(
+    'duplicate final child id is a structural error',
+    errors.some(e => e.rule === 'duplicate-final-child-id'),
+    'duplicate-final-child-id'
+  ));
+}
+
 // 10. bonus: valid debug-step (3 steps) passes step-count check
 tests.push(expectNoError(
   'valid debug-step with 3 steps passes step-count check',
@@ -323,8 +383,8 @@ tests.push(expectAssignmentWarning(
     countryId: 'JP',
     worldId: 'decode',
     languageId: 'python',
-    factIds: ['jp_sakura_traditional'],
-    entityKeys: ['cherry blossom'],
+    factIds: ['fact_jp_py_d10'],
+    entityKeys: ['sakura as cultural symbol, not statutory national flower'],
     learningObjectiveId: 'lo_alias',
     programmingConceptIds: ['variables'],
     cognitiveTask: 'recall-from-given-context',

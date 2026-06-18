@@ -43,6 +43,36 @@ function sanitizeAttempt(a) {
   };
 }
 
+function normalizeLegacyFinalMissionId(id) {
+  return typeof id === 'string' && id.startsWith('final_') && id.includes('*')
+    ? id.replaceAll('*', '_')
+    : id;
+}
+
+function sanitizeFinalMissions(finalMissions) {
+  if (!isObj(finalMissions)) return {};
+  const clean = {};
+  for (const [rawId, rawValue] of Object.entries(finalMissions)) {
+    const value = isObj(rawValue) ? rawValue : {};
+    const id = normalizeLegacyFinalMissionId(rawId);
+    clean[id] = {
+      ...value,
+      missionId: value.missionId || id,
+      completedChildCount: Number.isInteger(value.completedChildCount)
+        ? Math.max(0, value.completedChildCount)
+        : value.completedAt ? 3 : 0,
+      targetChildCount: Number.isInteger(value.targetChildCount)
+        ? Math.max(1, value.targetChildCount)
+        : 3,
+      currentChildIndex: Number.isInteger(value.currentChildIndex)
+        ? Math.max(0, value.currentChildIndex)
+        : 0,
+      migratedFromMissionId: rawId !== id ? rawId : value.migratedFromMissionId,
+    };
+  }
+  return clean;
+}
+
 export function sanitizeMeta(meta) {
   const input = isObj(meta) ? meta : {};
 
@@ -57,7 +87,7 @@ export function sanitizeMeta(meta) {
     version:       Number.isInteger(input.version) ? input.version : 1,
     resume:        isObj(input.resume)        ? input.resume        : {},
     review:        isObj(input.review)        ? input.review        : {},
-    finalMissions: isObj(input.finalMissions) ? input.finalMissions : {},
+    finalMissions: sanitizeFinalMissions(input.finalMissions),
     attempts,
   };
 }
@@ -156,5 +186,6 @@ export function mergeMeta(localMeta, cloudMeta) {
 }
 
 export function isFinalMissionCleared(meta, missionId) {
-  return Boolean(sanitizeMeta(meta).finalMissions?.[missionId]?.completedAt);
+  const item = sanitizeMeta(meta).finalMissions?.[missionId];
+  return Boolean(item?.completedAt && (item.completedChildCount || 0) >= (item.targetChildCount || 3));
 }

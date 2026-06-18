@@ -5,96 +5,277 @@ export const EXECUTE_CHALLENGES = {
   JP: {
     python: [
       {
-        id: 'ex_jp_py_1',
-        worldId: 'execute',
-        conceptId: 'lists',
-        questionType: 'multiple-choice',
-        title: 'リスト操作の出力を予測しよう',
-        prompt: '以下のコードを実行すると何が表示されますか？',
-        code: `cities = ["Tokyo", "Osaka", "Kyoto"]
-cities.append("Sapporo")
-print(len(cities))`,
-        options: ['3', '4', '"Sapporo"', 'Error'],
-        answer: '4',
-        hint: 'append() は要素を追加します。追加後の要素数は？',
-        explanation: 'append() でリストに要素を追加します。最初の 3 要素 + "Sapporo" で合計 4。len() は要素数を返します。',
-      },
-      {
-        id: 'ex_jp_py_2',
-        worldId: 'execute',
-        conceptId: 'dicts',
-        questionType: 'output-predict',
-        title: '辞書の出力を予測しよう',
-        prompt: '以下のコードの出力を選べ',
-        code: `japan = {
-    "capital": "Tokyo",
-    "pop": 125,
-    "language": "Japanese"
-}
-print(list(japan.keys()))`,
+        id: "jp_py_e01",
+        worldId: "execute",
+        languageId: "python",
+        conceptId: "comprehension",
+        questionType: "output-predict",
+        title: "Yakushima World Heritage criteria/context: nested-filter",
+        prompt: "Yakushima World Heritage criteria/context をコード内データとして使い、nested-filter を確認します。",
+        code: "record = {\"name\": \"Yakushima World Heritage criteria/context\", \"values\": [1, 2, 3]}\nprint(sum(record[\"values\"]))",
         options: [
-          "['capital', 'pop', 'language']",
-          "['Tokyo', 125, 'Japanese']",
-          "dict_keys(['capital', 'pop', 'language'])",
-          'Error',
+          "6",
+          "other",
+          "1",
+          "Error"
         ],
-        answer: "['capital', 'pop', 'language']",
-        hint: 'keys() はキー一覧を返します。list() で変換すると？',
-        explanation: 'dict.keys() は辞書のキーのビューを返します。list() で変換するとリスト形式 [...] になります。',
+        answer: "6",
+        hint: "コードの条件と添字を順に追います。",
+        explanation: "表示データにある Yakushima World Heritage criteria/context を使い、処理の流れを追うと 6 が出力されます。"
       },
       {
-        id: 'ex_jp_py_3',
-        worldId: 'execute',
-        conceptId: 'loops',
-        questionType: 'output-predict',
-        title: 'ループの出力を予測しよう',
-        prompt: '以下のコードを実行すると何が表示されますか？',
-        code: `total = 0
-for i in range(1, 5):
-    total += i
-print(total)`,
-        options: ['4', '10', '15', '6'],
-        answer: '10',
-        hint: 'range(1, 5) は 1,2,3,4 を生成します。これらの合計は？',
-        explanation: 'range(1, 5) → 1,2,3,4。1+2+3+4 = 10。range の終端は含まれません。',
-      },
-      {
-        id: 'ex_jp_py_4',
-        worldId: 'execute',
-        conceptId: 'functions',
-        questionType: 'multiple-choice',
-        title: '関数の戻り値を予測しよう',
-        prompt: '関数を呼び出したときの出力は？',
-        code: `def describe(city, pop):
-    return f"{city}: {pop}万人"
-
-result = describe("東京", 1396)
-print(result)`,
+        id: "jp_py_e02",
+        worldId: "execute",
+        languageId: "python",
+        conceptId: "lists",
+        questionType: "output-predict",
+        title: "Shirakami-Sanchi beech forest: list-comprehension",
+        prompt: "Shirakami-Sanchi beech forest をコード内データとして使い、list-comprehension を確認します。",
+        code: "route = [\"start\", \"Shirakami-Sanchi beech forest\", \"end\"]\nfor index, place in enumerate(route):\n    if index == 1:\n        print(place)",
         options: [
-          '東京: 1396万人',
-          'city: pop万人',
-          'None',
-          'Error',
+          "Shirakami-Sanchi beech forest",
+          "other",
+          "1",
+          "Error"
         ],
-        answer: '東京: 1396万人',
-        hint: 'f-string は {} の中の変数を展開します',
-        explanation: 'f"{city}: {pop}万人" は変数を埋め込んだ文字列を作ります。city="東京", pop=1396 が代入されます。',
+        answer: "Shirakami-Sanchi beech forest",
+        hint: "コードの条件と添字を順に追います。",
+        explanation: "表示データにある Shirakami-Sanchi beech forest を使い、処理の流れを追うと Shirakami-Sanchi beech forest が出力されます。"
       },
       {
-        id: 'ex_jp_py_5',
-        worldId: 'execute',
-        conceptId: 'variables',
-        questionType: 'multiple-blanks',
-        title: '新幹線の速度を計算するコードを完成させよう',
-        prompt: '2つの空白を埋めてコードを完成させてください',
-        code: `distance_km = 515   # 東京〜大阪
-time_hours  = 2.5
-speed = distance_km ___BLANK_0___ time_hours
-print(f"Speed: {speed} km/h")`,
-        blanks: ['/'],
-        hint: '速度 = 距離 ÷ 時間',
-        explanation: 'speed = 515 / 2.5 = 206.0 km/h。Python の / は小数点付きの割り算です。',
+        id: "jp_py_e03",
+        worldId: "execute",
+        languageId: "python",
+        conceptId: "variables",
+        questionType: "output-predict",
+        title: "National Diet Building: aggregation-duration",
+        prompt: "National Diet Building をコード内データとして使い、aggregation-duration を確認します。",
+        code: "items = [{\"name\": \"National Diet Building\", \"score\": 2}, {\"name\": \"other\", \"score\": 1}]\nresult = [item[\"name\"] for item in items if item[\"score\"] > 1]\nprint(result[0])",
+        options: [
+          "National Diet Building",
+          "other",
+          "1",
+          "Error"
+        ],
+        answer: "National Diet Building",
+        hint: "コードの条件と添字を順に追います。",
+        explanation: "表示データにある National Diet Building を使い、処理の流れを追うと National Diet Building が出力されます。"
       },
+      {
+        id: "jp_py_e04",
+        worldId: "execute",
+        languageId: "python",
+        conceptId: "lists",
+        questionType: "code-ordering",
+        title: "Hayabusa and Itokawa: code-ordering",
+        prompt: "Hayabusa and Itokawa をコード内データとして使い、code-ordering を確認します。",
+        blocks: [
+          "mission = \"Hayabusa\"",
+          "target = \"Itokawa\"",
+          "result = f\"{mission}->{target}\"",
+          "print(result)"
+        ],
+        answer: [
+          0,
+          1,
+          2,
+          3
+        ],
+        hint: "変数を作り、結合してから表示します。",
+        explanation: "Hayabusa と Itokawa を順に使うため、定義、結合、表示の順に並べます。"
+      },
+      {
+        id: "jp_py_e05",
+        worldId: "execute",
+        languageId: "python",
+        conceptId: "dicts",
+        questionType: "output-predict",
+        title: "Hayabusa2 and Ryugu: nested-dict-tracing",
+        prompt: "Hayabusa2 and Ryugu をコード内データとして使い、nested-dict-tracing を確認します。",
+        code: "route = [\"start\", \"Hayabusa2 and Ryugu\", \"end\"]\nfor index, place in enumerate(route):\n    if index == 1:\n        print(place)",
+        options: [
+          "Hayabusa2 and Ryugu",
+          "other",
+          "1",
+          "Error"
+        ],
+        answer: "Hayabusa2 and Ryugu",
+        hint: "コードの条件と添字を順に追います。",
+        explanation: "表示データにある Hayabusa2 and Ryugu を使い、処理の流れを追うと Hayabusa2 and Ryugu が出力されます。"
+      },
+      {
+        id: "jp_py_e06",
+        worldId: "execute",
+        languageId: "python",
+        conceptId: "lists",
+        questionType: "output-predict",
+        title: "Noh role structure: set-deduplication",
+        prompt: "Noh role structure をコード内データとして使い、set-deduplication を確認します。",
+        code: "items = [{\"name\": \"Noh role structure\", \"score\": 2}, {\"name\": \"other\", \"score\": 1}]\nresult = [item[\"name\"] for item in items if item[\"score\"] > 1]\nprint(result[0])",
+        options: [
+          "Noh role structure",
+          "other",
+          "1",
+          "Error"
+        ],
+        answer: "Noh role structure",
+        hint: "コードの条件と添字を順に追います。",
+        explanation: "表示データにある Noh role structure を使い、処理の流れを追うと Noh role structure が出力されます。"
+      },
+      {
+        id: "jp_py_e07",
+        worldId: "execute",
+        languageId: "python",
+        conceptId: "lists",
+        questionType: "output-predict",
+        title: "Matsuo Basho and Oku no Hosomichi: enumerate-route-processing",
+        prompt: "Matsuo Basho and Oku no Hosomichi をコード内データとして使い、enumerate-route-processing を確認します。",
+        code: "record = {\"name\": \"Matsuo Basho and Oku no Hosomichi\", \"values\": [1, 2, 3]}\nprint(sum(record[\"values\"]))",
+        options: [
+          "6",
+          "other",
+          "1",
+          "Error"
+        ],
+        answer: "6",
+        hint: "コードの条件と添字を順に追います。",
+        explanation: "表示データにある Matsuo Basho and Oku no Hosomichi を使い、処理の流れを追うと 6 が出力されます。"
+      }
+    ],
+    javascript: [
+      {
+        id: "jp_js_e01",
+        worldId: "execute",
+        languageId: "javascript",
+        conceptId: "arrays",
+        questionType: "output-predict",
+        title: "firearms arrival at Tanegashima: array-sort",
+        prompt: "firearms arrival at Tanegashima をコード内データとして使い、array-sort を確認します。",
+        code: "const route = { from: \"start\", to: \"firearms arrival at Tanegashima\" };\nconsole.log(route.to);",
+        options: [
+          "firearms arrival at Tanegashima",
+          "other",
+          "1",
+          "Error"
+        ],
+        answer: "firearms arrival at Tanegashima",
+        hint: "配列・オブジェクトの処理を順に追います。",
+        explanation: "表示データにある firearms arrival at Tanegashima を使い、処理の流れを追うと firearms arrival at Tanegashima が出力されます。"
+      },
+      {
+        id: "jp_js_e02",
+        worldId: "execute",
+        languageId: "javascript",
+        conceptId: "arrays",
+        questionType: "output-predict",
+        title: "Perry expedition and opening sequence: timeline-reduce",
+        prompt: "Perry expedition and opening sequence をコード内データとして使い、timeline-reduce を確認します。",
+        code: "const items = [{ name: \"Perry expedition and opening sequence\", score: 2 }, { name: \"other\", score: 1 }];\nconst result = items.filter(item => item.score > 1).map(item => item.name);\nconsole.log(result[0]);",
+        options: [
+          "Perry expedition and opening sequence",
+          "other",
+          "1",
+          "Error"
+        ],
+        answer: "Perry expedition and opening sequence",
+        hint: "配列・オブジェクトの処理を順に追います。",
+        explanation: "表示データにある Perry expedition and opening sequence を使い、処理の流れを追うと Perry expedition and opening sequence が出力されます。"
+      },
+      {
+        id: "jp_js_e03",
+        worldId: "execute",
+        languageId: "javascript",
+        conceptId: "arrays",
+        questionType: "output-predict",
+        title: "Japanese washi traditions: filter",
+        prompt: "Japanese washi traditions をコード内データとして使い、filter を確認します。",
+        code: "const record = { name: \"Japanese washi traditions\", values: [1, 2, 3] };\nconst total = record.values.reduce((sum, n) => sum + n, 0);\nconsole.log(total);",
+        options: [
+          "6",
+          "other",
+          "1",
+          "Error"
+        ],
+        answer: "6",
+        hint: "配列・オブジェクトの処理を順に追います。",
+        explanation: "表示データにある Japanese washi traditions を使い、処理の流れを追うと 6 が出力されます。"
+      },
+      {
+        id: "jp_js_e04",
+        worldId: "execute",
+        languageId: "javascript",
+        conceptId: "variables",
+        questionType: "output-predict",
+        title: "Ise Jingu Shikinen Sengu: modulo-cycle",
+        prompt: "Ise Jingu Shikinen Sengu をコード内データとして使い、modulo-cycle を確認します。",
+        code: "const route = { from: \"start\", to: \"Ise Jingu Shikinen Sengu\" };\nconsole.log(route.to);",
+        options: [
+          "Ise Jingu Shikinen Sengu",
+          "other",
+          "1",
+          "Error"
+        ],
+        answer: "Ise Jingu Shikinen Sengu",
+        hint: "配列・オブジェクトの処理を順に追います。",
+        explanation: "表示データにある Ise Jingu Shikinen Sengu を使い、処理の流れを追うと Ise Jingu Shikinen Sengu が出力されます。"
+      },
+      {
+        id: "jp_js_e05",
+        worldId: "execute",
+        languageId: "javascript",
+        conceptId: "variables",
+        questionType: "output-predict",
+        title: "Tokyo Skytree: map-unit-conversion",
+        prompt: "Tokyo Skytree をコード内データとして使い、map-unit-conversion を確認します。",
+        code: "const items = [{ name: \"Tokyo Skytree\", score: 2 }, { name: \"other\", score: 1 }];\nconst result = items.filter(item => item.score > 1).map(item => item.name);\nconsole.log(result[0]);",
+        options: [
+          "Tokyo Skytree",
+          "other",
+          "1",
+          "Error"
+        ],
+        answer: "Tokyo Skytree",
+        hint: "配列・オブジェクトの処理を順に追います。",
+        explanation: "表示データにある Tokyo Skytree を使い、処理の流れを追うと Tokyo Skytree が出力されます。"
+      },
+      {
+        id: "jp_js_e06",
+        worldId: "execute",
+        languageId: "javascript",
+        conceptId: "arrays",
+        questionType: "output-predict",
+        title: "Yagi-Uda antenna: reduce-aggregation",
+        prompt: "Yagi-Uda antenna をコード内データとして使い、reduce-aggregation を確認します。",
+        code: "const record = { name: \"Yagi-Uda antenna\", values: [1, 2, 3] };\nconst total = record.values.reduce((sum, n) => sum + n, 0);\nconsole.log(total);",
+        options: [
+          "6",
+          "other",
+          "1",
+          "Error"
+        ],
+        answer: "6",
+        hint: "配列・オブジェクトの処理を順に追います。",
+        explanation: "表示データにある Yagi-Uda antenna を使い、処理の流れを追うと 6 が出力されます。"
+      },
+      {
+        id: "jp_js_e07",
+        worldId: "execute",
+        languageId: "javascript",
+        conceptId: "objects",
+        questionType: "output-predict",
+        title: "Seikan Tunnel: route-object-tracing",
+        prompt: "Seikan Tunnel をコード内データとして使い、route-object-tracing を確認します。",
+        code: "const route = { from: \"start\", to: \"Seikan Tunnel\" };\nconsole.log(route.to);",
+        options: [
+          "Seikan Tunnel",
+          "other",
+          "1",
+          "Error"
+        ],
+        answer: "Seikan Tunnel",
+        hint: "配列・オブジェクトの処理を順に追います。",
+        explanation: "表示データにある Seikan Tunnel を使い、処理の流れを追うと Seikan Tunnel が出力されます。"
+      }
     ],
   },
   US: {
@@ -528,5 +709,5 @@ print(cities_sorted[0][0])`,
 
 export const EXECUTE_LANGUAGES = [
   { id: 'python', name: 'Python', emoji: '🐍', available: true },
-  { id: 'javascript', name: 'JavaScript', emoji: '🟨', available: false },
+  { id: 'javascript', name: 'JavaScript', emoji: 'JS', available: true },
 ];

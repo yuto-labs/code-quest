@@ -17,10 +17,18 @@ import {
 const GEO_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
 
 const ISO_MAP = {
+  // G20
   392: 'JP', 840: 'US', 250: 'FR',  76: 'BR',  36: 'AU',
   818: 'EG', 356: 'IN', 643: 'RU', 156: 'CN', 276: 'DE',
   826: 'GB', 410: 'KR', 124: 'CA', 380: 'IT', 484: 'MX',
   682: 'SA',  32: 'AR', 792: 'TR', 360: 'ID', 710: 'ZA',
+  // OECD追加国
+   40: 'AT',  56: 'BE', 152: 'CL', 170: 'CO', 188: 'CR',
+  203: 'CZ', 208: 'DK', 233: 'EE', 246: 'FI', 300: 'GR',
+  348: 'HU', 352: 'IS', 372: 'IE', 376: 'IL', 428: 'LV',
+  440: 'LT', 442: 'LU', 528: 'NL', 554: 'NZ', 578: 'NO',
+  616: 'PL', 620: 'PT', 703: 'SK', 705: 'SI', 724: 'ES',
+  752: 'SE', 756: 'CH',
 };
 const REVERSE_ISO = Object.fromEntries(
   Object.entries(ISO_MAP).map(([num, id]) => [id, parseInt(num)])
@@ -46,6 +54,11 @@ export default function MapScreen({ onSelectCountry, onBack, progress, quizProgr
       zoomTimersRef.current = [];
     };
   }, []);
+
+  // PC では visualViewport の offsetTop 補正は不要（iOS キーボード用途のみ）
+  const safeTop = isTouch
+    ? 'calc(var(--vv-offset, 0px) + env(safe-area-inset-top, 0px))'
+    : 'env(safe-area-inset-top, 0px)';
 
   const clearedIds  = getClearedCountryIds(progress || {}, world);
   const unlockedIds = getUnlockedIds(progress || {}, world);
@@ -122,12 +135,12 @@ export default function MapScreen({ onSelectCountry, onBack, progress, quizProgr
   const tooltipStyle = isTouch ? styles.tooltipMobile : styles.tooltipDesktop;
 
   return (
-    <div style={styles.wrap}>
+    <div style={{ ...styles.wrap, top: safeTop }}>
       <div style={styles.crtScanlines} />
       <div style={styles.crtVignette} />
 
       {/* ── HUD: all fixed to viewport, outside the map/SVG transform ── */}
-      <div style={styles.header}>
+      <div style={{ ...styles.header, top: `calc(${safeTop} + 12px)` }}>
         <button style={styles.backBtn} onClick={onBack}>
           {'[ < BACK ]'}
         </button>
@@ -139,7 +152,7 @@ export default function MapScreen({ onSelectCountry, onBack, progress, quizProgr
       {/* Reset zoom button */}
       {(position.zoom !== defaultPos.zoom ||
         position.coordinates[0] !== defaultPos.coordinates[0]) && !zooming && (
-        <button style={styles.resetBtn} onClick={() => setPosition(defaultPos)}>
+        <button style={{ ...styles.resetBtn, top: `calc(${safeTop} + 14px)` }} onClick={() => setPosition(defaultPos)}>
           {'> reset.exe'}
         </button>
       )}
@@ -344,7 +357,7 @@ export default function MapScreen({ onSelectCountry, onBack, progress, quizProgr
 const styles = {
   wrap: {
     position: 'fixed',
-    top: 'calc(var(--vv-offset, 0px) + env(safe-area-inset-top, 0px))',
+    top: 0,
     left: 0,
     right: 0,
     bottom: 0,
@@ -374,7 +387,7 @@ const styles = {
   },
   header: {
     position: 'fixed',
-    top: 'calc(var(--vv-offset, 0px) + env(safe-area-inset-top, 0px) + 12px)',
+    top: 12,
     left: 16,
     zIndex: 30,
     display: 'flex',
@@ -430,11 +443,12 @@ const styles = {
     boxSizing: 'border-box',
     zIndex: 30,
   },
-  // Desktop: fixed right-side panel, below header, above legend
+  // Desktop: bottom-center (slightly right), above legend
   tooltipDesktop: {
     position: 'fixed',
-    top: 'calc(var(--vv-offset, 0px) + env(safe-area-inset-top, 0px) + 56px)',
-    right: 20,
+    bottom: 'calc(env(safe-area-inset-bottom, 0px) + 72px)',
+    left: 'calc(50% + 60px)',
+    transform: 'translateX(-50%)',
     background: 'rgba(4,5,14,0.94)',
     border: '1px solid rgba(0,255,136,0.35)',
     boxShadow: '0 0 20px rgba(0,255,136,0.12)',
@@ -509,7 +523,7 @@ const styles = {
   },
   resetBtn: {
     position: 'fixed',
-    top: 'calc(var(--vv-offset, 0px) + env(safe-area-inset-top, 0px) + 14px)',
+    top: 14,
     right: 14,
     fontFamily: 'var(--pixel-font)',
     fontSize: 9,

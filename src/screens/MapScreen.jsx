@@ -8,6 +8,11 @@ import {
 } from 'react-simple-maps';
 import { COUNTRIES } from '../data/countries';
 import { getUnlockedIds, getClearedCountryIds } from '../utils/progress';
+import {
+  getGeoNeonColor,
+  getGeoFillRgba,
+  getColorForCountry,
+} from '../utils/mapColors';
 
 const GEO_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
 
@@ -22,55 +27,6 @@ const REVERSE_ISO = Object.fromEntries(
   Object.entries(ISO_MAP).map(([num, id]) => [id, parseInt(num)])
 );
 
-const CONTINENT_NEON = {
-  na: '#ff3344',
-  sa: '#00dd66',
-  eu: '#44aaff',
-  af: '#ffbb00',
-  as: '#cc44ff',
-  oc: '#ff7722',
-};
-
-const CONTINENT_MAP = {
-  124: 'na', 840: 'na', 484: 'na', 188: 'na', 320: 'na', 222: 'na',
-  340: 'na', 388: 'na', 630: 'na', 558: 'na', 591: 'na', 192: 'na',
-  332: 'na', 214: 'na', 780: 'na',  28: 'na',  44: 'na',  52: 'na',
-   84: 'na', 659: 'na', 308: 'na', 670: 'na', 662: 'na', 500: 'na',
-  474: 'na', 212: 'na', 850: 'na', 796: 'na',  60: 'na', 535: 'na',
-   76: 'sa',  32: 'sa', 152: 'sa', 170: 'sa', 218: 'sa', 600: 'sa',
-  858: 'sa', 328: 'sa', 740: 'sa',  68: 'sa', 254: 'sa', 531: 'sa', 226: 'sa',
-  276: 'eu', 250: 'eu', 826: 'eu', 380: 'eu', 724: 'eu', 620: 'eu',
-  528: 'eu',  56: 'eu', 756: 'eu',  40: 'eu', 203: 'eu', 703: 'eu',
-  348: 'eu', 642: 'eu', 100: 'eu', 688: 'eu', 807: 'eu', 499: 'eu',
-  191: 'eu', 705: 'eu', 372: 'eu', 233: 'eu', 428: 'eu', 440: 'eu',
-  616: 'eu', 752: 'eu', 578: 'eu', 246: 'eu', 208: 'eu', 352: 'eu',
-  442: 'eu', 470: 'eu', 492: 'eu', 674: 'eu', 336: 'eu',   8: 'eu',
-   20: 'eu',  70: 'eu', 438: 'eu', 248: 'eu', 304: 'eu',
-  818: 'af', 710: 'af', 404: 'af', 566: 'af',  12: 'af', 288: 'af',
-  504: 'af', 231: 'af', 834: 'af', 716: 'af', 800: 'af', 646: 'af',
-  686: 'af', 706: 'af', 516: 'af', 466: 'af', 430: 'af', 324: 'af',
-  204: 'af', 120: 'af', 140: 'af', 562: 'af', 694: 'af', 270: 'af',
-  624: 'af',  72: 'af', 174: 'af', 454: 'af', 508: 'af', 748: 'af',
-  266: 'af', 729: 'af', 178: 'af', 180: 'af', 384: 'af', 768: 'af',
-  894: 'af', 108: 'af', 638: 'af', 450: 'af', 426: 'af', 262: 'af',
-  232: 'af',
-  356: 'as', 643: 'as', 156: 'as', 392: 'as', 410: 'as', 682: 'as',
-  792: 'as', 360: 'as', 704: 'as', 764: 'as', 116: 'as', 496: 'as',
-  398: 'as', 762: 'as', 795: 'as', 860: 'as',  50: 'as', 144: 'as',
-  586: 'as', 408: 'as', 458: 'as', 418: 'as', 104: 'as', 524: 'as',
-   64: 'as', 400: 'as', 414: 'as', 422: 'as', 760: 'as', 368: 'as',
-  364: 'as', 887: 'as', 512: 'as', 376: 'as', 275: 'as',  51: 'as',
-   31: 'as', 268: 'as', 417: 'as', 626: 'as', 196: 'as',
-   36: 'oc', 554: 'oc', 598: 'oc', 242: 'oc', 520: 'oc', 584: 'oc',
-  585: 'oc',  90: 'oc', 548: 'oc', 776: 'oc', 882: 'oc', 316: 'oc',
-  580: 'oc', 258: 'oc', 772: 'oc',
-};
-
-function getNeonColor(numericId) {
-  const continent = CONTINENT_MAP[numericId];
-  return continent ? CONTINENT_NEON[continent] : '#3355aa';
-}
-
 export default function MapScreen({ onSelectCountry, onBack, progress, quizProgress, world = 'decode' }) {
   const [tooltip, setTooltip] = useState(null);
   const [isTouch] = useState(() => window.matchMedia('(pointer: coarse)').matches);
@@ -80,6 +36,9 @@ export default function MapScreen({ onSelectCountry, onBack, progress, quizProgr
   const [zoomStage, setZoomStage] = useState(0);
   const [zoomCountry, setZoomCountry] = useState(null);
   const [hoveredNumId, setHoveredNumId] = useState(null);
+
+  // MapScreen remounts on every world change (App.jsx screen transitions always
+  // unmount it), so hover/tooltip state resets automatically on mount.
 
   const clearedIds  = getClearedCountryIds(progress || {}, world);
   const unlockedIds = getUnlockedIds(progress || {}, world);
@@ -114,25 +73,30 @@ export default function MapScreen({ onSelectCountry, onBack, progress, quizProgr
   };
 
   const getGeoStyle = (numericId, gameId, status, isHovered) => {
-    const neon = getNeonColor(numericId);
+    const neon = getGeoNeonColor(numericId);
 
     if (status === 'cleared') {
+      // Use continent hue — never universal green
+      const fill     = getGeoFillRgba(numericId, 0.16);
+      const fillHov  = getGeoFillRgba(numericId, 0.54);
       const base = {
-        fill: 'rgba(0,255,136,0.12)',
-        stroke: '#00ff88',
-        strokeWidth: 1.0,
+        fill,
+        stroke: neon,
+        strokeWidth: 1.2,
         outline: 'none',
         cursor: 'pointer',
+        filter: `drop-shadow(0 0 3px ${neon}55)`,
       };
       const hov = {
-        fill: 'rgba(0,255,136,0.55)',
-        stroke: '#00ffcc',
+        fill: fillHov,
+        stroke: neon,
         strokeWidth: 2.4,
         outline: 'none',
         cursor: 'pointer',
+        filter: `drop-shadow(0 0 7px ${neon}99)`,
       };
       const active = isHovered ? hov : base;
-      return { default: active, hover: active, pressed: { fill: 'rgba(0,255,136,0.65)', outline: 'none' } };
+      return { default: active, hover: active, pressed: { fill: fillHov, outline: 'none' } };
     }
     if (status === 'unlocked') {
       const base = {
@@ -153,6 +117,7 @@ export default function MapScreen({ onSelectCountry, onBack, progress, quizProgr
       return { default: active, hover: active, pressed: { fill: 'rgba(0,80,200,0.60)', outline: 'none' } };
     }
     if (status === 'locked') {
+      // Muted continent hue (same hue, reduced opacity)
       const base = {
         fill: 'rgba(0,0,0,0.05)',
         stroke: neon,
@@ -162,7 +127,7 @@ export default function MapScreen({ onSelectCountry, onBack, progress, quizProgr
         cursor: 'default',
       };
       const hov = {
-        fill: 'rgba(255,220,80,0.42)',
+        fill: getGeoFillRgba(numericId, 0.30),
         stroke: neon,
         strokeWidth: 2.2,
         outline: 'none',
@@ -172,7 +137,7 @@ export default function MapScreen({ onSelectCountry, onBack, progress, quizProgr
       const active = isHovered ? hov : base;
       return { default: active, hover: active, pressed: { outline: 'none' } };
     }
-    // ゲーム外の国
+    // Unsupported / outside game — continent hue, muted
     const base = {
       fill: 'rgba(0,0,0,0.04)',
       stroke: neon,
@@ -181,7 +146,7 @@ export default function MapScreen({ onSelectCountry, onBack, progress, quizProgr
       opacity: 0.55,
     };
     const hov = {
-      fill: 'rgba(255,220,80,0.32)',
+      fill: getGeoFillRgba(numericId, 0.28),
       stroke: neon,
       strokeWidth: 1.8,
       outline: 'none',
@@ -317,7 +282,7 @@ export default function MapScreen({ onSelectCountry, onBack, progress, quizProgr
                       y={16}
                       style={{
                         fontSize: 4,
-                        fill: clearedIds.has(c.id) ? '#00ff88'
+                        fill: clearedIds.has(c.id) ? getColorForCountry(c.id)
                             : Object.keys(quizProgress || {}).some(k => k.startsWith(`${world}_${c.id}_`)) ? '#ffdd00'
                             : '#aaa',
                         fontFamily: 'Press Start 2P, monospace',
@@ -390,7 +355,7 @@ export default function MapScreen({ onSelectCountry, onBack, progress, quizProgr
       {/* フッター凡例 */}
       <div style={styles.legend}>
         <span style={styles.legendLabel}>{'// MAP KEY'}</span>
-        <span style={{ ...styles.legendItem, color: '#00ffaa', textShadow: '0 0 6px #00ffaa, 0 0 14px #00ff8866' }}>
+        <span style={{ ...styles.legendItem, color: '#ccddbb' }}>
           {'[✓]'} <span style={styles.legendText}>CLEARED</span>
         </span>
         <span style={{ ...styles.legendItem, color: '#22ccff', textShadow: '0 0 6px #22ccff, 0 0 14px #0088ff66' }}>

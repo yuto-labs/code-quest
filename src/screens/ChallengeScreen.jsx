@@ -4,6 +4,7 @@ import { CHALLENGES } from '../data/challenges';
 import { EXECUTE_CHALLENGES } from '../data/execute_challenges';
 import { DEBUG_CHALLENGES } from '../data/debug_challenges';
 import WireframeBackground from '../components/WireframeBackground';
+import { getColorForCountry } from '../utils/mapColors';
 
 const WORLD_CHALLENGES = {
   decode:  CHALLENGES,
@@ -43,6 +44,7 @@ export default function ChallengeScreen({
   const [comboDisplay, setComboDisplay]         = useState(0); // fix: use separate state so popup shows correct value
   const [shakingHeartIdx, setShakingHeartIdx]   = useState(-1);
   const [scorePop, setScorePop]                 = useState(false);
+  const [showCorrectOverlay, setShowCorrectOverlay] = useState(false);
 
   // new question types
   const [selectedOption,    setSelectedOption]    = useState(null);
@@ -50,6 +52,13 @@ export default function ChallengeScreen({
   const [debugStepIdx,      setDebugStepIdx]      = useState(0);
   const [debugStepAnswers,  setDebugStepAnswers]  = useState([]);
   const [orderingSelection, setOrderingSelection] = useState([]);
+
+  // Track whether clear was earned this session (vs reload with initialIdx >= questions.length)
+  const clearedJustNow = useRef(false);
+  // Track which question indices have already shown the CORRECT overlay this session
+  const correctShownForIdx = useRef(new Set());
+  // Continent color for this country — used on clear panel and effects
+  const continentColor = getColorForCountry(country.id);
 
   // fix: track all timers so we can cancel them on unmount / retry
   const timersRef = useRef([]);
@@ -142,6 +151,8 @@ export default function ChallengeScreen({
 
   const resetGame = () => {
     clearTimers();
+    clearedJustNow.current = false;
+    correctShownForIdx.current = new Set();
     setIdx(0);
     setHearts(MAX_HEARTS);
     setScore(0);
@@ -151,6 +162,7 @@ export default function ChallengeScreen({
     setStatus('idle');
     setAnswer('');
     setScreenEffect(null);
+    setShowCorrectOverlay(false);
     setShakingHeartIdx(-1);
     setSelectedOption(null);
     setBlankAnswers([]);
@@ -200,31 +212,126 @@ export default function ChallengeScreen({
 
   // ── クリア画面 ────────────────────────────────
   if (!questions[idx]) {
-    enterActionRef.current = () => { onSaveScore?.(score); onComplete(country.id); };
+    const isNewClear = clearedJustNow.current;
+    const handleReturn = () => { onSaveScore?.(score); onComplete(country.id); };
+    enterActionRef.current = handleReturn;
+
+    const STARS = [
+      { top: '18%', left: '12%',  delay: '0s',    char: '✦' },
+      { top: '14%', right: '14%', delay: '0.12s', char: '★' },
+      { top: '38%', left: '6%',   delay: '0.22s', char: '✧' },
+      { top: '35%', right: '8%',  delay: '0.08s', char: '✦' },
+      { top: '62%', left: '10%',  delay: '0.18s', char: '✴' },
+      { top: '60%', right: '10%', delay: '0.30s', char: '✧' },
+    ];
+
     return (
       <div style={{ ...styles.wrap, overflowY: 'auto' }} className="fade-in">
         <WireframeBackground countryId={country.id} />
-        <div style={{ ...styles.complete, justifyContent: 'flex-start', paddingTop: 'clamp(32px, 10vh, 80px)' }}>
-          <div style={{ fontSize: 'clamp(48px, 12vw, 72px)' }}>🎉</div>
-          <div style={styles.completeTitle}>QUEST CLEAR!</div>
-          <div style={styles.completeSub}>{country.name} の {language.name} クエスト完了！</div>
-          <div style={styles.finalScore}>
+
+        {/* Stars — only on fresh clear */}
+        {isNewClear && STARS.map((s, i) => (
+          <div
+            key={i}
+            className="clear-star"
+            style={{
+              position: 'fixed',
+              top: s.top,
+              left: s.left,
+              right: s.right,
+              fontSize: 18,
+              color: continentColor,
+              pointerEvents: 'none',
+              zIndex: 5,
+              animationDelay: s.delay,
+            }}
+          >
+            {s.char}
+          </div>
+        ))}
+
+        <div style={{
+          ...styles.complete,
+          justifyContent: 'flex-start',
+          paddingTop: 'clamp(32px, 10vh, 72px)',
+        }}>
+          {/* Country emoji */}
+          <div style={{
+            fontSize: 'clamp(40px, 10vw, 60px)',
+            animation: isNewClear ? 'clearCountryIn 0.45s 0.05s ease both' : 'none',
+          }}>
+            {country.emoji}
+          </div>
+
+          {/* Localized country name */}
+          <div style={{
+            fontSize: 'clamp(16px, 4.5vw, 26px)',
+            color: continentColor,
+            textShadow: `0 0 10px ${continentColor}aa, 0 0 24px ${continentColor}55, 2px 2px 0 #110011`,
+            letterSpacing: 3,
+            animation: isNewClear ? 'clearCountryIn 0.45s 0.18s ease both' : 'none',
+          }}>
+            {country.nameJa || country.name}
+          </div>
+
+          {/* CLEAR */}
+          <div style={{
+            fontSize: 'clamp(28px, 8vw, 52px)',
+            color: continentColor,
+            textShadow: `0 0 14px ${continentColor}, 0 0 32px ${continentColor}bb, 0 0 60px ${continentColor}55, 3px 3px 0 #110011`,
+            letterSpacing: 6,
+            animation: isNewClear
+              ? 'clearCountryIn 0.5s 0.35s ease both, clearTextGlow 2s 0.85s ease-in-out infinite'
+              : 'clearTextGlow 2s 0s ease-in-out infinite',
+          }}>
+            CLEAR
+          </div>
+
+          {/* Border accent line */}
+          <div style={{
+            width: 'clamp(140px, 40vw, 260px)',
+            height: 2,
+            background: `linear-gradient(90deg, transparent, ${continentColor}88, transparent)`,
+            margin: '4px 0',
+            animation: isNewClear ? 'clearCountryIn 0.4s 0.5s ease both' : 'none',
+          }} />
+
+          {/* Score */}
+          <div style={{
+            ...styles.finalScore,
+            border: `2px solid ${continentColor}55`,
+            animation: isNewClear ? 'clearCountryIn 0.4s 0.55s ease both' : 'none',
+          }}>
             <div style={{ fontSize: 7, color: 'var(--text-dim)' }}>FINAL SCORE</div>
             <div style={{ fontSize: 'clamp(20px, 6vw, 32px)', color: 'var(--accent2)' }}>
               {score.toLocaleString()}
             </div>
           </div>
-          <div style={{ display: 'flex', gap: 6, margin: '4px 0 8px' }}>
+
+          {/* Hearts */}
+          <div style={{
+            display: 'flex',
+            gap: 6,
+            margin: '4px 0 8px',
+            animation: isNewClear ? 'clearCountryIn 0.4s 0.65s ease both' : 'none',
+          }}>
             {Array.from({ length: MAX_HEARTS }).map((_, i) => (
               <span key={i} style={{ fontSize: 22, opacity: i < hearts ? 1 : 0.2 }}>
                 {i < hearts ? '❤️' : '🖤'}
               </span>
             ))}
           </div>
+
+          {/* Button — always visible and interactive immediately */}
           <button
             className="pixel-btn"
-            style={{ marginTop: 16 }}
-            onClick={() => { onSaveScore?.(score); onComplete(country.id); }}
+            style={{
+              marginTop: 16,
+              borderColor: continentColor,
+              color: continentColor,
+              boxShadow: `0 0 12px ${continentColor}44`,
+            }}
+            onClick={handleReturn}
           >
             ワールドマップへ戻る
           </button>
@@ -292,6 +399,13 @@ export default function ChallengeScreen({
     schedule(() => setScorePop(false), 400);
     setScreenEffect('correct');
     schedule(() => setScreenEffect(null), 400);
+
+    // CORRECT overlay — once per question index per session
+    if (!correctShownForIdx.current.has(idx)) {
+      correctShownForIdx.current.add(idx);
+      setShowCorrectOverlay(true);
+      schedule(() => setShowCorrectOverlay(false), 950);
+    }
   };
 
   const fireWrong = () => {
@@ -342,6 +456,9 @@ export default function ChallengeScreen({
       return;
     }
     const nextIdx = idx + 1;
+    if (nextIdx >= questions.length) {
+      clearedJustNow.current = true;
+    }
     setIdx(nextIdx);
     onSaveIdx?.(nextIdx, { questionId: questions[nextIdx]?.id });
   };
@@ -411,6 +528,59 @@ export default function ChallengeScreen({
             : 'rgba(255,68,68,0.22)',
           animation: 'flashFade 0.4s ease forwards',
         }} />
+      )}
+
+      {/* CORRECT overlay — neon LED dot-matrix style, non-blocking */}
+      {showCorrectOverlay && (
+        <div style={{
+          position: 'fixed', inset: 0,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          zIndex: 400, pointerEvents: 'none',
+          animation: 'correctFade 0.95s ease forwards',
+        }}>
+          <div style={{ position: 'relative', textAlign: 'center', animation: 'correctScale 0.95s ease forwards' }}>
+            {/* Sparkle stars — absolute inside scaled container */}
+            {[
+              { top: -28, left:  6,  char: '✦', delay: '0s'    },
+              { top: -24, right: 8,  char: '★', delay: '0.08s' },
+              { top:  6,  left: -30, char: '✧', delay: '0.15s' },
+              { top:  6,  right:-30, char: '✴', delay: '0.06s' },
+              { bottom:-24, left: 18, char: '✦', delay: '0.20s' },
+              { bottom:-20, right:14, char: '✧', delay: '0.28s' },
+            ].map((s, i) => (
+              <div
+                key={i}
+                className="correct-star"
+                style={{
+                  position: 'absolute',
+                  fontSize: 11,
+                  color: '#00ff88',
+                  top: s.top,
+                  left: s.left,
+                  right: s.right,
+                  bottom: s.bottom,
+                  animationDelay: s.delay,
+                }}
+              >
+                {s.char}
+              </div>
+            ))}
+            <div style={{
+              fontFamily: 'var(--pixel-font)',
+              fontSize: 'clamp(18px, 4.5vw, 26px)',
+              color: '#00ff88',
+              textShadow: '0 0 8px #00ff88, 0 0 18px #00ff88, 0 0 36px #00ff8866, 2px 2px 0 #002211',
+              letterSpacing: 4,
+              background: 'rgba(0,6,3,0.90)',
+              border: '2px solid #00ff8833',
+              padding: '12px 24px',
+              boxShadow: '0 0 24px #00ff8818, inset 0 0 16px rgba(0,255,136,0.04)',
+              whiteSpace: 'nowrap',
+            }}>
+              CORRECT
+            </div>
+          </div>
+        </div>
       )}
 
       {/* コンボポップアップ */}

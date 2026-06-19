@@ -10,566 +10,696 @@ export const DEBUG_CHALLENGES = {
   JP: {
     python: [
       {
-        id: "jp_py_b01",
-        worldId: "debug",
-        languageId: "python",
-        conceptId: "variables",
-        questionType: "debug-step",
-        title: "kanji-hiragana-katakana search: unicode-normalization",
-        description: "日本語の検索では、半角カタカナと全角カタカナ、濁点の持ち方などが違うだけで一致しないことがあります。次の検索コードは、見た目が同じ『フジ』を見つけられません。",
-        code: "import unicodedata\n\nentries = [\n    {\"script\": \"kanji\", \"label\": \"富士\", \"keyword\": \"富士\"},\n    {\"script\": \"katakana\", \"label\": \"フジ\", \"keyword\": \"ﾌｼﾞ\"},\n    {\"script\": \"hiragana\", \"label\": \"ふじ\", \"keyword\": \"ふじ\"}\n]\nquery = \"フジ\"\n\nfor entry in entries:\n    if entry[\"keyword\"] == query:\n        print(entry[\"label\"])",
-        steps: [
+        "id": "jp_py_b01",
+        "worldId": "debug",
+        "languageId": "python",
+        "conceptId": "variables",
+        "questionType": "debug-step",
+        "title": "kanji-hiragana-katakana search: normalization-debug",
+        "description": "漢字・ひらがな・カタカナが混在する検索を扱う Python コードの不具合を、原因・修正・影響の3段階で確認します。",
+        "code": "records = [\n    {\"name\": \"kanji-hiragana-katakana search\", \"key\": \"kanji-hiragana-katakana-search\", \"country\": \"JP\"},\n    {\"name\": \"comparison\", \"key\": \"comparison\", \"country\": \"JP\"}\n]\nquery = \"KANJI-HIRAGANA-KATAKANA-SEARCH\"\n\nfor record in records:\n    if record[\"key\"] == query:\n        print(record[\"name\"])",
+        "steps": [
           {
-            stepNum: 1,
-            stepTitle: "原因を特定",
-            prompt: "検索語 `フジ` とデータ側の `ﾌｼﾞ` は見た目が近いですが、Unicode では別の表現です。コードは正規化せずに直接比較しています。",
-            question: "この不具合の主な原因はどれですか。",
-            options: [
-              "検索語とデータ側の文字列を Unicode 正規化せずに比較している",
-              "for 文が entries の最後の要素を読み飛ばしている",
-              "print に渡す値が label ではなく script になっている"
+            "stepNum": 1,
+            "stepTitle": "原因を特定",
+            "prompt": "漢字・ひらがな・カタカナが混在する検索のデータは存在しますが、期待した出力になりません。",
+            "question": "主な原因はどれですか。",
+            "options": [
+              "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。",
+              "配列の長さが常に0になっている",
+              "print 文がコメントアウトされている"
             ],
-            answer: "検索語とデータ側の文字列を Unicode 正規化せずに比較している",
-            hint: "`フジ` と `ﾌｼﾞ` は画面では似ています。比較の前に同じ表現へそろえている処理があるかを探します。",
-            explanation: "`entry[\"keyword\"] == query` は、文字の見た目ではなく Unicode の実際の並びを比較します。半角カタカナと全角カタカナをそのまま比べると一致しません。"
+            "answer": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。",
+            "hint": "値を作っている行ではなく、比較または return で使っている変数を見ます。",
+            "explanation": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。"
           },
           {
-            stepNum: 2,
-            stepTitle: "修正を選ぶ",
-            prompt: "Step 1 の原因を踏まえ、検索語とデータ側の keyword を同じ Unicode 表現へそろえてから比較します。",
-            question: "最も安全な修正はどれですか。",
-            options: [
-              "比較前に `unicodedata.normalize(\"NFKC\", text)` を query と keyword の両方に適用する",
-              "query を空文字にして、すべての項目を一致させる",
-              "katakana の行だけ entries から削除する"
+            "stepNum": 2,
+            "stepTitle": "修正を選ぶ",
+            "prompt": "Step 1 の原因を踏まえて、最小で安全な修正を選びます。",
+            "question": "正しい修正はどれですか。",
+            "options": [
+              "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる",
+              "データを空にしてエラーを避ける",
+              "常に最初の record を表示する"
             ],
-            answer: "比較前に `unicodedata.normalize(\"NFKC\", text)` を query と keyword の両方に適用する",
-            hint: "片方だけではなく、入力側と保存データ側の両方を同じルールで変換する修正を選びます。",
-            explanation: "NFKC 正規化を両方にかけると、半角カタカナなどの互換文字を比較しやすい形にそろえられます。"
+            "answer": "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる",
+            "hint": "データを消さず、処理の対象になる値を正しくそろえる修正を選びます。",
+            "explanation": "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる"
           },
           {
-            stepNum: 3,
-            stepTitle: "理由と影響",
-            prompt: "修正後は、日本語の入力表記が多少違っても同じ項目を探しやすくなります。",
-            question: "この修正の理由・影響として正しいものはどれですか。",
-            options: [
-              "入力と保存データを同じ正規化形式にそろえるため、半角/全角の違いで検索漏れしにくくなる",
-              "辞書のキーをすべて英語に変えるため、日本語データが不要になる",
-              "for 文の回数を半分に減らすため、必ず高速化する"
+            "stepNum": 3,
+            "stepTitle": "理由と影響",
+            "prompt": "修正後の動作がなぜ安全になるかを確認します。",
+            "question": "修正の影響として正しいものはどれですか。",
+            "options": [
+              "入力表記の大小差による検索漏れを減らせる。",
+              "国別データが不要になる",
+              "すべての入力が同じ結果になる"
             ],
-            answer: "入力と保存データを同じ正規化形式にそろえるため、半角/全角の違いで検索漏れしにくくなる",
-            hint: "検索結果が増える理由は、ループ回数ではなく、比較前の文字列表現をそろえたことです。",
-            explanation: "日本語の検索では、見た目が近い文字でも内部表現が異なることがあります。正規化により、表記ゆれによる取りこぼしを減らせます。"
+            "answer": "入力表記の大小差による検索漏れを減らせる。",
+            "hint": "修正で改善される境界ケースまたは表記ゆれに注目します。",
+            "explanation": "入力表記の大小差による検索漏れを減らせる。"
           }
         ],
-        correctAnswer: "検索語とデータ側の文字列を Unicode 正規化せずに比較している / NFKC 正規化を両方に適用する / 検索漏れを減らす",
-        correctedCode: "import unicodedata\n\nentries = [\n    {\"script\": \"kanji\", \"label\": \"富士\", \"keyword\": \"富士\"},\n    {\"script\": \"katakana\", \"label\": \"フジ\", \"keyword\": \"ﾌｼﾞ\"},\n    {\"script\": \"hiragana\", \"label\": \"ふじ\", \"keyword\": \"ふじ\"}\n]\nquery = unicodedata.normalize(\"NFKC\", \"フジ\")\n\nfor entry in entries:\n    keyword = unicodedata.normalize(\"NFKC\", entry[\"keyword\"])\n    if keyword == query:\n        print(entry[\"label\"])",
-        executionSteps: [
-          "検索語 `フジ` を受け取る。",
-          "各 entry の keyword と query を直接比較する。",
-          "正規化がないため、`ﾌｼﾞ` と `フジ` が一致せず、期待する label が表示されない。"
+        "correctAnswer": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。 / 比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる / 入力表記の大小差による検索漏れを減らせる。",
+        "correctedCode": "records = [\n    {\"name\": \"kanji-hiragana-katakana search\", \"key\": \"kanji-hiragana-katakana-search\", \"country\": \"JP\"},\n    {\"name\": \"comparison\", \"key\": \"comparison\", \"country\": \"JP\"}\n]\nquery = \"KANJI-HIRAGANA-KATAKANA-SEARCH\"\n\nfor record in records:\n    if record[\"key\"].casefold() == query.casefold():\n        print(record[\"name\"])",
+        "commonMistakes": [
+          "症状だけを見てデータ削除で直そうとしないこと。",
+          "中間値を作っても、最後の比較や return で使わなければ反映されません。"
         ],
-        commonMistakes: [
-          "`lower()` は英字の大文字小文字には効きますが、半角/全角カタカナの差は解決しません。",
-          "データを削除して合わせると、実データを失ってしまいます。"
-        ],
-        programmingExplanation: "`unicodedata.normalize(\"NFKC\", text)` は互換文字を比較しやすい形にそろえるために使えます。検索では、入力と保存データの両方へ同じ前処理をかけることが大切です。",
-        countryNote: "日本語では漢字・ひらがな・カタカナに加えて、半角/全角などの表記ゆれも扱う必要があります。",
-        debugExplanation: {
-          cause: "`フジ` と `ﾌｼﾞ` を正規化せず直接比較しているため、見た目が似ていても一致しない。",
-          fix: "query と entry の keyword の両方に `unicodedata.normalize(\"NFKC\", ...)` を適用してから比較する。",
-          why: "同じ意味の文字列を同じ Unicode 表現へそろえることで、比較条件が期待通りに働く。",
-          impact: "半角/全角の違いによる日本語検索の取りこぼしが減り、実データを削除せずに検索品質を上げられる。",
-          correctedCode: "import unicodedata\n\nentries = [\n    {\"script\": \"kanji\", \"label\": \"富士\", \"keyword\": \"富士\"},\n    {\"script\": \"katakana\", \"label\": \"フジ\", \"keyword\": \"ﾌｼﾞ\"},\n    {\"script\": \"hiragana\", \"label\": \"ふじ\", \"keyword\": \"ふじ\"}\n]\nquery = unicodedata.normalize(\"NFKC\", \"フジ\")\n\nfor entry in entries:\n    keyword = unicodedata.normalize(\"NFKC\", entry[\"keyword\"])\n    if keyword == query:\n        print(entry[\"label\"])"
+        "programmingExplanation": "DEBUG では、原因の行、修正の行、修正後の影響を分けて考えます。データを保ったまま、比較または境界処理を正しくします。",
+        "countryNote": "漢字・ひらがな・カタカナが混在する検索を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。",
+        "debugExplanation": {
+          "cause": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。",
+          "fix": "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる",
+          "why": "原因になっている値の表現または時刻境界を、処理前後で一貫させる必要があるため。",
+          "impact": "入力表記の大小差による検索漏れを減らせる。",
+          "correctedCode": "records = [\n    {\"name\": \"kanji-hiragana-katakana search\", \"key\": \"kanji-hiragana-katakana-search\", \"country\": \"JP\"},\n    {\"name\": \"comparison\", \"key\": \"comparison\", \"country\": \"JP\"}\n]\nquery = \"KANJI-HIRAGANA-KATAKANA-SEARCH\"\n\nfor record in records:\n    if record[\"key\"].casefold() == query.casefold():\n        print(record[\"name\"])"
         }
       },
       {
-        id: "jp_py_b02",
-        worldId: "debug",
-        languageId: "python",
-        conceptId: "conditions",
-        questionType: "debug-step",
-        title: "Japanese era conversion: boundary-condition",
-        description: "Japanese era conversion をコード内データとして使い、boundary-condition を確認します。",
-        code: "data = {\"japanese\": \"Japanese era conversion\"}\nkey = \"Japanese\"\nprint(data[key])",
-        steps: [
+        "id": "jp_py_b02",
+        "worldId": "debug",
+        "languageId": "python",
+        "conceptId": "conditions",
+        "questionType": "debug-step",
+        "title": "Japanese era conversion: normalization-debug",
+        "description": "和暦変換を扱う Python コードの不具合を、原因・修正・影響の3段階で確認します。",
+        "code": "records = [\n    {\"name\": \"Japanese era conversion\", \"key\": \"japanese-era-conversion\", \"country\": \"JP\"},\n    {\"name\": \"comparison\", \"key\": \"comparison\", \"country\": \"JP\"}\n]\nquery = \"JAPANESE-ERA-CONVERSION\"\n\nfor record in records:\n    if record[\"key\"] == query:\n        print(record[\"name\"])",
+        "steps": [
           {
-            stepNum: 1,
-            stepTitle: "原因を特定",
-            prompt: "Japanese era conversion をコード内データとして使い、boundary-condition を確認します。",
-            question: "この不具合の主な原因はどれですか。",
-            options: [
-              "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
-              "配列の長さが長すぎる",
-              "コメントがない"
+            "stepNum": 1,
+            "stepTitle": "原因を特定",
+            "prompt": "和暦変換のデータは存在しますが、期待した出力になりません。",
+            "question": "主な原因はどれですか。",
+            "options": [
+              "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。",
+              "配列の長さが常に0になっている",
+              "print 文がコメントアウトされている"
             ],
-            answer: "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
-            hint: "data 側のキー名と、検索に使っている key の文字列を見比べます。表記ゆれや余分な文字があると見つかりません。",
-            explanation: "Japanese era conversion のデータは存在しますが、キー表記が揃っていません。"
+            "answer": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。",
+            "hint": "値を作っている行ではなく、比較または return で使っている変数を見ます。",
+            "explanation": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。"
           },
           {
-            stepNum: 2,
-            stepTitle: "修正を選ぶ",
-            prompt: "Step 1 の原因を踏まえて、最も安全な修正を選びます。",
-            question: "正しい修正はどれですか。",
-            options: [
-              "key = key.lower() のように、検索前にキー表記を揃える",
-              "データを空にする",
-              "エラーを無視する"
+            "stepNum": 2,
+            "stepTitle": "修正を選ぶ",
+            "prompt": "Step 1 の原因を踏まえて、最小で安全な修正を選びます。",
+            "question": "正しい修正はどれですか。",
+            "options": [
+              "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる",
+              "データを空にしてエラーを避ける",
+              "常に最初の record を表示する"
             ],
-            answer: "key = key.lower() のように、検索前にキー表記を揃える",
-            hint: "データを消すのではなく、検索前の key を data 側のキーと同じ形にそろえる修正を選びます。",
-            explanation: "正規化してから検索すると、表記揺れに強くなります。"
+            "answer": "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる",
+            "hint": "データを消さず、処理の対象になる値を正しくそろえる修正を選びます。",
+            "explanation": "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる"
           },
           {
-            stepNum: 3,
-            stepTitle: "理由と影響",
-            prompt: "修正後の影響を確認します。",
-            question: "この修正の理由または影響として正しいものはどれですか。",
-            options: [
-              "同じ事実データを、入力表記の揺れで見失わずに取得できる",
-              "事実データが不要になる",
-              "常に最初の項目だけを返す"
+            "stepNum": 3,
+            "stepTitle": "理由と影響",
+            "prompt": "修正後の動作がなぜ安全になるかを確認します。",
+            "question": "修正の影響として正しいものはどれですか。",
+            "options": [
+              "入力表記の大小差による検索漏れを減らせる。",
+              "国別データが不要になる",
+              "すべての入力が同じ結果になる"
             ],
-            answer: "同じ事実データを、入力表記の揺れで見失わずに取得できる",
-            hint: "入力や表示のゆれを吸収すると、同じ事実データを安全に再利用できるかを考えます。",
-            explanation: "キーの正規化はローカライズされた検索や表示で起きやすい不一致を減らします。"
+            "answer": "入力表記の大小差による検索漏れを減らせる。",
+            "hint": "修正で改善される境界ケースまたは表記ゆれに注目します。",
+            "explanation": "入力表記の大小差による検索漏れを減らせる。"
           }
-        ]
+        ],
+        "correctAnswer": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。 / 比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる / 入力表記の大小差による検索漏れを減らせる。",
+        "correctedCode": "records = [\n    {\"name\": \"Japanese era conversion\", \"key\": \"japanese-era-conversion\", \"country\": \"JP\"},\n    {\"name\": \"comparison\", \"key\": \"comparison\", \"country\": \"JP\"}\n]\nquery = \"JAPANESE-ERA-CONVERSION\"\n\nfor record in records:\n    if record[\"key\"].casefold() == query.casefold():\n        print(record[\"name\"])",
+        "commonMistakes": [
+          "症状だけを見てデータ削除で直そうとしないこと。",
+          "中間値を作っても、最後の比較や return で使わなければ反映されません。"
+        ],
+        "programmingExplanation": "DEBUG では、原因の行、修正の行、修正後の影響を分けて考えます。データを保ったまま、比較または境界処理を正しくします。",
+        "countryNote": "和暦変換を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。",
+        "debugExplanation": {
+          "cause": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。",
+          "fix": "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる",
+          "why": "原因になっている値の表現または時刻境界を、処理前後で一貫させる必要があるため。",
+          "impact": "入力表記の大小差による検索漏れを減らせる。",
+          "correctedCode": "records = [\n    {\"name\": \"Japanese era conversion\", \"key\": \"japanese-era-conversion\", \"country\": \"JP\"},\n    {\"name\": \"comparison\", \"key\": \"comparison\", \"country\": \"JP\"}\n]\nquery = \"JAPANESE-ERA-CONVERSION\"\n\nfor record in records:\n    if record[\"key\"].casefold() == query.casefold():\n        print(record[\"name\"])"
+        }
       },
       {
-        id: "jp_py_b03",
-        worldId: "debug",
-        languageId: "python",
-        conceptId: "lists",
-        questionType: "debug-step",
-        title: "Japanese address order: parsing-order",
-        description: "Japanese address order をコード内データとして使い、parsing-order を確認します。",
-        code: "data = {\"japanese\": \"Japanese address order\"}\nkey = \"Japanese\"\nprint(data[key])",
-        steps: [
+        "id": "jp_py_b03",
+        "worldId": "debug",
+        "languageId": "python",
+        "conceptId": "lists",
+        "questionType": "debug-step",
+        "title": "Japanese address order: normalization-debug",
+        "description": "日本の住所表記順を扱う Python コードの不具合を、原因・修正・影響の3段階で確認します。",
+        "code": "records = [\n    {\"name\": \"Japanese address order\", \"key\": \"japanese-address-order\", \"country\": \"JP\"},\n    {\"name\": \"comparison\", \"key\": \"comparison\", \"country\": \"JP\"}\n]\nquery = \"JAPANESE-ADDRESS-ORDER\"\n\nfor record in records:\n    if record[\"key\"] == query:\n        print(record[\"name\"])",
+        "steps": [
           {
-            stepNum: 1,
-            stepTitle: "原因を特定",
-            prompt: "Japanese address order をコード内データとして使い、parsing-order を確認します。",
-            question: "この不具合の主な原因はどれですか。",
-            options: [
-              "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
-              "配列の長さが長すぎる",
-              "コメントがない"
+            "stepNum": 1,
+            "stepTitle": "原因を特定",
+            "prompt": "日本の住所表記順のデータは存在しますが、期待した出力になりません。",
+            "question": "主な原因はどれですか。",
+            "options": [
+              "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。",
+              "配列の長さが常に0になっている",
+              "print 文がコメントアウトされている"
             ],
-            answer: "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
-            hint: "data 側のキー名と、検索に使っている key の文字列を見比べます。表記ゆれや余分な文字があると見つかりません。",
-            explanation: "Japanese address order のデータは存在しますが、キー表記が揃っていません。"
+            "answer": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。",
+            "hint": "値を作っている行ではなく、比較または return で使っている変数を見ます。",
+            "explanation": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。"
           },
           {
-            stepNum: 2,
-            stepTitle: "修正を選ぶ",
-            prompt: "Step 1 の原因を踏まえて、最も安全な修正を選びます。",
-            question: "正しい修正はどれですか。",
-            options: [
-              "key = key.lower() のように、検索前にキー表記を揃える",
-              "データを空にする",
-              "エラーを無視する"
+            "stepNum": 2,
+            "stepTitle": "修正を選ぶ",
+            "prompt": "Step 1 の原因を踏まえて、最小で安全な修正を選びます。",
+            "question": "正しい修正はどれですか。",
+            "options": [
+              "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる",
+              "データを空にしてエラーを避ける",
+              "常に最初の record を表示する"
             ],
-            answer: "key = key.lower() のように、検索前にキー表記を揃える",
-            hint: "データを消すのではなく、検索前の key を data 側のキーと同じ形にそろえる修正を選びます。",
-            explanation: "正規化してから検索すると、表記揺れに強くなります。"
+            "answer": "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる",
+            "hint": "データを消さず、処理の対象になる値を正しくそろえる修正を選びます。",
+            "explanation": "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる"
           },
           {
-            stepNum: 3,
-            stepTitle: "理由と影響",
-            prompt: "修正後の影響を確認します。",
-            question: "この修正の理由または影響として正しいものはどれですか。",
-            options: [
-              "同じ事実データを、入力表記の揺れで見失わずに取得できる",
-              "事実データが不要になる",
-              "常に最初の項目だけを返す"
+            "stepNum": 3,
+            "stepTitle": "理由と影響",
+            "prompt": "修正後の動作がなぜ安全になるかを確認します。",
+            "question": "修正の影響として正しいものはどれですか。",
+            "options": [
+              "入力表記の大小差による検索漏れを減らせる。",
+              "国別データが不要になる",
+              "すべての入力が同じ結果になる"
             ],
-            answer: "同じ事実データを、入力表記の揺れで見失わずに取得できる",
-            hint: "入力や表示のゆれを吸収すると、同じ事実データを安全に再利用できるかを考えます。",
-            explanation: "キーの正規化はローカライズされた検索や表示で起きやすい不一致を減らします。"
+            "answer": "入力表記の大小差による検索漏れを減らせる。",
+            "hint": "修正で改善される境界ケースまたは表記ゆれに注目します。",
+            "explanation": "入力表記の大小差による検索漏れを減らせる。"
           }
-        ]
+        ],
+        "correctAnswer": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。 / 比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる / 入力表記の大小差による検索漏れを減らせる。",
+        "correctedCode": "records = [\n    {\"name\": \"Japanese address order\", \"key\": \"japanese-address-order\", \"country\": \"JP\"},\n    {\"name\": \"comparison\", \"key\": \"comparison\", \"country\": \"JP\"}\n]\nquery = \"JAPANESE-ADDRESS-ORDER\"\n\nfor record in records:\n    if record[\"key\"].casefold() == query.casefold():\n        print(record[\"name\"])",
+        "commonMistakes": [
+          "症状だけを見てデータ削除で直そうとしないこと。",
+          "中間値を作っても、最後の比較や return で使わなければ反映されません。"
+        ],
+        "programmingExplanation": "DEBUG では、原因の行、修正の行、修正後の影響を分けて考えます。データを保ったまま、比較または境界処理を正しくします。",
+        "countryNote": "日本の住所表記順を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。",
+        "debugExplanation": {
+          "cause": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。",
+          "fix": "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる",
+          "why": "原因になっている値の表現または時刻境界を、処理前後で一貫させる必要があるため。",
+          "impact": "入力表記の大小差による検索漏れを減らせる。",
+          "correctedCode": "records = [\n    {\"name\": \"Japanese address order\", \"key\": \"japanese-address-order\", \"country\": \"JP\"},\n    {\"name\": \"comparison\", \"key\": \"comparison\", \"country\": \"JP\"}\n]\nquery = \"JAPANESE-ADDRESS-ORDER\"\n\nfor record in records:\n    if record[\"key\"].casefold() == query.casefold():\n        print(record[\"name\"])"
+        }
       },
       {
-        id: "jp_py_b04",
-        worldId: "debug",
-        languageId: "python",
-        conceptId: "variables",
-        questionType: "debug-step",
-        title: "Japanese yen display: number-formatting",
-        description: "Japanese yen display をコード内データとして使い、number-formatting を確認します。",
-        code: "data = {\"japanese\": \"Japanese yen display\"}\nkey = \"Japanese\"\nprint(data[key])",
-        steps: [
+        "id": "jp_py_b04",
+        "worldId": "debug",
+        "languageId": "python",
+        "conceptId": "variables",
+        "questionType": "debug-step",
+        "title": "Japanese yen display: normalization-debug",
+        "description": "日本円の表示形式を扱う Python コードの不具合を、原因・修正・影響の3段階で確認します。",
+        "code": "records = [\n    {\"name\": \"Japanese yen display\", \"key\": \"japanese-yen-display\", \"country\": \"JP\"},\n    {\"name\": \"comparison\", \"key\": \"comparison\", \"country\": \"JP\"}\n]\nquery = \"JAPANESE-YEN-DISPLAY\"\n\nfor record in records:\n    if record[\"key\"] == query:\n        print(record[\"name\"])",
+        "steps": [
           {
-            stepNum: 1,
-            stepTitle: "原因を特定",
-            prompt: "Japanese yen display をコード内データとして使い、number-formatting を確認します。",
-            question: "この不具合の主な原因はどれですか。",
-            options: [
-              "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
-              "配列の長さが長すぎる",
-              "コメントがない"
+            "stepNum": 1,
+            "stepTitle": "原因を特定",
+            "prompt": "日本円の表示形式のデータは存在しますが、期待した出力になりません。",
+            "question": "主な原因はどれですか。",
+            "options": [
+              "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。",
+              "配列の長さが常に0になっている",
+              "print 文がコメントアウトされている"
             ],
-            answer: "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
-            hint: "data 側のキー名と、検索に使っている key の文字列を見比べます。表記ゆれや余分な文字があると見つかりません。",
-            explanation: "Japanese yen display のデータは存在しますが、キー表記が揃っていません。"
+            "answer": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。",
+            "hint": "値を作っている行ではなく、比較または return で使っている変数を見ます。",
+            "explanation": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。"
           },
           {
-            stepNum: 2,
-            stepTitle: "修正を選ぶ",
-            prompt: "Step 1 の原因を踏まえて、最も安全な修正を選びます。",
-            question: "正しい修正はどれですか。",
-            options: [
-              "key = key.lower() のように、検索前にキー表記を揃える",
-              "データを空にする",
-              "エラーを無視する"
+            "stepNum": 2,
+            "stepTitle": "修正を選ぶ",
+            "prompt": "Step 1 の原因を踏まえて、最小で安全な修正を選びます。",
+            "question": "正しい修正はどれですか。",
+            "options": [
+              "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる",
+              "データを空にしてエラーを避ける",
+              "常に最初の record を表示する"
             ],
-            answer: "key = key.lower() のように、検索前にキー表記を揃える",
-            hint: "データを消すのではなく、検索前の key を data 側のキーと同じ形にそろえる修正を選びます。",
-            explanation: "正規化してから検索すると、表記揺れに強くなります。"
+            "answer": "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる",
+            "hint": "データを消さず、処理の対象になる値を正しくそろえる修正を選びます。",
+            "explanation": "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる"
           },
           {
-            stepNum: 3,
-            stepTitle: "理由と影響",
-            prompt: "修正後の影響を確認します。",
-            question: "この修正の理由または影響として正しいものはどれですか。",
-            options: [
-              "同じ事実データを、入力表記の揺れで見失わずに取得できる",
-              "事実データが不要になる",
-              "常に最初の項目だけを返す"
+            "stepNum": 3,
+            "stepTitle": "理由と影響",
+            "prompt": "修正後の動作がなぜ安全になるかを確認します。",
+            "question": "修正の影響として正しいものはどれですか。",
+            "options": [
+              "入力表記の大小差による検索漏れを減らせる。",
+              "国別データが不要になる",
+              "すべての入力が同じ結果になる"
             ],
-            answer: "同じ事実データを、入力表記の揺れで見失わずに取得できる",
-            hint: "入力や表示のゆれを吸収すると、同じ事実データを安全に再利用できるかを考えます。",
-            explanation: "キーの正規化はローカライズされた検索や表示で起きやすい不一致を減らします。"
+            "answer": "入力表記の大小差による検索漏れを減らせる。",
+            "hint": "修正で改善される境界ケースまたは表記ゆれに注目します。",
+            "explanation": "入力表記の大小差による検索漏れを減らせる。"
           }
-        ]
+        ],
+        "correctAnswer": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。 / 比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる / 入力表記の大小差による検索漏れを減らせる。",
+        "correctedCode": "records = [\n    {\"name\": \"Japanese yen display\", \"key\": \"japanese-yen-display\", \"country\": \"JP\"},\n    {\"name\": \"comparison\", \"key\": \"comparison\", \"country\": \"JP\"}\n]\nquery = \"JAPANESE-YEN-DISPLAY\"\n\nfor record in records:\n    if record[\"key\"].casefold() == query.casefold():\n        print(record[\"name\"])",
+        "commonMistakes": [
+          "症状だけを見てデータ削除で直そうとしないこと。",
+          "中間値を作っても、最後の比較や return で使わなければ反映されません。"
+        ],
+        "programmingExplanation": "DEBUG では、原因の行、修正の行、修正後の影響を分けて考えます。データを保ったまま、比較または境界処理を正しくします。",
+        "countryNote": "日本円の表示形式を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。",
+        "debugExplanation": {
+          "cause": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。",
+          "fix": "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる",
+          "why": "原因になっている値の表現または時刻境界を、処理前後で一貫させる必要があるため。",
+          "impact": "入力表記の大小差による検索漏れを減らせる。",
+          "correctedCode": "records = [\n    {\"name\": \"Japanese yen display\", \"key\": \"japanese-yen-display\", \"country\": \"JP\"},\n    {\"name\": \"comparison\", \"key\": \"comparison\", \"country\": \"JP\"}\n]\nquery = \"JAPANESE-YEN-DISPLAY\"\n\nfor record in records:\n    if record[\"key\"].casefold() == query.casefold():\n        print(record[\"name\"])"
+        }
       },
       {
-        id: "jp_py_b05",
-        worldId: "debug",
-        languageId: "python",
-        conceptId: "dicts",
-        questionType: "debug-step",
-        title: "station names in Japanese and romaji: normalized-key-lookup",
-        description: "station names in Japanese and romaji をコード内データとして使い、normalized-key-lookup を確認します。",
-        code: "data = {\"station\": \"station names in Japanese and romaji\"}\nkey = \"station \"\nprint(data[key])",
-        steps: [
+        "id": "jp_py_b05",
+        "worldId": "debug",
+        "languageId": "python",
+        "conceptId": "dicts",
+        "questionType": "debug-step",
+        "title": "station names in Japanese and romaji: normalization-debug",
+        "description": "駅名の日本語表記とローマ字表記を扱う Python コードの不具合を、原因・修正・影響の3段階で確認します。",
+        "code": "records = [\n    {\"name\": \"station names in Japanese and romaji\", \"key\": \"station-names-in-japanese-and-romaji\", \"country\": \"JP\"},\n    {\"name\": \"comparison\", \"key\": \"comparison\", \"country\": \"JP\"}\n]\nquery = \"STATION-NAMES-IN-JAPANESE-AND-ROMAJI\"\n\nfor record in records:\n    if record[\"key\"] == query:\n        print(record[\"name\"])",
+        "steps": [
           {
-            stepNum: 1,
-            stepTitle: "原因を特定",
-            prompt: "station names in Japanese and romaji をコード内データとして使い、normalized-key-lookup を確認します。",
-            question: "この不具合の主な原因はどれですか。",
-            options: [
-              "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
-              "配列の長さが長すぎる",
-              "コメントがない"
+            "stepNum": 1,
+            "stepTitle": "原因を特定",
+            "prompt": "駅名の日本語表記とローマ字表記のデータは存在しますが、期待した出力になりません。",
+            "question": "主な原因はどれですか。",
+            "options": [
+              "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。",
+              "配列の長さが常に0になっている",
+              "print 文がコメントアウトされている"
             ],
-            answer: "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
-            hint: "data 側のキー名と、検索に使っている key の文字列を見比べます。表記ゆれや余分な文字があると見つかりません。",
-            explanation: "station names in Japanese and romaji のデータは存在しますが、キー表記が揃っていません。"
+            "answer": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。",
+            "hint": "値を作っている行ではなく、比較または return で使っている変数を見ます。",
+            "explanation": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。"
           },
           {
-            stepNum: 2,
-            stepTitle: "修正を選ぶ",
-            prompt: "Step 1 の原因を踏まえて、最も安全な修正を選びます。",
-            question: "正しい修正はどれですか。",
-            options: [
-              "key = key.lower() のように、検索前にキー表記を揃える",
-              "データを空にする",
-              "エラーを無視する"
+            "stepNum": 2,
+            "stepTitle": "修正を選ぶ",
+            "prompt": "Step 1 の原因を踏まえて、最小で安全な修正を選びます。",
+            "question": "正しい修正はどれですか。",
+            "options": [
+              "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる",
+              "データを空にしてエラーを避ける",
+              "常に最初の record を表示する"
             ],
-            answer: "key = key.lower() のように、検索前にキー表記を揃える",
-            hint: "データを消すのではなく、検索前の key を data 側のキーと同じ形にそろえる修正を選びます。",
-            explanation: "正規化してから検索すると、表記揺れに強くなります。"
+            "answer": "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる",
+            "hint": "データを消さず、処理の対象になる値を正しくそろえる修正を選びます。",
+            "explanation": "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる"
           },
           {
-            stepNum: 3,
-            stepTitle: "理由と影響",
-            prompt: "修正後の影響を確認します。",
-            question: "この修正の理由または影響として正しいものはどれですか。",
-            options: [
-              "同じ事実データを、入力表記の揺れで見失わずに取得できる",
-              "事実データが不要になる",
-              "常に最初の項目だけを返す"
+            "stepNum": 3,
+            "stepTitle": "理由と影響",
+            "prompt": "修正後の動作がなぜ安全になるかを確認します。",
+            "question": "修正の影響として正しいものはどれですか。",
+            "options": [
+              "入力表記の大小差による検索漏れを減らせる。",
+              "国別データが不要になる",
+              "すべての入力が同じ結果になる"
             ],
-            answer: "同じ事実データを、入力表記の揺れで見失わずに取得できる",
-            hint: "入力や表示のゆれを吸収すると、同じ事実データを安全に再利用できるかを考えます。",
-            explanation: "キーの正規化はローカライズされた検索や表示で起きやすい不一致を減らします。"
+            "answer": "入力表記の大小差による検索漏れを減らせる。",
+            "hint": "修正で改善される境界ケースまたは表記ゆれに注目します。",
+            "explanation": "入力表記の大小差による検索漏れを減らせる。"
           }
-        ]
+        ],
+        "correctAnswer": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。 / 比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる / 入力表記の大小差による検索漏れを減らせる。",
+        "correctedCode": "records = [\n    {\"name\": \"station names in Japanese and romaji\", \"key\": \"station-names-in-japanese-and-romaji\", \"country\": \"JP\"},\n    {\"name\": \"comparison\", \"key\": \"comparison\", \"country\": \"JP\"}\n]\nquery = \"STATION-NAMES-IN-JAPANESE-AND-ROMAJI\"\n\nfor record in records:\n    if record[\"key\"].casefold() == query.casefold():\n        print(record[\"name\"])",
+        "commonMistakes": [
+          "症状だけを見てデータ削除で直そうとしないこと。",
+          "中間値を作っても、最後の比較や return で使わなければ反映されません。"
+        ],
+        "programmingExplanation": "DEBUG では、原因の行、修正の行、修正後の影響を分けて考えます。データを保ったまま、比較または境界処理を正しくします。",
+        "countryNote": "駅名の日本語表記とローマ字表記を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。",
+        "debugExplanation": {
+          "cause": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。",
+          "fix": "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる",
+          "why": "原因になっている値の表現または時刻境界を、処理前後で一貫させる必要があるため。",
+          "impact": "入力表記の大小差による検索漏れを減らせる。",
+          "correctedCode": "records = [\n    {\"name\": \"station names in Japanese and romaji\", \"key\": \"station-names-in-japanese-and-romaji\", \"country\": \"JP\"},\n    {\"name\": \"comparison\", \"key\": \"comparison\", \"country\": \"JP\"}\n]\nquery = \"STATION-NAMES-IN-JAPANESE-AND-ROMAJI\"\n\nfor record in records:\n    if record[\"key\"].casefold() == query.casefold():\n        print(record[\"name\"])"
+        }
       }
     ],
     javascript: [
       {
-        id: "jp_js_b01",
-        worldId: "debug",
-        languageId: "javascript",
-        conceptId: "variables",
-        questionType: "debug-step",
-        title: "Ono no Komachi and traditional three beauties claim: fact-status-modeling",
-        description: "Ono no Komachi and traditional three beauties claim（伝承・文化的関連として扱い、断定しません） をコード内データとして使い、fact-status-modeling を確認します。",
-        code: "const data = { \"ononok\": \"Ono no Komachi and traditional three beauties claim\" };\nconst key = \"Ono no K\";\nconsole.log(data[key]);",
-        steps: [
+        "id": "jp_js_b01",
+        "worldId": "debug",
+        "languageId": "javascript",
+        "conceptId": "variables",
+        "questionType": "debug-step",
+        "title": "Ono no Komachi and traditional three beauties claim: normalization-debug",
+        "description": "小野小町と伝統的な三美人説を扱う JavaScript コードの不具合を、原因・修正・影響の3段階で確認します。",
+        "code": "const records = [\n  { name: \"Ono no Komachi and traditional three beauties claim\", key: \"ono-no-komachi-and-traditional-three-beauties-claim\", country: \"JP\" },\n  { name: \"comparison\", key: \"comparison\", country: \"JP\" }\n];\nconst query = \"ONO-NO-KOMACHI-AND-TRADITIONAL-THREE-BEAUTIES-CLAIM\";\nfor (const record of records) {\n  if (record.key === query) {\n    console.log(record.name);\n  }\n}",
+        "steps": [
           {
-            stepNum: 1,
-            stepTitle: "原因を特定",
-            prompt: "Ono no Komachi and traditional three beauties claim（伝承・文化的関連として扱い、断定しません） をコード内データとして使い、fact-status-modeling を確認します。",
-            question: "この不具合の主な原因はどれですか。",
-            options: [
-              "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
-              "配列の長さが長すぎる",
-              "コメントがない"
+            "stepNum": 1,
+            "stepTitle": "原因を特定",
+            "prompt": "小野小町と伝統的な三美人説のデータはあるのに期待通り表示されません。",
+            "question": "主な原因はどれですか。",
+            "options": [
+              "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。",
+              "配列の末尾だけが処理される",
+              "console.log が非同期で遅れている"
             ],
-            answer: "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
-            hint: "data 側のキー名と、検索に使っている key の文字列を見比べます。表記ゆれや余分な文字があると見つかりません。",
-            explanation: "Ono no Komachi and traditional three beauties claim のデータは存在しますが、キー表記が揃っていません。"
+            "answer": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。",
+            "hint": "比較式または年度計算の条件を確認します。",
+            "explanation": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。"
           },
           {
-            stepNum: 2,
-            stepTitle: "修正を選ぶ",
-            prompt: "Step 1 の原因を踏まえて、最も安全な修正を選びます。",
-            question: "正しい修正はどれですか。",
-            options: [
-              "const normalizedKey = key.toLowerCase(); のように、検索前にキー表記を揃える",
-              "データを空にする",
-              "エラーを無視する"
+            "stepNum": 2,
+            "stepTitle": "修正を選ぶ",
+            "prompt": "Step 1 の原因を踏まえて、安全な修正を選びます。",
+            "question": "正しい修正はどれですか。",
+            "options": [
+              "`record.key.toLowerCase() === query.toLowerCase()` で比較する",
+              "records を空配列にする",
+              "常に true を返す"
             ],
-            answer: "const normalizedKey = key.toLowerCase(); のように、検索前にキー表記を揃える",
-            hint: "データを消すのではなく、検索前の key を data 側のキーと同じ形にそろえる修正を選びます。",
-            explanation: "正規化してから検索すると、表記揺れに強くなります。"
+            "answer": "`record.key.toLowerCase() === query.toLowerCase()` で比較する",
+            "hint": "データを消さず、条件式の扱いを正しくします。",
+            "explanation": "`record.key.toLowerCase() === query.toLowerCase()` で比較する"
           },
           {
-            stepNum: 3,
-            stepTitle: "理由と影響",
-            prompt: "修正後の影響を確認します。",
-            question: "この修正の理由または影響として正しいものはどれですか。",
-            options: [
-              "同じ事実データを、入力表記の揺れで見失わずに取得できる",
-              "事実データが不要になる",
-              "常に最初の項目だけを返す"
+            "stepNum": 3,
+            "stepTitle": "理由と影響",
+            "prompt": "修正後の影響を確認します。",
+            "question": "修正の影響として正しいものはどれですか。",
+            "options": [
+              "入力の大文字小文字差による検索漏れを減らせる。",
+              "国別データが不要になる",
+              "どの入力でも同じ record を返す"
             ],
-            answer: "同じ事実データを、入力表記の揺れで見失わずに取得できる",
-            hint: "入力や表示のゆれを吸収すると、同じ事実データを安全に再利用できるかを考えます。",
-            explanation: "キーの正規化はローカライズされた検索や表示で起きやすい不一致を減らします。"
+            "answer": "入力の大文字小文字差による検索漏れを減らせる。",
+            "hint": "表記ゆれまたは日付境界を正しく扱えるかを見ます。",
+            "explanation": "入力の大文字小文字差による検索漏れを減らせる。"
           }
-        ]
+        ],
+        "correctAnswer": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。 / `record.key.toLowerCase() === query.toLowerCase()` で比較する / 入力の大文字小文字差による検索漏れを減らせる。",
+        "correctedCode": "const records = [\n  { name: \"Ono no Komachi and traditional three beauties claim\", key: \"ono-no-komachi-and-traditional-three-beauties-claim\", country: \"JP\" },\n  { name: \"comparison\", key: \"comparison\", country: \"JP\" }\n];\nconst query = \"ONO-NO-KOMACHI-AND-TRADITIONAL-THREE-BEAUTIES-CLAIM\";\nfor (const record of records) {\n  if (record.key.toLowerCase() === query.toLowerCase()) {\n    console.log(record.name);\n  }\n}",
+        "commonMistakes": [
+          "エラーを隠す修正ではなく、条件式を正しくします。",
+          "日本語や日付の仕様をコードの条件に反映する必要があります。"
+        ],
+        "programmingExplanation": "DEBUG は、壊れている条件式を特定し、最小修正で仕様に合わせる練習です。",
+        "countryNote": "小野小町と伝統的な三美人説を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。",
+        "debugExplanation": {
+          "cause": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。",
+          "fix": "`record.key.toLowerCase() === query.toLowerCase()` で比較する",
+          "why": "仕様に合わせた比較や境界条件を入れないと、特定の入力だけ失敗するため。",
+          "impact": "入力の大文字小文字差による検索漏れを減らせる。",
+          "correctedCode": "const records = [\n  { name: \"Ono no Komachi and traditional three beauties claim\", key: \"ono-no-komachi-and-traditional-three-beauties-claim\", country: \"JP\" },\n  { name: \"comparison\", key: \"comparison\", country: \"JP\" }\n];\nconst query = \"ONO-NO-KOMACHI-AND-TRADITIONAL-THREE-BEAUTIES-CLAIM\";\nfor (const record of records) {\n  if (record.key.toLowerCase() === query.toLowerCase()) {\n    console.log(record.name);\n  }\n}"
+        }
       },
       {
-        id: "jp_js_b02",
-        worldId: "debug",
-        languageId: "javascript",
-        conceptId: "variables",
-        questionType: "debug-step",
-        title: "Japanese personal-name order: display-order",
-        description: "Japanese personal-name order をコード内データとして使い、display-order を確認します。",
-        code: "const data = { \"japanese\": \"Japanese personal-name order\" };\nconst key = \"Japanese\";\nconsole.log(data[key]);",
-        steps: [
+        "id": "jp_js_b02",
+        "worldId": "debug",
+        "languageId": "javascript",
+        "conceptId": "variables",
+        "questionType": "debug-step",
+        "title": "Japanese personal-name order: normalization-debug",
+        "description": "日本語の姓名順を扱う JavaScript コードの不具合を、原因・修正・影響の3段階で確認します。",
+        "code": "const records = [\n  { name: \"Japanese personal-name order\", key: \"japanese-personal-name-order\", country: \"JP\" },\n  { name: \"comparison\", key: \"comparison\", country: \"JP\" }\n];\nconst query = \"JAPANESE-PERSONAL-NAME-ORDER\";\nfor (const record of records) {\n  if (record.key === query) {\n    console.log(record.name);\n  }\n}",
+        "steps": [
           {
-            stepNum: 1,
-            stepTitle: "原因を特定",
-            prompt: "Japanese personal-name order をコード内データとして使い、display-order を確認します。",
-            question: "この不具合の主な原因はどれですか。",
-            options: [
-              "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
-              "配列の長さが長すぎる",
-              "コメントがない"
+            "stepNum": 1,
+            "stepTitle": "原因を特定",
+            "prompt": "日本語の姓名順のデータはあるのに期待通り表示されません。",
+            "question": "主な原因はどれですか。",
+            "options": [
+              "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。",
+              "配列の末尾だけが処理される",
+              "console.log が非同期で遅れている"
             ],
-            answer: "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
-            hint: "data 側のキー名と、検索に使っている key の文字列を見比べます。表記ゆれや余分な文字があると見つかりません。",
-            explanation: "Japanese personal-name order のデータは存在しますが、キー表記が揃っていません。"
+            "answer": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。",
+            "hint": "比較式または年度計算の条件を確認します。",
+            "explanation": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。"
           },
           {
-            stepNum: 2,
-            stepTitle: "修正を選ぶ",
-            prompt: "Step 1 の原因を踏まえて、最も安全な修正を選びます。",
-            question: "正しい修正はどれですか。",
-            options: [
-              "const normalizedKey = key.toLowerCase(); のように、検索前にキー表記を揃える",
-              "データを空にする",
-              "エラーを無視する"
+            "stepNum": 2,
+            "stepTitle": "修正を選ぶ",
+            "prompt": "Step 1 の原因を踏まえて、安全な修正を選びます。",
+            "question": "正しい修正はどれですか。",
+            "options": [
+              "`record.key.toLowerCase() === query.toLowerCase()` で比較する",
+              "records を空配列にする",
+              "常に true を返す"
             ],
-            answer: "const normalizedKey = key.toLowerCase(); のように、検索前にキー表記を揃える",
-            hint: "データを消すのではなく、検索前の key を data 側のキーと同じ形にそろえる修正を選びます。",
-            explanation: "正規化してから検索すると、表記揺れに強くなります。"
+            "answer": "`record.key.toLowerCase() === query.toLowerCase()` で比較する",
+            "hint": "データを消さず、条件式の扱いを正しくします。",
+            "explanation": "`record.key.toLowerCase() === query.toLowerCase()` で比較する"
           },
           {
-            stepNum: 3,
-            stepTitle: "理由と影響",
-            prompt: "修正後の影響を確認します。",
-            question: "この修正の理由または影響として正しいものはどれですか。",
-            options: [
-              "同じ事実データを、入力表記の揺れで見失わずに取得できる",
-              "事実データが不要になる",
-              "常に最初の項目だけを返す"
+            "stepNum": 3,
+            "stepTitle": "理由と影響",
+            "prompt": "修正後の影響を確認します。",
+            "question": "修正の影響として正しいものはどれですか。",
+            "options": [
+              "入力の大文字小文字差による検索漏れを減らせる。",
+              "国別データが不要になる",
+              "どの入力でも同じ record を返す"
             ],
-            answer: "同じ事実データを、入力表記の揺れで見失わずに取得できる",
-            hint: "入力や表示のゆれを吸収すると、同じ事実データを安全に再利用できるかを考えます。",
-            explanation: "キーの正規化はローカライズされた検索や表示で起きやすい不一致を減らします。"
+            "answer": "入力の大文字小文字差による検索漏れを減らせる。",
+            "hint": "表記ゆれまたは日付境界を正しく扱えるかを見ます。",
+            "explanation": "入力の大文字小文字差による検索漏れを減らせる。"
           }
-        ]
+        ],
+        "correctAnswer": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。 / `record.key.toLowerCase() === query.toLowerCase()` で比較する / 入力の大文字小文字差による検索漏れを減らせる。",
+        "correctedCode": "const records = [\n  { name: \"Japanese personal-name order\", key: \"japanese-personal-name-order\", country: \"JP\" },\n  { name: \"comparison\", key: \"comparison\", country: \"JP\" }\n];\nconst query = \"JAPANESE-PERSONAL-NAME-ORDER\";\nfor (const record of records) {\n  if (record.key.toLowerCase() === query.toLowerCase()) {\n    console.log(record.name);\n  }\n}",
+        "commonMistakes": [
+          "エラーを隠す修正ではなく、条件式を正しくします。",
+          "日本語や日付の仕様をコードの条件に反映する必要があります。"
+        ],
+        "programmingExplanation": "DEBUG は、壊れている条件式を特定し、最小修正で仕様に合わせる練習です。",
+        "countryNote": "日本語の姓名順を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。",
+        "debugExplanation": {
+          "cause": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。",
+          "fix": "`record.key.toLowerCase() === query.toLowerCase()` で比較する",
+          "why": "仕様に合わせた比較や境界条件を入れないと、特定の入力だけ失敗するため。",
+          "impact": "入力の大文字小文字差による検索漏れを減らせる。",
+          "correctedCode": "const records = [\n  { name: \"Japanese personal-name order\", key: \"japanese-personal-name-order\", country: \"JP\" },\n  { name: \"comparison\", key: \"comparison\", country: \"JP\" }\n];\nconst query = \"JAPANESE-PERSONAL-NAME-ORDER\";\nfor (const record of records) {\n  if (record.key.toLowerCase() === query.toLowerCase()) {\n    console.log(record.name);\n  }\n}"
+        }
       },
       {
-        id: "jp_js_b03",
-        worldId: "debug",
-        languageId: "javascript",
-        conceptId: "variables",
-        questionType: "debug-step",
-        title: "full-width and half-width characters: input-normalization",
-        description: "full-width and half-width characters をコード内データとして使い、input-normalization を確認します。",
-        code: "const data = { \"fullwid\": \"full-width and half-width characters\" };\nconst key = \"full-wid\";\nconsole.log(data[key]);",
-        steps: [
+        "id": "jp_js_b03",
+        "worldId": "debug",
+        "languageId": "javascript",
+        "conceptId": "variables",
+        "questionType": "debug-step",
+        "title": "full-width and half-width characters: normalization-debug",
+        "description": "全角文字と半角文字を扱う JavaScript コードの不具合を、原因・修正・影響の3段階で確認します。",
+        "code": "const records = [\n  { name: \"full-width and half-width characters\", key: \"full-width-and-half-width-characters\", country: \"JP\" },\n  { name: \"comparison\", key: \"comparison\", country: \"JP\" }\n];\nconst query = \"FULL-WIDTH-AND-HALF-WIDTH-CHARACTERS\";\nfor (const record of records) {\n  if (record.key === query) {\n    console.log(record.name);\n  }\n}",
+        "steps": [
           {
-            stepNum: 1,
-            stepTitle: "原因を特定",
-            prompt: "full-width and half-width characters をコード内データとして使い、input-normalization を確認します。",
-            question: "この不具合の主な原因はどれですか。",
-            options: [
-              "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
-              "配列の長さが長すぎる",
-              "コメントがない"
+            "stepNum": 1,
+            "stepTitle": "原因を特定",
+            "prompt": "全角文字と半角文字のデータはあるのに期待通り表示されません。",
+            "question": "主な原因はどれですか。",
+            "options": [
+              "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。",
+              "配列の末尾だけが処理される",
+              "console.log が非同期で遅れている"
             ],
-            answer: "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
-            hint: "data 側のキー名と、検索に使っている key の文字列を見比べます。表記ゆれや余分な文字があると見つかりません。",
-            explanation: "full-width and half-width characters のデータは存在しますが、キー表記が揃っていません。"
+            "answer": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。",
+            "hint": "比較式または年度計算の条件を確認します。",
+            "explanation": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。"
           },
           {
-            stepNum: 2,
-            stepTitle: "修正を選ぶ",
-            prompt: "Step 1 の原因を踏まえて、最も安全な修正を選びます。",
-            question: "正しい修正はどれですか。",
-            options: [
-              "const normalizedKey = key.toLowerCase(); のように、検索前にキー表記を揃える",
-              "データを空にする",
-              "エラーを無視する"
+            "stepNum": 2,
+            "stepTitle": "修正を選ぶ",
+            "prompt": "Step 1 の原因を踏まえて、安全な修正を選びます。",
+            "question": "正しい修正はどれですか。",
+            "options": [
+              "`record.key.toLowerCase() === query.toLowerCase()` で比較する",
+              "records を空配列にする",
+              "常に true を返す"
             ],
-            answer: "const normalizedKey = key.toLowerCase(); のように、検索前にキー表記を揃える",
-            hint: "データを消すのではなく、検索前の key を data 側のキーと同じ形にそろえる修正を選びます。",
-            explanation: "正規化してから検索すると、表記揺れに強くなります。"
+            "answer": "`record.key.toLowerCase() === query.toLowerCase()` で比較する",
+            "hint": "データを消さず、条件式の扱いを正しくします。",
+            "explanation": "`record.key.toLowerCase() === query.toLowerCase()` で比較する"
           },
           {
-            stepNum: 3,
-            stepTitle: "理由と影響",
-            prompt: "修正後の影響を確認します。",
-            question: "この修正の理由または影響として正しいものはどれですか。",
-            options: [
-              "同じ事実データを、入力表記の揺れで見失わずに取得できる",
-              "事実データが不要になる",
-              "常に最初の項目だけを返す"
+            "stepNum": 3,
+            "stepTitle": "理由と影響",
+            "prompt": "修正後の影響を確認します。",
+            "question": "修正の影響として正しいものはどれですか。",
+            "options": [
+              "入力の大文字小文字差による検索漏れを減らせる。",
+              "国別データが不要になる",
+              "どの入力でも同じ record を返す"
             ],
-            answer: "同じ事実データを、入力表記の揺れで見失わずに取得できる",
-            hint: "入力や表示のゆれを吸収すると、同じ事実データを安全に再利用できるかを考えます。",
-            explanation: "キーの正規化はローカライズされた検索や表示で起きやすい不一致を減らします。"
+            "answer": "入力の大文字小文字差による検索漏れを減らせる。",
+            "hint": "表記ゆれまたは日付境界を正しく扱えるかを見ます。",
+            "explanation": "入力の大文字小文字差による検索漏れを減らせる。"
           }
-        ]
+        ],
+        "correctAnswer": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。 / `record.key.toLowerCase() === query.toLowerCase()` で比較する / 入力の大文字小文字差による検索漏れを減らせる。",
+        "correctedCode": "const records = [\n  { name: \"full-width and half-width characters\", key: \"full-width-and-half-width-characters\", country: \"JP\" },\n  { name: \"comparison\", key: \"comparison\", country: \"JP\" }\n];\nconst query = \"FULL-WIDTH-AND-HALF-WIDTH-CHARACTERS\";\nfor (const record of records) {\n  if (record.key.toLowerCase() === query.toLowerCase()) {\n    console.log(record.name);\n  }\n}",
+        "commonMistakes": [
+          "エラーを隠す修正ではなく、条件式を正しくします。",
+          "日本語や日付の仕様をコードの条件に反映する必要があります。"
+        ],
+        "programmingExplanation": "DEBUG は、壊れている条件式を特定し、最小修正で仕様に合わせる練習です。",
+        "countryNote": "全角文字と半角文字を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。",
+        "debugExplanation": {
+          "cause": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。",
+          "fix": "`record.key.toLowerCase() === query.toLowerCase()` で比較する",
+          "why": "仕様に合わせた比較や境界条件を入れないと、特定の入力だけ失敗するため。",
+          "impact": "入力の大文字小文字差による検索漏れを減らせる。",
+          "correctedCode": "const records = [\n  { name: \"full-width and half-width characters\", key: \"full-width-and-half-width-characters\", country: \"JP\" },\n  { name: \"comparison\", key: \"comparison\", country: \"JP\" }\n];\nconst query = \"FULL-WIDTH-AND-HALF-WIDTH-CHARACTERS\";\nfor (const record of records) {\n  if (record.key.toLowerCase() === query.toLowerCase()) {\n    console.log(record.name);\n  }\n}"
+        }
       },
       {
-        id: "jp_js_b04",
-        worldId: "debug",
-        languageId: "javascript",
-        conceptId: "arrays",
-        questionType: "debug-step",
-        title: "gojuon ordering: Intl-Collator",
-        description: "gojuon ordering をコード内データとして使い、Intl-Collator を確認します。",
-        code: "const data = { \"gojuono\": \"gojuon ordering\" };\nconst key = \"gojuon o\";\nconsole.log(data[key]);",
-        steps: [
+        "id": "jp_js_b04",
+        "worldId": "debug",
+        "languageId": "javascript",
+        "conceptId": "arrays",
+        "questionType": "debug-step",
+        "title": "gojuon ordering: normalization-debug",
+        "description": "五十音順を扱う JavaScript コードの不具合を、原因・修正・影響の3段階で確認します。",
+        "code": "const records = [\n  { name: \"gojuon ordering\", key: \"gojuon-ordering\", country: \"JP\" },\n  { name: \"comparison\", key: \"comparison\", country: \"JP\" }\n];\nconst query = \"GOJUON-ORDERING\";\nfor (const record of records) {\n  if (record.key === query) {\n    console.log(record.name);\n  }\n}",
+        "steps": [
           {
-            stepNum: 1,
-            stepTitle: "原因を特定",
-            prompt: "gojuon ordering をコード内データとして使い、Intl-Collator を確認します。",
-            question: "この不具合の主な原因はどれですか。",
-            options: [
-              "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
-              "配列の長さが長すぎる",
-              "コメントがない"
+            "stepNum": 1,
+            "stepTitle": "原因を特定",
+            "prompt": "五十音順のデータはあるのに期待通り表示されません。",
+            "question": "主な原因はどれですか。",
+            "options": [
+              "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。",
+              "配列の末尾だけが処理される",
+              "console.log が非同期で遅れている"
             ],
-            answer: "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
-            hint: "data 側のキー名と、検索に使っている key の文字列を見比べます。表記ゆれや余分な文字があると見つかりません。",
-            explanation: "gojuon ordering のデータは存在しますが、キー表記が揃っていません。"
+            "answer": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。",
+            "hint": "比較式または年度計算の条件を確認します。",
+            "explanation": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。"
           },
           {
-            stepNum: 2,
-            stepTitle: "修正を選ぶ",
-            prompt: "Step 1 の原因を踏まえて、最も安全な修正を選びます。",
-            question: "正しい修正はどれですか。",
-            options: [
-              "const normalizedKey = key.toLowerCase(); のように、検索前にキー表記を揃える",
-              "データを空にする",
-              "エラーを無視する"
+            "stepNum": 2,
+            "stepTitle": "修正を選ぶ",
+            "prompt": "Step 1 の原因を踏まえて、安全な修正を選びます。",
+            "question": "正しい修正はどれですか。",
+            "options": [
+              "`record.key.toLowerCase() === query.toLowerCase()` で比較する",
+              "records を空配列にする",
+              "常に true を返す"
             ],
-            answer: "const normalizedKey = key.toLowerCase(); のように、検索前にキー表記を揃える",
-            hint: "データを消すのではなく、検索前の key を data 側のキーと同じ形にそろえる修正を選びます。",
-            explanation: "正規化してから検索すると、表記揺れに強くなります。"
+            "answer": "`record.key.toLowerCase() === query.toLowerCase()` で比較する",
+            "hint": "データを消さず、条件式の扱いを正しくします。",
+            "explanation": "`record.key.toLowerCase() === query.toLowerCase()` で比較する"
           },
           {
-            stepNum: 3,
-            stepTitle: "理由と影響",
-            prompt: "修正後の影響を確認します。",
-            question: "この修正の理由または影響として正しいものはどれですか。",
-            options: [
-              "同じ事実データを、入力表記の揺れで見失わずに取得できる",
-              "事実データが不要になる",
-              "常に最初の項目だけを返す"
+            "stepNum": 3,
+            "stepTitle": "理由と影響",
+            "prompt": "修正後の影響を確認します。",
+            "question": "修正の影響として正しいものはどれですか。",
+            "options": [
+              "入力の大文字小文字差による検索漏れを減らせる。",
+              "国別データが不要になる",
+              "どの入力でも同じ record を返す"
             ],
-            answer: "同じ事実データを、入力表記の揺れで見失わずに取得できる",
-            hint: "入力や表示のゆれを吸収すると、同じ事実データを安全に再利用できるかを考えます。",
-            explanation: "キーの正規化はローカライズされた検索や表示で起きやすい不一致を減らします。"
+            "answer": "入力の大文字小文字差による検索漏れを減らせる。",
+            "hint": "表記ゆれまたは日付境界を正しく扱えるかを見ます。",
+            "explanation": "入力の大文字小文字差による検索漏れを減らせる。"
           }
-        ]
+        ],
+        "correctAnswer": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。 / `record.key.toLowerCase() === query.toLowerCase()` で比較する / 入力の大文字小文字差による検索漏れを減らせる。",
+        "correctedCode": "const records = [\n  { name: \"gojuon ordering\", key: \"gojuon-ordering\", country: \"JP\" },\n  { name: \"comparison\", key: \"comparison\", country: \"JP\" }\n];\nconst query = \"GOJUON-ORDERING\";\nfor (const record of records) {\n  if (record.key.toLowerCase() === query.toLowerCase()) {\n    console.log(record.name);\n  }\n}",
+        "commonMistakes": [
+          "エラーを隠す修正ではなく、条件式を正しくします。",
+          "日本語や日付の仕様をコードの条件に反映する必要があります。"
+        ],
+        "programmingExplanation": "DEBUG は、壊れている条件式を特定し、最小修正で仕様に合わせる練習です。",
+        "countryNote": "五十音順を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。",
+        "debugExplanation": {
+          "cause": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。",
+          "fix": "`record.key.toLowerCase() === query.toLowerCase()` で比較する",
+          "why": "仕様に合わせた比較や境界条件を入れないと、特定の入力だけ失敗するため。",
+          "impact": "入力の大文字小文字差による検索漏れを減らせる。",
+          "correctedCode": "const records = [\n  { name: \"gojuon ordering\", key: \"gojuon-ordering\", country: \"JP\" },\n  { name: \"comparison\", key: \"comparison\", country: \"JP\" }\n];\nconst query = \"GOJUON-ORDERING\";\nfor (const record of records) {\n  if (record.key.toLowerCase() === query.toLowerCase()) {\n    console.log(record.name);\n  }\n}"
+        }
       },
       {
-        id: "jp_js_b05",
-        worldId: "debug",
-        languageId: "javascript",
-        conceptId: "variables",
-        questionType: "debug-step",
-        title: "to-do-fu-ken suffix handling: suffix-parsing",
-        description: "to-do-fu-ken suffix handling をコード内データとして使い、suffix-parsing を確認します。",
-        code: "const data = { \"todofu\": \"to-do-fu-ken suffix handling\" };\nconst key = \"to-do-fu\";\nconsole.log(data[key]);",
-        steps: [
+        "id": "jp_js_b05",
+        "worldId": "debug",
+        "languageId": "javascript",
+        "conceptId": "variables",
+        "questionType": "debug-step",
+        "title": "to-do-fu-ken suffix handling: normalization-debug",
+        "description": "都道府県の接尾辞処理を扱う JavaScript コードの不具合を、原因・修正・影響の3段階で確認します。",
+        "code": "const records = [\n  { name: \"to-do-fu-ken suffix handling\", key: \"to-do-fu-ken-suffix-handling\", country: \"JP\" },\n  { name: \"comparison\", key: \"comparison\", country: \"JP\" }\n];\nconst query = \"TO-DO-FU-KEN-SUFFIX-HANDLING\";\nfor (const record of records) {\n  if (record.key === query) {\n    console.log(record.name);\n  }\n}",
+        "steps": [
           {
-            stepNum: 1,
-            stepTitle: "原因を特定",
-            prompt: "to-do-fu-ken suffix handling をコード内データとして使い、suffix-parsing を確認します。",
-            question: "この不具合の主な原因はどれですか。",
-            options: [
-              "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
-              "配列の長さが長すぎる",
-              "コメントがない"
+            "stepNum": 1,
+            "stepTitle": "原因を特定",
+            "prompt": "都道府県の接尾辞処理のデータはあるのに期待通り表示されません。",
+            "question": "主な原因はどれですか。",
+            "options": [
+              "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。",
+              "配列の末尾だけが処理される",
+              "console.log が非同期で遅れている"
             ],
-            answer: "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
-            hint: "data 側のキー名と、検索に使っている key の文字列を見比べます。表記ゆれや余分な文字があると見つかりません。",
-            explanation: "to-do-fu-ken suffix handling のデータは存在しますが、キー表記が揃っていません。"
+            "answer": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。",
+            "hint": "比較式または年度計算の条件を確認します。",
+            "explanation": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。"
           },
           {
-            stepNum: 2,
-            stepTitle: "修正を選ぶ",
-            prompt: "Step 1 の原因を踏まえて、最も安全な修正を選びます。",
-            question: "正しい修正はどれですか。",
-            options: [
-              "const normalizedKey = key.toLowerCase(); のように、検索前にキー表記を揃える",
-              "データを空にする",
-              "エラーを無視する"
+            "stepNum": 2,
+            "stepTitle": "修正を選ぶ",
+            "prompt": "Step 1 の原因を踏まえて、安全な修正を選びます。",
+            "question": "正しい修正はどれですか。",
+            "options": [
+              "`record.key.toLowerCase() === query.toLowerCase()` で比較する",
+              "records を空配列にする",
+              "常に true を返す"
             ],
-            answer: "const normalizedKey = key.toLowerCase(); のように、検索前にキー表記を揃える",
-            hint: "データを消すのではなく、検索前の key を data 側のキーと同じ形にそろえる修正を選びます。",
-            explanation: "正規化してから検索すると、表記揺れに強くなります。"
+            "answer": "`record.key.toLowerCase() === query.toLowerCase()` で比較する",
+            "hint": "データを消さず、条件式の扱いを正しくします。",
+            "explanation": "`record.key.toLowerCase() === query.toLowerCase()` で比較する"
           },
           {
-            stepNum: 3,
-            stepTitle: "理由と影響",
-            prompt: "修正後の影響を確認します。",
-            question: "この修正の理由または影響として正しいものはどれですか。",
-            options: [
-              "同じ事実データを、入力表記の揺れで見失わずに取得できる",
-              "事実データが不要になる",
-              "常に最初の項目だけを返す"
+            "stepNum": 3,
+            "stepTitle": "理由と影響",
+            "prompt": "修正後の影響を確認します。",
+            "question": "修正の影響として正しいものはどれですか。",
+            "options": [
+              "入力の大文字小文字差による検索漏れを減らせる。",
+              "国別データが不要になる",
+              "どの入力でも同じ record を返す"
             ],
-            answer: "同じ事実データを、入力表記の揺れで見失わずに取得できる",
-            hint: "入力や表示のゆれを吸収すると、同じ事実データを安全に再利用できるかを考えます。",
-            explanation: "キーの正規化はローカライズされた検索や表示で起きやすい不一致を減らします。"
+            "answer": "入力の大文字小文字差による検索漏れを減らせる。",
+            "hint": "表記ゆれまたは日付境界を正しく扱えるかを見ます。",
+            "explanation": "入力の大文字小文字差による検索漏れを減らせる。"
           }
-        ]
+        ],
+        "correctAnswer": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。 / `record.key.toLowerCase() === query.toLowerCase()` で比較する / 入力の大文字小文字差による検索漏れを減らせる。",
+        "correctedCode": "const records = [\n  { name: \"to-do-fu-ken suffix handling\", key: \"to-do-fu-ken-suffix-handling\", country: \"JP\" },\n  { name: \"comparison\", key: \"comparison\", country: \"JP\" }\n];\nconst query = \"TO-DO-FU-KEN-SUFFIX-HANDLING\";\nfor (const record of records) {\n  if (record.key.toLowerCase() === query.toLowerCase()) {\n    console.log(record.name);\n  }\n}",
+        "commonMistakes": [
+          "エラーを隠す修正ではなく、条件式を正しくします。",
+          "日本語や日付の仕様をコードの条件に反映する必要があります。"
+        ],
+        "programmingExplanation": "DEBUG は、壊れている条件式を特定し、最小修正で仕様に合わせる練習です。",
+        "countryNote": "都道府県の接尾辞処理を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。",
+        "debugExplanation": {
+          "cause": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。",
+          "fix": "`record.key.toLowerCase() === query.toLowerCase()` で比較する",
+          "why": "仕様に合わせた比較や境界条件を入れないと、特定の入力だけ失敗するため。",
+          "impact": "入力の大文字小文字差による検索漏れを減らせる。",
+          "correctedCode": "const records = [\n  { name: \"to-do-fu-ken suffix handling\", key: \"to-do-fu-ken-suffix-handling\", country: \"JP\" },\n  { name: \"comparison\", key: \"comparison\", country: \"JP\" }\n];\nconst query = \"TO-DO-FU-KEN-SUFFIX-HANDLING\";\nfor (const record of records) {\n  if (record.key.toLowerCase() === query.toLowerCase()) {\n    console.log(record.name);\n  }\n}"
+        }
       }
     ],
   },

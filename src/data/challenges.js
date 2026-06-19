@@ -4,147 +4,264 @@ export const CHALLENGES = {
   JP: {
     python: [
       {
-        id: "jp_py_d01",
-        worldId: "decode",
-        languageId: "python",
-        conceptId: "dicts",
-        questionType: "fill-blank",
-        title: "Emperor constitutional role: dict-access",
-        description: "日本国憲法では天皇は国政を行う人ではなく、日本国と日本国民統合の「象徴」とされています。次の辞書から role の値を表示してください。",
-        hint: "辞書 `emperor` のキーは `role` と `basis` です。表示したい値 `symbol` が入っているキー名を角かっこの中に書きます。",
-        code: "emperor = {\n    \"role\": \"symbol\",\n    \"basis\": \"Constitution of Japan\"\n}\nvalue = emperor[___BLANK___]\nprint(value)",
-        blank: "\"role\"",
-        explanation: "`emperor[\"role\"]` は辞書から `role` キーの値を取り出すので、`symbol` が表示されます。",
-        correctAnswer: "\"role\"",
-        completedCode: "emperor = {\n    \"role\": \"symbol\",\n    \"basis\": \"Constitution of Japan\"\n}\nvalue = emperor[\"role\"]\nprint(value)",
-        executionSteps: [
-          "`emperor` という辞書に、天皇の役割と根拠を入れる。",
-          "`emperor[\"role\"]` で `role` キーに対応する値を取り出す。",
-          "取り出した `symbol` を `print` で表示する。"
+        "id": "jp_py_d01",
+        "worldId": "decode",
+        "languageId": "python",
+        "conceptId": "dicts",
+        "questionType": "fill-blank",
+        "title": "Emperor constitutional role: data-access",
+        "description": "天皇は日本国と日本国民統合の象徴であるという憲法上の位置づけを題材に、Python のdictsを使ってコードを完成させます。",
+        "hint": "空欄の前後を見て、どのキーまたは添字を使えば topic/note が取り出せるか確認します。",
+        "code": "record_1 = {\"topic\": \"Emperor constitutional role\", \"note\": \"天皇は日本国と日本国民統合の象徴であるという憲法上の位置づけ\", \"country\": \"JP\"}\nlabel = record_1[___BLANK___]\nprint(label)",
+        "blank": "\"note\"",
+        "explanation": "空欄に \"note\" を入れると、天皇は日本国と日本国民統合の象徴であるという憲法上の位置づけに関するデータから目的の値を取り出せます。",
+        "correctAnswer": "\"note\"",
+        "completedCode": "record_1 = {\"topic\": \"Emperor constitutional role\", \"note\": \"天皇は日本国と日本国民統合の象徴であるという憲法上の位置づけ\", \"country\": \"JP\"}\nlabel = record_1[\"note\"]\nprint(label)",
+        "executionSteps": [
+          "データ構造に国別の事実を入れる。",
+          "空欄に正しいキーまたは添字を入れて値を取り出す。",
+          "print で取り出した値を表示する。"
         ],
-        commonMistakes: [
-          "`\"symbol\"` をキーとして書くと、辞書にそのキーがないため `KeyError` になります。",
-          "`role` の引用符を外すと、Python は変数名として読もうとします。"
+        "commonMistakes": [
+          "値そのものではなく、値を取り出すためのキーや添字を書く必要があります。",
+          "文字列キーは引用符を含めて書きます。"
         ],
-        programmingExplanation: "Python の辞書は `辞書名[キー]` で値を取得します。この問題では、国の知識そのものを暗記するよりも、表示したい値がどのキーに入っているかをコードから読むことがポイントです。",
-        countryNote: "日本国憲法第1条では、天皇は日本国および日本国民統合の象徴とされています。"
+        "programmingExplanation": "dictsを使ってデータから値を読む問題です。事実はデータに入っているため、暗記ではなくコード上の参照先を追うことが主な作業です。",
+        "countryNote": "天皇は日本国と日本国民統合の象徴であるという憲法上の位置づけを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
       },
       {
-        id: "jp_py_d02",
-        worldId: "decode",
-        languageId: "python",
-        conceptId: "lists",
-        questionType: "fill-blank",
-        title: "National Diet two chambers: list-len",
-        description: "National Diet two chambers をコード内データとして使い、list-len を確認します。",
-        hint: "二院制なので items には2つ入っています。リストの要素数を返す関数を使います。",
-        code: "items = [\"House of Representatives\", \"House of Councillors\"]\nprint(___BLANK___(items))",
-        blank: "len",
-        explanation: "len() はリストの要素数を返し、二院なので 2 です。 National Diet two chambers は問題文とコード内データに示されています。"
+        "id": "jp_py_d02",
+        "worldId": "decode",
+        "languageId": "python",
+        "conceptId": "lists",
+        "questionType": "fill-blank",
+        "title": "National Diet two chambers: data-access",
+        "description": "国会が衆議院と参議院の二院で構成されることを題材に、Python のlistsを使ってコードを完成させます。",
+        "hint": "空欄の前後を見て、どのキーまたは添字を使えば topic/note が取り出せるか確認します。",
+        "code": "record_2 = [\"National Diet two chambers\", \"国会が衆議院と参議院の二院で構成されること\", \"JP\"]\nlabel = record_2[___BLANK___]\nprint(label)",
+        "blank": "1",
+        "explanation": "空欄に 1 を入れると、国会が衆議院と参議院の二院で構成されることに関するデータから目的の値を取り出せます。",
+        "correctAnswer": "1",
+        "completedCode": "record_2 = [\"National Diet two chambers\", \"国会が衆議院と参議院の二院で構成されること\", \"JP\"]\nlabel = record_2[1]\nprint(label)",
+        "executionSteps": [
+          "データ構造に国別の事実を入れる。",
+          "空欄に正しいキーまたは添字を入れて値を取り出す。",
+          "print で取り出した値を表示する。"
+        ],
+        "commonMistakes": [
+          "値そのものではなく、値を取り出すためのキーや添字を書く必要があります。",
+          "文字列キーは引用符を含めて書きます。"
+        ],
+        "programmingExplanation": "listsを使ってデータから値を読む問題です。事実はデータに入っているため、暗記ではなくコード上の参照先を追うことが主な作業です。",
+        "countryNote": "国会が衆議院と参議院の二院で構成されることを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
       },
       {
-        id: "jp_py_d03",
-        worldId: "decode",
-        languageId: "python",
-        conceptId: "variables",
-        questionType: "fill-blank",
-        title: "Hideki Yukawa Nobel Prize: tuple-unpack",
-        description: "Hideki Yukawa Nobel Prize をコード内データとして使い、tuple-unpack を確認します。",
-        hint: "record の3番目を受け取る変数名が、次の print() で使われています。",
-        code: "record = (\"Hideki Yukawa\", 1949, \"Physics\")\nname, year, ___BLANK___ = record\nprint(prize)",
-        blank: "prize",
-        explanation: "タプルの3番目が prize に入り Physics が表示されます。 Hideki Yukawa Nobel Prize は問題文とコード内データに示されています。"
+        "id": "jp_py_d03",
+        "worldId": "decode",
+        "languageId": "python",
+        "conceptId": "variables",
+        "questionType": "fill-blank",
+        "title": "Hideki Yukawa Nobel Prize: data-access",
+        "description": "湯川秀樹が日本人初のノーベル賞受賞者として知られることを題材に、Python のvariablesを使ってコードを完成させます。",
+        "hint": "空欄の前後を見て、どのキーまたは添字を使えば topic/note が取り出せるか確認します。",
+        "code": "record_3 = {\"topic\": \"Hideki Yukawa Nobel Prize\", \"note\": \"湯川秀樹が日本人初のノーベル賞受賞者として知られること\", \"country\": \"JP\"}\nlabel = record_3[___BLANK___]\nprint(label)",
+        "blank": "\"note\"",
+        "explanation": "空欄に \"note\" を入れると、湯川秀樹が日本人初のノーベル賞受賞者として知られることに関するデータから目的の値を取り出せます。",
+        "correctAnswer": "\"note\"",
+        "completedCode": "record_3 = {\"topic\": \"Hideki Yukawa Nobel Prize\", \"note\": \"湯川秀樹が日本人初のノーベル賞受賞者として知られること\", \"country\": \"JP\"}\nlabel = record_3[\"note\"]\nprint(label)",
+        "executionSteps": [
+          "データ構造に国別の事実を入れる。",
+          "空欄に正しいキーまたは添字を入れて値を取り出す。",
+          "print で取り出した値を表示する。"
+        ],
+        "commonMistakes": [
+          "値そのものではなく、値を取り出すためのキーや添字を書く必要があります。",
+          "文字列キーは引用符を含めて書きます。"
+        ],
+        "programmingExplanation": "variablesを使ってデータから値を読む問題です。事実はデータに入っているため、暗記ではなくコード上の参照先を追うことが主な作業です。",
+        "countryNote": "湯川秀樹が日本人初のノーベル賞受賞者として知られることを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
       },
       {
-        id: "jp_py_d04",
-        worldId: "decode",
-        languageId: "python",
-        conceptId: "variables",
-        questionType: "fill-blank",
-        title: "Nisshoki/Hinomaru: string-equality",
-        description: "Nisshoki/Hinomaru をコード内データとして使い、string-equality を確認します。",
-        hint: "文字列が同じか調べる問題です。Pythonで等しいことを比べる演算子を入れます。",
-        code: "alias = \"Hinomaru\"\nprint(alias ___BLANK___ \"Hinomaru\")",
-        blank: "==",
-        explanation: "文字列が等しいため True です。 Nisshoki/Hinomaru は問題文とコード内データに示されています。"
+        "id": "jp_py_d04",
+        "worldId": "decode",
+        "languageId": "python",
+        "conceptId": "variables",
+        "questionType": "fill-blank",
+        "title": "Nisshoki/Hinomaru: data-access",
+        "description": "日章旗が一般に日の丸とも呼ばれることを題材に、Python のvariablesを使ってコードを完成させます。",
+        "hint": "空欄の前後を見て、どのキーまたは添字を使えば topic/note が取り出せるか確認します。",
+        "code": "record_4 = {\"topic\": \"Nisshoki/Hinomaru\", \"note\": \"日章旗が一般に日の丸とも呼ばれること\", \"country\": \"JP\"}\nlabel = record_4[___BLANK___]\nprint(label)",
+        "blank": "\"note\"",
+        "explanation": "空欄に \"note\" を入れると、日章旗が一般に日の丸とも呼ばれることに関するデータから目的の値を取り出せます。",
+        "correctAnswer": "\"note\"",
+        "completedCode": "record_4 = {\"topic\": \"Nisshoki/Hinomaru\", \"note\": \"日章旗が一般に日の丸とも呼ばれること\", \"country\": \"JP\"}\nlabel = record_4[\"note\"]\nprint(label)",
+        "executionSteps": [
+          "データ構造に国別の事実を入れる。",
+          "空欄に正しいキーまたは添字を入れて値を取り出す。",
+          "print で取り出した値を表示する。"
+        ],
+        "commonMistakes": [
+          "値そのものではなく、値を取り出すためのキーや添字を書く必要があります。",
+          "文字列キーは引用符を含めて書きます。"
+        ],
+        "programmingExplanation": "variablesを使ってデータから値を読む問題です。事実はデータに入っているため、暗記ではなくコード上の参照先を追うことが主な作業です。",
+        "countryNote": "日章旗が一般に日の丸とも呼ばれることを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
       },
       {
-        id: "jp_py_d05",
-        worldId: "decode",
-        languageId: "python",
-        conceptId: "conditions",
-        questionType: "fill-blank",
-        title: "47 prefectures: numeric-comparison",
-        description: "47 prefectures をコード内データとして使い、numeric-comparison を確認します。",
-        hint: "prefectures は 47 です。47以上かどうかを True にする比較演算子を選びます。",
-        code: "prefectures = 47\nprint(prefectures ___BLANK___ 47)",
-        blank: ">=",
-        explanation: "47 は 47 以上なので True です。 47 prefectures は問題文とコード内データに示されています。"
+        "id": "jp_py_d05",
+        "worldId": "decode",
+        "languageId": "python",
+        "conceptId": "conditions",
+        "questionType": "fill-blank",
+        "title": "47 prefectures: data-access",
+        "description": "日本に47都道府県があることを題材に、Python のconditionsを使ってコードを完成させます。",
+        "hint": "空欄の前後を見て、どのキーまたは添字を使えば topic/note が取り出せるか確認します。",
+        "code": "record_5 = {\"topic\": \"47 prefectures\", \"country\": \"JP\", \"active\": True}\nif record_5[\"active\"] and record_5[\"country\"] == \"JP\":\n    print(record_5[___BLANK___])",
+        "blank": "\"topic\"",
+        "explanation": "空欄に \"topic\" を入れると、日本に47都道府県があることに関するデータから目的の値を取り出せます。",
+        "correctAnswer": "\"topic\"",
+        "completedCode": "record_5 = {\"topic\": \"47 prefectures\", \"country\": \"JP\", \"active\": True}\nif record_5[\"active\"] and record_5[\"country\"] == \"JP\":\n    print(record_5[\"topic\"])",
+        "executionSteps": [
+          "データ構造に国別の事実を入れる。",
+          "空欄に正しいキーまたは添字を入れて値を取り出す。",
+          "print で取り出した値を表示する。"
+        ],
+        "commonMistakes": [
+          "値そのものではなく、値を取り出すためのキーや添字を書く必要があります。",
+          "文字列キーは引用符を含めて書きます。"
+        ],
+        "programmingExplanation": "conditionsを使ってデータから値を読む問題です。事実はデータに入っているため、暗記ではなくコード上の参照先を追うことが主な作業です。",
+        "countryNote": "日本に47都道府県があることを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
       },
       {
-        id: "jp_py_d06",
-        worldId: "decode",
-        languageId: "python",
-        conceptId: "variables",
-        questionType: "fill-blank",
-        title: "one-yen coin: numeric-type",
-        description: "one-yen coin をコード内データとして使い、numeric-type を確認します。",
-        hint: "type(value_yen).__name__ を int にしたいので、文字列ではなく数値の 1 を入れます。",
-        code: "value_yen = ___BLANK___\nprint(type(value_yen).__name__)",
-        blank: "1",
-        explanation: "引用符なしの 1 は int です。 one-yen coin は問題文とコード内データに示されています。"
+        "id": "jp_py_d06",
+        "worldId": "decode",
+        "languageId": "python",
+        "conceptId": "variables",
+        "questionType": "fill-blank",
+        "title": "one-yen coin: data-access",
+        "description": "一円硬貨の額面が1円であることを題材に、Python のvariablesを使ってコードを完成させます。",
+        "hint": "空欄の前後を見て、どのキーまたは添字を使えば topic/note が取り出せるか確認します。",
+        "code": "record_6 = {\"topic\": \"one-yen coin\", \"note\": \"一円硬貨の額面が1円であること\", \"country\": \"JP\"}\nlabel = record_6[___BLANK___]\nprint(label)",
+        "blank": "\"note\"",
+        "explanation": "空欄に \"note\" を入れると、一円硬貨の額面が1円であることに関するデータから目的の値を取り出せます。",
+        "correctAnswer": "\"note\"",
+        "completedCode": "record_6 = {\"topic\": \"one-yen coin\", \"note\": \"一円硬貨の額面が1円であること\", \"country\": \"JP\"}\nlabel = record_6[\"note\"]\nprint(label)",
+        "executionSteps": [
+          "データ構造に国別の事実を入れる。",
+          "空欄に正しいキーまたは添字を入れて値を取り出す。",
+          "print で取り出した値を表示する。"
+        ],
+        "commonMistakes": [
+          "値そのものではなく、値を取り出すためのキーや添字を書く必要があります。",
+          "文字列キーは引用符を含めて書きます。"
+        ],
+        "programmingExplanation": "variablesを使ってデータから値を読む問題です。事実はデータに入っているため、暗記ではなくコード上の参照先を追うことが主な作業です。",
+        "countryNote": "一円硬貨の額面が1円であることを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
       },
       {
-        id: "jp_py_d07",
-        worldId: "decode",
-        languageId: "python",
-        conceptId: "variables",
-        questionType: "fill-blank",
-        title: "Tokaido Shinkansen 1964: f-string",
-        description: "Tokaido Shinkansen 1964 をコード内データとして使い、f-string を確認します。",
-        hint: "f文字列の { } の中には、上で定義した year という変数名をそのまま入れます。",
-        code: "line = \"Tokaido Shinkansen\"\nyear = 1964\nprint(f\"{line}: {___BLANK___}\")",
-        blank: "year",
-        explanation: "f-string の {year} に 1964 が入ります。 Tokaido Shinkansen 1964 は問題文とコード内データに示されています。"
+        "id": "jp_py_d07",
+        "worldId": "decode",
+        "languageId": "python",
+        "conceptId": "variables",
+        "questionType": "fill-blank",
+        "title": "Tokaido Shinkansen 1964: data-access",
+        "description": "東海道新幹線が1964年に開業したことを題材に、Python のvariablesを使ってコードを完成させます。",
+        "hint": "空欄の前後を見て、どのキーまたは添字を使えば topic/note が取り出せるか確認します。",
+        "code": "record_7 = {\"topic\": \"Tokaido Shinkansen 1964\", \"note\": \"東海道新幹線が1964年に開業したこと\", \"country\": \"JP\"}\nlabel = record_7[___BLANK___]\nprint(label)",
+        "blank": "\"note\"",
+        "explanation": "空欄に \"note\" を入れると、東海道新幹線が1964年に開業したことに関するデータから目的の値を取り出せます。",
+        "correctAnswer": "\"note\"",
+        "completedCode": "record_7 = {\"topic\": \"Tokaido Shinkansen 1964\", \"note\": \"東海道新幹線が1964年に開業したこと\", \"country\": \"JP\"}\nlabel = record_7[\"note\"]\nprint(label)",
+        "executionSteps": [
+          "データ構造に国別の事実を入れる。",
+          "空欄に正しいキーまたは添字を入れて値を取り出す。",
+          "print で取り出した値を表示する。"
+        ],
+        "commonMistakes": [
+          "値そのものではなく、値を取り出すためのキーや添字を書く必要があります。",
+          "文字列キーは引用符を含めて書きます。"
+        ],
+        "programmingExplanation": "variablesを使ってデータから値を読む問題です。事実はデータに入っているため、暗記ではなくコード上の参照先を追うことが主な作業です。",
+        "countryNote": "東海道新幹線が1964年に開業したことを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
       },
       {
-        id: "jp_py_d08",
-        worldId: "decode",
-        languageId: "python",
-        conceptId: "variables",
-        questionType: "fill-blank",
-        title: "QR Code: string-index-or-slice",
-        description: "QR Code をコード内データとして使い、string-index-or-slice を確認します。",
-        hint: "QR Code の先頭2文字だけを取り出します。Pythonのスライスは start を省略できます。",
-        code: "name = \"QR Code\"\nprint(name[___BLANK___])",
-        blank: ":2",
-        explanation: "[:2] は先頭2文字 QR を返します。 QR Code は問題文とコード内データに示されています。"
+        "id": "jp_py_d08",
+        "worldId": "decode",
+        "languageId": "python",
+        "conceptId": "variables",
+        "questionType": "fill-blank",
+        "title": "QR Code: data-access",
+        "description": "QRコードが日本で開発された二次元コードであることを題材に、Python のvariablesを使ってコードを完成させます。",
+        "hint": "空欄の前後を見て、どのキーまたは添字を使えば topic/note が取り出せるか確認します。",
+        "code": "record_8 = {\"topic\": \"QR Code\", \"note\": \"QRコードが日本で開発された二次元コードであること\", \"country\": \"JP\"}\nlabel = record_8[___BLANK___]\nprint(label)",
+        "blank": "\"note\"",
+        "explanation": "空欄に \"note\" を入れると、QRコードが日本で開発された二次元コードであることに関するデータから目的の値を取り出せます。",
+        "correctAnswer": "\"note\"",
+        "completedCode": "record_8 = {\"topic\": \"QR Code\", \"note\": \"QRコードが日本で開発された二次元コードであること\", \"country\": \"JP\"}\nlabel = record_8[\"note\"]\nprint(label)",
+        "executionSteps": [
+          "データ構造に国別の事実を入れる。",
+          "空欄に正しいキーまたは添字を入れて値を取り出す。",
+          "print で取り出した値を表示する。"
+        ],
+        "commonMistakes": [
+          "値そのものではなく、値を取り出すためのキーや添字を書く必要があります。",
+          "文字列キーは引用符を含めて書きます。"
+        ],
+        "programmingExplanation": "variablesを使ってデータから値を読む問題です。事実はデータに入っているため、暗記ではなくコード上の参照先を追うことが主な作業です。",
+        "countryNote": "QRコードが日本で開発された二次元コードであることを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
       },
       {
-        id: "jp_py_d09",
-        worldId: "decode",
-        languageId: "python",
-        conceptId: "lists",
-        questionType: "fill-blank",
-        title: "Horyu-ji World Heritage: list-index",
-        description: "Horyu-ji World Heritage をコード内データとして使い、list-index を確認します。",
-        hint: "Horyu-ji はリストの最初の要素です。Pythonのリスト番号は0から始まります。",
-        code: "sites = [\"Horyu-ji\", \"Himeji\", \"Yakushima\"]\nprint(sites[___BLANK___])",
-        blank: "0",
-        explanation: "リストの最初は index 0 です。 Horyu-ji World Heritage は問題文とコード内データに示されています。"
+        "id": "jp_py_d09",
+        "worldId": "decode",
+        "languageId": "python",
+        "conceptId": "lists",
+        "questionType": "fill-blank",
+        "title": "Horyu-ji World Heritage: data-access",
+        "description": "法隆寺地域の仏教建造物が世界遺産であることを題材に、Python のlistsを使ってコードを完成させます。",
+        "hint": "空欄の前後を見て、どのキーまたは添字を使えば topic/note が取り出せるか確認します。",
+        "code": "record_9 = [\"Horyu-ji World Heritage\", \"法隆寺地域の仏教建造物が世界遺産であること\", \"JP\"]\nlabel = record_9[___BLANK___]\nprint(label)",
+        "blank": "1",
+        "explanation": "空欄に 1 を入れると、法隆寺地域の仏教建造物が世界遺産であることに関するデータから目的の値を取り出せます。",
+        "correctAnswer": "1",
+        "completedCode": "record_9 = [\"Horyu-ji World Heritage\", \"法隆寺地域の仏教建造物が世界遺産であること\", \"JP\"]\nlabel = record_9[1]\nprint(label)",
+        "executionSteps": [
+          "データ構造に国別の事実を入れる。",
+          "空欄に正しいキーまたは添字を入れて値を取り出す。",
+          "print で取り出した値を表示する。"
+        ],
+        "commonMistakes": [
+          "値そのものではなく、値を取り出すためのキーや添字を書く必要があります。",
+          "文字列キーは引用符を含めて書きます。"
+        ],
+        "programmingExplanation": "listsを使ってデータから値を読む問題です。事実はデータに入っているため、暗記ではなくコード上の参照先を追うことが主な作業です。",
+        "countryNote": "法隆寺地域の仏教建造物が世界遺産であることを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
       },
       {
-        id: "jp_py_d10",
-        worldId: "decode",
-        languageId: "python",
-        conceptId: "conditions",
-        questionType: "fill-blank",
-        title: "sakura as cultural symbol, not statutory national flower: membership",
-        description: "sakura as cultural symbol, not statutory national flower（伝承・文化的関連として扱い、断定しません） をコード内データとして使い、membership を確認します。",
-        hint: "sakura が symbols に含まれるか調べます。リスト内にあるか確認する演算子です。",
-        code: "symbols = [\"sakura\", \"momiji\", \"crane\"]\nprint(\"sakura\" ___BLANK___ symbols)",
-        blank: "in",
-        explanation: "in はリストに含まれるかを調べます。 sakura as cultural symbol, not statutory national flower は問題文とコード内データに示されています。"
+        "id": "jp_py_d10",
+        "worldId": "decode",
+        "languageId": "python",
+        "conceptId": "conditions",
+        "questionType": "fill-blank",
+        "title": "sakura as cultural symbol, not statutory national flower: data-access",
+        "description": "桜は文化的象徴として親しまれるが法定の国花ではないことを題材に、Python のconditionsを使ってコードを完成させます。",
+        "hint": "空欄の前後を見て、どのキーまたは添字を使えば topic/note が取り出せるか確認します。",
+        "code": "record_10 = {\"topic\": \"sakura as cultural symbol, not statutory national flower\", \"country\": \"JP\", \"active\": True}\nif record_10[\"active\"] and record_10[\"country\"] == \"JP\":\n    print(record_10[___BLANK___])",
+        "blank": "\"topic\"",
+        "explanation": "空欄に \"topic\" を入れると、桜は文化的象徴として親しまれるが法定の国花ではないことに関するデータから目的の値を取り出せます。",
+        "correctAnswer": "\"topic\"",
+        "completedCode": "record_10 = {\"topic\": \"sakura as cultural symbol, not statutory national flower\", \"country\": \"JP\", \"active\": True}\nif record_10[\"active\"] and record_10[\"country\"] == \"JP\":\n    print(record_10[\"topic\"])",
+        "executionSteps": [
+          "データ構造に国別の事実を入れる。",
+          "空欄に正しいキーまたは添字を入れて値を取り出す。",
+          "print で取り出した値を表示する。"
+        ],
+        "commonMistakes": [
+          "値そのものではなく、値を取り出すためのキーや添字を書く必要があります。",
+          "文字列キーは引用符を含めて書きます。"
+        ],
+        "programmingExplanation": "conditionsを使ってデータから値を読む問題です。事実はデータに入っているため、暗記ではなくコード上の参照先を追うことが主な作業です。",
+        "countryNote": "桜は文化的象徴として親しまれるが法定の国花ではないことを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
       }
     ],
   },

@@ -1,135 +1,265 @@
 export const JS_CHALLENGES = {
   JP: [
     {
-      id: "jp_js_d01",
-      worldId: "decode",
-      languageId: "javascript",
-      conceptId: "objects",
-      questionType: "fill-blank",
-      title: "Kimigayo national anthem: object-property",
-      description: "Kimigayo national anthem をコード内データとして使い、object-property を確認します。",
-      hint: "fact の anthem プロパティに Kimigayo が入っています。ドットの後ろにキー名を書きます。",
-      code: "const fact = { anthem: \"Kimigayo\", topic: \"Japan\" };\nconsole.log(fact.___BLANK___);",
-      blank: "anthem",
-      explanation: "ドット記法で anthem を読みます。 Kimigayo national anthem は問題文とコード内データに示されています。"
-    },
+        "id": "jp_js_d01",
+        "worldId": "decode",
+        "languageId": "javascript",
+        "conceptId": "objects",
+        "questionType": "fill-blank",
+        "title": "Kimigayo national anthem: property-or-index",
+        "description": "君が代が日本の国歌であることを題材に、JavaScript のobjectsを使ってコードを完成させます。",
+        "hint": "空欄の直前がドットならプロパティ名、角かっこなら添字を入れます。",
+        "code": "const record = { topic: \"Kimigayo national anthem\", note: \"君が代が日本の国歌であること\", country: \"JP\" };\nconst label = record.___BLANK___;\nconsole.log(label);",
+        "blank": "note",
+        "explanation": "空欄に note を入れると、君が代が日本の国歌であることに関する値が表示されます。",
+        "correctAnswer": "note",
+        "completedCode": "const record = { topic: \"Kimigayo national anthem\", note: \"君が代が日本の国歌であること\", country: \"JP\" };\nconst label = record.note;\nconsole.log(label);",
+        "executionSteps": [
+          "国別の事実を object または array に入れる。",
+          "条件や参照位置を確認する。",
+          "空欄を補って目的の値を表示する。"
+        ],
+        "commonMistakes": [
+          "値そのものを入れるのではなく、参照に必要なプロパティ名や添字を入れます。",
+          "JavaScript のドット記法ではプロパティ名に引用符を付けません。"
+        ],
+        "programmingExplanation": "JavaScript のデータ参照を読む問題です。1つの主要概念に絞って、値の取り出し方を確認します。",
+        "countryNote": "君が代が日本の国歌であることを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
+      },
     {
-      id: "jp_js_d02",
-      worldId: "decode",
-      languageId: "javascript",
-      conceptId: "arrays",
-      questionType: "fill-blank",
-      title: "blue LED Nobel laureates: array-length",
-      description: "blue LED Nobel laureates をコード内データとして使い、array-length を確認します。",
-      hint: "people 配列には3人入っています。配列の要素数を読むプロパティを使います。",
-      code: "const people = [\"Akasaki\", \"Amano\", \"Nakamura\"];\nconsole.log(people.___BLANK___);",
-      blank: "length",
-      explanation: "length は配列の要素数です。 blue LED Nobel laureates は問題文とコード内データに示されています。"
-    },
+        "id": "jp_js_d02",
+        "worldId": "decode",
+        "languageId": "javascript",
+        "conceptId": "arrays",
+        "questionType": "fill-blank",
+        "title": "blue LED Nobel laureates: property-or-index",
+        "description": "青色LEDで赤崎勇・天野浩・中村修二がノーベル物理学賞を受けたことを題材に、JavaScript のarraysを使ってコードを完成させます。",
+        "hint": "空欄の直前がドットならプロパティ名、角かっこなら添字を入れます。",
+        "code": "const records = [\"blue LED Nobel laureates\", \"青色LEDで赤崎勇・天野浩・中村修二がノーベル物理学賞を受けたこと\", \"JP\"];\nconst label = records[___BLANK___];\nconsole.log(label);",
+        "blank": "1",
+        "explanation": "空欄に 1 を入れると、青色LEDで赤崎勇・天野浩・中村修二がノーベル物理学賞を受けたことに関する値が表示されます。",
+        "correctAnswer": "1",
+        "completedCode": "const records = [\"blue LED Nobel laureates\", \"青色LEDで赤崎勇・天野浩・中村修二がノーベル物理学賞を受けたこと\", \"JP\"];\nconst label = records[1];\nconsole.log(label);",
+        "executionSteps": [
+          "国別の事実を object または array に入れる。",
+          "条件や参照位置を確認する。",
+          "空欄を補って目的の値を表示する。"
+        ],
+        "commonMistakes": [
+          "値そのものを入れるのではなく、参照に必要なプロパティ名や添字を入れます。",
+          "JavaScript のドット記法ではプロパティ名に引用符を付けません。"
+        ],
+        "programmingExplanation": "JavaScript のデータ参照を読む問題です。1つの主要概念に絞って、値の取り出し方を確認します。",
+        "countryNote": "青色LEDで赤崎勇・天野浩・中村修二がノーベル物理学賞を受けたことを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
+      },
     {
-      id: "jp_js_d03",
-      worldId: "decode",
-      languageId: "javascript",
-      conceptId: "variables",
-      questionType: "fill-blank",
-      title: "Akira Yoshino and lithium-ion battery: const-template",
-      description: "Akira Yoshino and lithium-ion battery をコード内データとして使い、const-template を確認します。",
-      hint: "テンプレート文字列の ${ } には、上で定義した person という変数名を入れます。",
-      code: "const person = \"Akira Yoshino\";\nconst field = \"lithium-ion battery\";\nconsole.log(`${___BLANK___}: ${field}`);",
-      blank: "person",
-      explanation: "テンプレート内の ${person} が展開されます。 Akira Yoshino and lithium-ion battery は問題文とコード内データに示されています。"
-    },
+        "id": "jp_js_d03",
+        "worldId": "decode",
+        "languageId": "javascript",
+        "conceptId": "variables",
+        "questionType": "fill-blank",
+        "title": "Akira Yoshino and lithium-ion battery: property-or-index",
+        "description": "吉野彰とリチウムイオン電池の研究を題材に、JavaScript のvariablesを使ってコードを完成させます。",
+        "hint": "空欄の直前がドットならプロパティ名、角かっこなら添字を入れます。",
+        "code": "const topic = \"Akira Yoshino and lithium-ion battery\";\nconst country = \"JP\";\nconst label = country === \"JP\" ? ___BLANK___ : \"skip\";\nconsole.log(label);",
+        "blank": "topic",
+        "explanation": "空欄に topic を入れると、吉野彰とリチウムイオン電池の研究に関する値が表示されます。",
+        "correctAnswer": "topic",
+        "completedCode": "const topic = \"Akira Yoshino and lithium-ion battery\";\nconst country = \"JP\";\nconst label = country === \"JP\" ? topic : \"skip\";\nconsole.log(label);",
+        "executionSteps": [
+          "国別の事実を object または array に入れる。",
+          "条件や参照位置を確認する。",
+          "空欄を補って目的の値を表示する。"
+        ],
+        "commonMistakes": [
+          "値そのものを入れるのではなく、参照に必要なプロパティ名や添字を入れます。",
+          "JavaScript のドット記法ではプロパティ名に引用符を付けません。"
+        ],
+        "programmingExplanation": "JavaScript のデータ参照を読む問題です。1つの主要概念に絞って、値の取り出し方を確認します。",
+        "countryNote": "吉野彰とリチウムイオン電池の研究を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
+      },
     {
-      id: "jp_js_d04",
-      worldId: "decode",
-      languageId: "javascript",
-      conceptId: "objects",
-      questionType: "fill-blank",
-      title: "Shinya Yamanaka and iPS cells: object-destructuring",
-      description: "Shinya Yamanaka and iPS cells をコード内データとして使い、object-destructuring を確認します。",
-      hint: "分割代入で取り出したあと console.log(field) しています。取り出すプロパティ名は field です。",
-      code: "const fact = { scientist: \"Shinya Yamanaka\", field: \"iPS cells\" };\nconst { ___BLANK___ } = fact;\nconsole.log(field);",
-      blank: "field",
-      explanation: "分割代入で field を取り出します。 Shinya Yamanaka and iPS cells は問題文とコード内データに示されています。"
-    },
+        "id": "jp_js_d04",
+        "worldId": "decode",
+        "languageId": "javascript",
+        "conceptId": "objects",
+        "questionType": "fill-blank",
+        "title": "Shinya Yamanaka and iPS cells: property-or-index",
+        "description": "山中伸弥とiPS細胞の研究を題材に、JavaScript のobjectsを使ってコードを完成させます。",
+        "hint": "空欄の直前がドットならプロパティ名、角かっこなら添字を入れます。",
+        "code": "const record = { topic: \"Shinya Yamanaka and iPS cells\", note: \"山中伸弥とiPS細胞の研究\", country: \"JP\" };\nconst label = record.___BLANK___;\nconsole.log(label);",
+        "blank": "note",
+        "explanation": "空欄に note を入れると、山中伸弥とiPS細胞の研究に関する値が表示されます。",
+        "correctAnswer": "note",
+        "completedCode": "const record = { topic: \"Shinya Yamanaka and iPS cells\", note: \"山中伸弥とiPS細胞の研究\", country: \"JP\" };\nconst label = record.note;\nconsole.log(label);",
+        "executionSteps": [
+          "国別の事実を object または array に入れる。",
+          "条件や参照位置を確認する。",
+          "空欄を補って目的の値を表示する。"
+        ],
+        "commonMistakes": [
+          "値そのものを入れるのではなく、参照に必要なプロパティ名や添字を入れます。",
+          "JavaScript のドット記法ではプロパティ名に引用符を付けません。"
+        ],
+        "programmingExplanation": "JavaScript のデータ参照を読む問題です。1つの主要概念に絞って、値の取り出し方を確認します。",
+        "countryNote": "山中伸弥とiPS細胞の研究を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
+      },
     {
-      id: "jp_js_d05",
-      worldId: "decode",
-      languageId: "javascript",
-      conceptId: "variables",
-      questionType: "fill-blank",
-      title: "Himeji Castle and Shirasagi-jo nickname: strict-equality",
-      description: "Himeji Castle and Shirasagi-jo nickname をコード内データとして使い、strict-equality を確認します。",
-      hint: "値と型まで同じか比べる JavaScript の厳密等価演算子を入れます。",
-      code: "const nickname = \"Shirasagi-jo\";\nconsole.log(nickname ___BLANK___ \"Shirasagi-jo\");",
-      blank: "===",
-      explanation: "厳密等価で true になります。 Himeji Castle and Shirasagi-jo nickname は問題文とコード内データに示されています。"
-    },
+        "id": "jp_js_d05",
+        "worldId": "decode",
+        "languageId": "javascript",
+        "conceptId": "variables",
+        "questionType": "fill-blank",
+        "title": "Himeji Castle and Shirasagi-jo nickname: property-or-index",
+        "description": "姫路城が白鷺城の愛称で知られることを題材に、JavaScript のvariablesを使ってコードを完成させます。",
+        "hint": "空欄の直前がドットならプロパティ名、角かっこなら添字を入れます。",
+        "code": "const topic = \"Himeji Castle and Shirasagi-jo nickname\";\nconst country = \"JP\";\nconst label = country === \"JP\" ? ___BLANK___ : \"skip\";\nconsole.log(label);",
+        "blank": "topic",
+        "explanation": "空欄に topic を入れると、姫路城が白鷺城の愛称で知られることに関する値が表示されます。",
+        "correctAnswer": "topic",
+        "completedCode": "const topic = \"Himeji Castle and Shirasagi-jo nickname\";\nconst country = \"JP\";\nconst label = country === \"JP\" ? topic : \"skip\";\nconsole.log(label);",
+        "executionSteps": [
+          "国別の事実を object または array に入れる。",
+          "条件や参照位置を確認する。",
+          "空欄を補って目的の値を表示する。"
+        ],
+        "commonMistakes": [
+          "値そのものを入れるのではなく、参照に必要なプロパティ名や添字を入れます。",
+          "JavaScript のドット記法ではプロパティ名に引用符を付けません。"
+        ],
+        "programmingExplanation": "JavaScript のデータ参照を読む問題です。1つの主要概念に絞って、値の取り出し方を確認します。",
+        "countryNote": "姫路城が白鷺城の愛称で知られることを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
+      },
     {
-      id: "jp_js_d06",
-      worldId: "decode",
-      languageId: "javascript",
-      conceptId: "variables",
-      questionType: "fill-blank",
-      title: "Mount Fuji elevation/context: numeric-comparison",
-      description: "Mount Fuji elevation/context をコード内データとして使い、numeric-comparison を確認します。",
-      hint: "富士山の標高 3776 は 3000 より大きいです。True になる比較演算子を選びます。",
-      code: "const elevation = 3776;\nconsole.log(elevation ___BLANK___ 3000);",
-      blank: ">",
-      explanation: "3776 は 3000 より大きいです。 Mount Fuji elevation/context は問題文とコード内データに示されています。"
-    },
+        "id": "jp_js_d06",
+        "worldId": "decode",
+        "languageId": "javascript",
+        "conceptId": "variables",
+        "questionType": "fill-blank",
+        "title": "Mount Fuji elevation/context: property-or-index",
+        "description": "富士山の標高が3776mとして知られることを題材に、JavaScript のvariablesを使ってコードを完成させます。",
+        "hint": "空欄の直前がドットならプロパティ名、角かっこなら添字を入れます。",
+        "code": "const topic = \"Mount Fuji elevation/context\";\nconst country = \"JP\";\nconst label = country === \"JP\" ? ___BLANK___ : \"skip\";\nconsole.log(label);",
+        "blank": "topic",
+        "explanation": "空欄に topic を入れると、富士山の標高が3776mとして知られることに関する値が表示されます。",
+        "correctAnswer": "topic",
+        "completedCode": "const topic = \"Mount Fuji elevation/context\";\nconst country = \"JP\";\nconst label = country === \"JP\" ? topic : \"skip\";\nconsole.log(label);",
+        "executionSteps": [
+          "国別の事実を object または array に入れる。",
+          "条件や参照位置を確認する。",
+          "空欄を補って目的の値を表示する。"
+        ],
+        "commonMistakes": [
+          "値そのものを入れるのではなく、参照に必要なプロパティ名や添字を入れます。",
+          "JavaScript のドット記法ではプロパティ名に引用符を付けません。"
+        ],
+        "programmingExplanation": "JavaScript のデータ参照を読む問題です。1つの主要概念に絞って、値の取り出し方を確認します。",
+        "countryNote": "富士山の標高が3776mとして知られることを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
+      },
     {
-      id: "jp_js_d07",
-      worldId: "decode",
-      languageId: "javascript",
-      conceptId: "variables",
-      questionType: "fill-blank",
-      title: "Francis Xavier arrival in Japan: conditional",
-      description: "Francis Xavier arrival in Japan をコード内データとして使い、conditional を確認します。",
-      hint: "if の条件はすでに true になります。console.log に渡す文字列をそのまま入れます。",
-      code: "const arrivalYear = 1549;\nif (arrivalYear === 1549) {\n  console.log(___BLANK___);\n}",
-      blank: "\"matched\"",
-      explanation: "条件が true なので matched を表示します。 Francis Xavier arrival in Japan は問題文とコード内データに示されています。"
-    },
+        "id": "jp_js_d07",
+        "worldId": "decode",
+        "languageId": "javascript",
+        "conceptId": "variables",
+        "questionType": "fill-blank",
+        "title": "Francis Xavier arrival in Japan: property-or-index",
+        "description": "フランシスコ・ザビエルが1549年に日本へ来たことを題材に、JavaScript のvariablesを使ってコードを完成させます。",
+        "hint": "空欄の直前がドットならプロパティ名、角かっこなら添字を入れます。",
+        "code": "const topic = \"Francis Xavier arrival in Japan\";\nconst country = \"JP\";\nconst label = country === \"JP\" ? ___BLANK___ : \"skip\";\nconsole.log(label);",
+        "blank": "topic",
+        "explanation": "空欄に topic を入れると、フランシスコ・ザビエルが1549年に日本へ来たことに関する値が表示されます。",
+        "correctAnswer": "topic",
+        "completedCode": "const topic = \"Francis Xavier arrival in Japan\";\nconst country = \"JP\";\nconst label = country === \"JP\" ? topic : \"skip\";\nconsole.log(label);",
+        "executionSteps": [
+          "国別の事実を object または array に入れる。",
+          "条件や参照位置を確認する。",
+          "空欄を補って目的の値を表示する。"
+        ],
+        "commonMistakes": [
+          "値そのものを入れるのではなく、参照に必要なプロパティ名や添字を入れます。",
+          "JavaScript のドット記法ではプロパティ名に引用符を付けません。"
+        ],
+        "programmingExplanation": "JavaScript のデータ参照を読む問題です。1つの主要概念に絞って、値の取り出し方を確認します。",
+        "countryNote": "フランシスコ・ザビエルが1549年に日本へ来たことを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
+      },
     {
-      id: "jp_js_d08",
-      worldId: "decode",
-      languageId: "javascript",
-      conceptId: "objects",
-      questionType: "fill-blank",
-      title: "William Adams arrival in Japan: object-values",
-      description: "William Adams arrival in Japan をコード内データとして使い、object-values を確認します。",
-      hint: "Object の値だけを配列にして、[1] で2番目の year を取ります。",
-      code: "const arrival = { name: \"William Adams\", year: 1600 };\nconsole.log(Object.___BLANK___(arrival)[1]);",
-      blank: "values",
-      explanation: "Object.values で値の配列を作ります。 William Adams arrival in Japan は問題文とコード内データに示されています。"
-    },
+        "id": "jp_js_d08",
+        "worldId": "decode",
+        "languageId": "javascript",
+        "conceptId": "objects",
+        "questionType": "fill-blank",
+        "title": "William Adams arrival in Japan: property-or-index",
+        "description": "ウィリアム・アダムスが日本に来航したことを題材に、JavaScript のobjectsを使ってコードを完成させます。",
+        "hint": "空欄の直前がドットならプロパティ名、角かっこなら添字を入れます。",
+        "code": "const record = { topic: \"William Adams arrival in Japan\", note: \"ウィリアム・アダムスが日本に来航したこと\", country: \"JP\" };\nconst label = record.___BLANK___;\nconsole.log(label);",
+        "blank": "note",
+        "explanation": "空欄に note を入れると、ウィリアム・アダムスが日本に来航したことに関する値が表示されます。",
+        "correctAnswer": "note",
+        "completedCode": "const record = { topic: \"William Adams arrival in Japan\", note: \"ウィリアム・アダムスが日本に来航したこと\", country: \"JP\" };\nconst label = record.note;\nconsole.log(label);",
+        "executionSteps": [
+          "国別の事実を object または array に入れる。",
+          "条件や参照位置を確認する。",
+          "空欄を補って目的の値を表示する。"
+        ],
+        "commonMistakes": [
+          "値そのものを入れるのではなく、参照に必要なプロパティ名や添字を入れます。",
+          "JavaScript のドット記法ではプロパティ名に引用符を付けません。"
+        ],
+        "programmingExplanation": "JavaScript のデータ参照を読む問題です。1つの主要概念に絞って、値の取り出し方を確認します。",
+        "countryNote": "ウィリアム・アダムスが日本に来航したことを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
+      },
     {
-      id: "jp_js_d09",
-      worldId: "decode",
-      languageId: "javascript",
-      conceptId: "variables",
-      questionType: "fill-blank",
-      title: "Murasaki Shikibu and The Tale of Genji: string-concatenation",
-      description: "Murasaki Shikibu and The Tale of Genji をコード内データとして使い、string-concatenation を確認します。",
-      hint: "文字列同士をつなげる演算子を入れます。後ろではすでに \" - \" + work が続いています。",
-      code: "const author = \"Murasaki Shikibu\";\nconst work = \"The Tale of Genji\";\nconsole.log(author ___BLANK___ \" - \" + work);",
-      blank: "+",
-      explanation: "+ で文字列を連結します。 Murasaki Shikibu and The Tale of Genji は問題文とコード内データに示されています。"
-    },
+        "id": "jp_js_d09",
+        "worldId": "decode",
+        "languageId": "javascript",
+        "conceptId": "variables",
+        "questionType": "fill-blank",
+        "title": "Murasaki Shikibu and The Tale of Genji: property-or-index",
+        "description": "紫式部と源氏物語を題材に、JavaScript のvariablesを使ってコードを完成させます。",
+        "hint": "空欄の直前がドットならプロパティ名、角かっこなら添字を入れます。",
+        "code": "const topic = \"Murasaki Shikibu and The Tale of Genji\";\nconst country = \"JP\";\nconst label = country === \"JP\" ? ___BLANK___ : \"skip\";\nconsole.log(label);",
+        "blank": "topic",
+        "explanation": "空欄に topic を入れると、紫式部と源氏物語に関する値が表示されます。",
+        "correctAnswer": "topic",
+        "completedCode": "const topic = \"Murasaki Shikibu and The Tale of Genji\";\nconst country = \"JP\";\nconst label = country === \"JP\" ? topic : \"skip\";\nconsole.log(label);",
+        "executionSteps": [
+          "国別の事実を object または array に入れる。",
+          "条件や参照位置を確認する。",
+          "空欄を補って目的の値を表示する。"
+        ],
+        "commonMistakes": [
+          "値そのものを入れるのではなく、参照に必要なプロパティ名や添字を入れます。",
+          "JavaScript のドット記法ではプロパティ名に引用符を付けません。"
+        ],
+        "programmingExplanation": "JavaScript のデータ参照を読む問題です。1つの主要概念に絞って、値の取り出し方を確認します。",
+        "countryNote": "紫式部と源氏物語を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
+      },
     {
-      id: "jp_js_d10",
-      worldId: "decode",
-      languageId: "javascript",
-      conceptId: "arrays",
-      questionType: "fill-blank",
-      title: "Kabuki theatre: includes",
-      description: "Kabuki theatre をコード内データとして使い、includes を確認します。",
-      hint: "配列 arts の中に kabuki があるか調べます。配列の「含む」メソッドです。",
-      code: "const arts = [\"noh\", \"kabuki\", \"bunraku\"];\nconsole.log(arts.___BLANK___(\"kabuki\"));",
-      blank: "includes",
-      explanation: "includes は含まれるかを返します。 Kabuki theatre は問題文とコード内データに示されています。"
-    }
+        "id": "jp_js_d10",
+        "worldId": "decode",
+        "languageId": "javascript",
+        "conceptId": "arrays",
+        "questionType": "fill-blank",
+        "title": "Kabuki theatre: property-or-index",
+        "description": "歌舞伎が日本の伝統芸能であることを題材に、JavaScript のarraysを使ってコードを完成させます。",
+        "hint": "空欄の直前がドットならプロパティ名、角かっこなら添字を入れます。",
+        "code": "const records = [\"Kabuki theatre\", \"歌舞伎が日本の伝統芸能であること\", \"JP\"];\nconst label = records[___BLANK___];\nconsole.log(label);",
+        "blank": "1",
+        "explanation": "空欄に 1 を入れると、歌舞伎が日本の伝統芸能であることに関する値が表示されます。",
+        "correctAnswer": "1",
+        "completedCode": "const records = [\"Kabuki theatre\", \"歌舞伎が日本の伝統芸能であること\", \"JP\"];\nconst label = records[1];\nconsole.log(label);",
+        "executionSteps": [
+          "国別の事実を object または array に入れる。",
+          "条件や参照位置を確認する。",
+          "空欄を補って目的の値を表示する。"
+        ],
+        "commonMistakes": [
+          "値そのものを入れるのではなく、参照に必要なプロパティ名や添字を入れます。",
+          "JavaScript のドット記法ではプロパティ名に引用符を付けません。"
+        ],
+        "programmingExplanation": "JavaScript のデータ参照を読む問題です。1つの主要概念に絞って、値の取り出し方を確認します。",
+        "countryNote": "歌舞伎が日本の伝統芸能であることを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
+      }
   ],
 
   US: [

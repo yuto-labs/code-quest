@@ -3,9 +3,40 @@ function TextBlock({ children }) {
   return <div style={styles.text}>{children}</div>;
 }
 
-function CodeBlock({ children }) {
+function CodeBlock({ children, label = 'CODE' }) {
   if (!children) return null;
-  return <pre style={styles.code}>{children}</pre>;
+  const code = String(children);
+  const lines = code.split('\n');
+  const isLong = lines.length > 14 || code.length > 900;
+  const longMaxHeight = typeof window !== 'undefined' && window.innerWidth <= 720 ? '45vh' : '55vh';
+  return (
+    <div style={styles.codeWrap}>
+      {isLong && (
+        <details style={styles.expandDetails}>
+          <summary style={styles.expandSummary}>コードを拡大</summary>
+          <div style={styles.expandedPanel}>
+            <pre style={styles.expandedCode} aria-label={label}>
+              {lines.map((line, index) => (
+                <span key={`${index}-${line}`} style={styles.codeLine}>
+                  <span style={styles.lineNo}>{index + 1}</span>
+                  <span style={styles.lineText}>{line || ' '}</span>
+                </span>
+              ))}
+            </pre>
+            <div style={styles.closeHint}>閉じるには「コードを拡大」をもう一度押す</div>
+          </div>
+        </details>
+      )}
+      <pre style={{ ...styles.code, ...(isLong ? { ...styles.longCode, maxHeight: longMaxHeight } : null) }} aria-label={label}>
+        {lines.map((line, index) => (
+          <span key={`${index}-${line}`} style={styles.codeLine}>
+            <span style={styles.lineNo}>{index + 1}</span>
+            <span style={styles.lineText}>{line || ' '}</span>
+          </span>
+        ))}
+      </pre>
+    </div>
+  );
 }
 
 function Section({ title, children }) {
@@ -46,7 +77,7 @@ export default function ExplanationPanel({ data, title = '解説' }) {
 
       {(data.correctOutput || data.completedCode) && (
         <Section title={data.correctOutput ? '正しい出力' : '完成コード'}>
-          {data.correctOutput ? <CodeBlock>{data.correctOutput}</CodeBlock> : <CodeBlock>{data.completedCode}</CodeBlock>}
+          {data.correctOutput ? <CodeBlock label="正しい出力">{data.correctOutput}</CodeBlock> : <CodeBlock label="完成コード">{data.completedCode}</CodeBlock>}
         </Section>
       )}
 
@@ -60,7 +91,7 @@ export default function ExplanationPanel({ data, title = '解説' }) {
         <>
           {debug.originalCode && (
             <Section title="ORIGINAL CODE">
-              <CodeBlock>{debug.originalCode}</CodeBlock>
+              <CodeBlock label="ORIGINAL CODE">{debug.originalCode}</CodeBlock>
             </Section>
           )}
           {debug.cause && (
@@ -85,7 +116,7 @@ export default function ExplanationPanel({ data, title = '解説' }) {
           )}
           {debug.correctedCode && (
             <Section title="CORRECTED CODE">
-              <CodeBlock>{debug.correctedCode}</CodeBlock>
+              <CodeBlock label="CORRECTED CODE">{debug.correctedCode}</CodeBlock>
             </Section>
           )}
         </>
@@ -165,6 +196,11 @@ const styles = {
     lineHeight: 2,
     wordBreak: 'break-word',
   },
+  codeWrap: {
+    width: '100%',
+    minWidth: 0,
+    maxWidth: '100%',
+  },
   code: {
     margin: 0,
     padding: '10px 12px',
@@ -174,8 +210,73 @@ const styles = {
     fontSize: 11,
     lineHeight: 1.8,
     overflowX: 'auto',
+    overflowY: 'visible',
     whiteSpace: 'pre',
+    width: '100%',
+    minWidth: 0,
     maxWidth: '100%',
+  },
+  longCode: {
+    overflowY: 'auto',
+  },
+  codeLine: {
+    display: 'grid',
+    gridTemplateColumns: '3.2em max-content',
+    minWidth: 'max-content',
+  },
+  lineNo: {
+    userSelect: 'none',
+    color: 'rgba(168,216,168,0.45)',
+    paddingRight: 10,
+    textAlign: 'right',
+  },
+  lineText: {
+    whiteSpace: 'pre',
+  },
+  expandDetails: {
+    marginBottom: 6,
+  },
+  expandSummary: {
+    cursor: 'pointer',
+    color: 'var(--accent)',
+    fontFamily: 'var(--pixel-font)',
+    fontSize: 8,
+    listStyle: 'none',
+  },
+  expandedPanel: {
+    position: 'fixed',
+    inset: 12,
+    zIndex: 1000,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 8,
+    padding: 12,
+    background: 'rgba(0,5,25,0.98)',
+    border: '2px solid var(--accent)',
+    boxShadow: '0 0 28px rgba(0,255,136,0.22)',
+  },
+  expandedCode: {
+    margin: 0,
+    padding: '12px 14px',
+    flex: 1,
+    minHeight: 0,
+    overflow: 'auto',
+    background: 'rgba(0,0,0,0.55)',
+    border: '1px solid rgba(0,255,136,0.28)',
+    color: '#a8d8a8',
+    fontSize: 12,
+    lineHeight: 1.8,
+    whiteSpace: 'pre',
+  },
+  closeHint: {
+    flex: '0 0 auto',
+    alignSelf: 'flex-end',
+    padding: '7px 10px',
+    border: '1px solid rgba(0,255,136,0.45)',
+    color: 'var(--accent)',
+    background: 'rgba(0,255,136,0.08)',
+    fontFamily: 'var(--pixel-font)',
+    fontSize: 8,
   },
   sources: {
     borderTop: '1px solid rgba(0,102,255,0.25)',

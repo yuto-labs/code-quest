@@ -5,290 +5,440 @@ export const EXECUTE_CHALLENGES = {
   JP: {
     python: [
       {
-        id: "jp_py_e01",
-        worldId: "execute",
-        languageId: "python",
-        conceptId: "comprehension",
-        questionType: "output-predict",
-        title: "Yakushima World Heritage criteria/context: nested-filter",
-        prompt: "屋久島は日本の世界遺産のひとつです。次のデータでは、各地域の登録理由に関するタグと評価値を持たせています。自然遺産で、criteria に `vii` を含む地域の score 合計を追跡してください。",
-        code: "sites = [\n    {\"name\": \"Yakushima\", \"type\": \"natural\", \"criteria\": [\"vii\", \"ix\"], \"score\": 2},\n    {\"name\": \"Himeji Castle\", \"type\": \"cultural\", \"criteria\": [\"i\", \"iv\"], \"score\": 5},\n    {\"name\": \"Shirakami-Sanchi\", \"type\": \"natural\", \"criteria\": [\"ix\"], \"score\": 3}\n]\nselected = []\nfor site in sites:\n    if site[\"type\"] == \"natural\" and \"vii\" in site[\"criteria\"]:\n        selected.append(site)\npoints = [site[\"score\"] for site in selected]\nprint(sum(points))",
-        options: [
-          "2",
-          "5",
+        "id": "jp_py_e01",
+        "worldId": "execute",
+        "languageId": "python",
+        "conceptId": "comprehension",
+        "questionType": "output-predict",
+        "title": "Yakushima World Heritage criteria/context: filter-trace",
+        "prompt": "屋久島が日本の世界自然遺産として知られることを含むデータを、条件で絞り込んで出力を追跡します。",
+        "code": "items = [\n    {\"name\": \"Yakushima World Heritage criteria/context\", \"country\": \"JP\", \"score\": 4},\n    {\"name\": \"context\", \"country\": \"JP\", \"score\": 2},\n    {\"name\": \"other\", \"country\": \"other\", \"score\": 6}\n]\nselected = []\nfor item in items:\n    if item[\"country\"] == \"JP\" and item[\"score\"] >= 3:\n        selected.append(item[\"name\"])\nprint(\" | \".join(selected))",
+        "options": [
+          "Yakushima World Heritage criteria/context",
+          "context",
+          "other",
+          "Error"
+        ],
+        "answer": "Yakushima World Heritage criteria/context",
+        "hint": "country が JP で、score が 3 以上の要素だけを残します。",
+        "explanation": "条件を満たす主題データだけが残るため、出力は Yakushima World Heritage criteria/context です。",
+        "correctAnswer": "Yakushima World Heritage criteria/context",
+        "executionSteps": [
+          "items を1件ずつ調べる。",
+          "country が JP かつ score が基準以上の要素だけ selected に入れる。",
+          "name を連結して出力する。"
+        ],
+        "commonMistakes": [
+          "片方の条件だけで選ぶと、余分な項目が混ざります。",
+          "出力は辞書全体ではなく name の文字列です。"
+        ],
+        "programmingExplanation": "for 文、if 条件、リストへの追加を組み合わせて出力を追跡します。",
+        "countryNote": "屋久島が日本の世界自然遺産として知られることを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
+      },
+      {
+        "id": "jp_py_e02",
+        "worldId": "execute",
+        "languageId": "python",
+        "conceptId": "lists",
+        "questionType": "output-predict",
+        "title": "Shirakami-Sanchi beech forest: filter-trace",
+        "prompt": "白神山地のブナ林が自然遺産として知られることを含むデータを、条件で絞り込んで出力を追跡します。",
+        "code": "items = [\n    {\"name\": \"Shirakami-Sanchi beech forest\", \"country\": \"JP\", \"score\": 5},\n    {\"name\": \"context\", \"country\": \"JP\", \"score\": 3},\n    {\"name\": \"other\", \"country\": \"other\", \"score\": 7}\n]\nselected = []\nfor item in items:\n    if item[\"country\"] == \"JP\" and item[\"score\"] >= 4:\n        selected.append(item[\"name\"])\nprint(\" | \".join(selected))",
+        "options": [
+          "Shirakami-Sanchi beech forest",
+          "context",
+          "other",
+          "Error"
+        ],
+        "answer": "Shirakami-Sanchi beech forest",
+        "hint": "country が JP で、score が 4 以上の要素だけを残します。",
+        "explanation": "条件を満たす主題データだけが残るため、出力は Shirakami-Sanchi beech forest です。",
+        "correctAnswer": "Shirakami-Sanchi beech forest",
+        "executionSteps": [
+          "items を1件ずつ調べる。",
+          "country が JP かつ score が基準以上の要素だけ selected に入れる。",
+          "name を連結して出力する。"
+        ],
+        "commonMistakes": [
+          "片方の条件だけで選ぶと、余分な項目が混ざります。",
+          "出力は辞書全体ではなく name の文字列です。"
+        ],
+        "programmingExplanation": "for 文、if 条件、リストへの追加を組み合わせて出力を追跡します。",
+        "countryNote": "白神山地のブナ林が自然遺産として知られることを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
+      },
+      {
+        "id": "jp_py_e03",
+        "worldId": "execute",
+        "languageId": "python",
+        "conceptId": "variables",
+        "questionType": "output-predict",
+        "title": "National Diet Building: filter-trace",
+        "prompt": "国会議事堂の建築と議会機能を含むデータを、条件で絞り込んで出力を追跡します。",
+        "code": "items = [\n    {\"name\": \"National Diet Building\", \"country\": \"JP\", \"score\": 3},\n    {\"name\": \"context\", \"country\": \"JP\", \"score\": 1},\n    {\"name\": \"other\", \"country\": \"other\", \"score\": 5}\n]\nselected = []\nfor item in items:\n    if item[\"country\"] == \"JP\" and item[\"score\"] >= 2:\n        selected.append(item[\"name\"])\nprint(\" | \".join(selected))",
+        "options": [
+          "National Diet Building",
+          "context",
+          "other",
+          "Error"
+        ],
+        "answer": "National Diet Building",
+        "hint": "country が JP で、score が 2 以上の要素だけを残します。",
+        "explanation": "条件を満たす主題データだけが残るため、出力は National Diet Building です。",
+        "correctAnswer": "National Diet Building",
+        "executionSteps": [
+          "items を1件ずつ調べる。",
+          "country が JP かつ score が基準以上の要素だけ selected に入れる。",
+          "name を連結して出力する。"
+        ],
+        "commonMistakes": [
+          "片方の条件だけで選ぶと、余分な項目が混ざります。",
+          "出力は辞書全体ではなく name の文字列です。"
+        ],
+        "programmingExplanation": "for 文、if 条件、リストへの追加を組み合わせて出力を追跡します。",
+        "countryNote": "国会議事堂の建築と議会機能を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
+      },
+      {
+        "id": "jp_py_e04",
+        "worldId": "execute",
+        "languageId": "python",
+        "conceptId": "lists",
+        "questionType": "output-predict",
+        "title": "Hayabusa and Itokawa: filter-trace",
+        "prompt": "探査機はやぶさと小惑星イトカワを含むデータを、条件で絞り込んで出力を追跡します。",
+        "code": "items = [\n    {\"name\": \"Hayabusa and Itokawa\", \"country\": \"JP\", \"score\": 4},\n    {\"name\": \"context\", \"country\": \"JP\", \"score\": 2},\n    {\"name\": \"other\", \"country\": \"other\", \"score\": 6}\n]\nselected = []\nfor item in items:\n    if item[\"country\"] == \"JP\" and item[\"score\"] >= 3:\n        selected.append(item[\"name\"])\nprint(\" | \".join(selected))",
+        "options": [
+          "Hayabusa and Itokawa",
+          "context",
+          "other",
+          "Error"
+        ],
+        "answer": "Hayabusa and Itokawa",
+        "hint": "country が JP で、score が 3 以上の要素だけを残します。",
+        "explanation": "条件を満たす主題データだけが残るため、出力は Hayabusa and Itokawa です。",
+        "correctAnswer": "Hayabusa and Itokawa",
+        "executionSteps": [
+          "items を1件ずつ調べる。",
+          "country が JP かつ score が基準以上の要素だけ selected に入れる。",
+          "name を連結して出力する。"
+        ],
+        "commonMistakes": [
+          "片方の条件だけで選ぶと、余分な項目が混ざります。",
+          "出力は辞書全体ではなく name の文字列です。"
+        ],
+        "programmingExplanation": "for 文、if 条件、リストへの追加を組み合わせて出力を追跡します。",
+        "countryNote": "探査機はやぶさと小惑星イトカワを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
+      },
+      {
+        "id": "jp_py_e05",
+        "worldId": "execute",
+        "languageId": "python",
+        "conceptId": "dicts",
+        "questionType": "output-predict",
+        "title": "Hayabusa2 and Ryugu: filter-trace",
+        "prompt": "探査機はやぶさ2と小惑星リュウグウを含むデータを、条件で絞り込んで出力を追跡します。",
+        "code": "mission = {\"name\": \"Hayabusa2 and Ryugu\", \"country\": \"JP\", \"samples\": [2, 1, 0], \"confirmed\": True}\ntotal_samples = 0\nfor amount in mission[\"samples\"]:\n    if amount > 0:\n        total_samples += amount\nstatus = mission[\"name\"] if mission[\"confirmed\"] and total_samples == 3 else \"review\"\nprint(status)",
+        "options": [
+          "Hayabusa2 and Ryugu",
+          "review",
           "3",
           "Error"
         ],
-        answer: "2",
-        hint: "`type` が `natural` で、さらに `criteria` の中に `vii` があるものだけ残ります。屋久島だけが両方の条件を満たします。",
-        explanation: "条件を満たすのは Yakushima だけなので、`points` は `[2]` になり、`sum(points)` は `2` です。",
-        correctAnswer: "2",
-        executionSteps: [
-          "`sites` には屋久島、姫路城、白神山地の3件が入っている。",
-          "for 文で1件ずつ見て、`type == \"natural\"` と `\"vii\" in criteria` の両方を確認する。",
-          "Yakushima だけが条件を通るため `selected` に追加される。",
-          "`points` は選ばれた site の `score` だけを集めるので `[2]` になる。",
-          "`sum(points)` により `2` が出力される。"
+        "answer": "Hayabusa2 and Ryugu",
+        "hint": "country が JP で、score が 4 以上の要素だけを残します。",
+        "explanation": "条件を満たす主題データだけが残るため、出力は Hayabusa2 and Ryugu です。",
+        "correctAnswer": "Hayabusa2 and Ryugu",
+        "executionSteps": [
+          "samples の正の値だけを合計する。",
+          "2 + 1 で total_samples は 3 になる。",
+          "confirmed が True で合計も3なので mission name を表示する。"
         ],
-        commonMistakes: [
-          "`type` だけで選ぶと Shirakami-Sanchi も入ってしまいます。",
-          "`criteria` はリストなので、完全一致ではなく `in` で含まれるかを見ます。"
+        "commonMistakes": [
+          "片方の条件だけで選ぶと、余分な項目が混ざります。",
+          "出力は辞書全体ではなく name の文字列です。"
         ],
-        programmingExplanation: "この問題は、ネストした辞書リストを for 文で走査し、複数条件で filter してから数値を集計するトレース問題です。条件の順番よりも、両方の条件を満たしたものだけを残すことが重要です。",
-        countryNote: "屋久島は日本の世界遺産登録地のひとつで、自然遺産として扱われます。"
+        "programmingExplanation": "for 文、if 条件、リストへの追加を組み合わせて出力を追跡します。",
+        "countryNote": "探査機はやぶさ2と小惑星リュウグウを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
       },
       {
-        id: "jp_py_e02",
-        worldId: "execute",
-        languageId: "python",
-        conceptId: "lists",
-        questionType: "output-predict",
-        title: "Shirakami-Sanchi beech forest: list-comprehension",
-        prompt: "Shirakami-Sanchi beech forest をコード内データとして使い、list-comprehension を確認します。",
-        code: "route = [\"start\", \"Shirakami-Sanchi beech forest\", \"end\"]\nfor index, place in enumerate(route):\n    if index == 1:\n        print(place)",
-        options: [
-          "Shirakami-Sanchi beech forest",
-          "other",
-          "1",
-          "Error"
-        ],
-        answer: "Shirakami-Sanchi beech forest",
-        hint: "enumerate(route) で index が 1 のときだけ print します。route[1] の値を見ます。",
-        explanation: "表示データにある Shirakami-Sanchi beech forest を使い、処理の流れを追うと Shirakami-Sanchi beech forest が出力されます。"
-      },
-      {
-        id: "jp_py_e03",
-        worldId: "execute",
-        languageId: "python",
-        conceptId: "variables",
-        questionType: "output-predict",
-        title: "National Diet Building: aggregation-duration",
-        prompt: "National Diet Building をコード内データとして使い、aggregation-duration を確認します。",
-        code: "items = [{\"name\": \"National Diet Building\", \"score\": 2}, {\"name\": \"other\", \"score\": 1}]\nresult = [item[\"name\"] for item in items if item[\"score\"] > 1]\nprint(result[0])",
-        options: [
-          "National Diet Building",
-          "other",
-          "1",
-          "Error"
-        ],
-        answer: "National Diet Building",
-        hint: "score が 2 の item だけが条件 score > 1 を通ります。その name が result[0] です。",
-        explanation: "表示データにある National Diet Building を使い、処理の流れを追うと National Diet Building が出力されます。"
-      },
-      {
-        id: "jp_py_e04",
-        worldId: "execute",
-        languageId: "python",
-        conceptId: "lists",
-        questionType: "code-ordering",
-        title: "Hayabusa and Itokawa: code-ordering",
-        prompt: "Hayabusa and Itokawa をコード内データとして使い、code-ordering を確認します。",
-        blocks: [
-          "mission = \"Hayabusa\"",
-          "target = \"Itokawa\"",
-          "result = f\"{mission}->{target}\"",
-          "print(result)"
-        ],
-        answer: [
-          0,
-          1,
-          2,
-          3
-        ],
-        hint: "先に mission と target を作り、その2つを使って result を作り、最後に print します。",
-        explanation: "Hayabusa と Itokawa を順に使うため、定義、結合、表示の順に並べます。"
-      },
-      {
-        id: "jp_py_e05",
-        worldId: "execute",
-        languageId: "python",
-        conceptId: "dicts",
-        questionType: "output-predict",
-        title: "Hayabusa2 and Ryugu: nested-dict-tracing",
-        prompt: "Hayabusa2 and Ryugu をコード内データとして使い、nested-dict-tracing を確認します。",
-        code: "route = [\"start\", \"Hayabusa2 and Ryugu\", \"end\"]\nfor index, place in enumerate(route):\n    if index == 1:\n        print(place)",
-        options: [
-          "Hayabusa2 and Ryugu",
-          "other",
-          "1",
-          "Error"
-        ],
-        answer: "Hayabusa2 and Ryugu",
-        hint: "route の真ん中、つまり index == 1 の place だけが表示されます。",
-        explanation: "表示データにある Hayabusa2 and Ryugu を使い、処理の流れを追うと Hayabusa2 and Ryugu が出力されます。"
-      },
-      {
-        id: "jp_py_e06",
-        worldId: "execute",
-        languageId: "python",
-        conceptId: "lists",
-        questionType: "output-predict",
-        title: "Noh role structure: set-deduplication",
-        prompt: "Noh role structure をコード内データとして使い、set-deduplication を確認します。",
-        code: "items = [{\"name\": \"Noh role structure\", \"score\": 2}, {\"name\": \"other\", \"score\": 1}]\nresult = [item[\"name\"] for item in items if item[\"score\"] > 1]\nprint(result[0])",
-        options: [
+        "id": "jp_py_e06",
+        "worldId": "execute",
+        "languageId": "python",
+        "conceptId": "lists",
+        "questionType": "output-predict",
+        "title": "Noh role structure: filter-trace",
+        "prompt": "能の役柄構造を含むデータを、条件で絞り込んで出力を追跡します。",
+        "code": "items = [\n    {\"name\": \"Noh role structure\", \"country\": \"JP\", \"score\": 3},\n    {\"name\": \"context\", \"country\": \"JP\", \"score\": 1},\n    {\"name\": \"other\", \"country\": \"other\", \"score\": 5}\n]\nselected = []\nfor item in items:\n    if item[\"country\"] == \"JP\" and item[\"score\"] >= 2:\n        selected.append(item[\"name\"])\nprint(\" | \".join(selected))",
+        "options": [
           "Noh role structure",
+          "context",
           "other",
-          "1",
           "Error"
         ],
-        answer: "Noh role structure",
-        hint: "条件 score > 1 を満たすのは score が2の要素だけです。その name を追います。",
-        explanation: "表示データにある Noh role structure を使い、処理の流れを追うと Noh role structure が出力されます。"
+        "answer": "Noh role structure",
+        "hint": "country が JP で、score が 2 以上の要素だけを残します。",
+        "explanation": "条件を満たす主題データだけが残るため、出力は Noh role structure です。",
+        "correctAnswer": "Noh role structure",
+        "executionSteps": [
+          "items を1件ずつ調べる。",
+          "country が JP かつ score が基準以上の要素だけ selected に入れる。",
+          "name を連結して出力する。"
+        ],
+        "commonMistakes": [
+          "片方の条件だけで選ぶと、余分な項目が混ざります。",
+          "出力は辞書全体ではなく name の文字列です。"
+        ],
+        "programmingExplanation": "for 文、if 条件、リストへの追加を組み合わせて出力を追跡します。",
+        "countryNote": "能の役柄構造を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
       },
       {
-        id: "jp_py_e07",
-        worldId: "execute",
-        languageId: "python",
-        conceptId: "lists",
-        questionType: "output-predict",
-        title: "Matsuo Basho and Oku no Hosomichi: enumerate-route-processing",
-        prompt: "Matsuo Basho and Oku no Hosomichi をコード内データとして使い、enumerate-route-processing を確認します。",
-        code: "record = {\"name\": \"Matsuo Basho and Oku no Hosomichi\", \"values\": [1, 2, 3]}\nprint(sum(record[\"values\"]))",
-        options: [
-          "6",
+        "id": "jp_py_e07",
+        "worldId": "execute",
+        "languageId": "python",
+        "conceptId": "lists",
+        "questionType": "output-predict",
+        "title": "Matsuo Basho and Oku no Hosomichi: filter-trace",
+        "prompt": "松尾芭蕉とおくのほそ道を含むデータを、条件で絞り込んで出力を追跡します。",
+        "code": "items = [\n    {\"name\": \"Matsuo Basho and Oku no Hosomichi\", \"country\": \"JP\", \"score\": 4},\n    {\"name\": \"context\", \"country\": \"JP\", \"score\": 2},\n    {\"name\": \"other\", \"country\": \"other\", \"score\": 6}\n]\nselected = []\nfor item in items:\n    if item[\"country\"] == \"JP\" and item[\"score\"] >= 3:\n        selected.append(item[\"name\"])\nprint(\" | \".join(selected))",
+        "options": [
+          "Matsuo Basho and Oku no Hosomichi",
+          "context",
           "other",
-          "1",
           "Error"
         ],
-        answer: "6",
-        hint: "record[\"values\"] の 1, 2, 3 を合計します。表示されるのは数値の合計です。",
-        explanation: "表示データにある Matsuo Basho and Oku no Hosomichi を使い、処理の流れを追うと 6 が出力されます。"
+        "answer": "Matsuo Basho and Oku no Hosomichi",
+        "hint": "country が JP で、score が 3 以上の要素だけを残します。",
+        "explanation": "条件を満たす主題データだけが残るため、出力は Matsuo Basho and Oku no Hosomichi です。",
+        "correctAnswer": "Matsuo Basho and Oku no Hosomichi",
+        "executionSteps": [
+          "items を1件ずつ調べる。",
+          "country が JP かつ score が基準以上の要素だけ selected に入れる。",
+          "name を連結して出力する。"
+        ],
+        "commonMistakes": [
+          "片方の条件だけで選ぶと、余分な項目が混ざります。",
+          "出力は辞書全体ではなく name の文字列です。"
+        ],
+        "programmingExplanation": "for 文、if 条件、リストへの追加を組み合わせて出力を追跡します。",
+        "countryNote": "松尾芭蕉とおくのほそ道を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
       }
     ],
     javascript: [
       {
-        id: "jp_js_e01",
-        worldId: "execute",
-        languageId: "javascript",
-        conceptId: "arrays",
-        questionType: "output-predict",
-        title: "firearms arrival at Tanegashima: array-sort",
-        prompt: "firearms arrival at Tanegashima をコード内データとして使い、array-sort を確認します。",
-        code: "const route = { from: \"start\", to: \"firearms arrival at Tanegashima\" };\nconsole.log(route.to);",
-        options: [
+        "id": "jp_js_e01",
+        "worldId": "execute",
+        "languageId": "javascript",
+        "conceptId": "arrays",
+        "questionType": "output-predict",
+        "title": "firearms arrival at Tanegashima: filter-map-trace",
+        "prompt": "鉄砲伝来と種子島を含む配列データを、filter/map/sort で処理した出力を追跡します。",
+        "code": "const items = [\n  { name: \"firearms arrival at Tanegashima\", country: \"JP\", score: 4 },\n  { name: \"context\", country: \"JP\", score: 2 },\n  { name: \"other\", country: \"other\", score: 6 }\n];\nconst selected = items\n  .filter(item => item.country === \"JP\" && item.score >= 3)\n  .map(item => item.name);\nconsole.log(selected.join(\" | \"));",
+        "options": [
           "firearms arrival at Tanegashima",
+          "context",
           "other",
-          "1",
           "Error"
         ],
-        answer: "firearms arrival at Tanegashima",
-        hint: "route オブジェクトの to プロパティをそのまま console.log しています。",
-        explanation: "表示データにある firearms arrival at Tanegashima を使い、処理の流れを追うと firearms arrival at Tanegashima が出力されます。"
+        "answer": "firearms arrival at Tanegashima",
+        "hint": "JP かつ score が 3 以上の要素を残します。",
+        "explanation": "条件を満たす主題データだけが残るため、出力は firearms arrival at Tanegashima です。",
+        "correctAnswer": "firearms arrival at Tanegashima",
+        "executionSteps": [
+          "filter で条件を満たす要素を残す。",
+          "map で name を取り出す。",
+          "join で文字列にして表示する。"
+        ],
+        "commonMistakes": [
+          "filter 後の配列と map 後の配列を混同しやすいです。",
+          "other country の高い score は JP 条件で除外されます。"
+        ],
+        "programmingExplanation": "JavaScript の配列処理を読む問題です。regular では filter と map を中心に追跡します。",
+        "countryNote": "鉄砲伝来と種子島を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
       },
       {
-        id: "jp_js_e02",
-        worldId: "execute",
-        languageId: "javascript",
-        conceptId: "arrays",
-        questionType: "output-predict",
-        title: "Perry expedition and opening sequence: timeline-reduce",
-        prompt: "Perry expedition and opening sequence をコード内データとして使い、timeline-reduce を確認します。",
-        code: "const items = [{ name: \"Perry expedition and opening sequence\", score: 2 }, { name: \"other\", score: 1 }];\nconst result = items.filter(item => item.score > 1).map(item => item.name);\nconsole.log(result[0]);",
-        options: [
+        "id": "jp_js_e02",
+        "worldId": "execute",
+        "languageId": "javascript",
+        "conceptId": "arrays",
+        "questionType": "output-predict",
+        "title": "Perry expedition and opening sequence: filter-map-trace",
+        "prompt": "ペリー来航と開国までの流れを含む配列データを、filter/map/sort で処理した出力を追跡します。",
+        "code": "const items = [\n  { name: \"Perry expedition and opening sequence\", country: \"JP\", score: 5 },\n  { name: \"context\", country: \"JP\", score: 3 },\n  { name: \"other\", country: \"other\", score: 7 }\n];\nconst selected = items\n  .filter(item => item.country === \"JP\" && item.score >= 4)\n  .map(item => item.name);\nconsole.log(selected.join(\" | \"));",
+        "options": [
           "Perry expedition and opening sequence",
+          "context",
           "other",
-          "1",
           "Error"
         ],
-        answer: "Perry expedition and opening sequence",
-        hint: "filter で score > 1 の要素だけ残し、map で name だけ取り出します。",
-        explanation: "表示データにある Perry expedition and opening sequence を使い、処理の流れを追うと Perry expedition and opening sequence が出力されます。"
+        "answer": "Perry expedition and opening sequence",
+        "hint": "JP かつ score が 4 以上の要素を残します。",
+        "explanation": "条件を満たす主題データだけが残るため、出力は Perry expedition and opening sequence です。",
+        "correctAnswer": "Perry expedition and opening sequence",
+        "executionSteps": [
+          "filter で条件を満たす要素を残す。",
+          "map で name を取り出す。",
+          "join で文字列にして表示する。"
+        ],
+        "commonMistakes": [
+          "filter 後の配列と map 後の配列を混同しやすいです。",
+          "other country の高い score は JP 条件で除外されます。"
+        ],
+        "programmingExplanation": "JavaScript の配列処理を読む問題です。regular では filter と map を中心に追跡します。",
+        "countryNote": "ペリー来航と開国までの流れを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
       },
       {
-        id: "jp_js_e03",
-        worldId: "execute",
-        languageId: "javascript",
-        conceptId: "arrays",
-        questionType: "output-predict",
-        title: "Japanese washi traditions: filter",
-        prompt: "Japanese washi traditions をコード内データとして使い、filter を確認します。",
-        code: "const record = { name: \"Japanese washi traditions\", values: [1, 2, 3] };\nconst total = record.values.reduce((sum, n) => sum + n, 0);\nconsole.log(total);",
-        options: [
-          "6",
+        "id": "jp_js_e03",
+        "worldId": "execute",
+        "languageId": "javascript",
+        "conceptId": "arrays",
+        "questionType": "output-predict",
+        "title": "Japanese washi traditions: filter-map-trace",
+        "prompt": "和紙の伝統を含む配列データを、filter/map/sort で処理した出力を追跡します。",
+        "code": "const items = [\n  { name: \"Japanese washi traditions\", country: \"JP\", score: 3 },\n  { name: \"context\", country: \"JP\", score: 1 },\n  { name: \"other\", country: \"other\", score: 5 }\n];\nconst selected = items\n  .filter(item => item.country === \"JP\" && item.score >= 2)\n  .map(item => item.name);\nconsole.log(selected.join(\" | \"));",
+        "options": [
+          "Japanese washi traditions",
+          "context",
           "other",
-          "1",
           "Error"
         ],
-        answer: "6",
-        hint: "record.values は [1, 2, 3] です。reduce は左から順に足し算しています。",
-        explanation: "表示データにある Japanese washi traditions を使い、処理の流れを追うと 6 が出力されます。"
+        "answer": "Japanese washi traditions",
+        "hint": "JP かつ score が 2 以上の要素を残します。",
+        "explanation": "条件を満たす主題データだけが残るため、出力は Japanese washi traditions です。",
+        "correctAnswer": "Japanese washi traditions",
+        "executionSteps": [
+          "filter で条件を満たす要素を残す。",
+          "map で name を取り出す。",
+          "join で文字列にして表示する。"
+        ],
+        "commonMistakes": [
+          "filter 後の配列と map 後の配列を混同しやすいです。",
+          "other country の高い score は JP 条件で除外されます。"
+        ],
+        "programmingExplanation": "JavaScript の配列処理を読む問題です。regular では filter と map を中心に追跡します。",
+        "countryNote": "和紙の伝統を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
       },
       {
-        id: "jp_js_e04",
-        worldId: "execute",
-        languageId: "javascript",
-        conceptId: "variables",
-        questionType: "output-predict",
-        title: "Ise Jingu Shikinen Sengu: modulo-cycle",
-        prompt: "Ise Jingu Shikinen Sengu をコード内データとして使い、modulo-cycle を確認します。",
-        code: "const route = { from: \"start\", to: \"Ise Jingu Shikinen Sengu\" };\nconsole.log(route.to);",
-        options: [
+        "id": "jp_js_e04",
+        "worldId": "execute",
+        "languageId": "javascript",
+        "conceptId": "variables",
+        "questionType": "output-predict",
+        "title": "Ise Jingu Shikinen Sengu: filter-map-trace",
+        "prompt": "伊勢神宮の式年遷宮を含む配列データを、filter/map/sort で処理した出力を追跡します。",
+        "code": "const items = [\n  { name: \"Ise Jingu Shikinen Sengu\", country: \"JP\", score: 4 },\n  { name: \"context\", country: \"JP\", score: 2 },\n  { name: \"other\", country: \"other\", score: 6 }\n];\nconst selected = items\n  .filter(item => item.country === \"JP\" && item.score >= 3)\n  .map(item => item.name);\nconsole.log(selected.join(\" | \"));",
+        "options": [
           "Ise Jingu Shikinen Sengu",
+          "context",
           "other",
-          "1",
           "Error"
         ],
-        answer: "Ise Jingu Shikinen Sengu",
-        hint: "console.log(route.to) なので、from ではなく to の文字列が出ます。",
-        explanation: "表示データにある Ise Jingu Shikinen Sengu を使い、処理の流れを追うと Ise Jingu Shikinen Sengu が出力されます。"
+        "answer": "Ise Jingu Shikinen Sengu",
+        "hint": "JP かつ score が 3 以上の要素を残します。",
+        "explanation": "条件を満たす主題データだけが残るため、出力は Ise Jingu Shikinen Sengu です。",
+        "correctAnswer": "Ise Jingu Shikinen Sengu",
+        "executionSteps": [
+          "filter で条件を満たす要素を残す。",
+          "map で name を取り出す。",
+          "join で文字列にして表示する。"
+        ],
+        "commonMistakes": [
+          "filter 後の配列と map 後の配列を混同しやすいです。",
+          "other country の高い score は JP 条件で除外されます。"
+        ],
+        "programmingExplanation": "JavaScript の配列処理を読む問題です。regular では filter と map を中心に追跡します。",
+        "countryNote": "伊勢神宮の式年遷宮を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
       },
       {
-        id: "jp_js_e05",
-        worldId: "execute",
-        languageId: "javascript",
-        conceptId: "variables",
-        questionType: "output-predict",
-        title: "Tokyo Skytree: map-unit-conversion",
-        prompt: "Tokyo Skytree をコード内データとして使い、map-unit-conversion を確認します。",
-        code: "const items = [{ name: \"Tokyo Skytree\", score: 2 }, { name: \"other\", score: 1 }];\nconst result = items.filter(item => item.score > 1).map(item => item.name);\nconsole.log(result[0]);",
-        options: [
+        "id": "jp_js_e05",
+        "worldId": "execute",
+        "languageId": "javascript",
+        "conceptId": "variables",
+        "questionType": "output-predict",
+        "title": "Tokyo Skytree: filter-map-trace",
+        "prompt": "東京スカイツリーを含む配列データを、filter/map/sort で処理した出力を追跡します。",
+        "code": "const items = [\n  { name: \"Tokyo Skytree\", country: \"JP\", score: 5 },\n  { name: \"context\", country: \"JP\", score: 3 },\n  { name: \"other\", country: \"other\", score: 7 }\n];\nconst selected = items\n  .filter(item => item.country === \"JP\" && item.score >= 4)\n  .map(item => item.name);\nconsole.log(selected.join(\" | \"));",
+        "options": [
           "Tokyo Skytree",
+          "context",
           "other",
-          "1",
           "Error"
         ],
-        answer: "Tokyo Skytree",
-        hint: "score が2の要素だけ filter を通り、その name が result[0] になります。",
-        explanation: "表示データにある Tokyo Skytree を使い、処理の流れを追うと Tokyo Skytree が出力されます。"
+        "answer": "Tokyo Skytree",
+        "hint": "JP かつ score が 4 以上の要素を残します。",
+        "explanation": "条件を満たす主題データだけが残るため、出力は Tokyo Skytree です。",
+        "correctAnswer": "Tokyo Skytree",
+        "executionSteps": [
+          "filter で条件を満たす要素を残す。",
+          "map で name を取り出す。",
+          "join で文字列にして表示する。"
+        ],
+        "commonMistakes": [
+          "filter 後の配列と map 後の配列を混同しやすいです。",
+          "other country の高い score は JP 条件で除外されます。"
+        ],
+        "programmingExplanation": "JavaScript の配列処理を読む問題です。regular では filter と map を中心に追跡します。",
+        "countryNote": "東京スカイツリーを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
       },
       {
-        id: "jp_js_e06",
-        worldId: "execute",
-        languageId: "javascript",
-        conceptId: "arrays",
-        questionType: "output-predict",
-        title: "Yagi-Uda antenna: reduce-aggregation",
-        prompt: "Yagi-Uda antenna をコード内データとして使い、reduce-aggregation を確認します。",
-        code: "const record = { name: \"Yagi-Uda antenna\", values: [1, 2, 3] };\nconst total = record.values.reduce((sum, n) => sum + n, 0);\nconsole.log(total);",
-        options: [
-          "6",
+        "id": "jp_js_e06",
+        "worldId": "execute",
+        "languageId": "javascript",
+        "conceptId": "arrays",
+        "questionType": "output-predict",
+        "title": "Yagi-Uda antenna: filter-map-trace",
+        "prompt": "八木・宇田アンテナを含む配列データを、filter/map/sort で処理した出力を追跡します。",
+        "code": "const items = [\n  { name: \"Yagi-Uda antenna\", country: \"JP\", score: 3 },\n  { name: \"context\", country: \"JP\", score: 1 },\n  { name: \"other\", country: \"other\", score: 5 }\n];\nconst selected = items\n  .filter(item => item.country === \"JP\" && item.score >= 2)\n  .map(item => item.name);\nconsole.log(selected.join(\" | \"));",
+        "options": [
+          "Yagi-Uda antenna",
+          "context",
           "other",
-          "1",
           "Error"
         ],
-        answer: "6",
-        hint: "reduce の初期値は0です。1、2、3を順に足した合計を考えます。",
-        explanation: "表示データにある Yagi-Uda antenna を使い、処理の流れを追うと 6 が出力されます。"
+        "answer": "Yagi-Uda antenna",
+        "hint": "JP かつ score が 2 以上の要素を残します。",
+        "explanation": "条件を満たす主題データだけが残るため、出力は Yagi-Uda antenna です。",
+        "correctAnswer": "Yagi-Uda antenna",
+        "executionSteps": [
+          "filter で条件を満たす要素を残す。",
+          "map で name を取り出す。",
+          "join で文字列にして表示する。"
+        ],
+        "commonMistakes": [
+          "filter 後の配列と map 後の配列を混同しやすいです。",
+          "other country の高い score は JP 条件で除外されます。"
+        ],
+        "programmingExplanation": "JavaScript の配列処理を読む問題です。regular では filter と map を中心に追跡します。",
+        "countryNote": "八木・宇田アンテナを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
       },
       {
-        id: "jp_js_e07",
-        worldId: "execute",
-        languageId: "javascript",
-        conceptId: "objects",
-        questionType: "output-predict",
-        title: "Seikan Tunnel: route-object-tracing",
-        prompt: "Seikan Tunnel をコード内データとして使い、route-object-tracing を確認します。",
-        code: "const route = { from: \"start\", to: \"Seikan Tunnel\" };\nconsole.log(route.to);",
-        options: [
+        "id": "jp_js_e07",
+        "worldId": "execute",
+        "languageId": "javascript",
+        "conceptId": "objects",
+        "questionType": "output-predict",
+        "title": "Seikan Tunnel: filter-map-trace",
+        "prompt": "青函トンネルを含む配列データを、filter/map/sort で処理した出力を追跡します。",
+        "code": "const tunnel = { name: \"Seikan Tunnel\", country: \"JP\", segments: [{ open: true, km: 23 }, { open: false, km: 10 }, { open: true, km: 31 }] };\nlet openKm = 0;\nfor (const segment of tunnel.segments) {\n  if (segment.open) {\n    openKm += segment.km;\n  }\n}\nconsole.log(openKm >= 50 ? tunnel.name : \"check\");",
+        "options": [
           "Seikan Tunnel",
-          "other",
-          "1",
+          "check",
+          "54",
           "Error"
         ],
-        answer: "Seikan Tunnel",
-        hint: "route.to に入っている文字列をそのまま表示します。",
-        explanation: "表示データにある Seikan Tunnel を使い、処理の流れを追うと Seikan Tunnel が出力されます。"
+        "answer": "Seikan Tunnel",
+        "hint": "JP かつ score が 3 以上の要素を残します。",
+        "explanation": "条件を満たす主題データだけが残るため、出力は Seikan Tunnel です。",
+        "correctAnswer": "Seikan Tunnel",
+        "executionSteps": [
+          "open が true の segment だけを合計する。",
+          "23 + 31 で openKm は 54 になる。",
+          "54 >= 50 なので tunnel.name を表示する。"
+        ],
+        "commonMistakes": [
+          "filter 後の配列と map 後の配列を混同しやすいです。",
+          "other country の高い score は JP 条件で除外されます。"
+        ],
+        "programmingExplanation": "JavaScript の配列処理を読む問題です。regular では filter と map を中心に追跡します。",
+        "countryNote": "青函トンネルを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
       }
     ],
   },

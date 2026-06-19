@@ -45,58 +45,83 @@ export const FINAL_MISSIONS = {
         },
         questions: [
           {
-            id: "final_decode_JP_python_01",
-            worldId: "decode",
-            languageId: "python",
-            conceptId: "dicts",
-            questionType: "fill-blank",
-            title: "Meiji Constitution promulgation context: dict-plus-comparison",
-            description: "1889年に大日本帝国憲法が公布されたという文脈を、辞書・リスト・条件式で扱います。公布年が 1889 年以上で、kind が constitution の記録名だけを表示してください。",
-            hint: "`records[0]` は辞書です。`year` と `kind` を条件で確認したあと、表示したい値は同じ辞書の `name` キーにあります。",
-            code: "records = [\n    {\"name\": \"Meiji Constitution\", \"year\": 1889, \"kind\": \"constitution\"},\n    {\"name\": \"Cabinet system\", \"year\": 1885, \"kind\": \"government\"}\n]\nrecord = records[0]\nresult = record[___BLANK___] if record[\"year\"] >= 1889 and record[\"kind\"] == \"constitution\" else \"skip\"\nprint(result)",
-            blank: "\"name\"",
-            explanation: "条件式の前半は `record[\"year\"] >= 1889`、後半は `record[\"kind\"] == \"constitution\"` です。どちらも True なので、`record[\"name\"]` が選ばれて `Meiji Constitution` が表示されます。",
-            correctAnswer: "\"name\"",
-            completedCode: "records = [\n    {\"name\": \"Meiji Constitution\", \"year\": 1889, \"kind\": \"constitution\"},\n    {\"name\": \"Cabinet system\", \"year\": 1885, \"kind\": \"government\"}\n]\nrecord = records[0]\nresult = record[\"name\"] if record[\"year\"] >= 1889 and record[\"kind\"] == \"constitution\" else \"skip\"\nprint(result)",
-            executionSteps: [
-              "`records[0]` で大日本帝国憲法の辞書を取り出す。",
-              "`year` が 1889 以上か、`kind` が `constitution` かを確認する。",
-              "両方 True なので、条件式は `record[\"name\"]` を返す。",
-              "`Meiji Constitution` が表示される。"
-            ],
-            commonMistakes: [
-              "`\"year\"` を入れると 1889 が表示され、記録名ではなくなります。",
-              "条件式の結果に必要なのは True/False ではなく、条件を満たしたときの `name` です。"
-            ],
-            programmingExplanation: "Final decode なので、単なる変数表示ではなく、リストから辞書を取り出し、辞書アクセスと比較条件を組み合わせています。空欄には、条件が True のときに取り出したいキーを入れます。",
-            countryNote: "大日本帝国憲法は1889年に公布された、日本の近代政治史に関わる重要な憲法です。"
-          },
+        "id": "final_decode_JP_python_01",
+        "worldId": "decode",
+        "languageId": "python",
+        "conceptId": "dicts",
+        "questionType": "fill-blank",
+        "title": "Meiji Constitution promulgation context: final-combined-read",
+        "description": "大日本帝国憲法の公布を題材に、Python のdictsを使ってコードを完成させます。",
+        "hint": "`record` は辞書です。条件が True のときに表示したい記録名のキーを選びます。",
+        "code": "records = [\n    {\"name\": \"Meiji Constitution promulgation context\", \"country\": \"JP\", \"score\": 3},\n    {\"name\": \"comparison\", \"country\": \"other\", \"score\": 1}\n]\nrecord = records[0]\nresult = record[___BLANK___] if record[\"country\"] == \"JP\" and record[\"score\"] >= 3 else \"skip\"\nprint(result)",
+        "blank": "\"name\"",
+        "explanation": "空欄に \"name\" を入れると、大日本帝国憲法の公布に関するデータから目的の値を取り出せます。",
+        "correctAnswer": "\"name\"",
+        "completedCode": "records = [\n    {\"name\": \"Meiji Constitution promulgation context\", \"country\": \"JP\", \"score\": 3},\n    {\"name\": \"comparison\", \"country\": \"other\", \"score\": 1}\n]\nrecord = records[0]\nresult = record[\"name\"] if record[\"country\"] == \"JP\" and record[\"score\"] >= 3 else \"skip\"\nprint(result)",
+        "executionSteps": [
+          "データ構造に国別の事実を入れる。",
+          "空欄に正しいキーまたは添字を入れて値を取り出す。",
+          "print で取り出した値を表示する。"
+        ],
+        "commonMistakes": [
+          "値そのものではなく、値を取り出すためのキーや添字を書く必要があります。",
+          "文字列キーは引用符を含めて書きます。"
+        ],
+        "programmingExplanation": "dictsを使ってデータから値を読む問題です。事実はデータに入っているため、暗記ではなくコード上の参照先を追うことが主な作業です。",
+        "countryNote": "大日本帝国憲法の公布を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
+      },
           {
-            id: "final_decode_JP_python_02",
-            worldId: "decode",
-            languageId: "python",
-            conceptId: "dicts",
-            questionType: "fill-blank",
-            title: "Kenzaburo Oe Nobel Literature: list-plus-sort-key",
-            description: "Kenzaburo Oe Nobel Literature をコード内データとして使い、list-plus-sort-key を確認します。",
-            hint: "表示したい値は fact という変数に保存されています。文字列をもう一度書く必要はありません。",
-            code: "fact = \"Kenzaburo Oe Nobel Literature\"\nprint(___BLANK___)",
-            blank: "fact",
-            explanation: "変数 fact を表示します。 Kenzaburo Oe Nobel Literature は問題文とコード内データに示されています。"
-          },
+        "id": "final_decode_JP_python_02",
+        "worldId": "decode",
+        "languageId": "python",
+        "conceptId": "dicts",
+        "questionType": "fill-blank",
+        "title": "Kenzaburo Oe Nobel Literature: final-combined-read",
+        "description": "大江健三郎とノーベル文学賞を題材に、Python のdictsを使ってコードを完成させます。",
+        "hint": "`record` は辞書です。条件が True のときに表示したい記録名のキーを選びます。",
+        "code": "records = [\n    {\"name\": \"Kenzaburo Oe Nobel Literature\", \"country\": \"JP\", \"score\": 4},\n    {\"name\": \"comparison\", \"country\": \"other\", \"score\": 1}\n]\nrecord = records[0]\nresult = record[___BLANK___] if record[\"country\"] == \"JP\" and record[\"score\"] >= 4 else \"skip\"\nprint(result)",
+        "blank": "\"name\"",
+        "explanation": "空欄に \"name\" を入れると、大江健三郎とノーベル文学賞に関するデータから目的の値を取り出せます。",
+        "correctAnswer": "\"name\"",
+        "completedCode": "records = [\n    {\"name\": \"Kenzaburo Oe Nobel Literature\", \"country\": \"JP\", \"score\": 4},\n    {\"name\": \"comparison\", \"country\": \"other\", \"score\": 1}\n]\nrecord = records[0]\nresult = record[\"name\"] if record[\"country\"] == \"JP\" and record[\"score\"] >= 4 else \"skip\"\nprint(result)",
+        "executionSteps": [
+          "データ構造に国別の事実を入れる。",
+          "空欄に正しいキーまたは添字を入れて値を取り出す。",
+          "print で取り出した値を表示する。"
+        ],
+        "commonMistakes": [
+          "値そのものではなく、値を取り出すためのキーや添字を書く必要があります。",
+          "文字列キーは引用符を含めて書きます。"
+        ],
+        "programmingExplanation": "dictsを使ってデータから値を読む問題です。事実はデータに入っているため、暗記ではなくコード上の参照先を追うことが主な作業です。",
+        "countryNote": "大江健三郎とノーベル文学賞を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
+      },
           {
-            id: "final_decode_JP_python_03",
-            worldId: "decode",
-            languageId: "python",
-            conceptId: "conditions",
-            questionType: "fill-blank",
-            title: "Kinkaku-ji and Rokuon-ji naming: alias-resolution-plus-membership",
-            description: "Kinkaku-ji and Rokuon-ji naming をコード内データとして使い、alias-resolution-plus-membership を確認します。",
-            hint: "print したいのは変数 fact の中身です。空欄には変数名を入れます。",
-            code: "fact = \"Kinkaku-ji and Rokuon-ji naming\"\nprint(___BLANK___)",
-            blank: "fact",
-            explanation: "変数 fact を表示します。 Kinkaku-ji and Rokuon-ji naming は問題文とコード内データに示されています。"
-          }
+        "id": "final_decode_JP_python_03",
+        "worldId": "decode",
+        "languageId": "python",
+        "conceptId": "conditions",
+        "questionType": "fill-blank",
+        "title": "Kinkaku-ji and Rokuon-ji naming: final-combined-read",
+        "description": "金閣寺と鹿苑寺という名称を題材に、Python のconditionsを使ってコードを完成させます。",
+        "hint": "`record` は辞書です。条件が True のときに表示したい記録名のキーを選びます。",
+        "code": "records = [\n    {\"name\": \"Kinkaku-ji and Rokuon-ji naming\", \"country\": \"JP\", \"score\": 5},\n    {\"name\": \"comparison\", \"country\": \"other\", \"score\": 1}\n]\nrecord = records[0]\nresult = record[___BLANK___] if record[\"country\"] == \"JP\" and record[\"score\"] >= 5 else \"skip\"\nprint(result)",
+        "blank": "\"name\"",
+        "explanation": "空欄に \"name\" を入れると、金閣寺と鹿苑寺という名称に関するデータから目的の値を取り出せます。",
+        "correctAnswer": "\"name\"",
+        "completedCode": "records = [\n    {\"name\": \"Kinkaku-ji and Rokuon-ji naming\", \"country\": \"JP\", \"score\": 5},\n    {\"name\": \"comparison\", \"country\": \"other\", \"score\": 1}\n]\nrecord = records[0]\nresult = record[\"name\"] if record[\"country\"] == \"JP\" and record[\"score\"] >= 5 else \"skip\"\nprint(result)",
+        "executionSteps": [
+          "データ構造に国別の事実を入れる。",
+          "空欄に正しいキーまたは添字を入れて値を取り出す。",
+          "print で取り出した値を表示する。"
+        ],
+        "commonMistakes": [
+          "値そのものではなく、値を取り出すためのキーや添字を書く必要があります。",
+          "文字列キーは引用符を含めて書きます。"
+        ],
+        "programmingExplanation": "conditionsを使ってデータから値を読む問題です。事実はデータに入っているため、暗記ではなくコード上の参照先を追うことが主な作業です。",
+        "countryNote": "金閣寺と鹿苑寺という名称を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
+      }
         ]
       },
       javascript: {
@@ -108,44 +133,83 @@ export const FINAL_MISSIONS = {
         },
         questions: [
           {
-            id: "final_decode_JP_javascript_01",
-            worldId: "decode",
-            languageId: "javascript",
-            conceptId: "arrays",
-            questionType: "fill-blank",
-            title: "Hokusai and Thirty-six Views of Mount Fuji: array-method-plus-template",
-            description: "Hokusai and Thirty-six Views of Mount Fuji をコード内データとして使い、array-method-plus-template を確認します。",
-            hint: "const fact に文字列が入っています。console.log には変数名を渡します。",
-            code: "const fact = \"Hokusai and Thirty-six Views of Mount Fuji\";\nconsole.log(___BLANK___);",
-            blank: "fact",
-            explanation: "変数 fact を表示します。 Hokusai and Thirty-six Views of Mount Fuji は問題文とコード内データに示されています。"
-          },
+        "id": "final_decode_JP_javascript_01",
+        "worldId": "decode",
+        "languageId": "javascript",
+        "conceptId": "arrays",
+        "questionType": "fill-blank",
+        "title": "Hokusai and Thirty-six Views of Mount Fuji: final-combined-read",
+        "description": "葛飾北斎と富嶽三十六景を題材に、JavaScript のarraysを使ってコードを完成させます。",
+        "hint": "`find` で残った object から、表示したい名前のプロパティを読みます。",
+        "code": "const records = [\n  { name: \"Hokusai and Thirty-six Views of Mount Fuji\", country: \"JP\", score: 4 },\n  { name: \"comparison\", country: \"other\", score: 1 }\n];\nconst record = records.find(item => item.country === \"JP\" && item.score >= 4);\nconsole.log(record.___BLANK___);",
+        "blank": "name",
+        "explanation": "空欄に name を入れると、葛飾北斎と富嶽三十六景に関する値が表示されます。",
+        "correctAnswer": "name",
+        "completedCode": "const records = [\n  { name: \"Hokusai and Thirty-six Views of Mount Fuji\", country: \"JP\", score: 4 },\n  { name: \"comparison\", country: \"other\", score: 1 }\n];\nconst record = records.find(item => item.country === \"JP\" && item.score >= 4);\nconsole.log(record.name);",
+        "executionSteps": [
+          "国別の事実を object または array に入れる。",
+          "条件や参照位置を確認する。",
+          "空欄を補って目的の値を表示する。"
+        ],
+        "commonMistakes": [
+          "値そのものを入れるのではなく、参照に必要なプロパティ名や添字を入れます。",
+          "JavaScript のドット記法ではプロパティ名に引用符を付けません。"
+        ],
+        "programmingExplanation": "JavaScript のデータ参照を読む問題です。Final では find と条件判定も組み合わせています。",
+        "countryNote": "葛飾北斎と富嶽三十六景を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
+      },
           {
-            id: "final_decode_JP_javascript_02",
-            worldId: "decode",
-            languageId: "javascript",
-            conceptId: "objects",
-            questionType: "fill-blank",
-            title: "Super-Kamiokande: nested-object-plus-boolean",
-            description: "Super-Kamiokande をコード内データとして使い、nested-object-plus-boolean を確認します。",
-            hint: "表示したい文字列は fact という変数に入っています。",
-            code: "const fact = \"Super-Kamiokande\";\nconsole.log(___BLANK___);",
-            blank: "fact",
-            explanation: "変数 fact を表示します。 Super-Kamiokande は問題文とコード内データに示されています。"
-          },
+        "id": "final_decode_JP_javascript_02",
+        "worldId": "decode",
+        "languageId": "javascript",
+        "conceptId": "objects",
+        "questionType": "fill-blank",
+        "title": "Super-Kamiokande: final-combined-read",
+        "description": "スーパーカミオカンデを題材に、JavaScript のobjectsを使ってコードを完成させます。",
+        "hint": "`find` で残った object から、表示したい名前のプロパティを読みます。",
+        "code": "const records = [\n  { name: \"Super-Kamiokande\", country: \"JP\", score: 5 },\n  { name: \"comparison\", country: \"other\", score: 1 }\n];\nconst record = records.find(item => item.country === \"JP\" && item.score >= 5);\nconsole.log(record.___BLANK___);",
+        "blank": "name",
+        "explanation": "空欄に name を入れると、スーパーカミオカンデに関する値が表示されます。",
+        "correctAnswer": "name",
+        "completedCode": "const records = [\n  { name: \"Super-Kamiokande\", country: \"JP\", score: 5 },\n  { name: \"comparison\", country: \"other\", score: 1 }\n];\nconst record = records.find(item => item.country === \"JP\" && item.score >= 5);\nconsole.log(record.name);",
+        "executionSteps": [
+          "国別の事実を object または array に入れる。",
+          "条件や参照位置を確認する。",
+          "空欄を補って目的の値を表示する。"
+        ],
+        "commonMistakes": [
+          "値そのものを入れるのではなく、参照に必要なプロパティ名や添字を入れます。",
+          "JavaScript のドット記法ではプロパティ名に引用符を付けません。"
+        ],
+        "programmingExplanation": "JavaScript のデータ参照を読む問題です。Final では find と条件判定も組み合わせています。",
+        "countryNote": "スーパーカミオカンデを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
+      },
           {
-            id: "final_decode_JP_javascript_03",
-            worldId: "decode",
-            languageId: "javascript",
-            conceptId: "arrays",
-            questionType: "fill-blank",
-            title: "Itsukushima Shrine: set-plus-membership",
-            description: "Itsukushima Shrine をコード内データとして使い、set-plus-membership を確認します。",
-            hint: "console.log の引数には、上で宣言した fact をそのまま使います。",
-            code: "const fact = \"Itsukushima Shrine\";\nconsole.log(___BLANK___);",
-            blank: "fact",
-            explanation: "変数 fact を表示します。 Itsukushima Shrine は問題文とコード内データに示されています。"
-          }
+        "id": "final_decode_JP_javascript_03",
+        "worldId": "decode",
+        "languageId": "javascript",
+        "conceptId": "arrays",
+        "questionType": "fill-blank",
+        "title": "Itsukushima Shrine: final-combined-read",
+        "description": "厳島神社を題材に、JavaScript のarraysを使ってコードを完成させます。",
+        "hint": "`find` で残った object から、表示したい名前のプロパティを読みます。",
+        "code": "const records = [\n  { name: \"Itsukushima Shrine\", country: \"JP\", score: 6 },\n  { name: \"comparison\", country: \"other\", score: 1 }\n];\nconst record = records.find(item => item.country === \"JP\" && item.score >= 6);\nconsole.log(record.___BLANK___);",
+        "blank": "name",
+        "explanation": "空欄に name を入れると、厳島神社に関する値が表示されます。",
+        "correctAnswer": "name",
+        "completedCode": "const records = [\n  { name: \"Itsukushima Shrine\", country: \"JP\", score: 6 },\n  { name: \"comparison\", country: \"other\", score: 1 }\n];\nconst record = records.find(item => item.country === \"JP\" && item.score >= 6);\nconsole.log(record.name);",
+        "executionSteps": [
+          "国別の事実を object または array に入れる。",
+          "条件や参照位置を確認する。",
+          "空欄を補って目的の値を表示する。"
+        ],
+        "commonMistakes": [
+          "値そのものを入れるのではなく、参照に必要なプロパティ名や添字を入れます。",
+          "JavaScript のドット記法ではプロパティ名に引用符を付けません。"
+        ],
+        "programmingExplanation": "JavaScript のデータ参照を読む問題です。Final では find と条件判定も組み合わせています。",
+        "countryNote": "厳島神社を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
+      }
         ]
       }
     }
@@ -161,78 +225,98 @@ export const FINAL_MISSIONS = {
         },
         questions: [
           {
-            id: "final_execute_JP_python_01",
-            worldId: "execute",
-            languageId: "python",
-            conceptId: "lists",
-            questionType: "output-predict",
-            title: "Sacred Sites and Pilgrimage Routes in Kii Mountain Range: nested-filter-plus-sort",
-            prompt: "紀伊山地の霊場と参詣道に関するデータを使います。status が open、prefectures に Wakayama を含み、route_km が 5 以上の区間だけを選び、距離が短い順に並べたときの名前を `>` でつないだ出力を追跡してください。",
-            code: "routes = [\n    {\"name\": \"Kumano Kodo\", \"prefectures\": [\"Wakayama\", \"Nara\"], \"route_km\": 12, \"status\": \"open\"},\n    {\"name\": \"Koyasan Choishi-michi\", \"prefectures\": [\"Wakayama\"], \"route_km\": 6, \"status\": \"open\"},\n    {\"name\": \"Yoshino Omine\", \"prefectures\": [\"Nara\"], \"route_km\": 9, \"status\": \"open\"},\n    {\"name\": \"Short shrine path\", \"prefectures\": [\"Wakayama\"], \"route_km\": 2, \"status\": \"open\"}\n]\nfiltered = []\nfor route in routes:\n    in_wakayama = \"Wakayama\" in route[\"prefectures\"]\n    long_enough = route[\"route_km\"] >= 5\n    if route[\"status\"] == \"open\" and in_wakayama and long_enough:\n        filtered.append(route)\nordered = sorted(filtered, key=lambda route: route[\"route_km\"])\nnames = [route[\"name\"] for route in ordered]\nprint(\">\".join(names))",
-            options: [
-              "Koyasan Choishi-michi>Kumano Kodo",
-              "Kumano Kodo>Koyasan Choishi-michi",
-              "Koyasan Choishi-michi>Short shrine path>Kumano Kodo",
-              "Error"
-            ],
-            answer: "Koyasan Choishi-michi>Kumano Kodo",
-            hint: "Wakayama を含み、距離が 5km 以上の open route だけ残します。そのあと `route_km` が小さい順に並びます。",
-            explanation: "条件を満たすのは Kumano Kodo と Koyasan Choishi-michi です。距離は 12km と 6km なので、短い順では Koyasan Choishi-michi が先になります。",
-            correctAnswer: "Koyasan Choishi-michi>Kumano Kodo",
-            executionSteps: [
-              "4件の route を順に確認する。",
-              "`Wakayama` を含まない Yoshino Omine は除外される。",
-              "距離が 2km の Short shrine path は `route_km >= 5` を満たさない。",
-              "Kumano Kodo と Koyasan Choishi-michi が `filtered` に残る。",
-              "`sorted(..., key=lambda route: route[\"route_km\"])` で 6km の route が先になる。",
-              "名前だけを取り出し、`>` で連結して表示する。"
-            ],
-            commonMistakes: [
-              "フィルタ後の順番ではなく、sort 後の順番で答えます。",
-              "`prefectures` はリストなので、`\"Wakayama\" in route[\"prefectures\"]` で含有を確認します。",
-              "短い道も Wakayama にありますが、距離条件で除外されます。"
-            ],
-            programmingExplanation: "この Final execute は、ネストした辞書リスト、複数条件の filter、`lambda` による sort、リスト内包表記、文字列 join を組み合わせたトレースです。各段階で残るデータを更新しながら追うと答えが決まります。",
-            countryNote: "紀伊山地の霊場と参詣道は、日本の宗教的景観と巡礼路に関わる世界遺産として知られます。"
-          },
+        "id": "final_execute_JP_python_01",
+        "worldId": "execute",
+        "languageId": "python",
+        "conceptId": "lists",
+        "questionType": "output-predict",
+        "title": "Sacred Sites and Pilgrimage Routes in Kii Mountain Range: final-filter-sort-trace",
+        "prompt": "紀伊山地の霊場と参詣道を含むデータを、条件で絞り込んで出力を追跡します。",
+        "code": "items = [\n    {\"name\": \"Sacred Sites and Pilgrimage Routes in Kii Mountain Range\", \"country\": \"JP\", \"tags\": [\"heritage\", \"route\"], \"score\": 7},\n    {\"name\": \"nearby context\", \"country\": \"JP\", \"tags\": [\"context\"], \"score\": 4},\n    {\"name\": \"outside sample\", \"country\": \"other\", \"tags\": [\"heritage\"], \"score\": 6}\n]\nselected = []\nfor item in items:\n    has_topic_tag = \"heritage\" in item[\"tags\"] or \"route\" in item[\"tags\"]\n    if item[\"country\"] == \"JP\" and has_topic_tag and item[\"score\"] >= 5:\n        selected.append(item)\nordered = sorted(selected, key=lambda item: item[\"score\"], reverse=True)\nnames = [item[\"name\"] for item in ordered]\nprint(\" | \".join(names))",
+        "options": [
+          "Sacred Sites and Pilgrimage Routes in Kii Mountain Range",
+          "context",
+          "other",
+          "Error"
+        ],
+        "answer": "Sacred Sites and Pilgrimage Routes in Kii Mountain Range",
+        "hint": "country が JP で、score が 5 以上の要素だけを残します。その後 score の大きい順に並びます。",
+        "explanation": "条件を満たす主題データだけが残るため、出力は Sacred Sites and Pilgrimage Routes in Kii Mountain Range です。",
+        "correctAnswer": "Sacred Sites and Pilgrimage Routes in Kii Mountain Range",
+        "executionSteps": [
+          "items を1件ずつ調べる。",
+          "country・tag・score の複数条件をすべて満たす要素だけ selected に入れる。",
+          "score で並べ替え、name を取り出して連結する。"
+        ],
+        "commonMistakes": [
+          "片方の条件だけで選ぶと、余分な項目が混ざります。",
+          "出力は辞書全体ではなく name の文字列です。"
+        ],
+        "programmingExplanation": "for 文、if 条件、リストへの追加を組み合わせて出力を追跡します。Final ではさらに sort とリスト内包表記が加わります。",
+        "countryNote": "紀伊山地の霊場と参詣道を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
+      },
           {
-            id: "final_execute_JP_python_02",
-            worldId: "execute",
-            languageId: "python",
-            conceptId: "variables",
-            questionType: "output-predict",
-            title: "Kurobe Dam: multi-step-numeric-calculation",
-            prompt: "Kurobe Dam をコード内データとして使い、multi-step-numeric-calculation を確認します。",
-            code: "route = [\"start\", \"Kurobe Dam\", \"end\"]\nfor index, place in enumerate(route):\n    if index == 1:\n        print(place)",
-            options: [
-              "Kurobe Dam",
-              "other",
-              "1",
-              "Error"
-            ],
-            answer: "Kurobe Dam",
-            hint: "enumerate(route) の index が1のときだけ表示されます。真ん中の要素を見ます。",
-            explanation: "表示データにある Kurobe Dam を使い、処理の流れを追うと Kurobe Dam が出力されます。"
-          },
+        "id": "final_execute_JP_python_02",
+        "worldId": "execute",
+        "languageId": "python",
+        "conceptId": "variables",
+        "questionType": "output-predict",
+        "title": "Kurobe Dam: final-filter-sort-trace",
+        "prompt": "黒部ダムを含むデータを、条件で絞り込んで出力を追跡します。",
+        "code": "items = [\n    {\"name\": \"Kurobe Dam\", \"country\": \"JP\", \"tags\": [\"heritage\", \"route\"], \"score\": 8},\n    {\"name\": \"nearby context\", \"country\": \"JP\", \"tags\": [\"context\"], \"score\": 5},\n    {\"name\": \"outside sample\", \"country\": \"other\", \"tags\": [\"heritage\"], \"score\": 7}\n]\nselected = []\nfor item in items:\n    has_topic_tag = \"heritage\" in item[\"tags\"] or \"route\" in item[\"tags\"]\n    if item[\"country\"] == \"JP\" and has_topic_tag and item[\"score\"] >= 6:\n        selected.append(item)\nordered = sorted(selected, key=lambda item: item[\"score\"], reverse=True)\nnames = [item[\"name\"] for item in ordered]\nprint(\" | \".join(names))",
+        "options": [
+          "Kurobe Dam",
+          "context",
+          "other",
+          "Error"
+        ],
+        "answer": "Kurobe Dam",
+        "hint": "country が JP で、score が 6 以上の要素だけを残します。その後 score の大きい順に並びます。",
+        "explanation": "条件を満たす主題データだけが残るため、出力は Kurobe Dam です。",
+        "correctAnswer": "Kurobe Dam",
+        "executionSteps": [
+          "items を1件ずつ調べる。",
+          "country・tag・score の複数条件をすべて満たす要素だけ selected に入れる。",
+          "score で並べ替え、name を取り出して連結する。"
+        ],
+        "commonMistakes": [
+          "片方の条件だけで選ぶと、余分な項目が混ざります。",
+          "出力は辞書全体ではなく name の文字列です。"
+        ],
+        "programmingExplanation": "for 文、if 条件、リストへの追加を組み合わせて出力を追跡します。Final ではさらに sort とリスト内包表記が加わります。",
+        "countryNote": "黒部ダムを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
+      },
           {
-            id: "final_execute_JP_python_03",
-            worldId: "execute",
-            languageId: "python",
-            conceptId: "dicts",
-            questionType: "output-predict",
-            title: "Gokayama gassho-zukuri villages: group-count-summary",
-            prompt: "Gokayama gassho-zukuri villages をコード内データとして使い、group-count-summary を確認します。",
-            code: "items = [{\"name\": \"Gokayama gassho-zukuri villages\", \"score\": 2}, {\"name\": \"other\", \"score\": 1}]\nresult = [item[\"name\"] for item in items if item[\"score\"] > 1]\nprint(result[0])",
-            options: [
-              "Gokayama gassho-zukuri villages",
-              "other",
-              "1",
-              "Error"
-            ],
-            answer: "Gokayama gassho-zukuri villages",
-            hint: "score が1より大きい要素だけ残ります。残った要素の name が答えです。",
-            explanation: "表示データにある Gokayama gassho-zukuri villages を使い、処理の流れを追うと Gokayama gassho-zukuri villages が出力されます。"
-          }
+        "id": "final_execute_JP_python_03",
+        "worldId": "execute",
+        "languageId": "python",
+        "conceptId": "dicts",
+        "questionType": "output-predict",
+        "title": "Gokayama gassho-zukuri villages: final-filter-sort-trace",
+        "prompt": "五箇山の合掌造り集落を含むデータを、条件で絞り込んで出力を追跡します。",
+        "code": "villages = [\n    {\"name\": \"Gokayama gassho-zukuri villages\", \"area\": \"Toyama\", \"houses\": 18, \"listed\": True},\n    {\"name\": \"comparison village\", \"area\": \"Toyama\", \"houses\": 4, \"listed\": True},\n    {\"name\": \"outside sample\", \"area\": \"other\", \"houses\": 20, \"listed\": True}\n]\ngroups = {}\nfor village in villages:\n    if village[\"listed\"] and village[\"area\"] == \"Toyama\":\n        groups[village[\"area\"]] = groups.get(village[\"area\"], 0) + village[\"houses\"]\nresult = \"Gokayama gassho-zukuri villages\" if groups.get(\"Toyama\", 0) >= 20 else \"review\"\nprint(result)",
+        "options": [
+          "Gokayama gassho-zukuri villages",
+          "review",
+          "Toyama",
+          "Error"
+        ],
+        "answer": "Gokayama gassho-zukuri villages",
+        "hint": "country が JP で、score が 7 以上の要素だけを残します。その後 score の大きい順に並びます。",
+        "explanation": "条件を満たす主題データだけが残るため、出力は Gokayama gassho-zukuri villages です。",
+        "correctAnswer": "Gokayama gassho-zukuri villages",
+        "executionSteps": [
+          "listed かつ Toyama の village だけを集計する。",
+          "18 + 4 で Toyama の合計は22になる。",
+          "22 >= 20 なので Gokayama gassho-zukuri villages を表示する。"
+        ],
+        "commonMistakes": [
+          "片方の条件だけで選ぶと、余分な項目が混ざります。",
+          "出力は辞書全体ではなく name の文字列です。"
+        ],
+        "programmingExplanation": "for 文、if 条件、リストへの追加を組み合わせて出力を追跡します。Final ではさらに sort とリスト内包表記が加わります。",
+        "countryNote": "五箇山の合掌造り集落を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
+      }
         ]
       },
       javascript: {
@@ -244,62 +328,98 @@ export const FINAL_MISSIONS = {
         },
         questions: [
           {
-            id: "final_execute_JP_javascript_01",
-            worldId: "execute",
-            languageId: "javascript",
-            conceptId: "arrays",
-            questionType: "output-predict",
-            title: "Shikoku 88-temple pilgrimage: filter-reduce-route",
-            prompt: "Shikoku 88-temple pilgrimage をコード内データとして使い、filter-reduce-route を確認します。",
-            code: "const route = { from: \"start\", to: \"Shikoku 88-temple pilgrimage\" };\nconsole.log(route.to);",
-            options: [
-              "Shikoku 88-temple pilgrimage",
-              "other",
-              "1",
-              "Error"
-            ],
-            answer: "Shikoku 88-temple pilgrimage",
-            hint: "route.to を表示しています。オブジェクトの to プロパティの値を見ます。",
-            explanation: "表示データにある Shikoku 88-temple pilgrimage を使い、処理の流れを追うと Shikoku 88-temple pilgrimage が出力されます。"
-          },
+        "id": "final_execute_JP_javascript_01",
+        "worldId": "execute",
+        "languageId": "javascript",
+        "conceptId": "arrays",
+        "questionType": "output-predict",
+        "title": "Shikoku 88-temple pilgrimage: final-filter-sort-map",
+        "prompt": "四国八十八箇所巡礼を含む配列データを、filter/map/sort で処理した出力を追跡します。",
+        "code": "const items = [\n  { name: \"Shikoku 88-temple pilgrimage\", country: \"JP\", tags: [\"route\", \"heritage\"], score: 8 },\n  { name: \"local context\", country: \"JP\", tags: [\"context\"], score: 5 },\n  { name: \"outside sample\", country: \"other\", tags: [\"heritage\"], score: 7 }\n];\nconst selected = items\n  .filter(item => item.country === \"JP\")\n  .filter(item => item.tags.includes(\"heritage\") || item.tags.includes(\"route\"))\n  .filter(item => item.score >= 6)\n  .sort((a, b) => b.score - a.score)\n  .map(item => item.name);\nconsole.log(selected.join(\" | \"));",
+        "options": [
+          "Shikoku 88-temple pilgrimage",
+          "context",
+          "other",
+          "Error"
+        ],
+        "answer": "Shikoku 88-temple pilgrimage",
+        "hint": "JP かつ score が 6 以上の要素を残します。Final では tag 条件と sort も確認します。",
+        "explanation": "条件を満たす主題データだけが残るため、出力は Shikoku 88-temple pilgrimage です。",
+        "correctAnswer": "Shikoku 88-temple pilgrimage",
+        "executionSteps": [
+          "filter を段階的に適用して JP、tag、score 条件を確認する。",
+          "score の降順に並べる。",
+          "name だけを map で取り出して join する。"
+        ],
+        "commonMistakes": [
+          "filter 後の配列と map 後の配列を混同しやすいです。",
+          "other country の高い score は JP 条件で除外されます。"
+        ],
+        "programmingExplanation": "JavaScript の配列処理を読む問題です。Final では複数 filter、sort、map を続けて評価します。",
+        "countryNote": "四国八十八箇所巡礼を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
+      },
           {
-            id: "final_execute_JP_javascript_02",
-            worldId: "execute",
-            languageId: "javascript",
-            conceptId: "variables",
-            questionType: "output-predict",
-            title: "Sanriku ria coast: grouping-plus-summary",
-            prompt: "Sanriku ria coast をコード内データとして使い、grouping-plus-summary を確認します。",
-            code: "const items = [{ name: \"Sanriku ria coast\", score: 2 }, { name: \"other\", score: 1 }];\nconst result = items.filter(item => item.score > 1).map(item => item.name);\nconsole.log(result[0]);",
-            options: [
-              "Sanriku ria coast",
-              "other",
-              "1",
-              "Error"
-            ],
-            answer: "Sanriku ria coast",
-            hint: "filter で score > 1 を満たす要素だけになり、map で name に変わります。",
-            explanation: "表示データにある Sanriku ria coast を使い、処理の流れを追うと Sanriku ria coast が出力されます。"
-          },
+        "id": "final_execute_JP_javascript_02",
+        "worldId": "execute",
+        "languageId": "javascript",
+        "conceptId": "variables",
+        "questionType": "output-predict",
+        "title": "Sanriku ria coast: final-filter-sort-map",
+        "prompt": "三陸のリアス海岸を含む配列データを、filter/map/sort で処理した出力を追跡します。",
+        "code": "const coast = [\n  { name: \"Sanriku ria coast\", region: \"Sanriku\", bays: 5, kind: \"ria\" },\n  { name: \"plain coast\", region: \"other\", bays: 1, kind: \"plain\" },\n  { name: \"Sanriku inlet\", region: \"Sanriku\", bays: 2, kind: \"ria\" }\n];\nconst summary = coast.reduce((acc, item) => {\n  if (item.region === \"Sanriku\" && item.kind === \"ria\") {\n    acc.bays += item.bays;\n    acc.names.push(item.name);\n  }\n  return acc;\n}, { bays: 0, names: [] });\nconsole.log(summary.bays >= 7 ? summary.names[0] : \"review\");",
+        "options": [
+          "Sanriku ria coast",
+          "review",
+          "7",
+          "Error"
+        ],
+        "answer": "Sanriku ria coast",
+        "hint": "JP かつ score が 7 以上の要素を残します。Final では tag 条件と sort も確認します。",
+        "explanation": "条件を満たす主題データだけが残るため、出力は Sanriku ria coast です。",
+        "correctAnswer": "Sanriku ria coast",
+        "executionSteps": [
+          "reduce で Sanriku かつ ria の項目だけ合計する。",
+          "bays は 5 + 2 で 7 になる。",
+          "7 >= 7 なので最初の名前を表示する。"
+        ],
+        "commonMistakes": [
+          "filter 後の配列と map 後の配列を混同しやすいです。",
+          "other country の高い score は JP 条件で除外されます。"
+        ],
+        "programmingExplanation": "JavaScript の配列処理を読む問題です。Final では複数 filter、sort、map を続けて評価します。",
+        "countryNote": "三陸のリアス海岸を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
+      },
           {
-            id: "final_execute_JP_javascript_03",
-            worldId: "execute",
-            languageId: "javascript",
-            conceptId: "arrays",
-            questionType: "output-predict",
-            title: "Toyota Production System kanban: queue-simulation",
-            prompt: "Toyota Production System kanban をコード内データとして使い、queue-simulation を確認します。",
-            code: "const record = { name: \"Toyota Production System kanban\", values: [1, 2, 3] };\nconst total = record.values.reduce((sum, n) => sum + n, 0);\nconsole.log(total);",
-            options: [
-              "6",
-              "other",
-              "1",
-              "Error"
-            ],
-            answer: "6",
-            hint: "values の 1, 2, 3 を reduce で合計しています。初期値は0です。",
-            explanation: "表示データにある Toyota Production System kanban を使い、処理の流れを追うと 6 が出力されます。"
-          }
+        "id": "final_execute_JP_javascript_03",
+        "worldId": "execute",
+        "languageId": "javascript",
+        "conceptId": "arrays",
+        "questionType": "output-predict",
+        "title": "Toyota Production System kanban: final-filter-sort-map",
+        "prompt": "トヨタ生産方式のかんばんを含む配列データを、filter/map/sort で処理した出力を追跡します。",
+        "code": "const items = [\n  { name: \"Toyota Production System kanban\", country: \"JP\", tags: [\"route\", \"heritage\"], score: 10 },\n  { name: \"local context\", country: \"JP\", tags: [\"context\"], score: 7 },\n  { name: \"outside sample\", country: \"other\", tags: [\"heritage\"], score: 9 }\n];\nconst selected = items\n  .filter(item => item.country === \"JP\")\n  .filter(item => item.tags.includes(\"heritage\") || item.tags.includes(\"route\"))\n  .filter(item => item.score >= 8)\n  .sort((a, b) => b.score - a.score)\n  .map(item => item.name);\nconsole.log(selected.join(\" | \"));",
+        "options": [
+          "Toyota Production System kanban",
+          "context",
+          "other",
+          "Error"
+        ],
+        "answer": "Toyota Production System kanban",
+        "hint": "JP かつ score が 8 以上の要素を残します。Final では tag 条件と sort も確認します。",
+        "explanation": "条件を満たす主題データだけが残るため、出力は Toyota Production System kanban です。",
+        "correctAnswer": "Toyota Production System kanban",
+        "executionSteps": [
+          "filter を段階的に適用して JP、tag、score 条件を確認する。",
+          "score の降順に並べる。",
+          "name だけを map で取り出して join する。"
+        ],
+        "commonMistakes": [
+          "filter 後の配列と map 後の配列を混同しやすいです。",
+          "other country の高い score は JP 条件で除外されます。"
+        ],
+        "programmingExplanation": "JavaScript の配列処理を読む問題です。Final では複数 filter、sort、map を続けて評価します。",
+        "countryNote": "トヨタ生産方式のかんばんを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
+      }
         ]
       }
     }
@@ -315,188 +435,212 @@ export const FINAL_MISSIONS = {
         },
         questions: [
           {
-            id: "final_debug_JP_python_01",
-            worldId: "debug",
-            languageId: "python",
-            conceptId: "conditions",
-            questionType: "debug-step",
-            title: "Japan Standard Time UTC+9 date rollover: timezone-boundary",
-            description: "日本標準時は UTC+9 です。UTC の深夜前後を JST の日付に変換するコードで、日付の繰り上がりを扱う境界バグを直します。",
-            code: "from datetime import datetime, timedelta\n\nrecords = [\n    {\"city\": \"Tokyo\", \"utc\": \"2026-06-18 15:30\"},\n    {\"city\": \"Osaka\", \"utc\": \"2026-06-18 14:30\"}\n]\n\ndef to_jst_date(utc_text):\n    utc_time = datetime.strptime(utc_text, \"%Y-%m-%d %H:%M\")\n    jst_time = utc_time + timedelta(hours=9)\n    return utc_time.strftime(\"%Y-%m-%d\")\n\nfor record in records:\n    print(record[\"city\"], to_jst_date(record[\"utc\"]))",
-            steps: [
-              {
-                stepNum: 1,
-                stepTitle: "原因を特定",
-                prompt: "UTC 2026-06-18 15:30 に 9時間を足すと、日本標準時では 2026-06-19 00:30 になります。しかし関数は UTC 側の日付を返しています。",
-                question: "この不具合の主な原因はどれですか。",
-                options: [
-                  "JST に変換した `jst_time` ではなく、元の `utc_time` から日付文字列を作っている",
-                  "`timedelta(hours=9)` が UTC から JST への変換として常に間違っている",
-                  "records の city 名が Tokyo と Osaka になっている"
-                ],
-                answer: "JST に変換した `jst_time` ではなく、元の `utc_time` から日付文字列を作っている",
-                hint: "`jst_time` は計算されています。最後の `return` がどちらの変数を使っているか見ます。",
-                explanation: "UTC に9時間を足した後の `jst_time` を使わないと、午前0時をまたいだ日付変更が反映されません。"
-              },
-              {
-                stepNum: 2,
-                stepTitle: "修正を選ぶ",
-                prompt: "Step 1 の原因を踏まえ、返す日付を JST 変換後の値から作る必要があります。",
-                question: "正しい修正はどれですか。",
-                options: [
-                  "`return jst_time.strftime(\"%Y-%m-%d\")` に変更する",
-                  "`timedelta(hours=9)` を `timedelta(hours=-9)` に変更する",
-                  "日付だけでなく city も削除して表示を短くする"
-                ],
-                answer: "`return jst_time.strftime(\"%Y-%m-%d\")` に変更する",
-                hint: "変換後の日付を返すには、9時間足したあとの変数を使います。",
-                explanation: "`jst_time` は UTC から JST へ変換した結果なので、その日付部分を返すのが正しい修正です。"
-              },
-              {
-                stepNum: 3,
-                stepTitle: "理由と影響",
-                prompt: "修正後、UTC の 15:30 は JST の翌日 00:30 として扱われます。",
-                question: "この修正の理由または影響として正しいものはどれですか。",
-                options: [
-                  "JST 変換後の時刻から日付を作るため、午前0時をまたぐケースでも日本の日付を正しく表示できる",
-                  "UTC と JST の日付は常に同じなので、表示だけが変わる",
-                  "records の件数が増えても必ず同じ日付だけを返す"
-                ],
-                answer: "JST 変換後の時刻から日付を作るため、午前0時をまたぐケースでも日本の日付を正しく表示できる",
-                hint: "境界ケースは `15:30 + 9時間 = 00:30` のように日付が翌日になるところです。",
-                explanation: "タイムゾーン変換では、時刻だけでなく日付も変わる場合があります。変換前の日付を返すと、深夜付近の予定や記録が1日ずれてしまいます。"
-              }
+        "id": "final_debug_JP_python_01",
+        "worldId": "debug",
+        "languageId": "python",
+        "conceptId": "conditions",
+        "questionType": "debug-step",
+        "title": "Japan Standard Time UTC+9 date rollover: final-boundary-debug",
+        "description": "日本標準時 UTC+9 の日付またぎを扱う Python コードの不具合を、原因・修正・影響の3段階で確認します。",
+        "code": "from datetime import datetime, timedelta\n\nrecords = [\n    {\"name\": \"Japan Standard Time UTC+9 date rollover\", \"utc\": \"2026-04-01 15:20\", \"country\": \"JP\"},\n    {\"name\": \"comparison\", \"utc\": \"2026-04-01 02:00\", \"country\": \"JP\"}\n]\n\ndef local_date(record):\n    utc_time = datetime.strptime(record[\"utc\"], \"%Y-%m-%d %H:%M\")\n    local_time = utc_time + timedelta(hours=9)\n    return utc_time.strftime(\"%Y-%m-%d\")\n\nfor record in records:\n    if record[\"country\"] == \"JP\":\n        print(record[\"name\"], local_date(record))",
+        "steps": [
+          {
+            "stepNum": 1,
+            "stepTitle": "原因を特定",
+            "prompt": "日本標準時 UTC+9 の日付またぎのデータは存在しますが、期待した出力になりません。",
+            "question": "主な原因はどれですか。",
+            "options": [
+              "変換後の `local_time` ではなく、変換前の `utc_time` から日付を返している。",
+              "配列の長さが常に0になっている",
+              "print 文がコメントアウトされている"
             ],
-            correctAnswer: "JST 変換後の jst_time を返す / return jst_time.strftime(\"%Y-%m-%d\") / 日付またぎを正しく扱う",
-            correctedCode: "from datetime import datetime, timedelta\n\nrecords = [\n    {\"city\": \"Tokyo\", \"utc\": \"2026-06-18 15:30\"},\n    {\"city\": \"Osaka\", \"utc\": \"2026-06-18 14:30\"}\n]\n\ndef to_jst_date(utc_text):\n    utc_time = datetime.strptime(utc_text, \"%Y-%m-%d %H:%M\")\n    jst_time = utc_time + timedelta(hours=9)\n    return jst_time.strftime(\"%Y-%m-%d\")\n\nfor record in records:\n    print(record[\"city\"], to_jst_date(record[\"utc\"]))",
-            executionSteps: [
-              "UTC 文字列を `datetime.strptime` で日時に変換する。",
-              "`timedelta(hours=9)` を足して JST の日時を作る。",
-              "バグ版では `utc_time.strftime(...)` を返すため、日付またぎが反映されない。",
-              "修正版では `jst_time.strftime(...)` を返すため、Tokyo は 2026-06-19 になる。"
-            ],
-            commonMistakes: [
-              "9時間足す処理自体ではなく、最後に返す変数が間違っています。",
-              "UTC の日付だけを見ると、JST の深夜後の日付を見落とします。"
-            ],
-            programmingExplanation: "日時処理では、中間変数を作っただけでは結果に反映されません。変換後の値を後続処理で使う必要があります。特にタイムゾーンは午前0時付近で日付が変わるため、境界ケースをテストすることが大切です。",
-            countryNote: "日本標準時は UTC+9 として扱われます。UTC の午後遅い時刻は、日本では翌日の深夜になることがあります。",
-            debugExplanation: {
-              cause: "JST に変換した `jst_time` を作っているのに、戻り値では変換前の `utc_time` を使っている。",
-              fix: "`return utc_time.strftime(...)` を `return jst_time.strftime(...)` に変更する。",
-              why: "JST の日付は9時間加算後の日時から計算しないと、午前0時をまたぐケースで1日ずれる。",
-              impact: "日本時間の日付表示が正しくなり、深夜の予定・記録・締切などを誤った日付で扱う危険を減らせる。",
-              correctedCode: "from datetime import datetime, timedelta\n\nrecords = [\n    {\"city\": \"Tokyo\", \"utc\": \"2026-06-18 15:30\"},\n    {\"city\": \"Osaka\", \"utc\": \"2026-06-18 14:30\"}\n]\n\ndef to_jst_date(utc_text):\n    utc_time = datetime.strptime(utc_text, \"%Y-%m-%d %H:%M\")\n    jst_time = utc_time + timedelta(hours=9)\n    return jst_time.strftime(\"%Y-%m-%d\")\n\nfor record in records:\n    print(record[\"city\"], to_jst_date(record[\"utc\"]))"
-            }
+            "answer": "変換後の `local_time` ではなく、変換前の `utc_time` から日付を返している。",
+            "hint": "値を作っている行ではなく、比較または return で使っている変数を見ます。",
+            "explanation": "変換後の `local_time` ではなく、変換前の `utc_time` から日付を返している。"
           },
           {
-            id: "final_debug_JP_python_02",
-            worldId: "debug",
-            languageId: "python",
-            conceptId: "regex",
-            questionType: "debug-step",
-            title: "Japanese postal code format: regex-validation",
-            description: "Japanese postal code format をコード内データとして使い、regex-validation を確認します。",
-            code: "data = {\"japanese\": \"Japanese postal code format\"}\nkey = \"Japanese\"\nprint(data[key])",
-            steps: [
-              {
-                stepNum: 1,
-                stepTitle: "原因を特定",
-                prompt: "Japanese postal code format をコード内データとして使い、regex-validation を確認します。",
-                question: "この不具合の主な原因はどれですか。",
-                options: [
-                  "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
-                  "配列の長さが長すぎる",
-                  "コメントがない"
-                ],
-                answer: "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
-                hint: "data 側のキー名と、検索に使っている key の文字列を見比べます。表記ゆれや余分な文字があると見つかりません。",
-                explanation: "Japanese postal code format のデータは存在しますが、キー表記が揃っていません。"
-              },
-              {
-                stepNum: 2,
-                stepTitle: "修正を選ぶ",
-                prompt: "Step 1 の原因を踏まえて、最も安全な修正を選びます。",
-                question: "正しい修正はどれですか。",
-                options: [
-                  "key = key.lower() のように、検索前にキー表記を揃える",
-                  "データを空にする",
-                  "エラーを無視する"
-                ],
-                answer: "key = key.lower() のように、検索前にキー表記を揃える",
-                hint: "データを消すのではなく、検索前の key を data 側のキーと同じ形にそろえる修正を選びます。",
-                explanation: "正規化してから検索すると、表記揺れに強くなります。"
-              },
-              {
-                stepNum: 3,
-                stepTitle: "理由と影響",
-                prompt: "修正後の影響を確認します。",
-                question: "この修正の理由または影響として正しいものはどれですか。",
-                options: [
-                  "同じ事実データを、入力表記の揺れで見失わずに取得できる",
-                  "事実データが不要になる",
-                  "常に最初の項目だけを返す"
-                ],
-                answer: "同じ事実データを、入力表記の揺れで見失わずに取得できる",
-                hint: "入力や表示のゆれを吸収すると、同じ事実データを安全に再利用できるかを考えます。",
-                explanation: "キーの正規化はローカライズされた検索や表示で起きやすい不一致を減らします。"
-              }
-            ]
+            "stepNum": 2,
+            "stepTitle": "修正を選ぶ",
+            "prompt": "Step 1 の原因を踏まえて、最小で安全な修正を選びます。",
+            "question": "正しい修正はどれですか。",
+            "options": [
+              "`return local_time.strftime(\"%Y-%m-%d\")` に変更する",
+              "データを空にしてエラーを避ける",
+              "常に最初の record を表示する"
+            ],
+            "answer": "`return local_time.strftime(\"%Y-%m-%d\")` に変更する",
+            "hint": "データを消さず、処理の対象になる値を正しくそろえる修正を選びます。",
+            "explanation": "`return local_time.strftime(\"%Y-%m-%d\")` に変更する"
           },
           {
-            id: "final_debug_JP_python_03",
-            worldId: "debug",
-            languageId: "python",
-            conceptId: "dicts",
-            questionType: "debug-step",
-            title: "JIS prefecture codes: zero-padding-key-mismatch",
-            description: "JIS prefecture codes をコード内データとして使い、zero-padding-key-mismatch を確認します。",
-            code: "data = {\"jispref\": \"JIS prefecture codes\"}\nkey = \"JIS pref\"\nprint(data[key])",
-            steps: [
-              {
-                stepNum: 1,
-                stepTitle: "原因を特定",
-                prompt: "JIS prefecture codes をコード内データとして使い、zero-padding-key-mismatch を確認します。",
-                question: "この不具合の主な原因はどれですか。",
-                options: [
-                  "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
-                  "配列の長さが長すぎる",
-                  "コメントがない"
-                ],
-                answer: "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
-                hint: "data 側のキー名と、検索に使っている key の文字列を見比べます。表記ゆれや余分な文字があると見つかりません。",
-                explanation: "JIS prefecture codes のデータは存在しますが、キー表記が揃っていません。"
-              },
-              {
-                stepNum: 2,
-                stepTitle: "修正を選ぶ",
-                prompt: "Step 1 の原因を踏まえて、最も安全な修正を選びます。",
-                question: "正しい修正はどれですか。",
-                options: [
-                  "key = key.lower() のように、検索前にキー表記を揃える",
-                  "データを空にする",
-                  "エラーを無視する"
-                ],
-                answer: "key = key.lower() のように、検索前にキー表記を揃える",
-                hint: "データを消すのではなく、検索前の key を data 側のキーと同じ形にそろえる修正を選びます。",
-                explanation: "正規化してから検索すると、表記揺れに強くなります。"
-              },
-              {
-                stepNum: 3,
-                stepTitle: "理由と影響",
-                prompt: "修正後の影響を確認します。",
-                question: "この修正の理由または影響として正しいものはどれですか。",
-                options: [
-                  "同じ事実データを、入力表記の揺れで見失わずに取得できる",
-                  "事実データが不要になる",
-                  "常に最初の項目だけを返す"
-                ],
-                answer: "同じ事実データを、入力表記の揺れで見失わずに取得できる",
-                hint: "入力や表示のゆれを吸収すると、同じ事実データを安全に再利用できるかを考えます。",
-                explanation: "キーの正規化はローカライズされた検索や表示で起きやすい不一致を減らします。"
-              }
-            ]
+            "stepNum": 3,
+            "stepTitle": "理由と影響",
+            "prompt": "修正後の動作がなぜ安全になるかを確認します。",
+            "question": "修正の影響として正しいものはどれですか。",
+            "options": [
+              "午前0時をまたぐ日本時間の日付が正しく表示される。",
+              "国別データが不要になる",
+              "すべての入力が同じ結果になる"
+            ],
+            "answer": "午前0時をまたぐ日本時間の日付が正しく表示される。",
+            "hint": "修正で改善される境界ケースまたは表記ゆれに注目します。",
+            "explanation": "午前0時をまたぐ日本時間の日付が正しく表示される。"
           }
+        ],
+        "correctAnswer": "変換後の `local_time` ではなく、変換前の `utc_time` から日付を返している。 / `return local_time.strftime(\"%Y-%m-%d\")` に変更する / 午前0時をまたぐ日本時間の日付が正しく表示される。",
+        "correctedCode": "from datetime import datetime, timedelta\n\nrecords = [\n    {\"name\": \"Japan Standard Time UTC+9 date rollover\", \"utc\": \"2026-04-01 15:20\", \"country\": \"JP\"},\n    {\"name\": \"comparison\", \"utc\": \"2026-04-01 02:00\", \"country\": \"JP\"}\n]\n\ndef local_date(record):\n    utc_time = datetime.strptime(record[\"utc\"], \"%Y-%m-%d %H:%M\")\n    local_time = utc_time + timedelta(hours=9)\n    return local_time.strftime(\"%Y-%m-%d\")\n\nfor record in records:\n    if record[\"country\"] == \"JP\":\n        print(record[\"name\"], local_date(record))",
+        "commonMistakes": [
+          "症状だけを見てデータ削除で直そうとしないこと。",
+          "中間値を作っても、最後の比較や return で使わなければ反映されません。"
+        ],
+        "programmingExplanation": "DEBUG では、原因の行、修正の行、修正後の影響を分けて考えます。データを保ったまま、比較または境界処理を正しくします。",
+        "countryNote": "日本標準時 UTC+9 の日付またぎを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。",
+        "debugExplanation": {
+          "cause": "変換後の `local_time` ではなく、変換前の `utc_time` から日付を返している。",
+          "fix": "`return local_time.strftime(\"%Y-%m-%d\")` に変更する",
+          "why": "原因になっている値の表現または時刻境界を、処理前後で一貫させる必要があるため。",
+          "impact": "午前0時をまたぐ日本時間の日付が正しく表示される。",
+          "correctedCode": "from datetime import datetime, timedelta\n\nrecords = [\n    {\"name\": \"Japan Standard Time UTC+9 date rollover\", \"utc\": \"2026-04-01 15:20\", \"country\": \"JP\"},\n    {\"name\": \"comparison\", \"utc\": \"2026-04-01 02:00\", \"country\": \"JP\"}\n]\n\ndef local_date(record):\n    utc_time = datetime.strptime(record[\"utc\"], \"%Y-%m-%d %H:%M\")\n    local_time = utc_time + timedelta(hours=9)\n    return local_time.strftime(\"%Y-%m-%d\")\n\nfor record in records:\n    if record[\"country\"] == \"JP\":\n        print(record[\"name\"], local_date(record))"
+        }
+      },
+          {
+        "id": "final_debug_JP_python_02",
+        "worldId": "debug",
+        "languageId": "python",
+        "conceptId": "regex",
+        "questionType": "debug-step",
+        "title": "Japanese postal code format: final-boundary-debug",
+        "description": "日本の郵便番号形式を扱う Python コードの不具合を、原因・修正・影響の3段階で確認します。",
+        "code": "from datetime import datetime, timedelta\n\nrecords = [\n    {\"name\": \"Japanese postal code format\", \"utc\": \"2026-04-01 15:20\", \"country\": \"JP\"},\n    {\"name\": \"comparison\", \"utc\": \"2026-04-01 02:00\", \"country\": \"JP\"}\n]\n\ndef local_date(record):\n    utc_time = datetime.strptime(record[\"utc\"], \"%Y-%m-%d %H:%M\")\n    local_time = utc_time + timedelta(hours=9)\n    return utc_time.strftime(\"%Y-%m-%d\")\n\nfor record in records:\n    if record[\"country\"] == \"JP\":\n        print(record[\"name\"], local_date(record))",
+        "steps": [
+          {
+            "stepNum": 1,
+            "stepTitle": "原因を特定",
+            "prompt": "日本の郵便番号形式のデータは存在しますが、期待した出力になりません。",
+            "question": "主な原因はどれですか。",
+            "options": [
+              "変換後の `local_time` ではなく、変換前の `utc_time` から日付を返している。",
+              "配列の長さが常に0になっている",
+              "print 文がコメントアウトされている"
+            ],
+            "answer": "変換後の `local_time` ではなく、変換前の `utc_time` から日付を返している。",
+            "hint": "値を作っている行ではなく、比較または return で使っている変数を見ます。",
+            "explanation": "変換後の `local_time` ではなく、変換前の `utc_time` から日付を返している。"
+          },
+          {
+            "stepNum": 2,
+            "stepTitle": "修正を選ぶ",
+            "prompt": "Step 1 の原因を踏まえて、最小で安全な修正を選びます。",
+            "question": "正しい修正はどれですか。",
+            "options": [
+              "`return local_time.strftime(\"%Y-%m-%d\")` に変更する",
+              "データを空にしてエラーを避ける",
+              "常に最初の record を表示する"
+            ],
+            "answer": "`return local_time.strftime(\"%Y-%m-%d\")` に変更する",
+            "hint": "データを消さず、処理の対象になる値を正しくそろえる修正を選びます。",
+            "explanation": "`return local_time.strftime(\"%Y-%m-%d\")` に変更する"
+          },
+          {
+            "stepNum": 3,
+            "stepTitle": "理由と影響",
+            "prompt": "修正後の動作がなぜ安全になるかを確認します。",
+            "question": "修正の影響として正しいものはどれですか。",
+            "options": [
+              "午前0時をまたぐ日本時間の日付が正しく表示される。",
+              "国別データが不要になる",
+              "すべての入力が同じ結果になる"
+            ],
+            "answer": "午前0時をまたぐ日本時間の日付が正しく表示される。",
+            "hint": "修正で改善される境界ケースまたは表記ゆれに注目します。",
+            "explanation": "午前0時をまたぐ日本時間の日付が正しく表示される。"
+          }
+        ],
+        "correctAnswer": "変換後の `local_time` ではなく、変換前の `utc_time` から日付を返している。 / `return local_time.strftime(\"%Y-%m-%d\")` に変更する / 午前0時をまたぐ日本時間の日付が正しく表示される。",
+        "correctedCode": "from datetime import datetime, timedelta\n\nrecords = [\n    {\"name\": \"Japanese postal code format\", \"utc\": \"2026-04-01 15:20\", \"country\": \"JP\"},\n    {\"name\": \"comparison\", \"utc\": \"2026-04-01 02:00\", \"country\": \"JP\"}\n]\n\ndef local_date(record):\n    utc_time = datetime.strptime(record[\"utc\"], \"%Y-%m-%d %H:%M\")\n    local_time = utc_time + timedelta(hours=9)\n    return local_time.strftime(\"%Y-%m-%d\")\n\nfor record in records:\n    if record[\"country\"] == \"JP\":\n        print(record[\"name\"], local_date(record))",
+        "commonMistakes": [
+          "症状だけを見てデータ削除で直そうとしないこと。",
+          "中間値を作っても、最後の比較や return で使わなければ反映されません。"
+        ],
+        "programmingExplanation": "DEBUG では、原因の行、修正の行、修正後の影響を分けて考えます。データを保ったまま、比較または境界処理を正しくします。",
+        "countryNote": "日本の郵便番号形式を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。",
+        "debugExplanation": {
+          "cause": "変換後の `local_time` ではなく、変換前の `utc_time` から日付を返している。",
+          "fix": "`return local_time.strftime(\"%Y-%m-%d\")` に変更する",
+          "why": "原因になっている値の表現または時刻境界を、処理前後で一貫させる必要があるため。",
+          "impact": "午前0時をまたぐ日本時間の日付が正しく表示される。",
+          "correctedCode": "from datetime import datetime, timedelta\n\nrecords = [\n    {\"name\": \"Japanese postal code format\", \"utc\": \"2026-04-01 15:20\", \"country\": \"JP\"},\n    {\"name\": \"comparison\", \"utc\": \"2026-04-01 02:00\", \"country\": \"JP\"}\n]\n\ndef local_date(record):\n    utc_time = datetime.strptime(record[\"utc\"], \"%Y-%m-%d %H:%M\")\n    local_time = utc_time + timedelta(hours=9)\n    return local_time.strftime(\"%Y-%m-%d\")\n\nfor record in records:\n    if record[\"country\"] == \"JP\":\n        print(record[\"name\"], local_date(record))"
+        }
+      },
+          {
+        "id": "final_debug_JP_python_03",
+        "worldId": "debug",
+        "languageId": "python",
+        "conceptId": "dicts",
+        "questionType": "debug-step",
+        "title": "JIS prefecture codes: final-boundary-debug",
+        "description": "JIS 都道府県コードを扱う Python コードの不具合を、原因・修正・影響の3段階で確認します。",
+        "code": "from datetime import datetime, timedelta\n\nrecords = [\n    {\"name\": \"JIS prefecture codes\", \"utc\": \"2026-04-01 15:20\", \"country\": \"JP\"},\n    {\"name\": \"comparison\", \"utc\": \"2026-04-01 02:00\", \"country\": \"JP\"}\n]\n\ndef local_date(record):\n    utc_time = datetime.strptime(record[\"utc\"], \"%Y-%m-%d %H:%M\")\n    local_time = utc_time + timedelta(hours=9)\n    return utc_time.strftime(\"%Y-%m-%d\")\n\nfor record in records:\n    if record[\"country\"] == \"JP\":\n        print(record[\"name\"], local_date(record))",
+        "steps": [
+          {
+            "stepNum": 1,
+            "stepTitle": "原因を特定",
+            "prompt": "JIS 都道府県コードのデータは存在しますが、期待した出力になりません。",
+            "question": "主な原因はどれですか。",
+            "options": [
+              "変換後の `local_time` ではなく、変換前の `utc_time` から日付を返している。",
+              "配列ではなく Set を使っていること",
+              "print 文がコメントアウトされている"
+            ],
+            "answer": "変換後の `local_time` ではなく、変換前の `utc_time` から日付を返している。",
+            "hint": "値を作っている行ではなく、比較または return で使っている変数を見ます。",
+            "explanation": "変換後の `local_time` ではなく、変換前の `utc_time` から日付を返している。"
+          },
+          {
+            "stepNum": 2,
+            "stepTitle": "修正を選ぶ",
+            "prompt": "Step 1 の原因を踏まえて、最小で安全な修正を選びます。",
+            "question": "正しい修正はどれですか。",
+            "options": [
+              "`return local_time.strftime(\"%Y-%m-%d\")` に変更する",
+              "表示する文字列だけを uppercase にする",
+              "常に最初の record を表示する"
+            ],
+            "answer": "`return local_time.strftime(\"%Y-%m-%d\")` に変更する",
+            "hint": "データを消さず、処理の対象になる値を正しくそろえる修正を選びます。",
+            "explanation": "`return local_time.strftime(\"%Y-%m-%d\")` に変更する"
+          },
+          {
+            "stepNum": 3,
+            "stepTitle": "理由と影響",
+            "prompt": "修正後の動作がなぜ安全になるかを確認します。",
+            "question": "修正の影響として正しいものはどれですか。",
+            "options": [
+              "午前0時をまたぐ日本時間の日付が正しく表示される。",
+              "すべての国データを同じ年度へ丸める",
+              "すべての入力が同じ結果になる"
+            ],
+            "answer": "午前0時をまたぐ日本時間の日付が正しく表示される。",
+            "hint": "修正で改善される境界ケースまたは表記ゆれに注目します。",
+            "explanation": "午前0時をまたぐ日本時間の日付が正しく表示される。"
+          }
+        ],
+        "correctAnswer": "変換後の `local_time` ではなく、変換前の `utc_time` から日付を返している。 / `return local_time.strftime(\"%Y-%m-%d\")` に変更する / 午前0時をまたぐ日本時間の日付が正しく表示される。",
+        "correctedCode": "from datetime import datetime, timedelta\n\nrecords = [\n    {\"name\": \"JIS prefecture codes\", \"utc\": \"2026-04-01 15:20\", \"country\": \"JP\"},\n    {\"name\": \"comparison\", \"utc\": \"2026-04-01 02:00\", \"country\": \"JP\"}\n]\n\ndef local_date(record):\n    utc_time = datetime.strptime(record[\"utc\"], \"%Y-%m-%d %H:%M\")\n    local_time = utc_time + timedelta(hours=9)\n    return local_time.strftime(\"%Y-%m-%d\")\n\nfor record in records:\n    if record[\"country\"] == \"JP\":\n        print(record[\"name\"], local_date(record))",
+        "commonMistakes": [
+          "症状だけを見てデータ削除で直そうとしないこと。",
+          "中間値を作っても、最後の比較や return で使わなければ反映されません。"
+        ],
+        "programmingExplanation": "DEBUG では、原因の行、修正の行、修正後の影響を分けて考えます。データを保ったまま、比較または境界処理を正しくします。",
+        "countryNote": "JIS 都道府県コードを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。",
+        "debugExplanation": {
+          "cause": "変換後の `local_time` ではなく、変換前の `utc_time` から日付を返している。",
+          "fix": "`return local_time.strftime(\"%Y-%m-%d\")` に変更する",
+          "why": "原因になっている値の表現または時刻境界を、処理前後で一貫させる必要があるため。",
+          "impact": "午前0時をまたぐ日本時間の日付が正しく表示される。",
+          "correctedCode": "from datetime import datetime, timedelta\n\nrecords = [\n    {\"name\": \"JIS prefecture codes\", \"utc\": \"2026-04-01 15:20\", \"country\": \"JP\"},\n    {\"name\": \"comparison\", \"utc\": \"2026-04-01 02:00\", \"country\": \"JP\"}\n]\n\ndef local_date(record):\n    utc_time = datetime.strptime(record[\"utc\"], \"%Y-%m-%d %H:%M\")\n    local_time = utc_time + timedelta(hours=9)\n    return local_time.strftime(\"%Y-%m-%d\")\n\nfor record in records:\n    if record[\"country\"] == \"JP\":\n        print(record[\"name\"], local_date(record))"
+        }
+      }
         ]
       },
       javascript: {
@@ -508,167 +652,212 @@ export const FINAL_MISSIONS = {
         },
         questions: [
           {
-            id: "final_debug_JP_javascript_01",
-            worldId: "debug",
-            languageId: "javascript",
-            conceptId: "variables",
-            questionType: "debug-step",
-            title: "Japanese telephone-number formatting: regex-normalization",
-            description: "Japanese telephone-number formatting をコード内データとして使い、regex-normalization を確認します。",
-            code: "const data = { \"japanese\": \"Japanese telephone-number formatting\" };\nconst key = \"Japanese\";\nconsole.log(data[key]);",
-            steps: [
-              {
-                stepNum: 1,
-                stepTitle: "原因を特定",
-                prompt: "Japanese telephone-number formatting をコード内データとして使い、regex-normalization を確認します。",
-                question: "この不具合の主な原因はどれですか。",
-                options: [
-                  "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
-                  "配列の長さが長すぎる",
-                  "コメントがない"
-                ],
-                answer: "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
-                hint: "data 側のキー名と、検索に使っている key の文字列を見比べます。表記ゆれや余分な文字があると見つかりません。",
-                explanation: "Japanese telephone-number formatting のデータは存在しますが、キー表記が揃っていません。"
-              },
-              {
-                stepNum: 2,
-                stepTitle: "修正を選ぶ",
-                prompt: "Step 1 の原因を踏まえて、最も安全な修正を選びます。",
-                question: "正しい修正はどれですか。",
-                options: [
-                  "const normalizedKey = key.toLowerCase(); のように、検索前にキー表記を揃える",
-                  "データを空にする",
-                  "エラーを無視する"
-                ],
-                answer: "const normalizedKey = key.toLowerCase(); のように、検索前にキー表記を揃える",
-                hint: "データを消すのではなく、検索前の key を data 側のキーと同じ形にそろえる修正を選びます。",
-                explanation: "正規化してから検索すると、表記揺れに強くなります。"
-              },
-              {
-                stepNum: 3,
-                stepTitle: "理由と影響",
-                prompt: "修正後の影響を確認します。",
-                question: "この修正の理由または影響として正しいものはどれですか。",
-                options: [
-                  "同じ事実データを、入力表記の揺れで見失わずに取得できる",
-                  "事実データが不要になる",
-                  "常に最初の項目だけを返す"
-                ],
-                answer: "同じ事実データを、入力表記の揺れで見失わずに取得できる",
-                hint: "入力や表示のゆれを吸収すると、同じ事実データを安全に再利用できるかを考えます。",
-                explanation: "キーの正規化はローカライズされた検索や表示で起きやすい不一致を減らします。"
-              }
-            ]
+        "id": "final_debug_JP_javascript_01",
+        "worldId": "debug",
+        "languageId": "javascript",
+        "conceptId": "variables",
+        "questionType": "debug-step",
+        "title": "Japanese telephone-number formatting: final-boundary-debug",
+        "description": "日本の電話番号整形を扱う JavaScript コードの不具合を、原因・修正・影響の3段階で確認します。",
+        "code": "const records = [\n  { name: \"Japanese telephone-number formatting\", date: \"2026-03-31\", country: \"JP\" },\n  { name: \"next term\", date: \"2026-04-01\", country: \"JP\" }\n];\nfunction fiscalYear(dateText) {\n  const date = new Date(dateText + \"T00:00:00+09:00\");\n  return date.getFullYear();\n}\nfor (const record of records) {\n  console.log(record.name, fiscalYear(record.date));\n}",
+        "steps": [
+          {
+            "stepNum": 1,
+            "stepTitle": "原因を特定",
+            "prompt": "日本の電話番号整形のデータはあるのに期待通り表示されません。",
+            "question": "主な原因はどれですか。",
+            "options": [
+              "年度が4月開始なのに、常に暦年 `getFullYear()` を返している。",
+              "配列の末尾だけが処理される",
+              "console.log が非同期で遅れている"
+            ],
+            "answer": "年度が4月開始なのに、常に暦年 `getFullYear()` を返している。",
+            "hint": "比較式または年度計算の条件を確認します。",
+            "explanation": "年度が4月開始なのに、常に暦年 `getFullYear()` を返している。"
           },
           {
-            id: "final_debug_JP_javascript_02",
-            worldId: "debug",
-            languageId: "javascript",
-            conceptId: "variables",
-            questionType: "debug-step",
-            title: "Japanese vertical writing/tategaki: layout-config-defect",
-            description: "Japanese vertical writing/tategaki をコード内データとして使い、layout-config-defect を確認します。",
-            code: "const data = { \"japanese\": \"Japanese vertical writing/tategaki\" };\nconst key = \"Japanese\";\nconsole.log(data[key]);",
-            steps: [
-              {
-                stepNum: 1,
-                stepTitle: "原因を特定",
-                prompt: "Japanese vertical writing/tategaki をコード内データとして使い、layout-config-defect を確認します。",
-                question: "この不具合の主な原因はどれですか。",
-                options: [
-                  "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
-                  "配列の長さが長すぎる",
-                  "コメントがない"
-                ],
-                answer: "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
-                hint: "data 側のキー名と、検索に使っている key の文字列を見比べます。表記ゆれや余分な文字があると見つかりません。",
-                explanation: "Japanese vertical writing/tategaki のデータは存在しますが、キー表記が揃っていません。"
-              },
-              {
-                stepNum: 2,
-                stepTitle: "修正を選ぶ",
-                prompt: "Step 1 の原因を踏まえて、最も安全な修正を選びます。",
-                question: "正しい修正はどれですか。",
-                options: [
-                  "const normalizedKey = key.toLowerCase(); のように、検索前にキー表記を揃える",
-                  "データを空にする",
-                  "エラーを無視する"
-                ],
-                answer: "const normalizedKey = key.toLowerCase(); のように、検索前にキー表記を揃える",
-                hint: "データを消すのではなく、検索前の key を data 側のキーと同じ形にそろえる修正を選びます。",
-                explanation: "正規化してから検索すると、表記揺れに強くなります。"
-              },
-              {
-                stepNum: 3,
-                stepTitle: "理由と影響",
-                prompt: "修正後の影響を確認します。",
-                question: "この修正の理由または影響として正しいものはどれですか。",
-                options: [
-                  "同じ事実データを、入力表記の揺れで見失わずに取得できる",
-                  "事実データが不要になる",
-                  "常に最初の項目だけを返す"
-                ],
-                answer: "同じ事実データを、入力表記の揺れで見失わずに取得できる",
-                hint: "入力や表示のゆれを吸収すると、同じ事実データを安全に再利用できるかを考えます。",
-                explanation: "キーの正規化はローカライズされた検索や表示で起きやすい不一致を減らします。"
-              }
-            ]
+            "stepNum": 2,
+            "stepTitle": "修正を選ぶ",
+            "prompt": "Step 1 の原因を踏まえて、安全な修正を選びます。",
+            "question": "正しい修正はどれですか。",
+            "options": [
+              "月が4月より前なら前年を返す条件を追加する",
+              "records を空配列にする",
+              "常に true を返す"
+            ],
+            "answer": "月が4月より前なら前年を返す条件を追加する",
+            "hint": "データを消さず、条件式の扱いを正しくします。",
+            "explanation": "月が4月より前なら前年を返す条件を追加する"
           },
           {
-            id: "final_debug_JP_javascript_03",
-            worldId: "debug",
-            languageId: "javascript",
-            conceptId: "variables",
-            questionType: "debug-step",
-            title: "Japanese fiscal year beginning in April: date-boundary",
-            description: "Japanese fiscal year beginning in April をコード内データとして使い、date-boundary を確認します。",
-            code: "const data = { \"japanese\": \"Japanese fiscal year beginning in April\" };\nconst key = \"Japanese\";\nconsole.log(data[key]);",
-            steps: [
-              {
-                stepNum: 1,
-                stepTitle: "原因を特定",
-                prompt: "Japanese fiscal year beginning in April をコード内データとして使い、date-boundary を確認します。",
-                question: "この不具合の主な原因はどれですか。",
-                options: [
-                  "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
-                  "配列の長さが長すぎる",
-                  "コメントがない"
-                ],
-                answer: "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
-                hint: "data 側のキー名と、検索に使っている key の文字列を見比べます。表記ゆれや余分な文字があると見つかりません。",
-                explanation: "Japanese fiscal year beginning in April のデータは存在しますが、キー表記が揃っていません。"
-              },
-              {
-                stepNum: 2,
-                stepTitle: "修正を選ぶ",
-                prompt: "Step 1 の原因を踏まえて、最も安全な修正を選びます。",
-                question: "正しい修正はどれですか。",
-                options: [
-                  "const normalizedKey = key.toLowerCase(); のように、検索前にキー表記を揃える",
-                  "データを空にする",
-                  "エラーを無視する"
-                ],
-                answer: "const normalizedKey = key.toLowerCase(); のように、検索前にキー表記を揃える",
-                hint: "データを消すのではなく、検索前の key を data 側のキーと同じ形にそろえる修正を選びます。",
-                explanation: "正規化してから検索すると、表記揺れに強くなります。"
-              },
-              {
-                stepNum: 3,
-                stepTitle: "理由と影響",
-                prompt: "修正後の影響を確認します。",
-                question: "この修正の理由または影響として正しいものはどれですか。",
-                options: [
-                  "同じ事実データを、入力表記の揺れで見失わずに取得できる",
-                  "事実データが不要になる",
-                  "常に最初の項目だけを返す"
-                ],
-                answer: "同じ事実データを、入力表記の揺れで見失わずに取得できる",
-                hint: "入力や表示のゆれを吸収すると、同じ事実データを安全に再利用できるかを考えます。",
-                explanation: "キーの正規化はローカライズされた検索や表示で起きやすい不一致を減らします。"
-              }
-            ]
+            "stepNum": 3,
+            "stepTitle": "理由と影響",
+            "prompt": "修正後の影響を確認します。",
+            "question": "修正の影響として正しいものはどれですか。",
+            "options": [
+              "1月から3月の日付を前年度として扱える。",
+              "国別データが不要になる",
+              "どの入力でも同じ record を返す"
+            ],
+            "answer": "1月から3月の日付を前年度として扱える。",
+            "hint": "表記ゆれまたは日付境界を正しく扱えるかを見ます。",
+            "explanation": "1月から3月の日付を前年度として扱える。"
           }
+        ],
+        "correctAnswer": "年度が4月開始なのに、常に暦年 `getFullYear()` を返している。 / 月が4月より前なら前年を返す条件を追加する / 1月から3月の日付を前年度として扱える。",
+        "correctedCode": "const records = [\n  { name: \"Japanese telephone-number formatting\", date: \"2026-03-31\", country: \"JP\" },\n  { name: \"next term\", date: \"2026-04-01\", country: \"JP\" }\n];\nfunction fiscalYear(dateText) {\n  const date = new Date(dateText + \"T00:00:00+09:00\");\n  return date.getMonth() < 3 ? date.getFullYear() - 1 : date.getFullYear();\n}\nfor (const record of records) {\n  console.log(record.name, fiscalYear(record.date));\n}",
+        "commonMistakes": [
+          "エラーを隠す修正ではなく、条件式を正しくします。",
+          "日本語や日付の仕様をコードの条件に反映する必要があります。"
+        ],
+        "programmingExplanation": "DEBUG は、壊れている条件式を特定し、最小修正で仕様に合わせる練習です。",
+        "countryNote": "日本の電話番号整形を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。",
+        "debugExplanation": {
+          "cause": "年度が4月開始なのに、常に暦年 `getFullYear()` を返している。",
+          "fix": "月が4月より前なら前年を返す条件を追加する",
+          "why": "仕様に合わせた比較や境界条件を入れないと、特定の入力だけ失敗するため。",
+          "impact": "1月から3月の日付を前年度として扱える。",
+          "correctedCode": "const records = [\n  { name: \"Japanese telephone-number formatting\", date: \"2026-03-31\", country: \"JP\" },\n  { name: \"next term\", date: \"2026-04-01\", country: \"JP\" }\n];\nfunction fiscalYear(dateText) {\n  const date = new Date(dateText + \"T00:00:00+09:00\");\n  return date.getMonth() < 3 ? date.getFullYear() - 1 : date.getFullYear();\n}\nfor (const record of records) {\n  console.log(record.name, fiscalYear(record.date));\n}"
+        }
+      },
+          {
+        "id": "final_debug_JP_javascript_02",
+        "worldId": "debug",
+        "languageId": "javascript",
+        "conceptId": "variables",
+        "questionType": "debug-step",
+        "title": "Japanese vertical writing/tategaki: final-boundary-debug",
+        "description": "日本語の縦書きを扱う JavaScript コードの不具合を、原因・修正・影響の3段階で確認します。",
+        "code": "const records = [\n  { name: \"Japanese vertical writing/tategaki\", date: \"2026-03-31\", country: \"JP\" },\n  { name: \"next term\", date: \"2026-04-01\", country: \"JP\" }\n];\nfunction fiscalYear(dateText) {\n  const date = new Date(dateText + \"T00:00:00+09:00\");\n  return date.getFullYear();\n}\nfor (const record of records) {\n  console.log(record.name, fiscalYear(record.date));\n}",
+        "steps": [
+          {
+            "stepNum": 1,
+            "stepTitle": "原因を特定",
+            "prompt": "日本語の縦書きのデータはあるのに期待通り表示されません。",
+            "question": "主な原因はどれですか。",
+            "options": [
+              "年度が4月開始なのに、常に暦年 `getFullYear()` を返している。",
+              "配列ではなく Set を使っていること",
+              "console.log が非同期で遅れている"
+            ],
+            "answer": "年度が4月開始なのに、常に暦年 `getFullYear()` を返している。",
+            "hint": "比較式または年度計算の条件を確認します。",
+            "explanation": "年度が4月開始なのに、常に暦年 `getFullYear()` を返している。"
+          },
+          {
+            "stepNum": 2,
+            "stepTitle": "修正を選ぶ",
+            "prompt": "Step 1 の原因を踏まえて、安全な修正を選びます。",
+            "question": "正しい修正はどれですか。",
+            "options": [
+              "月が4月より前なら前年を返す条件を追加する",
+              "表示する文字列だけを uppercase にする",
+              "常に true を返す"
+            ],
+            "answer": "月が4月より前なら前年を返す条件を追加する",
+            "hint": "データを消さず、条件式の扱いを正しくします。",
+            "explanation": "月が4月より前なら前年を返す条件を追加する"
+          },
+          {
+            "stepNum": 3,
+            "stepTitle": "理由と影響",
+            "prompt": "修正後の影響を確認します。",
+            "question": "修正の影響として正しいものはどれですか。",
+            "options": [
+              "1月から3月の日付を前年度として扱える。",
+              "すべての国データを同じ年度へ丸める",
+              "どの入力でも同じ record を返す"
+            ],
+            "answer": "1月から3月の日付を前年度として扱える。",
+            "hint": "表記ゆれまたは日付境界を正しく扱えるかを見ます。",
+            "explanation": "1月から3月の日付を前年度として扱える。"
+          }
+        ],
+        "correctAnswer": "年度が4月開始なのに、常に暦年 `getFullYear()` を返している。 / 月が4月より前なら前年を返す条件を追加する / 1月から3月の日付を前年度として扱える。",
+        "correctedCode": "const records = [\n  { name: \"Japanese vertical writing/tategaki\", date: \"2026-03-31\", country: \"JP\" },\n  { name: \"next term\", date: \"2026-04-01\", country: \"JP\" }\n];\nfunction fiscalYear(dateText) {\n  const date = new Date(dateText + \"T00:00:00+09:00\");\n  return date.getMonth() < 3 ? date.getFullYear() - 1 : date.getFullYear();\n}\nfor (const record of records) {\n  console.log(record.name, fiscalYear(record.date));\n}",
+        "commonMistakes": [
+          "エラーを隠す修正ではなく、条件式を正しくします。",
+          "日本語や日付の仕様をコードの条件に反映する必要があります。"
+        ],
+        "programmingExplanation": "DEBUG は、壊れている条件式を特定し、最小修正で仕様に合わせる練習です。",
+        "countryNote": "日本語の縦書きを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。",
+        "debugExplanation": {
+          "cause": "年度が4月開始なのに、常に暦年 `getFullYear()` を返している。",
+          "fix": "月が4月より前なら前年を返す条件を追加する",
+          "why": "仕様に合わせた比較や境界条件を入れないと、特定の入力だけ失敗するため。",
+          "impact": "1月から3月の日付を前年度として扱える。",
+          "correctedCode": "const records = [\n  { name: \"Japanese vertical writing/tategaki\", date: \"2026-03-31\", country: \"JP\" },\n  { name: \"next term\", date: \"2026-04-01\", country: \"JP\" }\n];\nfunction fiscalYear(dateText) {\n  const date = new Date(dateText + \"T00:00:00+09:00\");\n  return date.getMonth() < 3 ? date.getFullYear() - 1 : date.getFullYear();\n}\nfor (const record of records) {\n  console.log(record.name, fiscalYear(record.date));\n}"
+        }
+      },
+          {
+        "id": "final_debug_JP_javascript_03",
+        "worldId": "debug",
+        "languageId": "javascript",
+        "conceptId": "variables",
+        "questionType": "debug-step",
+        "title": "Japanese fiscal year beginning in April: final-boundary-debug",
+        "description": "日本の年度が4月に始まることを扱う JavaScript コードの不具合を、原因・修正・影響の3段階で確認します。",
+        "code": "const records = [\n  { name: \"Japanese fiscal year beginning in April\", date: \"2026-03-31\", country: \"JP\" },\n  { name: \"next term\", date: \"2026-04-01\", country: \"JP\" }\n];\nfunction fiscalYear(dateText) {\n  const date = new Date(dateText + \"T00:00:00+09:00\");\n  return date.getFullYear();\n}\nfor (const record of records) {\n  console.log(record.name, fiscalYear(record.date));\n}",
+        "steps": [
+          {
+            "stepNum": 1,
+            "stepTitle": "原因を特定",
+            "prompt": "日本の年度が4月に始まることのデータはあるのに期待通り表示されません。",
+            "question": "主な原因はどれですか。",
+            "options": [
+              "年度が4月開始なのに、常に暦年 `getFullYear()` を返している。",
+              "配列の末尾だけが処理される",
+              "console.log が非同期で遅れている"
+            ],
+            "answer": "年度が4月開始なのに、常に暦年 `getFullYear()` を返している。",
+            "hint": "比較式または年度計算の条件を確認します。",
+            "explanation": "年度が4月開始なのに、常に暦年 `getFullYear()` を返している。"
+          },
+          {
+            "stepNum": 2,
+            "stepTitle": "修正を選ぶ",
+            "prompt": "Step 1 の原因を踏まえて、安全な修正を選びます。",
+            "question": "正しい修正はどれですか。",
+            "options": [
+              "月が4月より前なら前年を返す条件を追加する",
+              "records を空配列にする",
+              "常に true を返す"
+            ],
+            "answer": "月が4月より前なら前年を返す条件を追加する",
+            "hint": "データを消さず、条件式の扱いを正しくします。",
+            "explanation": "月が4月より前なら前年を返す条件を追加する"
+          },
+          {
+            "stepNum": 3,
+            "stepTitle": "理由と影響",
+            "prompt": "修正後の影響を確認します。",
+            "question": "修正の影響として正しいものはどれですか。",
+            "options": [
+              "1月から3月の日付を前年度として扱える。",
+              "国別データが不要になる",
+              "どの入力でも同じ record を返す"
+            ],
+            "answer": "1月から3月の日付を前年度として扱える。",
+            "hint": "表記ゆれまたは日付境界を正しく扱えるかを見ます。",
+            "explanation": "1月から3月の日付を前年度として扱える。"
+          }
+        ],
+        "correctAnswer": "年度が4月開始なのに、常に暦年 `getFullYear()` を返している。 / 月が4月より前なら前年を返す条件を追加する / 1月から3月の日付を前年度として扱える。",
+        "correctedCode": "const records = [\n  { name: \"Japanese fiscal year beginning in April\", date: \"2026-03-31\", country: \"JP\" },\n  { name: \"next term\", date: \"2026-04-01\", country: \"JP\" }\n];\nfunction fiscalYear(dateText) {\n  const date = new Date(dateText + \"T00:00:00+09:00\");\n  return date.getMonth() < 3 ? date.getFullYear() - 1 : date.getFullYear();\n}\nfor (const record of records) {\n  console.log(record.name, fiscalYear(record.date));\n}",
+        "commonMistakes": [
+          "エラーを隠す修正ではなく、条件式を正しくします。",
+          "日本語や日付の仕様をコードの条件に反映する必要があります。"
+        ],
+        "programmingExplanation": "DEBUG は、壊れている条件式を特定し、最小修正で仕様に合わせる練習です。",
+        "countryNote": "日本の年度が4月に始まることを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。",
+        "debugExplanation": {
+          "cause": "年度が4月開始なのに、常に暦年 `getFullYear()` を返している。",
+          "fix": "月が4月より前なら前年を返す条件を追加する",
+          "why": "仕様に合わせた比較や境界条件を入れないと、特定の入力だけ失敗するため。",
+          "impact": "1月から3月の日付を前年度として扱える。",
+          "correctedCode": "const records = [\n  { name: \"Japanese fiscal year beginning in April\", date: \"2026-03-31\", country: \"JP\" },\n  { name: \"next term\", date: \"2026-04-01\", country: \"JP\" }\n];\nfunction fiscalYear(dateText) {\n  const date = new Date(dateText + \"T00:00:00+09:00\");\n  return date.getMonth() < 3 ? date.getFullYear() - 1 : date.getFullYear();\n}\nfor (const record of records) {\n  console.log(record.name, fiscalYear(record.date));\n}"
+        }
+      }
         ]
       }
     }

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { REFERENCE_TOPICS, resolveReferenceTopicId } from '../data/reference';
 import { CHALLENGES } from '../data/challenges';
 import { EXECUTE_CHALLENGES } from '../data/execute_challenges';
@@ -289,12 +289,32 @@ export default function ReferenceScreen({
 function TopicDetail({ topic, progress, scores, review, onNavigate, onBack, originContext, onReturnToOrigin }) {
   const [pageIdx, setPageIdx] = useState(0);
   const [practiceIdx, setPracticeIdx] = useState(0);
+  const contentRef = useRef(null);
+  const shouldScrollPageChangeRef = useRef(false);
   const page = topic.pages[pageIdx];
   const conceptId = topicConcept(topic);
   const status = conceptId ? getConceptCoreStatus(progress || {}, conceptId, topic.language) : null;
   const recs = practiceRecommendations(topic, progress, review);
   const practice = recs[practiceIdx % Math.max(recs.length, 1)];
   const isLast = pageIdx === topic.pages.length - 1;
+
+  useEffect(() => {
+    if (!shouldScrollPageChangeRef.current) return;
+    shouldScrollPageChangeRef.current = false;
+    requestAnimationFrame(() => {
+      contentRef.current?.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    });
+  }, [pageIdx]);
+
+  const goToPreviousPage = () => {
+    shouldScrollPageChangeRef.current = true;
+    setPageIdx(i => Math.max(0, i - 1));
+  };
+
+  const goToNextPage = () => {
+    shouldScrollPageChangeRef.current = true;
+    setPageIdx(i => Math.min(topic.pages.length - 1, i + 1));
+  };
 
   return (
     <div style={styles.wrap} className="fade-in">
@@ -332,7 +352,7 @@ function TopicDetail({ topic, progress, scores, review, onNavigate, onBack, orig
         ))}
       </div>
 
-      <div style={styles.content}>
+      <div ref={contentRef} style={styles.content}>
         <section style={styles.panel}>
           <div style={styles.sectionHeading}>{page.title}</div>
           <p style={styles.sectionText}>{page.summary}</p>
@@ -419,9 +439,9 @@ function TopicDetail({ topic, progress, scores, review, onNavigate, onBack, orig
         )}
 
         <div style={styles.navRow}>
-          <button style={{ ...styles.navBtn, opacity: pageIdx === 0 ? 0.3 : 1 }} onClick={() => setPageIdx(i => Math.max(0, i - 1))} disabled={pageIdx === 0}>◀ PREV</button>
+          <button style={{ ...styles.navBtn, opacity: pageIdx === 0 ? 0.3 : 1 }} onClick={goToPreviousPage} disabled={pageIdx === 0}>◀ PREV</button>
           {!isLast ? (
-            <button style={styles.navBtnPrimary} onClick={() => setPageIdx(i => i + 1)}>NEXT ▶</button>
+            <button style={styles.navBtnPrimary} onClick={goToNextPage}>NEXT ▶</button>
           ) : (
             <button style={styles.navBtnPrimary} onClick={onBack}>完了</button>
           )}

@@ -1,9 +1,6 @@
-// EXECUTE world: trace code, predict output, combine concepts.
-// questionType: 'multiple-choice' | 'multiple-blanks' | 'output-predict'
-
 export const EXECUTE_CHALLENGES = {
-  JP: {
-    python: [
+  "JP": {
+    "python": [
       {
         "id": "jp_py_e01",
         "worldId": "execute",
@@ -222,7 +219,7 @@ export const EXECUTE_CHALLENGES = {
         "countryNote": "松尾芭蕉とおくのほそ道を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
       }
     ],
-    javascript: [
+    "javascript": [
       {
         "id": "jp_js_e01",
         "worldId": "execute",
@@ -440,435 +437,963 @@ export const EXECUTE_CHALLENGES = {
         "programmingExplanation": "JavaScript の配列処理を読む問題です。regular では filter と map を中心に追跡します。",
         "countryNote": "青函トンネルを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
       }
-    ],
+    ]
   },
-  US: {
-    python: [
+  "US": {
+    "python": [
       {
-        id: 'ex_us_py_1',
-        worldId: 'execute',
-        conceptId: 'conditions',
-        questionType: 'output-predict',
-        title: 'if-elif チェーンの出力を予測しよう',
-        prompt: '以下のコードの出力は？',
-        code: `score = 85
-if score >= 90:
-    grade = "A"
-elif score >= 80:
-    grade = "B"
-elif score >= 70:
-    grade = "C"
-else:
-    grade = "F"
-print(grade)`,
-        options: ['A', 'B', 'C', 'F'],
-        answer: 'B',
-        hint: '85 はどの条件を最初に満たしますか？',
-        explanation: '85 >= 90 は False、85 >= 80 は True なので grade = "B"。',
-      },
-      {
-        id: 'ex_us_py_2',
-        worldId: 'execute',
-        conceptId: 'comprehension',
-        questionType: 'multiple-choice',
-        title: 'リスト内包表記の結果は？',
-        prompt: 'このコードの出力を選べ',
-        code: `states = ["California", "Texas", "New York", "Ohio"]
-short = [s for s in states if len(s) <= 5]
-print(short)`,
-        options: [
-          "['Ohio']",
-          "['Texas', 'Ohio']",
-          "['California', 'Texas', 'New York', 'Ohio']",
-          '[]',
+        "id": "ex_us_py_1",
+        "worldId": "execute",
+        "languageId": "python",
+        "conceptId": "lists",
+        "questionType": "output-predict",
+        "title": "Grand Canyon geologic/site data: EXECUTE",
+        "prompt": "Grand Canyon geologic/site data のデータを条件で絞り、出力を追跡します。",
+        "code": "items = [\n    {\"name\": \"Grand Canyon geologic/site data\", \"country\": \"US\", \"kind\": \"target\", \"score\": 5},\n    {\"name\": \"context sample\", \"country\": \"US\", \"kind\": \"context\", \"score\": 3},\n    {\"name\": \"outside sample\", \"country\": \"other\", \"kind\": \"target\", \"score\": 8}\n]\nselected = []\nfor item in items:\n    if item[\"country\"] == \"US\" and item[\"kind\"] == \"target\" and item[\"score\"] >= 5:\n        selected.append(item)\nselected.sort(key=lambda item: item[\"score\"], reverse=True)\nprint(selected[0][\"name\"])",
+        "options": [
+          "Grand Canyon geologic/site data",
+          "context sample",
+          "outside sample",
+          "Error"
         ],
-        answer: "['Ohio']",
-        hint: "len('Ohio') = 4、len('Texas') = 5。条件は <= 5 です",
-        explanation: "Texas は len=5 で <= 5 を満たしますが、短い方から確認: Ohio(4)✓、Texas(5)✓ → ['Texas', 'Ohio']... 実際は順番に確認。Texas=5, Ohio=4 が該当。",
+        "answer": "Grand Canyon geologic/site data",
+        "hint": "country、kind/tag、score の条件を上から順に確認します。",
+        "explanation": "条件をすべて満たす対象だけが残るため、出力は Grand Canyon geologic/site data です。",
+        "correctAnswer": "Grand Canyon geologic/site data",
+        "executionSteps": [
+          "配列/リストの各要素を確認する。",
+          "USかつ対象条件を満たす要素だけ残す。",
+          "必要なら並べ替え、最後に出力する値を読む。"
+        ],
+        "commonMistakes": [
+          "scoreだけを見ると他国やcontextデータを選んでしまいます。",
+          "出力はデータ全体ではなく、最後に組み立てたnameまたはlabelです。"
+        ],
+        "programmingExplanation": "通常問題なのでfilter/loopと条件追跡を中心にします。",
+        "countryNote": "Grand Canyon geologic/site data は Grand Canyon National Park（UNESCO World Heritage Centre） をもとにした題材です。",
+        "sourceRefs": [
+          {
+            "title": "Grand Canyon National Park",
+            "organization": "UNESCO World Heritage Centre",
+            "url": "https://whc.unesco.org/en/list/75/"
+          }
+        ],
+        "factIds": [
+          "fact_us_grand_canyon_site"
+        ],
+        "entityKeys": [
+          "us:grand_canyon_site"
+        ]
       },
       {
-        id: 'ex_us_py_3',
-        worldId: 'execute',
-        conceptId: 'lists',
-        questionType: 'output-predict',
-        title: 'リストスライスの出力を予測しよう',
-        prompt: '以下のコードの出力は？',
-        code: `presidents = ["Washington", "Adams", "Jefferson", "Madison", "Monroe"]
-print(presidents[1:3])`,
-        options: [
-          "['Washington', 'Adams']",
-          "['Adams', 'Jefferson']",
-          "['Jefferson', 'Madison']",
-          "['Adams', 'Jefferson', 'Madison']",
+        "id": "ex_us_py_2",
+        "worldId": "execute",
+        "languageId": "python",
+        "conceptId": "lists",
+        "questionType": "output-predict",
+        "title": "Great Lakes basin data: EXECUTE",
+        "prompt": "Great Lakes basin data のデータを条件で絞り、出力を追跡します。",
+        "code": "items = [\n    {\"name\": \"Great Lakes basin data\", \"country\": \"US\", \"kind\": \"target\", \"score\": 6},\n    {\"name\": \"context sample\", \"country\": \"US\", \"kind\": \"context\", \"score\": 4},\n    {\"name\": \"outside sample\", \"country\": \"other\", \"kind\": \"target\", \"score\": 9}\n]\nselected = []\nfor item in items:\n    if item[\"country\"] == \"US\" and item[\"kind\"] == \"target\" and item[\"score\"] >= 6:\n        selected.append(item)\nselected.sort(key=lambda item: item[\"score\"], reverse=True)\nprint(selected[0][\"name\"])",
+        "options": [
+          "Great Lakes basin data",
+          "context sample",
+          "outside sample",
+          "Error"
         ],
-        answer: "['Adams', 'Jefferson']",
-        hint: 'スライス [1:3] はインデックス 1 から 3 の手前まで',
-        explanation: 'インデックス 0=Washington, 1=Adams, 2=Jefferson, 3=Madison。[1:3] は 1,2 → Adams, Jefferson。',
+        "answer": "Great Lakes basin data",
+        "hint": "country、kind/tag、score の条件を上から順に確認します。",
+        "explanation": "条件をすべて満たす対象だけが残るため、出力は Great Lakes basin data です。",
+        "correctAnswer": "Great Lakes basin data",
+        "executionSteps": [
+          "配列/リストの各要素を確認する。",
+          "USかつ対象条件を満たす要素だけ残す。",
+          "必要なら並べ替え、最後に出力する値を読む。"
+        ],
+        "commonMistakes": [
+          "scoreだけを見ると他国やcontextデータを選んでしまいます。",
+          "出力はデータ全体ではなく、最後に組み立てたnameまたはlabelです。"
+        ],
+        "programmingExplanation": "通常問題なのでfilter/loopと条件追跡を中心にします。",
+        "countryNote": "Great Lakes basin data は Great Lakes（U.S. Environmental Protection Agency） をもとにした題材です。",
+        "sourceRefs": [
+          {
+            "title": "Great Lakes",
+            "organization": "U.S. Environmental Protection Agency",
+            "url": "https://www.epa.gov/greatlakes"
+          }
+        ],
+        "factIds": [
+          "fact_us_great_lakes_basin"
+        ],
+        "entityKeys": [
+          "us:great_lakes_basin"
+        ]
       },
+      {
+        "id": "ex_us_py_3",
+        "worldId": "execute",
+        "languageId": "python",
+        "conceptId": "lists",
+        "questionType": "output-predict",
+        "title": "Louisiana Purchase timeline: EXECUTE",
+        "prompt": "Louisiana Purchase timeline のデータを条件で絞り、出力を追跡します。",
+        "code": "items = [\n    {\"name\": \"Louisiana Purchase timeline\", \"country\": \"US\", \"kind\": \"target\", \"score\": 7},\n    {\"name\": \"context sample\", \"country\": \"US\", \"kind\": \"context\", \"score\": 5},\n    {\"name\": \"outside sample\", \"country\": \"other\", \"kind\": \"target\", \"score\": 10}\n]\nselected = []\nfor item in items:\n    if item[\"country\"] == \"US\" and item[\"kind\"] == \"target\" and item[\"score\"] >= 7:\n        selected.append(item)\nselected.sort(key=lambda item: item[\"score\"], reverse=True)\nprint(selected[0][\"name\"])",
+        "options": [
+          "Louisiana Purchase timeline",
+          "context sample",
+          "outside sample",
+          "Error"
+        ],
+        "answer": "Louisiana Purchase timeline",
+        "hint": "country、kind/tag、score の条件を上から順に確認します。",
+        "explanation": "条件をすべて満たす対象だけが残るため、出力は Louisiana Purchase timeline です。",
+        "correctAnswer": "Louisiana Purchase timeline",
+        "executionSteps": [
+          "配列/リストの各要素を確認する。",
+          "USかつ対象条件を満たす要素だけ残す。",
+          "必要なら並べ替え、最後に出力する値を読む。"
+        ],
+        "commonMistakes": [
+          "scoreだけを見ると他国やcontextデータを選んでしまいます。",
+          "出力はデータ全体ではなく、最後に組み立てたnameまたはlabelです。"
+        ],
+        "programmingExplanation": "通常問題なのでfilter/loopと条件追跡を中心にします。",
+        "countryNote": "Louisiana Purchase timeline は Louisiana Purchase（Office of the Historian, U.S. Department of State） をもとにした題材です。",
+        "sourceRefs": [
+          {
+            "title": "Louisiana Purchase",
+            "organization": "Office of the Historian, U.S. Department of State",
+            "url": "https://history.state.gov/milestones/1801-1829/louisiana-purchase"
+          }
+        ],
+        "factIds": [
+          "fact_us_louisiana_purchase_timeline"
+        ],
+        "entityKeys": [
+          "us:louisiana_purchase_timeline"
+        ]
+      },
+      {
+        "id": "ex_us_py_4",
+        "worldId": "execute",
+        "languageId": "python",
+        "conceptId": "lists",
+        "questionType": "output-predict",
+        "title": "transcontinental railroad/Promontory Summit: EXECUTE",
+        "prompt": "transcontinental railroad/Promontory Summit のデータを条件で絞り、出力を追跡します。",
+        "code": "items = [\n    {\"name\": \"transcontinental railroad/Promontory Summit\", \"country\": \"US\", \"kind\": \"target\", \"score\": 8},\n    {\"name\": \"context sample\", \"country\": \"US\", \"kind\": \"context\", \"score\": 6},\n    {\"name\": \"outside sample\", \"country\": \"other\", \"kind\": \"target\", \"score\": 11}\n]\nselected = []\nfor item in items:\n    if item[\"country\"] == \"US\" and item[\"kind\"] == \"target\" and item[\"score\"] >= 8:\n        selected.append(item)\nselected.sort(key=lambda item: item[\"score\"], reverse=True)\nprint(selected[0][\"name\"])",
+        "options": [
+          "transcontinental railroad/Promontory Summit",
+          "context sample",
+          "outside sample",
+          "Error"
+        ],
+        "answer": "transcontinental railroad/Promontory Summit",
+        "hint": "country、kind/tag、score の条件を上から順に確認します。",
+        "explanation": "条件をすべて満たす対象だけが残るため、出力は transcontinental railroad/Promontory Summit です。",
+        "correctAnswer": "transcontinental railroad/Promontory Summit",
+        "executionSteps": [
+          "配列/リストの各要素を確認する。",
+          "USかつ対象条件を満たす要素だけ残す。",
+          "必要なら並べ替え、最後に出力する値を読む。"
+        ],
+        "commonMistakes": [
+          "scoreだけを見ると他国やcontextデータを選んでしまいます。",
+          "出力はデータ全体ではなく、最後に組み立てたnameまたはlabelです。"
+        ],
+        "programmingExplanation": "通常問題なのでfilter/loopと条件追跡を中心にします。",
+        "countryNote": "transcontinental railroad/Promontory Summit は Golden Spike history（National Park Service） をもとにした題材です。",
+        "sourceRefs": [
+          {
+            "title": "Golden Spike history",
+            "organization": "National Park Service",
+            "url": "https://www.nps.gov/gosp/learn/historyculture/index.htm"
+          }
+        ],
+        "factIds": [
+          "fact_us_promontory_summit"
+        ],
+        "entityKeys": [
+          "us:promontory_summit"
+        ]
+      },
+      {
+        "id": "ex_us_py_5",
+        "worldId": "execute",
+        "languageId": "python",
+        "conceptId": "lists",
+        "questionType": "output-predict",
+        "title": "jazz origins/New Orleans: EXECUTE",
+        "prompt": "jazz origins/New Orleans のデータを条件で絞り、出力を追跡します。",
+        "code": "items = [\n    {\"name\": \"jazz origins/New Orleans\", \"country\": \"US\", \"kind\": \"target\", \"score\": 9},\n    {\"name\": \"context sample\", \"country\": \"US\", \"kind\": \"context\", \"score\": 7},\n    {\"name\": \"outside sample\", \"country\": \"other\", \"kind\": \"target\", \"score\": 12}\n]\nselected = []\nfor item in items:\n    if item[\"country\"] == \"US\" and item[\"kind\"] == \"target\" and item[\"score\"] >= 9:\n        selected.append(item)\nselected.sort(key=lambda item: item[\"score\"], reverse=True)\nprint(selected[0][\"name\"])",
+        "options": [
+          "jazz origins/New Orleans",
+          "context sample",
+          "outside sample",
+          "Error"
+        ],
+        "answer": "jazz origins/New Orleans",
+        "hint": "country、kind/tag、score の条件を上から順に確認します。",
+        "explanation": "条件をすべて満たす対象だけが残るため、出力は jazz origins/New Orleans です。",
+        "correctAnswer": "jazz origins/New Orleans",
+        "executionSteps": [
+          "配列/リストの各要素を確認する。",
+          "USかつ対象条件を満たす要素だけ残す。",
+          "必要なら並べ替え、最後に出力する値を読む。"
+        ],
+        "commonMistakes": [
+          "scoreだけを見ると他国やcontextデータを選んでしまいます。",
+          "出力はデータ全体ではなく、最後に組み立てたnameまたはlabelです。"
+        ],
+        "programmingExplanation": "通常問題なのでfilter/loopと条件追跡を中心にします。",
+        "countryNote": "jazz origins/New Orleans は New Orleans Jazz history（National Park Service） をもとにした題材です。",
+        "sourceRefs": [
+          {
+            "title": "New Orleans Jazz history",
+            "organization": "National Park Service",
+            "url": "https://www.nps.gov/jazz/learn/historyculture/index.htm"
+          }
+        ],
+        "factIds": [
+          "fact_us_new_orleans_jazz"
+        ],
+        "entityKeys": [
+          "us:new_orleans_jazz"
+        ]
+      },
+      {
+        "id": "ex_us_py_6",
+        "worldId": "execute",
+        "languageId": "python",
+        "conceptId": "variables",
+        "questionType": "output-predict",
+        "title": "Wright Flyer 1903 flight data: EXECUTE",
+        "prompt": "Wright Flyer 1903 flight data のデータを条件で絞り、出力を追跡します。",
+        "code": "items = [\n    {\"name\": \"Wright Flyer 1903 flight data\", \"country\": \"US\", \"kind\": \"target\", \"score\": 10},\n    {\"name\": \"context sample\", \"country\": \"US\", \"kind\": \"context\", \"score\": 8},\n    {\"name\": \"outside sample\", \"country\": \"other\", \"kind\": \"target\", \"score\": 13}\n]\nselected = []\nfor item in items:\n    if item[\"country\"] == \"US\" and item[\"kind\"] == \"target\" and item[\"score\"] >= 10:\n        selected.append(item)\nselected.sort(key=lambda item: item[\"score\"], reverse=True)\nprint(selected[0][\"name\"])",
+        "options": [
+          "Wright Flyer 1903 flight data",
+          "context sample",
+          "outside sample",
+          "Error"
+        ],
+        "answer": "Wright Flyer 1903 flight data",
+        "hint": "country、kind/tag、score の条件を上から順に確認します。",
+        "explanation": "条件をすべて満たす対象だけが残るため、出力は Wright Flyer 1903 flight data です。",
+        "correctAnswer": "Wright Flyer 1903 flight data",
+        "executionSteps": [
+          "配列/リストの各要素を確認する。",
+          "USかつ対象条件を満たす要素だけ残す。",
+          "必要なら並べ替え、最後に出力する値を読む。"
+        ],
+        "commonMistakes": [
+          "scoreだけを見ると他国やcontextデータを選んでしまいます。",
+          "出力はデータ全体ではなく、最後に組み立てたnameまたはlabelです。"
+        ],
+        "programmingExplanation": "通常問題なのでfilter/loopと条件追跡を中心にします。",
+        "countryNote": "Wright Flyer 1903 flight data は The First Flight（National Park Service） をもとにした題材です。",
+        "sourceRefs": [
+          {
+            "title": "The First Flight",
+            "organization": "National Park Service",
+            "url": "https://www.nps.gov/wrbr/learn/historyculture/thefirstflight.htm"
+          }
+        ],
+        "factIds": [
+          "fact_us_wright_flyer_1903"
+        ],
+        "entityKeys": [
+          "us:wright_flyer_1903"
+        ]
+      },
+      {
+        "id": "ex_us_py_7",
+        "worldId": "execute",
+        "languageId": "python",
+        "conceptId": "conditions",
+        "questionType": "output-predict",
+        "title": "Hoover Dam engineering data: EXECUTE",
+        "prompt": "Hoover Dam engineering data のデータを条件で絞り、出力を追跡します。",
+        "code": "items = [\n    {\"name\": \"Hoover Dam engineering data\", \"country\": \"US\", \"kind\": \"target\", \"score\": 11},\n    {\"name\": \"context sample\", \"country\": \"US\", \"kind\": \"context\", \"score\": 9},\n    {\"name\": \"outside sample\", \"country\": \"other\", \"kind\": \"target\", \"score\": 14}\n]\nselected = []\nfor item in items:\n    if item[\"country\"] == \"US\" and item[\"kind\"] == \"target\" and item[\"score\"] >= 11:\n        selected.append(item)\nselected.sort(key=lambda item: item[\"score\"], reverse=True)\nprint(selected[0][\"name\"])",
+        "options": [
+          "Hoover Dam engineering data",
+          "context sample",
+          "outside sample",
+          "Error"
+        ],
+        "answer": "Hoover Dam engineering data",
+        "hint": "country、kind/tag、score の条件を上から順に確認します。",
+        "explanation": "条件をすべて満たす対象だけが残るため、出力は Hoover Dam engineering data です。",
+        "correctAnswer": "Hoover Dam engineering data",
+        "executionSteps": [
+          "配列/リストの各要素を確認する。",
+          "USかつ対象条件を満たす要素だけ残す。",
+          "必要なら並べ替え、最後に出力する値を読む。"
+        ],
+        "commonMistakes": [
+          "scoreだけを見ると他国やcontextデータを選んでしまいます。",
+          "出力はデータ全体ではなく、最後に組み立てたnameまたはlabelです。"
+        ],
+        "programmingExplanation": "通常問題なのでfilter/loopと条件追跡を中心にします。",
+        "countryNote": "Hoover Dam engineering data は Hoover Dam FAQ（Bureau of Reclamation） をもとにした題材です。",
+        "sourceRefs": [
+          {
+            "title": "Hoover Dam FAQ",
+            "organization": "Bureau of Reclamation",
+            "url": "https://www.usbr.gov/lc/hooverdam/faqs/damfaqs.html"
+          }
+        ],
+        "factIds": [
+          "fact_us_hoover_dam_engineering"
+        ],
+        "entityKeys": [
+          "us:hoover_dam_engineering"
+        ]
+      }
     ],
-  },
-  FR: {
-    python: [
+    "javascript": [
       {
-        id: 'ex_fr_py_1',
-        worldId: 'execute',
-        conceptId: 'loops',
-        questionType: 'output-predict',
-        title: 'while ループの出力を予測しよう',
-        prompt: 'このコードは何を出力しますか？',
-        code: `count = 0
-while count < 3:
-    print(f"Tour {count + 1}")
-    count += 1`,
-        options: [
-          'Tour 0\nTour 1\nTour 2',
-          'Tour 1\nTour 2\nTour 3',
-          'Tour 1\nTour 2\nTour 3\nTour 4',
-          '無限ループ',
+        "id": "ex_us_js_1",
+        "worldId": "execute",
+        "languageId": "javascript",
+        "conceptId": "arrays",
+        "questionType": "output-predict",
+        "title": "Alaska Purchase timeline: EXECUTE",
+        "prompt": "Alaska Purchase timeline のデータを条件で絞り、出力を追跡します。",
+        "code": "const items = [\n  { name: \"Alaska Purchase timeline\", country: \"US\", kind: \"target\", score: 5 },\n  { name: \"context sample\", country: \"US\", kind: \"context\", score: 3 },\n  { name: \"outside sample\", country: \"other\", kind: \"target\", score: 8 }\n];\nconst selected = items\n  .filter(item => item.country === \"US\" && item.kind === \"target\" && item.score >= 5)\n  .sort((a, b) => b.score - a.score);\nconsole.log(selected[0].name);",
+        "options": [
+          "Alaska Purchase timeline",
+          "context sample",
+          "outside sample",
+          "Error"
         ],
-        answer: 'Tour 1\nTour 2\nTour 3',
-        hint: 'count は 0,1,2 と増え、3 になるとループを抜けます',
-        explanation: 'count=0: print(Tour 1), count=1: print(Tour 2), count=2: print(Tour 3), count=3: 条件 False でループ終了。',
+        "answer": "Alaska Purchase timeline",
+        "hint": "country、kind/tag、score の条件を上から順に確認します。",
+        "explanation": "条件をすべて満たす対象だけが残るため、出力は Alaska Purchase timeline です。",
+        "correctAnswer": "Alaska Purchase timeline",
+        "executionSteps": [
+          "配列/リストの各要素を確認する。",
+          "USかつ対象条件を満たす要素だけ残す。",
+          "必要なら並べ替え、最後に出力する値を読む。"
+        ],
+        "commonMistakes": [
+          "scoreだけを見ると他国やcontextデータを選んでしまいます。",
+          "出力はデータ全体ではなく、最後に組み立てたnameまたはlabelです。"
+        ],
+        "programmingExplanation": "通常問題なのでfilter/loopと条件追跡を中心にします。",
+        "countryNote": "Alaska Purchase timeline は Alaska Purchase（Office of the Historian, U.S. Department of State） をもとにした題材です。",
+        "sourceRefs": [
+          {
+            "title": "Alaska Purchase",
+            "organization": "Office of the Historian, U.S. Department of State",
+            "url": "https://history.state.gov/milestones/1866-1898/alaska-purchase"
+          }
+        ],
+        "factIds": [
+          "fact_us_alaska_purchase_timeline"
+        ],
+        "entityKeys": [
+          "us:alaska_purchase_timeline"
+        ]
       },
       {
-        id: 'ex_fr_py_2',
-        worldId: 'execute',
-        conceptId: 'loops',
-        questionType: 'output-predict',
-        title: 'フィルタ処理の出力を予測しよう',
-        prompt: 'このコードの出力は？',
-        code: `cities = ["Paris", "Lyon", "Nice", "Toulouse"]
-result = []
-for city in cities:
-    if len(city) > 4:
-        result.append(city)
-print(result)`,
-        options: [
+        "id": "ex_us_js_2",
+        "worldId": "execute",
+        "languageId": "javascript",
+        "conceptId": "arrays",
+        "questionType": "output-predict",
+        "title": "Lewis and Clark expedition route: EXECUTE",
+        "prompt": "Lewis and Clark expedition route のデータを条件で絞り、出力を追跡します。",
+        "code": "const items = [\n  { name: \"Lewis and Clark expedition route\", country: \"US\", kind: \"target\", score: 6 },\n  { name: \"context sample\", country: \"US\", kind: \"context\", score: 4 },\n  { name: \"outside sample\", country: \"other\", kind: \"target\", score: 9 }\n];\nconst selected = items\n  .filter(item => item.country === \"US\" && item.kind === \"target\" && item.score >= 6)\n  .sort((a, b) => b.score - a.score);\nconsole.log(selected[0].name);",
+        "options": [
+          "Lewis and Clark expedition route",
+          "context sample",
+          "outside sample",
+          "Error"
+        ],
+        "answer": "Lewis and Clark expedition route",
+        "hint": "country、kind/tag、score の条件を上から順に確認します。",
+        "explanation": "条件をすべて満たす対象だけが残るため、出力は Lewis and Clark expedition route です。",
+        "correctAnswer": "Lewis and Clark expedition route",
+        "executionSteps": [
+          "配列/リストの各要素を確認する。",
+          "USかつ対象条件を満たす要素だけ残す。",
+          "必要なら並べ替え、最後に出力する値を読む。"
+        ],
+        "commonMistakes": [
+          "scoreだけを見ると他国やcontextデータを選んでしまいます。",
+          "出力はデータ全体ではなく、最後に組み立てたnameまたはlabelです。"
+        ],
+        "programmingExplanation": "通常問題なのでfilter/loopと条件追跡を中心にします。",
+        "countryNote": "Lewis and Clark expedition route は Lewis and Clark Trail（National Park Service） をもとにした題材です。",
+        "sourceRefs": [
+          {
+            "title": "Lewis and Clark Trail",
+            "organization": "National Park Service",
+            "url": "https://www.nps.gov/lecl/index.htm"
+          }
+        ],
+        "factIds": [
+          "fact_us_lewis_clark_route"
+        ],
+        "entityKeys": [
+          "us:lewis_clark_route"
+        ]
+      },
+      {
+        "id": "ex_us_js_3",
+        "worldId": "execute",
+        "languageId": "javascript",
+        "conceptId": "arrays",
+        "questionType": "output-predict",
+        "title": "San Antonio Missions: EXECUTE",
+        "prompt": "San Antonio Missions のデータを条件で絞り、出力を追跡します。",
+        "code": "const items = [\n  { name: \"San Antonio Missions\", country: \"US\", kind: \"target\", score: 7 },\n  { name: \"context sample\", country: \"US\", kind: \"context\", score: 5 },\n  { name: \"outside sample\", country: \"other\", kind: \"target\", score: 10 }\n];\nconst selected = items\n  .filter(item => item.country === \"US\" && item.kind === \"target\" && item.score >= 7)\n  .sort((a, b) => b.score - a.score);\nconsole.log(selected[0].name);",
+        "options": [
+          "San Antonio Missions",
+          "context sample",
+          "outside sample",
+          "Error"
+        ],
+        "answer": "San Antonio Missions",
+        "hint": "country、kind/tag、score の条件を上から順に確認します。",
+        "explanation": "条件をすべて満たす対象だけが残るため、出力は San Antonio Missions です。",
+        "correctAnswer": "San Antonio Missions",
+        "executionSteps": [
+          "配列/リストの各要素を確認する。",
+          "USかつ対象条件を満たす要素だけ残す。",
+          "必要なら並べ替え、最後に出力する値を読む。"
+        ],
+        "commonMistakes": [
+          "scoreだけを見ると他国やcontextデータを選んでしまいます。",
+          "出力はデータ全体ではなく、最後に組み立てたnameまたはlabelです。"
+        ],
+        "programmingExplanation": "通常問題なのでfilter/loopと条件追跡を中心にします。",
+        "countryNote": "San Antonio Missions は San Antonio Missions（UNESCO World Heritage Centre） をもとにした題材です。",
+        "sourceRefs": [
+          {
+            "title": "San Antonio Missions",
+            "organization": "UNESCO World Heritage Centre",
+            "url": "https://whc.unesco.org/en/list/1466/"
+          }
+        ],
+        "factIds": [
+          "fact_us_san_antonio_missions"
+        ],
+        "entityKeys": [
+          "us:san_antonio_missions"
+        ]
+      },
+      {
+        "id": "ex_us_js_4",
+        "worldId": "execute",
+        "languageId": "javascript",
+        "conceptId": "arrays",
+        "questionType": "output-predict",
+        "title": "blues music/Beale Street context: EXECUTE",
+        "prompt": "blues music/Beale Street context のデータを条件で絞り、出力を追跡します。",
+        "code": "const items = [\n  { name: \"blues music/Beale Street context\", country: \"US\", kind: \"target\", score: 8 },\n  { name: \"context sample\", country: \"US\", kind: \"context\", score: 6 },\n  { name: \"outside sample\", country: \"other\", kind: \"target\", score: 11 }\n];\nconst selected = items\n  .filter(item => item.country === \"US\" && item.kind === \"target\" && item.score >= 8)\n  .sort((a, b) => b.score - a.score);\nconsole.log(selected[0].name);",
+        "options": [
+          "blues music/Beale Street context",
+          "context sample",
+          "outside sample",
+          "Error"
+        ],
+        "answer": "blues music/Beale Street context",
+        "hint": "country、kind/tag、score の条件を上から順に確認します。",
+        "explanation": "条件をすべて満たす対象だけが残るため、出力は blues music/Beale Street context です。",
+        "correctAnswer": "blues music/Beale Street context",
+        "executionSteps": [
+          "配列/リストの各要素を確認する。",
+          "USかつ対象条件を満たす要素だけ残す。",
+          "必要なら並べ替え、最後に出力する値を読む。"
+        ],
+        "commonMistakes": [
+          "scoreだけを見ると他国やcontextデータを選んでしまいます。",
+          "出力はデータ全体ではなく、最後に組み立てたnameまたはlabelです。"
+        ],
+        "programmingExplanation": "通常問題なのでfilter/loopと条件追跡を中心にします。",
+        "countryNote": "blues music/Beale Street context は Beale Street Historic District（National Park Service） をもとにした題材です。",
+        "sourceRefs": [
+          {
+            "title": "Beale Street Historic District",
+            "organization": "National Park Service",
+            "url": "https://www.nps.gov/places/beale-street-historic-district.htm"
+          }
+        ],
+        "factIds": [
+          "fact_us_beale_street_blues"
+        ],
+        "entityKeys": [
+          "us:beale_street_blues"
+        ]
+      },
+      {
+        "id": "ex_us_js_5",
+        "worldId": "execute",
+        "languageId": "javascript",
+        "conceptId": "objects",
+        "questionType": "output-predict",
+        "title": "Voyager 1 Pale Blue Dot: EXECUTE",
+        "prompt": "Voyager 1 Pale Blue Dot のデータを条件で絞り、出力を追跡します。",
+        "code": "const items = [\n  { name: \"Voyager 1 Pale Blue Dot\", country: \"US\", kind: \"target\", score: 9 },\n  { name: \"context sample\", country: \"US\", kind: \"context\", score: 7 },\n  { name: \"outside sample\", country: \"other\", kind: \"target\", score: 12 }\n];\nconst selected = items\n  .filter(item => item.country === \"US\" && item.kind === \"target\" && item.score >= 9)\n  .sort((a, b) => b.score - a.score);\nconsole.log(selected[0].name);",
+        "options": [
+          "Voyager 1 Pale Blue Dot",
+          "context sample",
+          "outside sample",
+          "Error"
+        ],
+        "answer": "Voyager 1 Pale Blue Dot",
+        "hint": "country、kind/tag、score の条件を上から順に確認します。",
+        "explanation": "条件をすべて満たす対象だけが残るため、出力は Voyager 1 Pale Blue Dot です。",
+        "correctAnswer": "Voyager 1 Pale Blue Dot",
+        "executionSteps": [
+          "配列/リストの各要素を確認する。",
+          "USかつ対象条件を満たす要素だけ残す。",
+          "必要なら並べ替え、最後に出力する値を読む。"
+        ],
+        "commonMistakes": [
+          "scoreだけを見ると他国やcontextデータを選んでしまいます。",
+          "出力はデータ全体ではなく、最後に組み立てたnameまたはlabelです。"
+        ],
+        "programmingExplanation": "通常問題なのでfilter/loopと条件追跡を中心にします。",
+        "countryNote": "Voyager 1 Pale Blue Dot は Voyager（NASA Science） をもとにした題材です。",
+        "sourceRefs": [
+          {
+            "title": "Voyager",
+            "organization": "NASA Science",
+            "url": "https://science.nasa.gov/mission/voyager/"
+          }
+        ],
+        "factIds": [
+          "fact_us_voyager_pale_blue_dot"
+        ],
+        "entityKeys": [
+          "us:voyager_pale_blue_dot"
+        ]
+      },
+      {
+        "id": "ex_us_js_6",
+        "worldId": "execute",
+        "languageId": "javascript",
+        "conceptId": "arrays",
+        "questionType": "output-predict",
+        "title": "GPS system segments: EXECUTE",
+        "prompt": "GPS system segments のデータを条件で絞り、出力を追跡します。",
+        "code": "const items = [\n  { name: \"GPS system segments\", country: \"US\", kind: \"target\", score: 10 },\n  { name: \"context sample\", country: \"US\", kind: \"context\", score: 8 },\n  { name: \"outside sample\", country: \"other\", kind: \"target\", score: 13 }\n];\nconst selected = items\n  .filter(item => item.country === \"US\" && item.kind === \"target\" && item.score >= 10)\n  .sort((a, b) => b.score - a.score);\nconsole.log(selected[0].name);",
+        "options": [
+          "GPS system segments",
+          "context sample",
+          "outside sample",
+          "Error"
+        ],
+        "answer": "GPS system segments",
+        "hint": "country、kind/tag、score の条件を上から順に確認します。",
+        "explanation": "条件をすべて満たす対象だけが残るため、出力は GPS system segments です。",
+        "correctAnswer": "GPS system segments",
+        "executionSteps": [
+          "配列/リストの各要素を確認する。",
+          "USかつ対象条件を満たす要素だけ残す。",
+          "必要なら並べ替え、最後に出力する値を読む。"
+        ],
+        "commonMistakes": [
+          "scoreだけを見ると他国やcontextデータを選んでしまいます。",
+          "出力はデータ全体ではなく、最後に組み立てたnameまたはlabelです。"
+        ],
+        "programmingExplanation": "通常問題なのでfilter/loopと条件追跡を中心にします。",
+        "countryNote": "GPS system segments は GPS system segments（GPS.gov） をもとにした題材です。",
+        "sourceRefs": [
+          {
+            "title": "GPS system segments",
+            "organization": "GPS.gov",
+            "url": "https://www.gps.gov/systems/gps/"
+          }
+        ],
+        "factIds": [
+          "fact_us_gps_segments"
+        ],
+        "entityKeys": [
+          "us:gps_segments"
+        ]
+      },
+      {
+        "id": "ex_us_js_7",
+        "worldId": "execute",
+        "languageId": "javascript",
+        "conceptId": "arrays",
+        "questionType": "output-predict",
+        "title": "Brooklyn Bridge opening/structure data: EXECUTE",
+        "prompt": "Brooklyn Bridge opening/structure data のデータを条件で絞り、出力を追跡します。",
+        "code": "const items = [\n  { name: \"Brooklyn Bridge opening/structure data\", country: \"US\", kind: \"target\", score: 11 },\n  { name: \"context sample\", country: \"US\", kind: \"context\", score: 9 },\n  { name: \"outside sample\", country: \"other\", kind: \"target\", score: 14 }\n];\nconst selected = items\n  .filter(item => item.country === \"US\" && item.kind === \"target\" && item.score >= 11)\n  .sort((a, b) => b.score - a.score);\nconsole.log(selected[0].name);",
+        "options": [
+          "Brooklyn Bridge opening/structure data",
+          "context sample",
+          "outside sample",
+          "Error"
+        ],
+        "answer": "Brooklyn Bridge opening/structure data",
+        "hint": "country、kind/tag、score の条件を上から順に確認します。",
+        "explanation": "条件をすべて満たす対象だけが残るため、出力は Brooklyn Bridge opening/structure data です。",
+        "correctAnswer": "Brooklyn Bridge opening/structure data",
+        "executionSteps": [
+          "配列/リストの各要素を確認する。",
+          "USかつ対象条件を満たす要素だけ残す。",
+          "必要なら並べ替え、最後に出力する値を読む。"
+        ],
+        "commonMistakes": [
+          "scoreだけを見ると他国やcontextデータを選んでしまいます。",
+          "出力はデータ全体ではなく、最後に組み立てたnameまたはlabelです。"
+        ],
+        "programmingExplanation": "通常問題なのでfilter/loopと条件追跡を中心にします。",
+        "countryNote": "Brooklyn Bridge opening/structure data は Brooklyn Bridge（National Park Service） をもとにした題材です。",
+        "sourceRefs": [
+          {
+            "title": "Brooklyn Bridge",
+            "organization": "National Park Service",
+            "url": "https://www.nps.gov/places/brooklyn-bridge.htm"
+          }
+        ],
+        "factIds": [
+          "fact_us_brooklyn_bridge_structure"
+        ],
+        "entityKeys": [
+          "us:brooklyn_bridge_structure"
+        ]
+      }
+    ]
+  },
+  "FR": {
+    "python": [
+      {
+        "id": "ex_fr_py_1",
+        "worldId": "execute",
+        "conceptId": "loops",
+        "questionType": "output-predict",
+        "title": "while ループの出力を予測しよう",
+        "prompt": "このコードは何を出力しますか？",
+        "code": "count = 0\nwhile count < 3:\n    print(f\"Tour {count + 1}\")\n    count += 1",
+        "options": [
+          "Tour 0\nTour 1\nTour 2",
+          "Tour 1\nTour 2\nTour 3",
+          "Tour 1\nTour 2\nTour 3\nTour 4",
+          "無限ループ"
+        ],
+        "answer": "Tour 1\nTour 2\nTour 3",
+        "hint": "count は 0,1,2 と増え、3 になるとループを抜けます",
+        "explanation": "count=0: print(Tour 1), count=1: print(Tour 2), count=2: print(Tour 3), count=3: 条件 False でループ終了。"
+      },
+      {
+        "id": "ex_fr_py_2",
+        "worldId": "execute",
+        "conceptId": "loops",
+        "questionType": "output-predict",
+        "title": "フィルタ処理の出力を予測しよう",
+        "prompt": "このコードの出力は？",
+        "code": "cities = [\"Paris\", \"Lyon\", \"Nice\", \"Toulouse\"]\nresult = []\nfor city in cities:\n    if len(city) > 4:\n        result.append(city)\nprint(result)",
+        "options": [
           "['Paris', 'Lyon', 'Nice', 'Toulouse']",
           "['Paris', 'Toulouse']",
           "['Lyon', 'Nice']",
-          "['Paris']",
+          "['Paris']"
         ],
-        answer: "['Paris', 'Toulouse']",
-        hint: 'len("Paris")=5, len("Lyon")=4, len("Nice")=4, len("Toulouse")=8',
-        explanation: 'len > 4 を満たすのは Paris(5) と Toulouse(8)。Lyon(4) と Nice(4) は除外されます。',
+        "answer": "['Paris', 'Toulouse']",
+        "hint": "len(\"Paris\")=5, len(\"Lyon\")=4, len(\"Nice\")=4, len(\"Toulouse\")=8",
+        "explanation": "len > 4 を満たすのは Paris(5) と Toulouse(8)。Lyon(4) と Nice(4) は除外されます。"
       },
       {
-        id: 'ex_fr_py_3',
-        worldId: 'execute',
-        conceptId: 'loops',
-        questionType: 'multiple-blanks',
-        title: 'enumerate でインデックス付き表示を完成させよう',
-        prompt: 'パリの観光地を 1 から番号付きで表示するコードの空欄を埋めてください',
-        code: `landmarks = ["Eiffel Tower", "Louvre", "Versailles"]
-for ___BLANK_0___, name in enumerate(landmarks, ___BLANK_1___):
-    print(f"{i}. {name}")`,
-        blanks: ['i', '1'],
-        hint: 'enumerate(iterable, start) の start は番号の開始値です',
-        explanation: 'enumerate(landmarks, 1) でインデックスを 1 から始めます。for i, name in enumerate(...) で番号と要素を同時に取得できます。',
-      },
-    ],
-  },
-  DE: {
-    python: [
-      {
-        id: 'ex_de_py_1',
-        worldId: 'execute',
-        conceptId: 'files',
-        questionType: 'multiple-choice',
-        title: '辞書のソートを理解しよう',
-        prompt: 'このコードの出力は？',
-        code: `cities = {"Berlin": 3769, "Hamburg": 1847, "Munich": 1488}
-sorted_cities = sorted(cities.items(), key=lambda x: x[1], reverse=True)
-print(sorted_cities[0][0])`,
-        options: ['Berlin', 'Hamburg', 'Munich', 'Error'],
-        answer: 'Berlin',
-        hint: 'reverse=True で値の大きい順にソート。最初の要素は？',
-        explanation: 'items() でキー・値ペアを取得。lambda x: x[1] で値でソート。reverse=True で降順。Berlin(3769) が最大。',
-      },
-      {
-        id: 'ex_de_py_2',
-        worldId: 'execute',
-        conceptId: 'files',
-        questionType: 'output-predict',
-        title: '辞書内包表記の結果を予測しよう',
-        prompt: 'このコードの出力は？',
-        code: `cities = {"Berlin": 3769, "Hamburg": 1847, "Munich": 1488}
-big = {k: v for k, v in cities.items() if v > 2000}
-print(len(big))`,
-        options: ['0', '1', '2', '3'],
-        answer: '1',
-        hint: '2000 より大きい都市の人口(千人)はどれ？',
-        explanation: 'Berlin=3769 > 2000 のみ該当。Hamburg=1847, Munich=1488 は 2000 以下。len(big) = 1。',
-      },
-      {
-        id: 'ex_de_py_3',
-        worldId: 'execute',
-        conceptId: 'files',
-        questionType: 'implementation-selection',
-        title: '最も Pythonic な辞書フィルタを選ぼう',
-        prompt: 'ドイツの都市から人口(千人)が 2000 以上の都市のみ取得する。最も Pythonic な実装はどれ？',
-        options: [
-          `cities = {"Berlin": 3769, "Hamburg": 1847, "Munich": 1488}
-big = {}
-for k, v in cities.items():
-    if v >= 2000:
-        big[k] = v
-print(big)`,
-          `cities = {"Berlin": 3769, "Hamburg": 1847, "Munich": 1488}
-big = {k: v for k, v in cities.items() if v >= 2000}
-print(big)`,
-          `cities = {"Berlin": 3769, "Hamburg": 1847, "Munich": 1488}
-keys = list(filter(lambda k: cities[k] >= 2000, cities))
-big = dict(zip(keys, [cities[k] for k in keys]))
-print(big)`,
+        "id": "ex_fr_py_3",
+        "worldId": "execute",
+        "conceptId": "loops",
+        "questionType": "multiple-blanks",
+        "title": "enumerate でインデックス付き表示を完成させよう",
+        "prompt": "パリの観光地を 1 から番号付きで表示するコードの空欄を埋めてください",
+        "code": "landmarks = [\"Eiffel Tower\", \"Louvre\", \"Versailles\"]\nfor ___BLANK_0___, name in enumerate(landmarks, ___BLANK_1___):\n    print(f\"{i}. {name}\")",
+        "blanks": [
+          "i",
+          "1"
         ],
-        answer: `cities = {"Berlin": 3769, "Hamburg": 1847, "Munich": 1488}
-big = {k: v for k, v in cities.items() if v >= 2000}
-print(big)`,
-        hint: '辞書内包表記は dict の if フィルタを 1 行で書けます',
-        explanation: '辞書内包表記 {k: v for k, v in d.items() if cond} が最も簡潔で読みやすい Pythonic な書き方です。for ループも動きますが冗長。filter+zip はさらに複雑になります。',
-      },
-    ],
+        "hint": "enumerate(iterable, start) の start は番号の開始値です",
+        "explanation": "enumerate(landmarks, 1) でインデックスを 1 から始めます。for i, name in enumerate(...) で番号と要素を同時に取得できます。"
+      }
+    ]
   },
-  GB: {
-    python: [
+  "DE": {
+    "python": [
       {
-        id: 'ex_gb_py_1',
-        worldId: 'execute',
-        conceptId: 'regex',
-        questionType: 'multiple-choice',
-        title: '文字列メソッドの出力を予測しよう',
-        prompt: 'このコードの出力は？',
-        code: `text = "  Hello, London!  "
-cleaned = text.strip().lower()
-print(cleaned)`,
-        options: [
+        "id": "ex_de_py_1",
+        "worldId": "execute",
+        "conceptId": "files",
+        "questionType": "multiple-choice",
+        "title": "辞書のソートを理解しよう",
+        "prompt": "このコードの出力は？",
+        "code": "cities = {\"Berlin\": 3769, \"Hamburg\": 1847, \"Munich\": 1488}\nsorted_cities = sorted(cities.items(), key=lambda x: x[1], reverse=True)\nprint(sorted_cities[0][0])",
+        "options": [
+          "Berlin",
+          "Hamburg",
+          "Munich",
+          "Error"
+        ],
+        "answer": "Berlin",
+        "hint": "reverse=True で値の大きい順にソート。最初の要素は？",
+        "explanation": "items() でキー・値ペアを取得。lambda x: x[1] で値でソート。reverse=True で降順。Berlin(3769) が最大。"
+      },
+      {
+        "id": "ex_de_py_2",
+        "worldId": "execute",
+        "conceptId": "files",
+        "questionType": "output-predict",
+        "title": "辞書内包表記の結果を予測しよう",
+        "prompt": "このコードの出力は？",
+        "code": "cities = {\"Berlin\": 3769, \"Hamburg\": 1847, \"Munich\": 1488}\nbig = {k: v for k, v in cities.items() if v > 2000}\nprint(len(big))",
+        "options": [
+          "0",
+          "1",
+          "2",
+          "3"
+        ],
+        "answer": "1",
+        "hint": "2000 より大きい都市の人口(千人)はどれ？",
+        "explanation": "Berlin=3769 > 2000 のみ該当。Hamburg=1847, Munich=1488 は 2000 以下。len(big) = 1。"
+      },
+      {
+        "id": "ex_de_py_3",
+        "worldId": "execute",
+        "conceptId": "files",
+        "questionType": "implementation-selection",
+        "title": "最も Pythonic な辞書フィルタを選ぼう",
+        "prompt": "ドイツの都市から人口(千人)が 2000 以上の都市のみ取得する。最も Pythonic な実装はどれ？",
+        "options": [
+          "cities = {\"Berlin\": 3769, \"Hamburg\": 1847, \"Munich\": 1488}\nbig = {}\nfor k, v in cities.items():\n    if v >= 2000:\n        big[k] = v\nprint(big)",
+          "cities = {\"Berlin\": 3769, \"Hamburg\": 1847, \"Munich\": 1488}\nbig = {k: v for k, v in cities.items() if v >= 2000}\nprint(big)",
+          "cities = {\"Berlin\": 3769, \"Hamburg\": 1847, \"Munich\": 1488}\nkeys = list(filter(lambda k: cities[k] >= 2000, cities))\nbig = dict(zip(keys, [cities[k] for k in keys]))\nprint(big)"
+        ],
+        "answer": "cities = {\"Berlin\": 3769, \"Hamburg\": 1847, \"Munich\": 1488}\nbig = {k: v for k, v in cities.items() if v >= 2000}\nprint(big)",
+        "hint": "辞書内包表記は dict の if フィルタを 1 行で書けます",
+        "explanation": "辞書内包表記 {k: v for k, v in d.items() if cond} が最も簡潔で読みやすい Pythonic な書き方です。for ループも動きますが冗長。filter+zip はさらに複雑になります。"
+      }
+    ]
+  },
+  "GB": {
+    "python": [
+      {
+        "id": "ex_gb_py_1",
+        "worldId": "execute",
+        "conceptId": "regex",
+        "questionType": "multiple-choice",
+        "title": "文字列メソッドの出力を予測しよう",
+        "prompt": "このコードの出力は？",
+        "code": "text = \"  Hello, London!  \"\ncleaned = text.strip().lower()\nprint(cleaned)",
+        "options": [
           "'hello, london!'",
-          '"hello, london!"',
-          'hello, london!',
-          'Hello, London!',
+          "\"hello, london!\"",
+          "hello, london!",
+          "Hello, London!"
         ],
-        answer: 'hello, london!',
-        hint: 'strip() は両端の空白を除去、lower() は小文字化',
-        explanation: 'strip() → "Hello, London!"、lower() → "hello, london!"。print() は引用符なしで表示します。',
+        "answer": "hello, london!",
+        "hint": "strip() は両端の空白を除去、lower() は小文字化",
+        "explanation": "strip() → \"Hello, London!\"、lower() → \"hello, london!\"。print() は引用符なしで表示します。"
       },
       {
-        id: 'ex_gb_py_2',
-        worldId: 'execute',
-        conceptId: 'regex',
-        questionType: 'output-predict',
-        title: 'split の出力を予測しよう',
-        prompt: 'このコードの出力は？',
-        code: `text = "Big Ben, Tower Bridge, Stonehenge"
-parts = text.split(", ")
-print(len(parts), parts[-1])`,
-        options: [
-          '2 Stonehenge',
-          '3 Stonehenge',
-          '3 Big Ben',
-          '2 Big Ben',
+        "id": "ex_gb_py_2",
+        "worldId": "execute",
+        "conceptId": "regex",
+        "questionType": "output-predict",
+        "title": "split の出力を予測しよう",
+        "prompt": "このコードの出力は？",
+        "code": "text = \"Big Ben, Tower Bridge, Stonehenge\"\nparts = text.split(\", \")\nprint(len(parts), parts[-1])",
+        "options": [
+          "2 Stonehenge",
+          "3 Stonehenge",
+          "3 Big Ben",
+          "2 Big Ben"
         ],
-        answer: '3 Stonehenge',
-        hint: '", " で分割すると何個に分かれますか？最後の要素は？',
-        explanation: 'split(", ") → ["Big Ben", "Tower Bridge", "Stonehenge"]。len=3、parts[-1] は末尾要素の "Stonehenge"。',
+        "answer": "3 Stonehenge",
+        "hint": "\", \" で分割すると何個に分かれますか？最後の要素は？",
+        "explanation": "split(\", \") → [\"Big Ben\", \"Tower Bridge\", \"Stonehenge\"]。len=3、parts[-1] は末尾要素の \"Stonehenge\"。"
       },
       {
-        id: 'ex_gb_py_3',
-        worldId: 'execute',
-        conceptId: 'regex',
-        questionType: 'multiple-blanks',
-        title: '文字列から数字のみ抽出するコードを完成させよう',
-        prompt: 'ロンドンの郵便番号から数字部分のみ抽出するコードの空欄を埋めてください',
-        code: `import re
-postcode = "SW1A 2AA"
-digits = re.___BLANK_0___(r"\\d+", postcode)
-print(digits)`,
-        blanks: ['findall'],
-        hint: 're モジュールで全マッチを探すメソッドは？',
-        explanation: 're.findall(pattern, string) はすべてのマッチをリストで返します。\\d+ は1文字以上の数字列。"SW1A 2AA" から ["1", "2"] が取得できます。',
-      },
-    ],
+        "id": "ex_gb_py_3",
+        "worldId": "execute",
+        "conceptId": "regex",
+        "questionType": "multiple-blanks",
+        "title": "文字列から数字のみ抽出するコードを完成させよう",
+        "prompt": "ロンドンの郵便番号から数字部分のみ抽出するコードの空欄を埋めてください",
+        "code": "import re\npostcode = \"SW1A 2AA\"\ndigits = re.___BLANK_0___(r\"\\d+\", postcode)\nprint(digits)",
+        "blanks": [
+          "findall"
+        ],
+        "hint": "re モジュールで全マッチを探すメソッドは？",
+        "explanation": "re.findall(pattern, string) はすべてのマッチをリストで返します。\\d+ は1文字以上の数字列。\"SW1A 2AA\" から [\"1\", \"2\"] が取得できます。"
+      }
+    ]
   },
-  ZA: {
-    python: [
+  "ZA": {
+    "python": [
       {
-        id: 'ex_za_py_1',
-        worldId: 'execute',
-        conceptId: 'typehints',
-        questionType: 'multiple-choice',
-        title: '型ヒント付き関数の出力を予測しよう',
-        prompt: 'このコードを実行したときの出力は？',
-        code: `def greet(name: str, times: int) -> str:
-    return name * times
-
-result = greet("Ubuntu! ", 3)
-print(result)`,
-        options: [
-          'Ubuntu! Ubuntu! Ubuntu! ',
-          'Ubuntu! 3',
-          'Error: type mismatch',
-          'None',
+        "id": "ex_za_py_1",
+        "worldId": "execute",
+        "conceptId": "typehints",
+        "questionType": "multiple-choice",
+        "title": "型ヒント付き関数の出力を予測しよう",
+        "prompt": "このコードを実行したときの出力は？",
+        "code": "def greet(name: str, times: int) -> str:\n    return name * times\n\nresult = greet(\"Ubuntu! \", 3)\nprint(result)",
+        "options": [
+          "Ubuntu! Ubuntu! Ubuntu! ",
+          "Ubuntu! 3",
+          "Error: type mismatch",
+          "None"
         ],
-        answer: 'Ubuntu! Ubuntu! Ubuntu! ',
-        hint: '文字列 * 数値は文字列を繰り返します。型ヒントは実行時には強制されません。',
-        explanation: '"Ubuntu! " * 3 → "Ubuntu! Ubuntu! Ubuntu! "。Pythonの型ヒントは注釈のみで実行時チェックなし。',
+        "answer": "Ubuntu! Ubuntu! Ubuntu! ",
+        "hint": "文字列 * 数値は文字列を繰り返します。型ヒントは実行時には強制されません。",
+        "explanation": "\"Ubuntu! \" * 3 → \"Ubuntu! Ubuntu! Ubuntu! \"。Pythonの型ヒントは注釈のみで実行時チェックなし。"
       },
       {
-        id: 'ex_za_py_2',
-        worldId: 'execute',
-        conceptId: 'typehints',
-        questionType: 'multiple-blanks',
-        title: 'Optional 型ヒントのコードを完成させよう',
-        prompt: '辞書から値を安全に取得する関数の空欄を埋めてください',
-        code: `from typing import ___BLANK_0___
-
-def get_capital(country: str) -> Optional[str]:
-    capitals = {"South Africa": "Pretoria", "Japan": "Tokyo"}
-    return capitals.___BLANK_1___(country)
-
-print(get_capital("Kenya"))`,
-        blanks: ['Optional', 'get'],
-        hint: 'キーが存在しない場合に None を返す辞書メソッドは？',
-        explanation: 'Optional[str] は str または None を返すことを示します。dict.get(key) はキーが存在しない場合 None を返します。"Kenya" はキーにないので None が出力されます。',
+        "id": "ex_za_py_2",
+        "worldId": "execute",
+        "conceptId": "typehints",
+        "questionType": "multiple-blanks",
+        "title": "Optional 型ヒントのコードを完成させよう",
+        "prompt": "辞書から値を安全に取得する関数の空欄を埋めてください",
+        "code": "from typing import ___BLANK_0___\n\ndef get_capital(country: str) -> Optional[str]:\n    capitals = {\"South Africa\": \"Pretoria\", \"Japan\": \"Tokyo\"}\n    return capitals.___BLANK_1___(country)\n\nprint(get_capital(\"Kenya\"))",
+        "blanks": [
+          "Optional",
+          "get"
+        ],
+        "hint": "キーが存在しない場合に None を返す辞書メソッドは？",
+        "explanation": "Optional[str] は str または None を返すことを示します。dict.get(key) はキーが存在しない場合 None を返します。\"Kenya\" はキーにないので None が出力されます。"
       },
       {
-        id: 'ex_za_py_3',
-        worldId: 'execute',
-        conceptId: 'typehints',
-        questionType: 'output-predict',
-        title: 'dataclass の出力を予測しよう',
-        prompt: 'このコードの出力は？',
-        code: `from dataclasses import dataclass
-
-@dataclass
-class Country:
-    name: str
-    languages: int
-
-sa = Country("South Africa", 11)
-print(sa.languages * 2)`,
-        options: ['11', '22', 'None', 'Error'],
-        answer: '22',
-        hint: 'dataclass は __init__ を自動生成します。sa.languages の値は？',
-        explanation: '@dataclass は name と languages の __init__ を自動生成します。sa.languages = 11、11 * 2 = 22。',
-      },
-    ],
+        "id": "ex_za_py_3",
+        "worldId": "execute",
+        "conceptId": "typehints",
+        "questionType": "output-predict",
+        "title": "dataclass の出力を予測しよう",
+        "prompt": "このコードの出力は？",
+        "code": "from dataclasses import dataclass\n\n@dataclass\nclass Country:\n    name: str\n    languages: int\n\nsa = Country(\"South Africa\", 11)\nprint(sa.languages * 2)",
+        "options": [
+          "11",
+          "22",
+          "None",
+          "Error"
+        ],
+        "answer": "22",
+        "hint": "dataclass は __init__ を自動生成します。sa.languages の値は？",
+        "explanation": "@dataclass は name と languages の __init__ を自動生成します。sa.languages = 11、11 * 2 = 22。"
+      }
+    ]
   },
-  BR: {
-    python: [
+  "BR": {
+    "python": [
       {
-        id: 'ex_br_py_1',
-        worldId: 'execute',
-        conceptId: 'lists',
-        questionType: 'code-ordering',
-        title: 'コードブロックを正しい順序に並べよう',
-        prompt: 'ブラジルの都市リストを作り、ソートして表示する。3 つのブロックを正しい実行順序に並べてください。',
-        blocks: [
-          'print(cities)',
-          'cities = ["São Paulo", "Rio de Janeiro", "Brasília", "Salvador"]',
-          'cities.sort()',
+        "id": "ex_br_py_1",
+        "worldId": "execute",
+        "conceptId": "lists",
+        "questionType": "code-ordering",
+        "title": "コードブロックを正しい順序に並べよう",
+        "prompt": "ブラジルの都市リストを作り、ソートして表示する。3 つのブロックを正しい実行順序に並べてください。",
+        "blocks": [
+          "print(cities)",
+          "cities = [\"São Paulo\", \"Rio de Janeiro\", \"Brasília\", \"Salvador\"]",
+          "cities.sort()"
         ],
-        answer: [1, 2, 0],
-        hint: 'リストは使う前に作る。表示は処理が終わってから。',
-        explanation: 'まず cities を定義し（index 1）、sort() で昇順に並べ替え（index 2）、最後に print() で表示（index 0）します。',
+        "answer": [
+          1,
+          2,
+          0
+        ],
+        "hint": "リストは使う前に作る。表示は処理が終わってから。",
+        "explanation": "まず cities を定義し（index 1）、sort() で昇順に並べ替え（index 2）、最後に print() で表示（index 0）します。"
       },
       {
-        id: 'ex_br_py_2',
-        worldId: 'execute',
-        conceptId: 'lists',
-        questionType: 'output-predict',
-        title: 'リスト内包表記の結果を予測しよう',
-        prompt: 'このコードの出力は？',
-        code: `cities = ["São Paulo", "Rio", "Brasília", "Salvador", "Fortaleza"]
-long_names = [c for c in cities if len(c) > 5]
-print(len(long_names))`,
-        options: ['2', '3', '4', '5'],
-        answer: '4',
-        hint: '長さが 5 より大きい(>5)都市名をカウント。"Rio" の長さは？',
-        explanation: '"São Paulo"(9), "Rio"(3), "Brasília"(8), "Salvador"(8), "Fortaleza"(9)。len > 5 を満たすのは Rio 以外の 4 つ。',
+        "id": "ex_br_py_2",
+        "worldId": "execute",
+        "conceptId": "lists",
+        "questionType": "output-predict",
+        "title": "リスト内包表記の結果を予測しよう",
+        "prompt": "このコードの出力は？",
+        "code": "cities = [\"São Paulo\", \"Rio\", \"Brasília\", \"Salvador\", \"Fortaleza\"]\nlong_names = [c for c in cities if len(c) > 5]\nprint(len(long_names))",
+        "options": [
+          "2",
+          "3",
+          "4",
+          "5"
+        ],
+        "answer": "4",
+        "hint": "長さが 5 より大きい(>5)都市名をカウント。\"Rio\" の長さは？",
+        "explanation": "\"São Paulo\"(9), \"Rio\"(3), \"Brasília\"(8), \"Salvador\"(8), \"Fortaleza\"(9)。len > 5 を満たすのは Rio 以外の 4 つ。"
       },
       {
-        id: 'ex_br_py_3',
-        worldId: 'execute',
-        conceptId: 'lists',
-        questionType: 'multiple-blanks',
-        title: '人口リストをソートして上位を取得するコードを完成させよう',
-        prompt: '空欄を埋めてブラジルの主要都市の人口(万人)を降順で上位 3 件取得してください',
-        code: `population = [1232, 674, 309, 290, 264]
-population.___BLANK_0___(reverse=True)
-top3 = population[___BLANK_1___]
-print(top3)`,
-        blanks: ['sort', ':3'],
-        hint: 'in-place ソートのメソッド名と、先頭 3 件を取るスライスは？',
-        explanation: 'sort(reverse=True) で降順に並べ替え。[:3] で先頭 3 件を取得。結果は [1232, 674, 309]。',
-      },
-    ],
+        "id": "ex_br_py_3",
+        "worldId": "execute",
+        "conceptId": "lists",
+        "questionType": "multiple-blanks",
+        "title": "人口リストをソートして上位を取得するコードを完成させよう",
+        "prompt": "空欄を埋めてブラジルの主要都市の人口(万人)を降順で上位 3 件取得してください",
+        "code": "population = [1232, 674, 309, 290, 264]\npopulation.___BLANK_0___(reverse=True)\ntop3 = population[___BLANK_1___]\nprint(top3)",
+        "blanks": [
+          "sort",
+          ":3"
+        ],
+        "hint": "in-place ソートのメソッド名と、先頭 3 件を取るスライスは？",
+        "explanation": "sort(reverse=True) で降順に並べ替え。[:3] で先頭 3 件を取得。結果は [1232, 674, 309]。"
+      }
+    ]
   },
-  AU: {
-    python: [
+  "AU": {
+    "python": [
       {
-        id: 'ex_au_py_1',
-        worldId: 'execute',
-        conceptId: 'functions',
-        questionType: 'implementation-selection',
-        title: '最も適切な実装を選ぼう',
-        prompt: 'オーストラリアの都市リストから先頭 3 件を取得して表示する。最も Python らしい（Pythonic な）実装はどれ？',
-        options: [
-          `cities = ["Sydney", "Melbourne", "Brisbane", "Perth"]
-result = []
-for i in range(3):
-    result.append(cities[i])
-print(result)`,
-          `cities = ["Sydney", "Melbourne", "Brisbane", "Perth"]
-print(cities[:3])`,
-          `cities = ["Sydney", "Melbourne", "Brisbane", "Perth"]
-print(cities[0], cities[1], cities[2])`,
+        "id": "ex_au_py_1",
+        "worldId": "execute",
+        "conceptId": "functions",
+        "questionType": "implementation-selection",
+        "title": "最も適切な実装を選ぼう",
+        "prompt": "オーストラリアの都市リストから先頭 3 件を取得して表示する。最も Python らしい（Pythonic な）実装はどれ？",
+        "options": [
+          "cities = [\"Sydney\", \"Melbourne\", \"Brisbane\", \"Perth\"]\nresult = []\nfor i in range(3):\n    result.append(cities[i])\nprint(result)",
+          "cities = [\"Sydney\", \"Melbourne\", \"Brisbane\", \"Perth\"]\nprint(cities[:3])",
+          "cities = [\"Sydney\", \"Melbourne\", \"Brisbane\", \"Perth\"]\nprint(cities[0], cities[1], cities[2])"
         ],
-        answer: `cities = ["Sydney", "Melbourne", "Brisbane", "Perth"]
-print(cities[:3])`,
-        hint: 'Pythonic なコードは短く明瞭。スライス記法を思い出して。',
-        explanation: 'cities[:3] が最も簡潔で慣用的なスライス記法です。ループによる個別 append や固定インデックスより可読性・保守性が高く、リスト長が変わっても安全です。',
+        "answer": "cities = [\"Sydney\", \"Melbourne\", \"Brisbane\", \"Perth\"]\nprint(cities[:3])",
+        "hint": "Pythonic なコードは短く明瞭。スライス記法を思い出して。",
+        "explanation": "cities[:3] が最も簡潔で慣用的なスライス記法です。ループによる個別 append や固定インデックスより可読性・保守性が高く、リスト長が変わっても安全です。"
       },
       {
-        id: 'ex_au_py_2',
-        worldId: 'execute',
-        conceptId: 'functions',
-        questionType: 'output-predict',
-        title: 'デフォルト引数付き関数の出力を予測しよう',
-        prompt: 'このコードの出力は？',
-        code: `def describe_city(name, country="Australia"):
-    return f"{name}, {country}"
-
-print(describe_city("Sydney"))
-print(describe_city("Paris", "France"))`,
-        options: [
-          'Sydney, Australia\nParis, France',
-          'Sydney, None\nParis, France',
-          'Sydney\nParis',
-          'Error',
+        "id": "ex_au_py_2",
+        "worldId": "execute",
+        "conceptId": "functions",
+        "questionType": "output-predict",
+        "title": "デフォルト引数付き関数の出力を予測しよう",
+        "prompt": "このコードの出力は？",
+        "code": "def describe_city(name, country=\"Australia\"):\n    return f\"{name}, {country}\"\n\nprint(describe_city(\"Sydney\"))\nprint(describe_city(\"Paris\", \"France\"))",
+        "options": [
+          "Sydney, Australia\nParis, France",
+          "Sydney, None\nParis, France",
+          "Sydney\nParis",
+          "Error"
         ],
-        answer: 'Sydney, Australia\nParis, France',
-        hint: 'デフォルト引数は省略したときだけ使われます',
-        explanation: 'describe_city("Sydney") → country はデフォルト "Australia"。describe_city("Paris", "France") → country は "France" に上書き。',
+        "answer": "Sydney, Australia\nParis, France",
+        "hint": "デフォルト引数は省略したときだけ使われます",
+        "explanation": "describe_city(\"Sydney\") → country はデフォルト \"Australia\"。describe_city(\"Paris\", \"France\") → country は \"France\" に上書き。"
       },
       {
-        id: 'ex_au_py_3',
-        worldId: 'execute',
-        conceptId: 'functions',
-        questionType: 'multiple-choice',
-        title: 'lambda を使ったソートの出力を予測しよう',
-        prompt: 'このコードの出力は？',
-        code: `cities = [("Sydney", 5312), ("Melbourne", 5078), ("Brisbane", 2561)]
-cities_sorted = sorted(cities, key=lambda x: x[1])
-print(cities_sorted[0][0])`,
-        options: ['Sydney', 'Melbourne', 'Brisbane', 'Error'],
-        answer: 'Brisbane',
-        hint: 'sorted() はデフォルトで昇順。key=lambda x: x[1] は何でソート？',
-        explanation: 'lambda x: x[1] でタプルの 2 番目要素（人口）でソート。昇順なので最小の Brisbane(2561) が先頭になります。',
-      },
-    ],
-  },
+        "id": "ex_au_py_3",
+        "worldId": "execute",
+        "conceptId": "functions",
+        "questionType": "multiple-choice",
+        "title": "lambda を使ったソートの出力を予測しよう",
+        "prompt": "このコードの出力は？",
+        "code": "cities = [(\"Sydney\", 5312), (\"Melbourne\", 5078), (\"Brisbane\", 2561)]\ncities_sorted = sorted(cities, key=lambda x: x[1])\nprint(cities_sorted[0][0])",
+        "options": [
+          "Sydney",
+          "Melbourne",
+          "Brisbane",
+          "Error"
+        ],
+        "answer": "Brisbane",
+        "hint": "sorted() はデフォルトで昇順。key=lambda x: x[1] は何でソート？",
+        "explanation": "lambda x: x[1] でタプルの 2 番目要素（人口）でソート。昇順なので最小の Brisbane(2561) が先頭になります。"
+      }
+    ]
+  }
 };
 
 export const EXECUTE_LANGUAGES = [

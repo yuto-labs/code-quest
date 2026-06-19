@@ -24,6 +24,11 @@ function normalizeText(value) {
   return String(value ?? '').toLowerCase();
 }
 
+function mistakeSearchText(item) {
+  if (!item || typeof item !== 'object') return item;
+  return [item.wrong, item.reason, item.correct].filter(Boolean).join(' ');
+}
+
 function searchableTopic(topic) {
   return [
     topic.id,
@@ -39,11 +44,25 @@ function searchableTopic(topic) {
       page.minimalExample?.code,
       page.minimalExample?.output,
       ...(page.minimalExample?.lineNotes || []),
-      ...(page.commonMistakes || []),
+      ...(page.commonMistakes || []).map(mistakeSearchText),
       ...(page.miniChecks || []).flatMap(check => [check.prompt, check.answer]),
       ...Object.values(page.worldExamples || {}),
     ]),
   ].filter(Boolean).join(' ');
+}
+
+function normalizeCodeForCompare(value) {
+  return String(value || '')
+    .split('\n')
+    .map(line => line.replace(/#.*$/, '').replace(/\/\/.*$/, '').trim())
+    .filter(Boolean)
+    .join('\n');
+}
+
+function isDistinctCodeBlock(left, right) {
+  const a = normalizeCodeForCompare(left);
+  const b = normalizeCodeForCompare(right);
+  return Boolean(a && b && a !== b);
 }
 
 function ConceptCore({ conceptId, language, progress, scores, size = 'sm' }) {
@@ -343,7 +362,7 @@ function TopicDetail({ topic, progress, scores, review, onNavigate, onBack, orig
           </section>
         )}
 
-        {page.correctedExample && (
+        {isDistinctCodeBlock(page.correctedExample, page.minimalExample?.code) && (
           <section style={styles.panel}>
             <div style={styles.sectionHeading}>修正版の例</div>
             <CodeBlock label={`${topic.title} corrected example`}>{page.correctedExample}</CodeBlock>
@@ -364,7 +383,7 @@ function TopicDetail({ topic, progress, scores, review, onNavigate, onBack, orig
 
         <section style={styles.panel}>
           <div style={styles.sectionHeading}>間違えやすいポイント</div>
-          <div style={styles.noteList}>{(page.commonMistakes || []).map(item => <div key={item} style={styles.noteItem}>{item}</div>)}</div>
+          <div style={styles.noteList}>{(page.commonMistakes || []).map((item, index) => <MistakeItem key={typeof item === 'string' ? item : `${item.wrong}-${index}`} item={item} />)}</div>
         </section>
 
         <section style={styles.panel}>
@@ -414,6 +433,19 @@ function TopicDetail({ topic, progress, scores, review, onNavigate, onBack, orig
 
 function ReturnButton({ onClick }) {
   return <button style={styles.returnBtn} onClick={onClick}>← 問題へ戻る</button>;
+}
+
+function MistakeItem({ item }) {
+  if (!item || typeof item !== 'object') {
+    return <div style={styles.noteItem}>{item}</div>;
+  }
+  return (
+    <div style={styles.mistakePair}>
+      <div style={styles.mistakeCode}><span style={styles.mistakeLabel}>NG</span><code>{item.wrong}</code></div>
+      <div style={styles.mistakeReason}>{item.reason}</div>
+      <div style={styles.mistakeCode}><span style={styles.mistakeLabel}>OK</span><code>{item.correct}</code></div>
+    </div>
+  );
 }
 
 const styles = {
@@ -498,6 +530,10 @@ const styles = {
   sectionText: { fontSize: 'clamp(11px, 3vw, 13px)', color: 'var(--text)', lineHeight: 2, margin: 0 },
   noteList: { display: 'flex', flexDirection: 'column', gap: 7 },
   noteItem: { fontSize: 10, color: 'var(--text)', lineHeight: 2, wordBreak: 'break-word' },
+  mistakePair: { display: 'grid', gap: 6, padding: 10, border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(0,0,0,0.16)', minWidth: 0 },
+  mistakeCode: { display: 'flex', alignItems: 'center', gap: 8, fontSize: 10, color: 'var(--text)', minWidth: 0, overflowX: 'auto' },
+  mistakeLabel: { fontFamily: 'var(--pixel-font)', fontSize: 8, color: 'var(--accent2)', flexShrink: 0 },
+  mistakeReason: { fontSize: 10, color: 'var(--text-dim)', lineHeight: 1.8 },
   worldGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 8 },
   worldExample: { display: 'flex', flexDirection: 'column', gap: 6, border: '1px solid rgba(255,255,255,0.12)', padding: 10, fontSize: 10, lineHeight: 1.8 },
   check: { fontSize: 10, color: 'var(--text)', lineHeight: 2 },

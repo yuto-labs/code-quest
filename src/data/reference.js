@@ -21,7 +21,7 @@ export const REFERENCE_TOPICS = [
         "details": "変数はデータを保存する「箱」です。名前をつけて値を入れておき、後から取り出したり書き換えたりできます。Pythonでは宣言不要で、代入するだけで変数が作られます。",
         "minimalExample": {
           "code": "name = \"Player\"        # 文字列を代入\nage  = 20            # 整数を代入\nheight = 175.5       # 小数を代入\n\nprint(name)          # → Player\nprint(age)           # → 20\nprint(height)        # → 175.5",
-          "output": "",
+          "output": "Player\n20\n175.5",
           "lineNotes": [
             "L1: 文字列を代入",
             "L2: 整数を代入",
@@ -45,7 +45,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: 変数とは？"
         },
         "commonMistakes": [
-          "変数はデータを保存する「箱」です。名前をつけて値を入れておき、後から取り出したり書き換えたりできます。Pythonでは宣言不要で、代入するだけで変数が作られます。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "変数はデータを保存する「箱」です。名前をつけて値を入れておき、後から取り出したり書き換えたりできます。Pythonでは宣言不要で、代入するだけで変数が作られます。",
+            "correct": "name = \"Player\"        # 文字列を代入"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -68,7 +72,7 @@ export const REFERENCE_TOPICS = [
         "details": "Pythonには値の「種類」があります。これをデータ型と言います。型によって使える操作が変わります。",
         "minimalExample": {
           "code": "str_val   = \"Hello\"   # str   文字列\nint_val   = 42        # int   整数\nfloat_val = 3.14      # float 小数\nbool_val  = True      # bool  真偽値（True/False）\nnone_val  = None      # NoneType 値なし\n\nprint(type(str_val))  # → <class 'str'>\nprint(type(int_val))  # → <class 'int'>",
-          "output": "",
+          "output": "<class 'str'>\n<class 'int'>",
           "lineNotes": [
             "L1: str   文字列",
             "L2: int   整数",
@@ -94,7 +98,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: データ型の種類"
         },
         "commonMistakes": [
-          "Pythonには値の「種類」があります。これをデータ型と言います。型によって使える操作が変わります。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Pythonには値の「種類」があります。これをデータ型と言います。型によって使える操作が変わります。",
+            "correct": "str_val   = \"Hello\"   # str   文字列"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -117,7 +125,7 @@ export const REFERENCE_TOPICS = [
         "details": "型を別の型に変換できます。これを「型キャスト」と言います。変換できない場合はエラーになります。",
         "minimalExample": {
           "code": "# 文字列 → 整数\nnum = int(\"42\")       # → 42\nnum = int(\"3.14\")     # ❌ エラー（小数文字列はint不可）\n\n# 文字列 → 小数\nf = float(\"3.14\")     # → 3.14\n\n# 数値 → 文字列\ns = str(100)          # → \"100\"\n\n# 整数 → 小数\nf = float(5)          # → 5.0\n\n# 実用例: 入力を数値として使う\nage = int(input(\"年齢: \"))\nprint(age + 1)",
-          "output": "",
+          "output": "42\n3.14\n\"100\"\n5.0",
           "lineNotes": [
             "L1: 文字列 → 整数",
             "L2: → 42",
@@ -149,7 +157,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: 型の変換"
         },
         "commonMistakes": [
-          "型を別の型に変換できます。これを「型キャスト」と言います。変換できない場合はエラーになります。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "型を別の型に変換できます。これを「型キャスト」と言います。変換できない場合はエラーになります。",
+            "correct": "num = int(\"42\")       # → 42"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -168,51 +180,47 @@ export const REFERENCE_TOPICS = [
       {
         "id": "variables-types-04-page",
         "title": "変数の命名ルール",
-        "summary": "Pythonの変数名には守るべきルールと推奨の書き方（慣習）があります。",
-        "details": "Pythonの変数名には守るべきルールと推奨の書き方（慣習）があります。",
+        "summary": "変数名は「動く名前」です。Pythonの文法と読みやすさの慣習を分けて確認します。",
+        "details": "数字で始まる名前、ハイフンを含む名前、予約語は変数名にできません。普通の変数は snake_case、クラス名は実際に class を定義するときに PascalCase を使います。_private はアクセス制御ではなく、内部用と伝える慣習です。",
         "minimalExample": {
-          "code": "# ✅ ルール（必須）\nmy_name = \"Player\"     # 英数字とアンダースコア\n_private = 100       # アンダースコアで始められる\nuser_id = \"Guest\"      # 数字は2文字目以降ならOK\n\n# ❌ エラーになる\n# 1user = \"Member\"      数字で始まるのはNG\n# my-name = \"...\"    ハイフンはNG\n# class = \"...\"      予約語はNG（if/for/defなども）\n\n# ✅ 慣習（推奨）\nuser_name = \"Player\"   # スネークケース（単語を_で区切る）\nMAX_SIZE = 100       # 定数は大文字\nUserName = \"Player\"    # クラス名はパスカルケース",
+          "code": "# valid variable names\nmy_name = \"Player\"      # letters and underscore\n_private = 100          # convention: internal-use name\nuser1 = \"Member\"       # digits are OK after the first character\n\n# recommended styles\nuser_name = \"Player\"   # snake_case for normal variables\nMAX_SIZE = 100          # UPPER_CASE for constants by convention\n\nclass UserName:\n    pass                # PascalCase for class names",
           "output": "",
           "lineNotes": [
-            "L1: ✅ ルール（必須）",
-            "L2: 英数字とアンダースコア",
-            "L3: アンダースコアで始められる",
-            "L4: 数字は2文字目以降ならOK",
-            "L6: ❌ エラーになる",
-            "L7: 1user = \"Member\"      数字で始まるのはNG",
-            "L8: my-name = \"...\"    ハイフンはNG",
-            "L9: class = \"...\"      予約語はNG（if/for/defなども）",
-            "L11: ✅ 慣習（推奨）",
-            "L12: スネークケース（単語を_で区切る）",
-            "L13: 定数は大文字",
-            "L14: クラス名はパスカルケース"
+            "L2: my_name は英字とアンダースコアだけで作った有効な変数名です。",
+            "L3: _private は「内部用」を伝える慣習で、強制的なアクセス制御ではありません。",
+            "L4: user1 のように、数字は2文字目以降なら使えます。",
+            "L7: 普通の変数は snake_case が読みやすい書き方です。",
+            "L8: MAX_SIZE は定数として扱う値の慣習的な名前です。",
+            "L10: PascalCase はクラス名の慣習なので、実際に class UserName: と書きます。"
           ],
           "stateTrace": [
-            "L1: ✅ ルール（必須）",
-            "L2: 英数字とアンダースコア",
-            "L3: アンダースコアで始められる",
-            "L4: 数字は2文字目以降ならOK",
-            "L6: ❌ エラーになる",
-            "L7: 1user = \"Member\"      数字で始まるのはNG",
-            "L8: my-name = \"...\"    ハイフンはNG",
-            "L9: class = \"...\"      予約語はNG（if/for/defなども）",
-            "L11: ✅ 慣習（推奨）",
-            "L12: スネークケース（単語を_で区切る）",
-            "L13: 定数は大文字",
-            "L14: クラス名はパスカルケース"
+            "my_name / _private / user1 / user_name / MAX_SIZE はすべて有効な名前です。",
+            "UserName は変数例ではなく、class 文の名前として示します。"
           ]
         },
         "worldExamples": {
-          "decode": "DECODE: 変数の命名ルール",
-          "execute": "EXECUTE: 変数の命名ルール",
-          "debug": "DEBUG: 変数の命名ルール"
+          "decode": "変数名として使える文字のルールを読む。",
+          "execute": "代入文を上から追い、どの名前が値を持つか確認する。",
+          "debug": "名前が数字開始・予約語・演算子になっていないか切り分ける。"
         },
         "commonMistakes": [
-          "# 1user = \"Member\"      数字で始まるのはNG",
-          "# my-name = \"...\"    ハイフンはNG",
-          "# class = \"...\"      予約語はNG（if/for/defなども）"
+          {
+            "wrong": "1user = \"Member\"",
+            "reason": "数字から開始不可",
+            "correct": "user1 = \"Member\""
+          },
+          {
+            "wrong": "my-name = \"Player\"",
+            "reason": "- は演算子",
+            "correct": "my_name = \"Player\""
+          },
+          {
+            "wrong": "class = \"Player\"",
+            "reason": "予約語",
+            "correct": "class_name = \"Player\""
+          }
         ],
-        "correctedExample": "# ✅ ルール（必須）\nmy_name = \"Player\"     # 英数字とアンダースコア\n_private = 100       # アンダースコアで始められる\nuser_id = \"Guest\"      # 数字は2文字目以降ならOK\n\n# ❌ エラーになる\n# 1user = \"Member\"      数字で始まるのはNG\n# my-name = \"...\"    ハイフンはNG\n# class = \"...\"      予約語はNG（if/for/defなども）\n\n# ✅ 慣習（推奨）\nuser_name = \"Player\"   # スネークケース（単語を_で区切る）\nMAX_SIZE = 100       # 定数は大文字\nUserName = \"Player\"    # クラス名はパスカルケース",
+        "correctedExample": "",
         "miniChecks": [
           {
             "id": "variables-types-04-check-1",
@@ -233,7 +241,7 @@ export const REFERENCE_TOPICS = [
         "details": "Pythonでは複数の変数を1行で代入したり、値を交換したりできます。",
         "minimalExample": {
           "code": "# 複数代入\nx, y, z = 1, 2, 3\nprint(x, y, z)       # → 1 2 3\n\n# 同じ値を複数に代入\na = b = c = 0\n\n# 値のスワップ（他の言語では一時変数が必要）\na, b = 10, 20\na, b = b, a          # 一行で交換できる！\nprint(a, b)          # → 20 10\n\n# アンパック\nfirst, *rest = [1, 2, 3, 4, 5]\nprint(first)         # → 1\nprint(rest)          # → [2, 3, 4, 5]",
-          "output": "",
+          "output": "1 2 3\n20 10\n1\n[2, 3, 4, 5]",
           "lineNotes": [
             "L1: 複数代入",
             "L3: → 1 2 3",
@@ -263,7 +271,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: 複数代入と値のスワップ"
         },
         "commonMistakes": [
-          "Pythonでは複数の変数を1行で代入したり、値を交換したりできます。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Pythonでは複数の変数を1行で代入したり、値を交換したりできます。",
+            "correct": "x, y, z = 1, 2, 3"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -326,7 +338,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: 型アノテーション（型ヒント）"
         },
         "commonMistakes": [
-          "Python 3.5以降では変数や引数に型アノテーションを書けます。コードの可読性が上がり、IDEや mypy などのツールで静的チェックができます。実行時には強制されません。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Python 3.5以降では変数や引数に型アノテーションを書けます。コードの可読性が上がり、IDEや mypy などのツールで静的チェックができます。実行時には強制されません。",
+            "correct": "name: str = \"Player\""
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -349,7 +365,7 @@ export const REFERENCE_TOPICS = [
         "details": "実行時に変数の型をチェックするには isinstance() を使います。type() との違いは継承クラスも True になる点です。",
         "minimalExample": {
           "code": "x = 42\n\n# type() は完全一致\nprint(type(x) == int)         # → True\nprint(type(x) == float)       # → False\n\n# isinstance() は継承も考慮（推奨）\nprint(isinstance(x, int))     # → True\nprint(isinstance(x, (int, float)))  # → True（どちらか）\n\n# 実用例：引数の型バリデーション\ndef add(a, b):\n    if not isinstance(a, (int, float)):\n        raise TypeError(f\"数値を渡してください: {type(a)}\")\n    return a + b",
-          "output": "",
+          "output": "True\nFalse\nTrue\nTrue（どちらか）",
           "lineNotes": [
             "L3: type() は完全一致",
             "L4: → True",
@@ -375,9 +391,13 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: isinstance で型を確認する"
         },
         "commonMistakes": [
-          "raise TypeError(f\"数値を渡してください: {type(a)}\")"
+          {
+            "wrong": "raise TypeError(f\"数値を渡してください: {type(a)}\")",
+            "reason": "raise TypeError(f\"数値を渡してください: {type(a)}\")",
+            "correct": "x = 42"
+          }
         ],
-        "correctedExample": "x = 42\n\n# type() は完全一致\nprint(type(x) == int)         # → True\nprint(type(x) == float)       # → False\n\n# isinstance() は継承も考慮（推奨）\nprint(isinstance(x, int))     # → True\nprint(isinstance(x, (int, float)))  # → True（どちらか）\n\n# 実用例：引数の型バリデーション\ndef add(a, b):\n    if not isinstance(a, (int, float)):\n        raise TypeError(f\"数値を渡してください: {type(a)}\")\n    return a + b",
+        "correctedExample": "",
         "miniChecks": [
           {
             "id": "variables-types-advanced-02-check-1",
@@ -398,7 +418,7 @@ export const REFERENCE_TOPICS = [
         "details": "Pythonには定数構文がありませんが、大文字スネークケースで「変更しない変数」を表す慣習があります。Python 3.8以降は Final を使って型レベルで保護できます。",
         "minimalExample": {
           "code": "# 慣習：大文字で定数を表す\nMAX_RETRY = 3\nBASE_URL  = \"https://api.example.com\"\nPI = 3.14159265358979\n\n# Python 3.8+ の Final 型ヒント\nfrom typing import Final\nMAX_SIZE: Final = 100   # 再代入しないことをツールに伝える\n\nfor attempt in range(MAX_RETRY):\n    print(f\"試行 {attempt + 1}/{MAX_RETRY}\")",
-          "output": "",
+          "output": "?? 1/3\n?? 2/3\n?? 3/3",
           "lineNotes": [
             "L1: 慣習：大文字で定数を表す",
             "L3: api.example.com\"",
@@ -418,7 +438,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: 定数の扱い方"
         },
         "commonMistakes": [
-          "Pythonには定数構文がありませんが、大文字スネークケースで「変更しない変数」を表す慣習があります。Python 3.8以降は Final を使って型レベルで保護できます。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Pythonには定数構文がありませんが、大文字スネークケースで「変更しない変数」を表す慣習があります。Python 3.8以降は Final を使って型レベルで保護できます。",
+            "correct": "MAX_RETRY = 3"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -461,7 +485,7 @@ export const REFERENCE_TOPICS = [
         "details": "def キーワードで関数を定義します。同じ処理を何度でも呼び出せます。",
         "minimalExample": {
           "code": "def greet():\n    print(\"Hello!\")\n    print(\"Welcome!\")\n\ngreet()    # 呼び出し\ngreet()    # 何度でも呼べる\n\n# 関数は定義した後に呼び出す\ndef add(a, b):\n    return a + b\n\nresult = add(3, 5)\nprint(result)   # → 8",
-          "output": "",
+          "output": "8",
           "lineNotes": [
             "L5: 呼び出し",
             "L6: 何度でも呼べる",
@@ -481,7 +505,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: 関数の定義と呼び出し"
         },
         "commonMistakes": [
-          "def キーワードで関数を定義します。同じ処理を何度でも呼び出せます。"
+          {
+            "wrong": "def キーワードで関数を定義します。同じ処理を何度でも呼び出せます。",
+            "reason": "def キーワードで関数を定義します。同じ処理を何度でも呼び出せます。",
+            "correct": "def greet():"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -504,7 +532,7 @@ export const REFERENCE_TOPICS = [
         "details": "Pythonの引数には位置引数・キーワード引数・デフォルト引数・可変長引数があります。",
         "minimalExample": {
           "code": "# デフォルト引数\ndef greet(name, greeting=\"Hello\"):\n    print(f\"{greeting}, {name}!\")\n\ngreet(\"Guest\")           # → Hello, Guest!\ngreet(\"Member\", \"Hi\")       # → Hi, Member!\ngreet(\"Carol\", greeting=\"Hey\")  # キーワード引数\n\n# 可変長引数 *args（複数の位置引数）\ndef total(*nums):\n    return sum(nums)\n\nprint(total(1, 2, 3))         # → 6\nprint(total(10, 20, 30, 40))  # → 100\n\n# **kwargs（複数のキーワード引数）\ndef profile(**info):\n    for key, val in info.items():\n        print(f\"{key}: {val}\")\n\nprofile(name=\"Guest\", age=25, city=\"Tokyo\")",
-          "output": "",
+          "output": "Hello, Guest!\nHi, Member!\n6\n100",
           "lineNotes": [
             "L1: デフォルト引数",
             "L5: → Hello, Guest!",
@@ -532,7 +560,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: 引数の種類"
         },
         "commonMistakes": [
-          "Pythonの引数には位置引数・キーワード引数・デフォルト引数・可変長引数があります。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Pythonの引数には位置引数・キーワード引数・デフォルト引数・可変長引数があります。",
+            "correct": "def greet(name, greeting=\"Hello\"):"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -555,7 +587,7 @@ export const REFERENCE_TOPICS = [
         "details": "関数から値を返すには return を使います。複数の値も返せます。",
         "minimalExample": {
           "code": "# 単一の戻り値\ndef square(x):\n    return x ** 2\n\nprint(square(4))    # → 16\n\n# 複数の戻り値（タプルとして返る）\ndef min_max(lst):\n    return min(lst), max(lst)\n\nlo, hi = min_max([3, 1, 4, 1, 5, 9])\nprint(lo, hi)       # → 1 9\n\n# 条件によって異なる値を返す\ndef abs_value(x):\n    if x >= 0:\n        return x\n    return -x       # elseは不要（returnで抜ける）\n\n# return なしは None を返す\ndef no_return():\n    x = 1 + 1\n\nprint(no_return())  # → None",
-          "output": "",
+          "output": "16\n1 9\nNone",
           "lineNotes": [
             "L1: 単一の戻り値",
             "L5: → 16",
@@ -583,7 +615,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: 戻り値とreturn"
         },
         "commonMistakes": [
-          "関数から値を返すには return を使います。複数の値も返せます。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "関数から値を返すには return を使います。複数の値も返せます。",
+            "correct": "def square(x):"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -606,7 +642,7 @@ export const REFERENCE_TOPICS = [
         "details": "名前のない1行の関数です。簡単な処理をその場で定義するときに使います。",
         "minimalExample": {
           "code": "# 通常の関数\ndef double(x):\n    return x * 2\n\n# ラムダ（同じ意味）\ndouble = lambda x: x * 2\nprint(double(5))    # → 10\n\n# 複数の引数\nadd = lambda a, b: a + b\nprint(add(3, 4))    # → 7\n\n# sorted() のキーとして使う\npeople = [(\"Guest\", 25), (\"Member\", 20), (\"Carol\", 30)]\nsorted_people = sorted(people, key=lambda p: p[1])\nprint(sorted_people)   # 年齢順にソート\n\n# map() と filter() との組み合わせ\nnums = [1, 2, 3, 4, 5]\ndoubled = list(map(lambda x: x*2, nums))\nevens   = list(filter(lambda x: x%2==0, nums))",
-          "output": "",
+          "output": "10\n7",
           "lineNotes": [
             "L1: 通常の関数",
             "L5: ラムダ（同じ意味）",
@@ -634,7 +670,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: ラムダ関数"
         },
         "commonMistakes": [
-          "名前のない1行の関数です。簡単な処理をその場で定義するときに使います。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "名前のない1行の関数です。簡単な処理をその場で定義するときに使います。",
+            "correct": "def double(x):"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -656,19 +696,19 @@ export const REFERENCE_TOPICS = [
         "summary": "関数を引数として受け取り、機能を追加した関数を返す仕組みです。ログ出力・認証チェック・処理時間の計測などに広く使われます。",
         "details": "関数を引数として受け取り、機能を追加した関数を返す仕組みです。ログ出力・認証チェック・処理時間の計測などに広く使われます。",
         "minimalExample": {
-          "code": "import time\n\n# デコレータの定義\ndef timer(func):\n    def wrapper(*args, **kwargs):\n        start = time.time()\n        result = func(*args, **kwargs)\n        end   = time.time()\n        print(f\"{func.__name__} の実行時間: {end - start:.4f}秒\")\n        return result\n    return wrapper\n\n# @記法でデコレータを適用\n@timer\ndef slow_sum(n):\n    return sum(range(n))\n\nslow_sum(1_000_000)   # → slow_sum の実行時間: 0.0Xsec\n\n# 複数のデコレータを重ねることもできる\ndef log(func):\n    def wrapper(*args, **kwargs):\n        print(f\"呼び出し: {func.__name__}{args}\")\n        return func(*args, **kwargs)\n    return wrapper\n\n@log\n@timer\ndef add(a, b):\n    return a + b\n\nadd(3, 5)",
-          "output": "",
+          "code": "import time\n\ndef timer(func):\n    def wrapper(*args, **kwargs):\n        start = time.time()\n        result = func(*args, **kwargs)\n        end = time.time()\n        print(f\"{func.__name__} ?????: {end - start:.4f}?\")\n        return result\n    return wrapper\n\ndef log(func):\n    def wrapper(*args, **kwargs):\n        print(f\"????: {func.__name__}{args}\")\n        return func(*args, **kwargs)\n    return wrapper\n\n@log\n@timer\ndef add(a, b):\n    return a + b\n\nadd(3, 5)",
+          "output": "????: add(3, 5)\nadd ?????: 0.0XXX?",
           "lineNotes": [
-            "L3: デコレータの定義",
-            "L13: @記法でデコレータを適用",
-            "L18: → slow_sum の実行時間: 0.0Xsec",
-            "L20: 複数のデコレータを重ねることもできる"
+            "L1: ????????? time ???????????",
+            "L3-L10: timer ?????? wrapper ?????????????????",
+            "L12-L16: log ????????????????????",
+            "L18-L20: @log ? @timer ? add ?????????",
+            "L23: add(3, 5) ?????????????????????"
           ],
           "stateTrace": [
-            "L3: デコレータの定義",
-            "L13: @記法でデコレータを適用",
-            "L18: → slow_sum の実行時間: 0.0Xsec",
-            "L20: 複数のデコレータを重ねることもできる"
+            "add = timer(add) ????????????????",
+            "add = log(add) ??????????????????",
+            "add(3, 5) -> log wrapper -> timer wrapper -> ?? add ??????????"
           ]
         },
         "worldExamples": {
@@ -677,7 +717,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: デコレータ"
         },
         "commonMistakes": [
-          "関数を引数として受け取り、機能を追加した関数を返す仕組みです。ログ出力・認証チェック・処理時間の計測などに広く使われます。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "関数を引数として受け取り、機能を追加した関数を返す仕組みです。ログ出力・認証チェック・処理時間の計測などに広く使われます。",
+            "correct": "import time"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -700,7 +744,7 @@ export const REFERENCE_TOPICS = [
         "details": "yield を使うと「必要なときだけ値を生成する」ジェネレータを作れます。大きなデータを一度にメモリに乗せずに処理できます。",
         "minimalExample": {
           "code": "# 通常の関数: 全要素をリストに入れて返す\ndef squares_list(n):\n    return [x**2 for x in range(n)]   # n 要素をメモリに確保\n\n# ジェネレータ: 1つずつ生成する\ndef squares_gen(n):\n    for x in range(n):\n        yield x**2   # ← yield で一時停止して値を返す\n\n# 使い方は同じだがメモリ効率が大幅に違う\nfor sq in squares_gen(5):\n    print(sq)       # 0, 1, 4, 9, 16\n\n# ジェネレータ式（内包表記に似た書き方）\ngen = (x**2 for x in range(5))  # () に注意\nprint(next(gen))    # → 0\nprint(next(gen))    # → 1\nprint(list(gen))    # → [4, 9, 16]（残り）",
-          "output": "",
+          "output": "0\n1\n[4, 9, 16]（残り）",
           "lineNotes": [
             "L1: 通常の関数: 全要素をリストに入れて返す",
             "L3: n 要素をメモリに確保",
@@ -734,7 +778,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: ジェネレータ関数"
         },
         "commonMistakes": [
-          "yield を使うと「必要なときだけ値を生成する」ジェネレータを作れます。大きなデータを一度にメモリに乗せずに処理できます。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "yield を使うと「必要なときだけ値を生成する」ジェネレータを作れます。大きなデータを一度にメモリに乗せずに処理できます。",
+            "correct": "def squares_list(n):"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -778,7 +826,7 @@ export const REFERENCE_TOPICS = [
         "details": "変数には「スコープ（有効範囲）」があります。関数の内外で扱いが変わります。",
         "minimalExample": {
           "code": "count = 0            # グローバル変数（関数の外）\n\ndef increment():\n    global count     # グローバル変数を変更するには global 宣言\n    count += 1\n\ndef show():\n    local_val = 99   # ローカル変数（関数の中だけ有効）\n    print(count)     # グローバルは読み取れる\n    print(local_val)\n\nincrement()\nshow()               # → 1, 99\n# print(local_val)   ❌ 関数の外からはアクセスできない",
-          "output": "",
+          "output": "1, 99",
           "lineNotes": [
             "L1: グローバル変数（関数の外）",
             "L4: グローバル変数を変更するには global 宣言",
@@ -802,7 +850,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: グローバル変数とローカル変数"
         },
         "commonMistakes": [
-          "変数には「スコープ（有効範囲）」があります。関数の内外で扱いが変わります。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "変数には「スコープ（有効範囲）」があります。関数の内外で扱いが変わります。",
+            "correct": "count = 0            # グローバル変数（関数の外）"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -825,7 +877,7 @@ export const REFERENCE_TOPICS = [
         "details": "関数のスコープ（変数の有効範囲）と、関数を返す関数（クロージャ）について理解しましょう。",
         "minimalExample": {
           "code": "# LEGB ルール: Local > Enclosing > Global > Built-in\nx = \"global\"\n\ndef outer():\n    x = \"enclosing\"\n\n    def inner():\n        x = \"local\"\n        print(x)    # → local（最も近いスコープを使う）\n    inner()\n    print(x)        # → enclosing\n\nouter()\nprint(x)            # → global\n\n# クロージャ: 関数を返す関数\ndef multiplier(n):\n    def multiply(x):\n        return x * n   # n を「記憶」する\n    return multiply\n\ndouble = multiplier(2)\ntriple = multiplier(3)\nprint(double(5))    # → 10\nprint(triple(5))    # → 15",
-          "output": "",
+          "output": "local（最も近いスコープを使う）\nenclosing\nglobal\n10\n15",
           "lineNotes": [
             "L1: LEGB ルール: Local > Enclosing > Global > Built-in",
             "L9: → local（最も近いスコープを使う）",
@@ -853,7 +905,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: スコープとクロージャ"
         },
         "commonMistakes": [
-          "関数のスコープ（変数の有効範囲）と、関数を返す関数（クロージャ）について理解しましょう。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "関数のスコープ（変数の有効範囲）と、関数を返す関数（クロージャ）について理解しましょう。",
+            "correct": "x = \"global\""
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -891,8 +947,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 globalで変更するでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "Python の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Python の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "counter = 0"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "counter = 0"
+          }
         ],
         "miniChecks": [
           {
@@ -930,8 +994,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 returnで返す代替案では、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "Python の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Python の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "def add_clear(counter):"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "def add_clear(counter):"
+          }
         ],
         "miniChecks": [
           {
@@ -969,8 +1041,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 よくある間違いでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "Python の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Python の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "score = 10"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "score = 10"
+          }
         ],
         "miniChecks": [
           {
@@ -1008,8 +1088,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 確認問題では、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "Python の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Python の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "def format_label(country):"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "def format_label(country):"
+          }
         ],
         "miniChecks": [
           {
@@ -1050,7 +1138,7 @@ export const REFERENCE_TOPICS = [
         "details": "文字列は \" \" または ' ' で囲みます。複数行は \"\"\" \"\"\" を使います。文字列はイミュータブル（変更不可）です。",
         "minimalExample": {
           "code": "s1 = \"Hello\"\ns2 = 'World'\ns3 = \"\"\"複数行の\n文字列が\n書けます\"\"\"\n\n# 文字列の結合\nprint(s1 + \" \" + s2)   # → Hello World\n\n# 繰り返し\nprint(\"Ha\" * 3)         # → HaHaHa\n\n# 長さ\nprint(len(\"Python\"))    # → 6",
-          "output": "",
+          "output": "Hello World\nHaHaHa\n6",
           "lineNotes": [
             "L7: 文字列の結合",
             "L8: → Hello World",
@@ -1074,7 +1162,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: 文字列の基本"
         },
         "commonMistakes": [
-          "文字列は \" \" または ' ' で囲みます。複数行は \"\"\" \"\"\" を使います。文字列はイミュータブル（変更不可）です。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "文字列は \" \" または ' ' で囲みます。複数行は \"\"\" \"\"\" を使います。文字列はイミュータブル（変更不可）です。",
+            "correct": "s1 = \"Hello\""
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -1097,7 +1189,7 @@ export const REFERENCE_TOPICS = [
         "details": "f文字列を使うと変数を文字列に埋め込めます。最も現代的で読みやすい書き方です。",
         "minimalExample": {
           "code": "name = \"Guest\"\nage = 25\nheight = 163.5\n\n# f文字列（推奨）\nprint(f\"名前: {name}, 年齢: {age}\")\n# → 名前: Guest, 年齢: 25\n\n# 計算も埋め込める\nprint(f\"来年は{age + 1}歳\")\n\n# 小数点の桁数を指定\nprint(f\"身長: {height:.1f}cm\")  # → 身長: 163.5cm\n\n# 古い書き方（参考）\nprint(\"名前: %s\" % name)\nprint(\"名前: {}\".format(name))",
-          "output": "",
+          "output": "名前: Guest, 年齢: 25\n身長: 163.5cm",
           "lineNotes": [
             "L5: f文字列（推奨）",
             "L7: → 名前: Guest, 年齢: 25",
@@ -1121,7 +1213,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: f文字列（フォーマット）"
         },
         "commonMistakes": [
-          "f文字列を使うと変数を文字列に埋め込めます。最も現代的で読みやすい書き方です。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "f文字列を使うと変数を文字列に埋め込めます。最も現代的で読みやすい書き方です。",
+            "correct": "name = \"Guest\""
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -1144,7 +1240,7 @@ export const REFERENCE_TOPICS = [
         "details": "文字列の特定の文字や範囲を取り出せます。インデックスは0から始まります。",
         "minimalExample": {
           "code": "s = \"Python\"\n\n# インデックス（1文字取り出し）\nprint(s[0])      # → P  (最初)\nprint(s[-1])     # → n  (最後)\nprint(s[-2])     # → o  (後ろから2番目)\n\n# スライス [start:stop:step]\nprint(s[0:3])    # → Pyt  (0〜2文字目)\nprint(s[2:])     # → thon (2文字目以降)\nprint(s[:4])     # → Pyth (最初〜3文字目)\nprint(s[::-1])   # → nohtyP (逆順)\nprint(s[::2])    # → Pto  (1文字おき)",
-          "output": "",
+          "output": "P  (最初)\nn  (最後)\no  (後ろから2番目)\nPyt  (0〜2文字目)\nthon (2文字目以降)\nPyth (最初〜3文字目)\nnohtyP (逆順)\nPto  (1文字おき)",
           "lineNotes": [
             "L3: インデックス（1文字取り出し）",
             "L4: → P  (最初)",
@@ -1176,7 +1272,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: インデックスとスライス"
         },
         "commonMistakes": [
-          "文字列の特定の文字や範囲を取り出せます。インデックスは0から始まります。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "文字列の特定の文字や範囲を取り出せます。インデックスは0から始まります。",
+            "correct": "s = \"Python\""
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -1199,7 +1299,7 @@ export const REFERENCE_TOPICS = [
         "details": "文字列には便利なメソッドがたくさんあります。メソッドは元の文字列を変更せず新しい文字列を返します。",
         "minimalExample": {
           "code": "s = \"  Hello, World!  \"\n\nprint(s.upper())         # → \"  HELLO, WORLD!  \"\nprint(s.lower())         # → \"  hello, world!  \"\nprint(s.strip())         # → \"Hello, World!\"  前後の空白除去\nprint(s.replace(\"o\",\"0\"))# → \"  Hell0, W0rld!  \"\nprint(s.count(\"l\"))      # → 3\nprint(s.find(\"World\"))   # → 9  (見つかった位置)\n\n# 分割と結合\nwords = \"a,b,c\".split(\",\")  # → ['a', 'b', 'c']\njoined = \"-\".join(words)     # → \"a-b-c\"\n\n# 確認系\nprint(\"hello\".startswith(\"he\"))  # → True\nprint(\"hello\".endswith(\"lo\"))    # → True\nprint(\"123\".isdigit())           # → True",
-          "output": "",
+          "output": "\"  HELLO, WORLD!  \"\n\"  hello, world!  \"\n\"Hello, World!\"  前後の空白除去\n\"  Hell0, W0rld!  \"\n3\n9  (見つかった位置)\n['a', 'b', 'c']\n\"a-b-c\"\nTrue\nTrue\nTrue",
           "lineNotes": [
             "L3: → \"  HELLO, WORLD!  \"",
             "L4: → \"  hello, world!  \"",
@@ -1235,7 +1335,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: よく使うメソッド"
         },
         "commonMistakes": [
-          "文字列には便利なメソッドがたくさんあります。メソッドは元の文字列を変更せず新しい文字列を返します。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "文字列には便利なメソッドがたくさんあります。メソッドは元の文字列を変更せず新しい文字列を返します。",
+            "correct": "s = \"  Hello, World!  \""
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -1258,7 +1362,7 @@ export const REFERENCE_TOPICS = [
         "details": "文字列と数値を混在させるとエラーになります。変換してから扱いましょう。",
         "minimalExample": {
           "code": "# ❌ エラー\n# print(\"年齢: \" + 25)   str と int は + できない\n\n# ✅ 正しい書き方\nprint(\"年齢: \" + str(25))    # 文字列に変換\nprint(f\"年齢: {25}\")          # f文字列を使う（推奨）\n\n# input() は常に文字列を返す\n# age = input(\"年齢: \")\n# print(age + 1)  ❌ エラー\n# print(int(age) + 1)  ✅ 正しい",
-          "output": "",
+          "output": "??: 25\n??: 25",
           "lineNotes": [
             "L1: ❌ エラー",
             "L2: print(\"年齢: \" + 25)   str と int は + できない",
@@ -1288,7 +1392,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: 文字列と数値の注意点"
         },
         "commonMistakes": [
-          "文字列と数値を混在させるとエラーになります。変換してから扱いましょう。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "文字列と数値を混在させるとエラーになります。変換してから扱いましょう。",
+            "correct": "print(\"年齢: \" + str(25))    # 文字列に変換"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -1311,7 +1419,7 @@ export const REFERENCE_TOPICS = [
         "details": "複雑なパターン検索や置換には re モジュールを使います。メールアドレスの検証やログ解析などに役立ちます。",
         "minimalExample": {
           "code": "import re\n\ntext = \"お問い合わせ: info@example.com または support@test.org\"\n\n# 検索: パターンにマッチする最初の箇所\nm = re.search(r'\\w+@\\w+\\.\\w+', text)\nif m:\n    print(m.group())     # → info@example.com\n\n# 全検索: すべてのマッチを取得\nemails = re.findall(r'\\w+@\\w+\\.\\w+', text)\nprint(emails)   # → ['info@example.com', 'support@test.org']\n\n# 置換\ncleaned = re.sub(r'\\d+', 'X', \"ID:123 Score:456\")\nprint(cleaned)  # → ID:X Score:X\n\n# よく使うパターン\n# \\d   数字\n# \\w   英数字＋アンダースコア\n# \\s   空白\n# .     任意の1文字\n# +     1回以上  *  0回以上  ?  0か1回",
-          "output": "",
+          "output": "info@example.com\n['info@example.com', 'support@test.org']\nID:X Score:X",
           "lineNotes": [
             "L5: 検索: パターンにマッチする最初の箇所",
             "L8: → info@example.com",
@@ -1347,7 +1455,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: 正規表現の基本（re モジュール）"
         },
         "commonMistakes": [
-          "複雑なパターン検索や置換には re モジュールを使います。メールアドレスの検証やログ解析などに役立ちます。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "複雑なパターン検索や置換には re モジュールを使います。メールアドレスの検証やログ解析などに役立ちます。",
+            "correct": "import re"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -1385,7 +1497,7 @@ export const REFERENCE_TOPICS = [
         "details": "数値の計算に使う記号です。優先順位は数学と同じ（掛け算・割り算が先）です。",
         "minimalExample": {
           "code": "a, b = 10, 3\n\nprint(a + b)    # → 13   足し算\nprint(a - b)    # →  7   引き算\nprint(a * b)    # → 30   掛け算\nprint(a / b)    # →  3.333... 割り算（常にfloat）\nprint(a // b)   # →  3   切り捨て除算（整数）\nprint(a % b)    # →  1   余り\nprint(a ** b)   # → 1000 べき乗（2**10=1024）\n\n# 優先順位\nprint(2 + 3 * 4)     # → 14  (* が先)\nprint((2 + 3) * 4)   # → 20  () で優先",
-          "output": "",
+          "output": "13   足し算\n7   引き算\n30   掛け算\n3.333... 割り算（常にfloat）\n3   切り捨て除算（整数）\n1   余り\n1000 べき乗（2**10=1024）\n14  (* が先)\n20  () で優先",
           "lineNotes": [
             "L3: → 13   足し算",
             "L4: →  7   引き算",
@@ -1417,7 +1529,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: 算術演算子"
         },
         "commonMistakes": [
-          "数値の計算に使う記号です。優先順位は数学と同じ（掛け算・割り算が先）です。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "数値の計算に使う記号です。優先順位は数学と同じ（掛け算・割り算が先）です。",
+            "correct": "a, b = 10, 3"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -1470,7 +1586,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: 代入演算子"
         },
         "commonMistakes": [
-          "変数の値を更新するときに使う省略形です。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "変数の値を更新するときに使う省略形です。",
+            "correct": "x = 10"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -1493,7 +1613,7 @@ export const REFERENCE_TOPICS = [
         "details": "2つの値を比べて True または False を返します。if文やwhile文の条件としてよく使います。",
         "minimalExample": {
           "code": "x = 5\n\nprint(x == 5)    # → True  等しい\nprint(x != 5)    # → False 等しくない\nprint(x > 3)     # → True  より大きい\nprint(x < 3)     # → False より小さい\nprint(x >= 5)    # → True  以上\nprint(x <= 4)    # → False 以下\n\n# 文字列の比較（アルファベット順）\nprint(\"apple\" < \"banana\")   # → True\nprint(\"abc\" == \"abc\")        # → True\n\n# 連鎖比較（Pythonの特徴）\nage = 20\nprint(18 <= age <= 65)   # → True（成人かつ65歳以下）",
-          "output": "",
+          "output": "True  等しい\nFalse 等しくない\nTrue  より大きい\nFalse より小さい\nTrue  以上\nFalse 以下\nTrue\nTrue\nTrue（成人かつ65歳以下）",
           "lineNotes": [
             "L3: → True  等しい",
             "L4: → False 等しくない",
@@ -1527,7 +1647,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: 比較演算子"
         },
         "commonMistakes": [
-          "2つの値を比べて True または False を返します。if文やwhile文の条件としてよく使います。"
+          {
+            "wrong": "2つの値を比べて True または False を返します。if文やwhile文の条件としてよく使います。",
+            "reason": "2つの値を比べて True または False を返します。if文やwhile文の条件としてよく使います。",
+            "correct": "x = 5"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -1550,7 +1674,7 @@ export const REFERENCE_TOPICS = [
         "details": "複数の条件を組み合わせます。短絡評価という仕組みで効率よく動きます。",
         "minimalExample": {
           "code": "a, b = True, False\n\nprint(a and b)   # → False  両方Trueのとき True\nprint(a or b)    # → True   どちらかTrueのとき True\nprint(not a)     # → False  反転\n\n# 実用例\nage = 20\nhas_id = True\nis_member = False\n\n# 18歳以上かつIDを持っている\nprint(age >= 18 and has_id)       # → True\n\n# 会員かまたは18歳以上\nprint(is_member or age >= 18)     # → True\n\n# 短絡評価: 左で結果が確定したら右は評価しない\nx = None\nprint(x is not None and x > 0)   # → False（エラーにならない）",
-          "output": "",
+          "output": "False  両方Trueのとき True\nTrue   どちらかTrueのとき True\nFalse  反転\nTrue\nTrue\nFalse（エラーにならない）",
           "lineNotes": [
             "L3: → False  両方Trueのとき True",
             "L4: → True   どちらかTrueのとき True",
@@ -1582,7 +1706,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: 論理演算子"
         },
         "commonMistakes": [
-          "複数の条件を組み合わせます。短絡評価という仕組みで効率よく動きます。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "複数の条件を組み合わせます。短絡評価という仕組みで効率よく動きます。",
+            "correct": "a, b = True, False"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -1605,7 +1733,7 @@ export const REFERENCE_TOPICS = [
         "details": "in、is、などのPython特有の演算子も覚えておくと便利です。",
         "minimalExample": {
           "code": "# in: 含まれるか確認\nfruits = [\"apple\", \"banana\"]\nprint(\"apple\" in fruits)      # → True\nprint(\"grape\" not in fruits)  # → True\nprint(\"py\" in \"python\")       # → True（文字列でも使える）\n\n# is: 同一オブジェクトか確認（==とは違う）\na = [1, 2, 3]\nb = a\nc = [1, 2, 3]\nprint(a is b)    # → True  同じオブジェクト\nprint(a is c)    # → False 中身は同じでも別オブジェクト\nprint(a == c)    # → True  値は等しい\n\n# None の確認は is を使う（推奨）\nx = None\nprint(x is None)      # → True  ✅ 推奨\nprint(x == None)      # → True  △ 非推奨",
-          "output": "",
+          "output": "True\nTrue\nTrue（文字列でも使える）\nTrue  同じオブジェクト\nFalse 中身は同じでも別オブジェクト\nTrue  値は等しい\nTrue  ✅ 推奨\nTrue  △ 非推奨",
           "lineNotes": [
             "L1: in: 含まれるか確認",
             "L3: → True",
@@ -1639,7 +1767,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: その他の便利な演算子"
         },
         "commonMistakes": [
-          "in、is、などのPython特有の演算子も覚えておくと便利です。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "in、is、などのPython特有の演算子も覚えておくと便利です。",
+            "correct": "fruits = [\"apple\", \"banana\"]"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -1677,7 +1809,7 @@ export const REFERENCE_TOPICS = [
         "details": "条件が True のときだけ処理を実行します。Pythonはインデント（スペース4つ）でブロックを表します。これは必須です。",
         "minimalExample": {
           "code": "temperature = 35\n\nif temperature > 30:\n    print(\"暑い！\")       # ← インデント必須\n    print(\"水を飲もう\")   # ← 同じブロック\n\nprint(\"これは常に表示\")   # ← if の外",
-          "output": "",
+          "output": "???\n?????\n???????",
           "lineNotes": [
             "L4: ← インデント必須",
             "L5: ← 同じブロック",
@@ -1695,7 +1827,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: if 文の基本"
         },
         "commonMistakes": [
-          "条件が True のときだけ処理を実行します。Pythonはインデント（スペース4つ）でブロックを表します。これは必須です。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "条件が True のときだけ処理を実行します。Pythonはインデント（スペース4つ）でブロックを表します。これは必須です。",
+            "correct": "temperature = 35"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -1718,7 +1854,7 @@ export const REFERENCE_TOPICS = [
         "details": "複数の条件分岐には elif を使います。上から順に評価され、最初に True になった条件だけ実行されます。",
         "minimalExample": {
           "code": "score = 85\n\nif score >= 90:\n    grade = \"S\"\nelif score >= 80:\n    grade = \"A\"\nelif score >= 70:\n    grade = \"B\"\nelif score >= 60:\n    grade = \"C\"\nelse:\n    grade = \"F\"\n\nprint(f\"評価: {grade}\")   # → 評価: A",
-          "output": "",
+          "output": "評価: A",
           "lineNotes": [
             "L14: → 評価: A"
           ],
@@ -1732,7 +1868,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: if / elif / else"
         },
         "commonMistakes": [
-          "複数の条件分岐には elif を使います。上から順に評価され、最初に True になった条件だけ実行されます。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "複数の条件分岐には elif を使います。上から順に評価され、最初に True になった条件だけ実行されます。",
+            "correct": "score = 85"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -1755,7 +1895,7 @@ export const REFERENCE_TOPICS = [
         "details": "1行で if-else を書けます。シンプルな条件分岐に便利です。",
         "minimalExample": {
           "code": "age = 20\n\n# 通常の書き方\nif age >= 18:\n    status = \"成人\"\nelse:\n    status = \"未成年\"\n\n# 三項演算子（1行で書ける）\nstatus = \"成人\" if age >= 18 else \"未成年\"\nprint(status)   # → 成人\n\n# 実用例\nx = 10\nabs_x = x if x >= 0 else -x   # 絶対値\nlabel = \"偶数\" if x % 2 == 0 else \"奇数\"",
-          "output": "",
+          "output": "成人",
           "lineNotes": [
             "L3: 通常の書き方",
             "L9: 三項演算子（1行で書ける）",
@@ -1777,7 +1917,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: 三項演算子（条件式）"
         },
         "commonMistakes": [
-          "1行で if-else を書けます。シンプルな条件分岐に便利です。"
+          {
+            "wrong": "1行で if-else を書けます。シンプルな条件分岐に便利です。",
+            "reason": "1行で if-else を書けます。シンプルな条件分岐に便利です。",
+            "correct": "age = 20"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -1800,7 +1944,7 @@ export const REFERENCE_TOPICS = [
         "details": "Pythonでは True/False 以外の値も条件として使えます。これを Truthy / Falsy と言います。",
         "minimalExample": {
           "code": "# Falsy（False として扱われる値）\nfalsy_values = [False, None, 0, 0.0, \"\", [], {}, set()]\n\nfor v in falsy_values:\n    if not v:\n        print(f\"{repr(v)} は Falsy\")\n\n# 実用例\nname = \"\"\nif name:             # 空文字は Falsy\n    print(f\"Hello, {name}\")\nelse:\n    print(\"名前が未入力です\")\n\nitems = []\nif not items:        # 空リストは Falsy\n    print(\"リストが空です\")",
-          "output": "",
+          "output": "False ? Falsy\nNone ? Falsy\n0 ? Falsy\n0.0 ? Falsy\n'' ? Falsy\n[] ? Falsy\n{} ? Falsy\nset() ? Falsy\n????????\n???????",
           "lineNotes": [
             "L1: Falsy（False として扱われる値）",
             "L8: 実用例",
@@ -1820,7 +1964,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: Truthyと Falsy"
         },
         "commonMistakes": [
-          "Pythonでは True/False 以外の値も条件として使えます。これを Truthy / Falsy と言います。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Pythonでは True/False 以外の値も条件として使えます。これを Truthy / Falsy と言います。",
+            "correct": "falsy_values = [False, None, 0, 0.0, \"\", [], {}, set()]"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -1843,7 +1991,7 @@ export const REFERENCE_TOPICS = [
         "details": "Python 3.10以降では match 文（パターンマッチング）が使えます。複雑な条件分岐をスッキリ書けます。",
         "minimalExample": {
           "code": "command = \"quit\"\n\nmatch command:\n    case \"start\":\n        print(\"ゲーム開始\")\n    case \"pause\":\n        print(\"一時停止\")\n    case \"quit\" | \"exit\":    # OR 条件\n        print(\"終了します\")\n    case _:                  # デフォルト（else相当）\n        print(\"不明なコマンド\")\n\n# 値のバインドも可能\npoint = (0, 5)\nmatch point:\n    case (0, y):\n        print(f\"Y軸上の点: y={y}\")\n    case (x, 0):\n        print(f\"X軸上の点: x={x}\")\n    case (x, y):\n        print(f\"座標: ({x}, {y})\")",
-          "output": "",
+          "output": "?????\nY????: y=5",
           "lineNotes": [
             "L8: OR 条件",
             "L10: デフォルト（else相当）",
@@ -1861,7 +2009,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: match 文（Python 3.10+）"
         },
         "commonMistakes": [
-          "Python 3.10以降では match 文（パターンマッチング）が使えます。複雑な条件分岐をスッキリ書けます。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Python 3.10以降では match 文（パターンマッチング）が使えます。複雑な条件分岐をスッキリ書けます。",
+            "correct": "command = \"quit\""
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -1901,7 +2053,7 @@ export const REFERENCE_TOPICS = [
         "details": "リスト・文字列・range() などの要素を1つずつ取り出して処理します。",
         "minimalExample": {
           "code": "# リストを繰り返す\nfruits = [\"apple\", \"banana\", \"cherry\"]\nfor fruit in fruits:\n    print(fruit)\n\n# 文字列を1文字ずつ\nfor char in \"Python\":\n    print(char)\n\n# range() で数字を繰り返す\nfor i in range(5):       # 0,1,2,3,4\n    print(i)\n\nfor i in range(1, 6):    # 1,2,3,4,5\n    print(i)\n\nfor i in range(0, 10, 2):  # 0,2,4,6,8（2飛ばし）\n    print(i)",
-          "output": "",
+          "output": "apple\nbanana\ncherry\nP\ny\nt\nh\no\nn\n0\n1\n2\n3\n4\n1\n2\n3\n4\n5\n0\n2\n4\n6\n8",
           "lineNotes": [
             "L1: リストを繰り返す",
             "L6: 文字列を1文字ずつ",
@@ -1925,7 +2077,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: for ループの基本"
         },
         "commonMistakes": [
-          "リスト・文字列・range() などの要素を1つずつ取り出して処理します。"
+          {
+            "wrong": "リスト・文字列・range() などの要素を1つずつ取り出して処理します。",
+            "reason": "リスト・文字列・range() などの要素を1つずつ取り出して処理します。",
+            "correct": "fruits = [\"apple\", \"banana\", \"cherry\"]"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -1948,7 +2104,7 @@ export const REFERENCE_TOPICS = [
         "details": "インデックスと値を同時に取得したり、複数のリストを並行して処理できます。",
         "minimalExample": {
           "code": "fruits = [\"apple\", \"banana\", \"cherry\"]\n\n# enumerate: インデックスと値を同時取得\nfor i, fruit in enumerate(fruits):\n    print(f\"{i}: {fruit}\")\n# → 0: apple\n# → 1: banana\n# → 2: cherry\n\n# enumerate の開始番号を変えられる\nfor i, fruit in enumerate(fruits, start=1):\n    print(f\"{i}. {fruit}\")   # 1から始まる\n\n# zip: 複数リストを並行処理\nnames = [\"Guest\", \"Member\", \"Carol\"]\nscores = [85, 92, 78]\nfor name, score in zip(names, scores):\n    print(f\"{name}: {score}点\")",
-          "output": "",
+          "output": "0: apple\n1: banana\n2: cherry",
           "lineNotes": [
             "L3: enumerate: インデックスと値を同時取得",
             "L6: → 0: apple",
@@ -1974,7 +2130,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: enumerate と zip"
         },
         "commonMistakes": [
-          "インデックスと値を同時に取得したり、複数のリストを並行して処理できます。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "インデックスと値を同時に取得したり、複数のリストを並行して処理できます。",
+            "correct": "fruits = [\"apple\", \"banana\", \"cherry\"]"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -1997,7 +2157,7 @@ export const REFERENCE_TOPICS = [
         "details": "条件が True の間ずっと繰り返します。条件が変化しないと無限ループになるので注意。",
         "minimalExample": {
           "code": "# 基本形\ncount = 0\nwhile count < 5:\n    print(count)\n    count += 1      # これを忘れると無限ループ！\n\n# 無限ループ + break でよく使うパターン\nwhile True:\n    answer = input(\"続けますか？(y/n): \")\n    if answer == \"n\":\n        break\n    print(\"続けます\")\n\n# 条件付きで試行\nattempts = 0\nwhile attempts < 3:\n    password = input(\"パスワード: \")\n    if password == \"secret\":\n        print(\"ログイン成功\")\n        break\n    attempts += 1\nelse:              # ループが break なしで終わったとき\n    print(\"3回失敗しました\")",
-          "output": "",
+          "output": "0\n1\n2\n3\n4\n?????????????????",
           "lineNotes": [
             "L1: 基本形",
             "L5: これを忘れると無限ループ！",
@@ -2019,7 +2179,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: while ループ"
         },
         "commonMistakes": [
-          "条件が True の間ずっと繰り返します。条件が変化しないと無限ループになるので注意。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "条件が True の間ずっと繰り返します。条件が変化しないと無限ループになるので注意。",
+            "correct": "count = 0"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -2042,7 +2206,7 @@ export const REFERENCE_TOPICS = [
         "details": "ループの制御に使います。for/while どちらでも使えます。",
         "minimalExample": {
           "code": "# break: ループを即終了\nfor i in range(10):\n    if i == 5:\n        break\n    print(i)        # 0,1,2,3,4\n\n# continue: その回をスキップ\nfor i in range(6):\n    if i % 2 == 0:\n        continue    # 偶数はスキップ\n    print(i)        # 1,3,5\n\n# else: break なしでループが完了したとき実行\nfor i in range(5):\n    if i == 10:     # 条件は満たされない\n        break\nelse:\n    print(\"ループ完了！\")  # こちらが実行される",
-          "output": "",
+          "output": "0\n1\n2\n3\n4\n1\n3\n5\n??????",
           "lineNotes": [
             "L1: break: ループを即終了",
             "L5: 0,1,2,3,4",
@@ -2070,7 +2234,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: break / continue / else"
         },
         "commonMistakes": [
-          "ループの制御に使います。for/while どちらでも使えます。"
+          {
+            "wrong": "ループの制御に使います。for/while どちらでも使えます。",
+            "reason": "ループの制御に使います。for/while どちらでも使えます。",
+            "correct": "for i in range(10):"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -2093,7 +2261,7 @@ export const REFERENCE_TOPICS = [
         "details": "for ループを1行で書けるPythonらしい書き方です。新しいリストを作るときに便利です。",
         "minimalExample": {
           "code": "# 通常のfor文\nsquares = []\nfor x in range(5):\n    squares.append(x ** 2)\n\n# リスト内包表記（同じ意味）\nsquares = [x ** 2 for x in range(5)]\nprint(squares)   # → [0, 1, 4, 9, 16]\n\n# 条件付き\nevens = [x for x in range(10) if x % 2 == 0]\nprint(evens)     # → [0, 2, 4, 6, 8]\n\n# 文字列の変換\nwords = [\"hello\", \"world\"]\nupper = [w.upper() for w in words]\nprint(upper)     # → ['HELLO', 'WORLD']\n\n# 辞書内包表記\nsquares_dict = {x: x**2 for x in range(5)}\n# → {0:0, 1:1, 2:4, 3:9, 4:16}",
-          "output": "",
+          "output": "[0, 1, 4, 9, 16]\n[0, 2, 4, 6, 8]\n['HELLO', 'WORLD']\n{0:0, 1:1, 2:4, 3:9, 4:16}",
           "lineNotes": [
             "L1: 通常のfor文",
             "L6: リスト内包表記（同じ意味）",
@@ -2123,7 +2291,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: リスト内包表記"
         },
         "commonMistakes": [
-          "for ループを1行で書けるPythonらしい書き方です。新しいリストを作るときに便利です。"
+          {
+            "wrong": "for ループを1行で書けるPythonらしい書き方です。新しいリストを作るときに便利です。",
+            "reason": "for ループを1行で書けるPythonらしい書き方です。新しいリストを作るときに便利です。",
+            "correct": "squares = []"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -2164,7 +2336,7 @@ export const REFERENCE_TOPICS = [
         "details": "[ ] で複数の値をまとめて管理できます。異なる型を混在させることもできます。",
         "minimalExample": {
           "code": "# 作成\nfruits = [\"apple\", \"banana\", \"cherry\"]\nmixed  = [1, \"hello\", True, None, [1, 2]]  # 混在OK\n\n# アクセス（0始まり）\nprint(fruits[0])    # → apple   最初\nprint(fruits[-1])   # → cherry  最後\nprint(fruits[-2])   # → banana  後ろから2番目\n\n# スライス\nprint(fruits[0:2])  # → ['apple', 'banana']\nprint(fruits[1:])   # → ['banana', 'cherry']\nprint(fruits[::-1]) # → ['cherry', 'banana', 'apple']（逆順）\n\n# 長さ\nprint(len(fruits))  # → 3",
-          "output": "",
+          "output": "apple   最初\ncherry  最後\nbanana  後ろから2番目\n['apple', 'banana']\n['banana', 'cherry']\n['cherry', 'banana', 'apple']（逆順）\n3",
           "lineNotes": [
             "L1: 作成",
             "L3: 混在OK",
@@ -2200,7 +2372,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: リストの基本"
         },
         "commonMistakes": [
-          "[ ] で複数の値をまとめて管理できます。異なる型を混在させることもできます。"
+          {
+            "wrong": "[ ] で複数の値をまとめて管理できます。異なる型を混在させることもできます。",
+            "reason": "[ ] で複数の値をまとめて管理できます。異なる型を混在させることもできます。",
+            "correct": "fruits = [\"apple\", \"banana\", \"cherry\"]"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -2257,7 +2433,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: リストの変更"
         },
         "commonMistakes": [
-          "リストは変更可能（ミュータブル）です。要素の追加・削除・変更ができます。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "リストは変更可能（ミュータブル）です。要素の追加・削除・変更ができます。",
+            "correct": "nums = [1, 2, 3]"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -2280,7 +2460,7 @@ export const REFERENCE_TOPICS = [
         "details": "ソート・検索・コピーなどよく使う操作をまとめます。",
         "minimalExample": {
           "code": "nums = [3, 1, 4, 1, 5, 9, 2, 6]\n\n# ソート\nnums.sort()             # 元のリストを変更\nsorted_nums = sorted(nums)  # 新しいリストを返す（元は変わらない）\nnums.sort(reverse=True) # 降順\n\n# 検索\nprint(3 in nums)        # True/False で含まれるか確認\nprint(nums.index(4))    # 値の位置（なければエラー）\nprint(nums.count(1))    # 値の出現回数\n\n# コピー（重要！）\na = [1, 2, 3]\nb = a          # ❌ 参照コピー（同じオブジェクト）\nb = a.copy()   # ✅ シャローコピー\nb = a[:]       # ✅ スライスでもコピー\n\nimport copy\nb = copy.deepcopy(a)  # ネストしたリストのコピー",
-          "output": "",
+          "output": "True\n4\n2",
           "lineNotes": [
             "L3: ソート",
             "L4: 元のリストを変更",
@@ -2316,7 +2496,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: リストの便利な操作"
         },
         "commonMistakes": [
-          "ソート・検索・コピーなどよく使う操作をまとめます。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "ソート・検索・コピーなどよく使う操作をまとめます。",
+            "correct": "nums = [3, 1, 4, 1, 5, 9, 2, 6]"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -2339,7 +2523,7 @@ export const REFERENCE_TOPICS = [
         "details": "タプルはリストに似ていますが変更できません（イミュータブル）。変更不要なデータに使います。",
         "minimalExample": {
           "code": "# タプル: () で作成\npoint = (3, 5)\nrgb   = (255, 128, 0)\n\nprint(point[0])   # → 3  アクセスはリストと同じ\n\n# 変更しようとするとエラー\n# point[0] = 10   ❌ TypeError\n\n# タプルのアンパック\nx, y = point\nprint(x, y)   # → 3 5\n\nr, g, b = rgb\n\n# 1要素のタプル（カンマが必要）\nsingle = (42,)   # ← カンマ必須\nnot_tuple = (42) # ← これはただの整数\n\n# リストとタプルの変換\nlst = list(point)   # → [3, 5]\ntpl = tuple([1,2])  # → (1, 2)",
-          "output": "",
+          "output": "3  アクセスはリストと同じ\n3 5\n[3, 5]\n(1, 2)",
           "lineNotes": [
             "L1: タプル: () で作成",
             "L5: → 3  アクセスはリストと同じ",
@@ -2375,9 +2559,13 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: タプルとの違い"
         },
         "commonMistakes": [
-          "# point[0] = 10   ❌ TypeError"
+          {
+            "wrong": "point[0] = 10",
+            "reason": "TypeError",
+            "correct": "point = (3, 5)"
+          }
         ],
-        "correctedExample": "# タプル: () で作成\npoint = (3, 5)\nrgb   = (255, 128, 0)\n\nprint(point[0])   # → 3  アクセスはリストと同じ\n\n# 変更しようとするとエラー\n# point[0] = 10   ❌ TypeError\n\n# タプルのアンパック\nx, y = point\nprint(x, y)   # → 3 5\n\nr, g, b = rgb\n\n# 1要素のタプル（カンマが必要）\nsingle = (42,)   # ← カンマ必須\nnot_tuple = (42) # ← これはただの整数\n\n# リストとタプルの変換\nlst = list(point)   # → [3, 5]\ntpl = tuple([1,2])  # → (1, 2)",
+        "correctedExample": "",
         "miniChecks": [
           {
             "id": "lists-arrays-04-check-1",
@@ -2416,7 +2604,7 @@ export const REFERENCE_TOPICS = [
         "details": "{ } でキーと値のペアを管理します。キーは重複不可・変更不可の型（文字列・数値・タプルなど）が使えます。",
         "minimalExample": {
           "code": "# 作成\nperson = {\n    \"name\": \"Guest\",\n    \"age\": 25,\n    \"city\": \"Tokyo\"\n}\n\n# アクセス\nprint(person[\"name\"])       # → Guest\nprint(person.get(\"age\"))    # → 25\nprint(person.get(\"email\"))  # → None（KeyErrorにならない）\nprint(person.get(\"email\", \"未設定\"))  # デフォルト値\n\n# 追加・更新\nperson[\"email\"] = \"Guest@example.com\"\nperson[\"age\"] = 26\n\n# 削除\ndel person[\"city\"]\nremoved = person.pop(\"email\")  # 取り出して返す",
-          "output": "",
+          "output": "Guest\n25\nNone（KeyErrorにならない）",
           "lineNotes": [
             "L1: 作成",
             "L8: アクセス",
@@ -2446,9 +2634,13 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: 辞書の基本"
         },
         "commonMistakes": [
-          "print(person.get(\"email\"))  # → None（KeyErrorにならない）"
+          {
+            "wrong": "print(person.get(\"email\"))",
+            "reason": "# → None（KeyErrorにならない）",
+            "correct": "person = {"
+          }
         ],
-        "correctedExample": "# 作成\nperson = {\n    \"name\": \"Guest\",\n    \"age\": 25,\n    \"city\": \"Tokyo\"\n}\n\n# アクセス\nprint(person[\"name\"])       # → Guest\nprint(person.get(\"age\"))    # → 25\nprint(person.get(\"email\"))  # → None（KeyErrorにならない）\nprint(person.get(\"email\", \"未設定\"))  # デフォルト値\n\n# 追加・更新\nperson[\"email\"] = \"Guest@example.com\"\nperson[\"age\"] = 26\n\n# 削除\ndel person[\"city\"]\nremoved = person.pop(\"email\")  # 取り出して返す",
+        "correctedExample": "",
         "miniChecks": [
           {
             "id": "dicts-objects-01-check-1",
@@ -2469,7 +2661,7 @@ export const REFERENCE_TOPICS = [
         "details": "keys()・values()・items() でキーや値を取り出してループできます。",
         "minimalExample": {
           "code": "person = {\"name\": \"Guest\", \"age\": 25, \"city\": \"Tokyo\"}\n\n# キーだけ\nfor key in person:\n    print(key)\n\n# 値だけ\nfor val in person.values():\n    print(val)\n\n# キーと値を同時に\nfor key, val in person.items():\n    print(f\"{key}: {val}\")\n\n# 辞書内包表記\nsquares = {x: x**2 for x in range(5)}\n# → {0:0, 1:1, 2:4, 3:9, 4:16}\n\n# 値が偶数のものだけ\nevens = {k: v for k, v in squares.items() if v % 2 == 0}",
-          "output": "",
+          "output": "{0:0, 1:1, 2:4, 3:9, 4:16}",
           "lineNotes": [
             "L3: キーだけ",
             "L7: 値だけ",
@@ -2493,7 +2685,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: 辞書のループ処理"
         },
         "commonMistakes": [
-          "keys()・values()・items() でキーや値を取り出してループできます。"
+          {
+            "wrong": "keys()・values()・items() でキーや値を取り出してループできます。",
+            "reason": "keys()・values()・items() でキーや値を取り出してループできます。",
+            "correct": "person = {\"name\": \"Guest\", \"age\": 25, \"city\": \"Tokyo\"}"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -2516,7 +2712,7 @@ export const REFERENCE_TOPICS = [
         "details": "辞書の中に辞書やリストを入れることで複雑なデータを表現できます。",
         "minimalExample": {
           "code": "users = {\n    \"Guest\": {\n        \"age\": 25,\n        \"scores\": [85, 92, 78],\n        \"active\": True\n    },\n    \"Member\": {\n        \"age\": 30,\n        \"scores\": [70, 88, 95],\n        \"active\": False\n    }\n}\n\n# アクセス\nprint(users[\"Guest\"][\"age\"])        # → 25\nprint(users[\"Member\"][\"scores\"][0])    # → 70\n\n# ネストしたデータのループ\nfor name, info in users.items():\n    avg = sum(info[\"scores\"]) / len(info[\"scores\"])\n    print(f\"{name}: 平均 {avg:.1f}点\")",
-          "output": "",
+          "output": "25\n70",
           "lineNotes": [
             "L14: アクセス",
             "L15: → 25",
@@ -2536,7 +2732,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: ネストした辞書"
         },
         "commonMistakes": [
-          "辞書の中に辞書やリストを入れることで複雑なデータを表現できます。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "辞書の中に辞書やリストを入れることで複雑なデータを表現できます。",
+            "correct": "users = {"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -2559,7 +2759,7 @@ export const REFERENCE_TOPICS = [
         "details": "setdefault・update・辞書のマージなど実用的なテクニックです。",
         "minimalExample": {
           "code": "# setdefault: キーがなければデフォルト値をセット\ncounts = {}\nwords = [\"apple\", \"banana\", \"apple\", \"cherry\"]\nfor word in words:\n    counts.setdefault(word, 0)\n    counts[word] += 1\nprint(counts)   # → {'apple':2, 'banana':1, 'cherry':1}\n\n# もっとシンプルに: collections.Counter\nfrom collections import Counter\ncounts = Counter(words)\n\n# update: 辞書を結合（上書き）\nd1 = {\"a\": 1, \"b\": 2}\nd2 = {\"b\": 3, \"c\": 4}\nd1.update(d2)\nprint(d1)   # → {'a':1, 'b':3, 'c':4}\n\n# Python 3.9+ のマージ演算子\nmerged = d1 | d2   # 新しい辞書を返す",
-          "output": "",
+          "output": "{'apple':2, 'banana':1, 'cherry':1}\n{'a':1, 'b':3, 'c':4}",
           "lineNotes": [
             "L1: setdefault: キーがなければデフォルト値をセット",
             "L7: → {'apple':2, 'banana':1, 'cherry':1}",
@@ -2585,7 +2785,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: 便利なメソッドとパターン"
         },
         "commonMistakes": [
-          "setdefault・update・辞書のマージなど実用的なテクニックです。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "setdefault・update・辞書のマージなど実用的なテクニックです。",
+            "correct": "counts = {}"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -2626,7 +2830,7 @@ export const REFERENCE_TOPICS = [
         "details": "クラスはデータ（属性）と処理（メソッド）をまとめた設計図です。インスタンスはその設計図から作られた実体です。",
         "minimalExample": {
           "code": "class Dog:\n    # __init__: インスタンス作成時に自動で呼ばれる\n    def __init__(self, name, age):\n        self.name = name   # インスタンス属性\n        self.age = age\n\n    def bark(self):\n        print(f\"{self.name}: ワン！\")\n\n    def info(self):\n        print(f\"{self.name}（{self.age}歳）\")\n\n# インスタンスを作成\ndog1 = Dog(\"Pochi\", 3)\ndog2 = Dog(\"Hana\", 5)\n\ndog1.bark()    # → Pochi: ワン！\ndog2.info()    # → Hana（5歳）\nprint(dog1.name)  # → Pochi",
-          "output": "",
+          "output": "Pochi: ワン！\nHana（5歳）\nPochi",
           "lineNotes": [
             "L2: __init__: インスタンス作成時に自動で呼ばれる",
             "L4: インスタンス属性",
@@ -2650,7 +2854,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: クラスの基本"
         },
         "commonMistakes": [
-          "クラスはデータ（属性）と処理（メソッド）をまとめた設計図です。インスタンスはその設計図から作られた実体です。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "クラスはデータ（属性）と処理（メソッド）をまとめた設計図です。インスタンスはその設計図から作られた実体です。",
+            "correct": "class Dog:"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -2673,7 +2881,7 @@ export const REFERENCE_TOPICS = [
         "details": "クラス変数はすべてのインスタンスで共有、インスタンス変数はインスタンスごとに異なります。",
         "minimalExample": {
           "code": "class Counter:\n    count = 0   # クラス変数（全インスタンス共有）\n\n    def __init__(self, name):\n        self.name = name     # インスタンス変数\n        Counter.count += 1   # クラス変数を更新\n\n    @classmethod\n    def get_count(cls):      # クラスメソッド\n        return cls.count\n\nc1 = Counter(\"A\")\nc2 = Counter(\"B\")\nc3 = Counter(\"C\")\n\nprint(Counter.get_count())  # → 3（全インスタンス数）\nprint(c1.name)              # → A（固有）",
-          "output": "",
+          "output": "3（全インスタンス数）\nA（固有）",
           "lineNotes": [
             "L2: クラス変数（全インスタンス共有）",
             "L5: インスタンス変数",
@@ -2697,7 +2905,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: クラス変数とインスタンス変数"
         },
         "commonMistakes": [
-          "クラス変数はすべてのインスタンスで共有、インスタンス変数はインスタンスごとに異なります。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "クラス変数はすべてのインスタンスで共有、インスタンス変数はインスタンスごとに異なります。",
+            "correct": "class Counter:"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -2720,7 +2932,7 @@ export const REFERENCE_TOPICS = [
         "details": "既存のクラスの機能を引き継いで新しいクラスを作ります。コードの再利用に役立ちます。",
         "minimalExample": {
           "code": "class Animal:\n    def __init__(self, name):\n        self.name = name\n\n    def speak(self):\n        print(f\"{self.name}が鳴く\")\n\nclass Dog(Animal):   # Animal を継承\n    def speak(self):    # メソッドを上書き（オーバーライド）\n        print(f\"{self.name}: ワン！\")\n\nclass Cat(Animal):\n    def speak(self):\n        print(f\"{self.name}: ニャー！\")\n\nanimals = [Dog(\"Pochi\"), Cat(\"Tama\"), Dog(\"Koro\")]\nfor animal in animals:\n    animal.speak()   # 各クラスのspeakが呼ばれる\n\n# super(): 親クラスのメソッドを呼ぶ\nclass Puppy(Dog):\n    def __init__(self, name, owner):\n        super().__init__(name)   # 親の__init__を呼ぶ\n        self.owner = owner",
-          "output": "",
+          "output": "Pochi: ???\nTama: ????\nKoro: ???",
           "lineNotes": [
             "L8: Animal を継承",
             "L9: メソッドを上書き（オーバーライド）",
@@ -2742,7 +2954,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: 継承"
         },
         "commonMistakes": [
-          "既存のクラスの機能を引き継いで新しいクラスを作ります。コードの再利用に役立ちます。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "既存のクラスの機能を引き継いで新しいクラスを作ります。コードの再利用に役立ちます。",
+            "correct": "class Animal:"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -2765,7 +2981,7 @@ export const REFERENCE_TOPICS = [
         "details": "__xxx__ の形のメソッドで、Pythonの組み込み操作をカスタマイズできます。",
         "minimalExample": {
           "code": "class Vector:\n    def __init__(self, x, y):\n        self.x = x\n        self.y = y\n\n    def __str__(self):       # str() や print() で使われる\n        return f\"Vector({self.x}, {self.y})\"\n\n    def __repr__(self):      # デバッグ用の表現\n        return f\"Vector(x={self.x}, y={self.y})\"\n\n    def __add__(self, other):  # + 演算子をカスタマイズ\n        return Vector(self.x + other.x, self.y + other.y)\n\n    def __len__(self):       # len() で使われる\n        return 2\n\nv1 = Vector(1, 2)\nv2 = Vector(3, 4)\nprint(v1)           # → Vector(1, 2)\nprint(v1 + v2)      # → Vector(4, 6)\nprint(len(v1))      # → 2",
-          "output": "",
+          "output": "Vector(1, 2)\nVector(4, 6)\n2",
           "lineNotes": [
             "L6: str() や print() で使われる",
             "L9: デバッグ用の表現",
@@ -2791,7 +3007,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: 特殊メソッド（マジックメソッド）"
         },
         "commonMistakes": [
-          "__xxx__ の形のメソッドで、Pythonの組み込み操作をカスタマイズできます。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "__xxx__ の形のメソッドで、Pythonの組み込み操作をカスタマイズできます。",
+            "correct": "class Vector:"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -2814,7 +3034,7 @@ export const REFERENCE_TOPICS = [
         "details": "Python 3.7以降の @dataclass を使うと、__init__ や __repr__ などを自動生成できます。データを保持するだけのクラスに最適です。",
         "minimalExample": {
           "code": "from dataclasses import dataclass, field\n\n@dataclass\nclass Point:\n    x: float\n    y: float\n\np = Point(3.0, 4.0)\nprint(p)        # → Point(x=3.0, y=4.0)（__repr__ 自動生成）\nprint(p.x)      # → 3.0\n\n# デフォルト値と field\n@dataclass\nclass Student:\n    name: str\n    scores: list = field(default_factory=list)  # ← ミュータブルは field()\n    grade: str = \"A\"\n\ns1 = Student(\"Guest\")\ns2 = Student(\"Member\", [90, 85], \"B\")\nprint(s1)   # → Student(name='Guest', scores=[], grade='A')\n\n# frozen=True で読み取り専用にする\n@dataclass(frozen=True)\nclass Color:\n    r: int; g: int; b: int\n\nc = Color(255, 128, 0)\n# c.r = 0   ❌ FrozenInstanceError",
-          "output": "",
+          "output": "Point(x=3.0, y=4.0)（__repr__ 自動生成）\n3.0\nStudent(name='Guest', scores=[], grade='A')",
           "lineNotes": [
             "L9: → Point(x=3.0, y=4.0)（__repr__ 自動生成）",
             "L10: → 3.0",
@@ -2840,9 +3060,13 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: dataclass で定型クラスを簡潔に書く"
         },
         "commonMistakes": [
-          "# c.r = 0   ❌ FrozenInstanceError"
+          {
+            "wrong": "c.r = 0",
+            "reason": "FrozenInstanceError",
+            "correct": "from dataclasses import dataclass, field"
+          }
         ],
-        "correctedExample": "from dataclasses import dataclass, field\n\n@dataclass\nclass Point:\n    x: float\n    y: float\n\np = Point(3.0, 4.0)\nprint(p)        # → Point(x=3.0, y=4.0)（__repr__ 自動生成）\nprint(p.x)      # → 3.0\n\n# デフォルト値と field\n@dataclass\nclass Student:\n    name: str\n    scores: list = field(default_factory=list)  # ← ミュータブルは field()\n    grade: str = \"A\"\n\ns1 = Student(\"Guest\")\ns2 = Student(\"Member\", [90, 85], \"B\")\nprint(s1)   # → Student(name='Guest', scores=[], grade='A')\n\n# frozen=True で読み取り専用にする\n@dataclass(frozen=True)\nclass Color:\n    r: int; g: int; b: int\n\nc = Color(255, 128, 0)\n# c.r = 0   ❌ FrozenInstanceError",
+        "correctedExample": "",
         "miniChecks": [
           {
             "id": "classes-objects-05-check-1",
@@ -2863,7 +3087,7 @@ export const REFERENCE_TOPICS = [
         "details": "property を使うと、属性アクセスの形を保ちながら値の検証・計算を行えます。",
         "minimalExample": {
           "code": "class Temperature:\n    def __init__(self, celsius):\n        self._celsius = celsius\n\n    @property\n    def celsius(self):\n        return self._celsius\n\n    @celsius.setter\n    def celsius(self, value):\n        if value < -273.15:\n            raise ValueError(\"絶対零度より低い温度は設定できません\")\n        self._celsius = value\n\n    @property\n    def fahrenheit(self):         # 読み取り専用の計算プロパティ\n        return self._celsius * 9/5 + 32\n\nt = Temperature(100)\nprint(t.fahrenheit)   # → 212.0\nt.celsius = 25        # setter 経由で検証される\n# t.celsius = -300    ❌ ValueError",
-          "output": "",
+          "output": "212.0",
           "lineNotes": [
             "L16: 読み取り専用の計算プロパティ",
             "L20: → 212.0",
@@ -2883,10 +3107,18 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: プロパティ（getter / setter）"
         },
         "commonMistakes": [
-          "raise ValueError(\"絶対零度より低い温度は設定できません\")",
-          "# t.celsius = -300    ❌ ValueError"
+          {
+            "wrong": "raise ValueError(\"絶対零度より低い温度は設定できません\")",
+            "reason": "raise ValueError(\"絶対零度より低い温度は設定できません\")",
+            "correct": "class Temperature:"
+          },
+          {
+            "wrong": "t.celsius = -300",
+            "reason": "ValueError",
+            "correct": "class Temperature:"
+          }
         ],
-        "correctedExample": "class Temperature:\n    def __init__(self, celsius):\n        self._celsius = celsius\n\n    @property\n    def celsius(self):\n        return self._celsius\n\n    @celsius.setter\n    def celsius(self, value):\n        if value < -273.15:\n            raise ValueError(\"絶対零度より低い温度は設定できません\")\n        self._celsius = value\n\n    @property\n    def fahrenheit(self):         # 読み取り専用の計算プロパティ\n        return self._celsius * 9/5 + 32\n\nt = Temperature(100)\nprint(t.fahrenheit)   # → 212.0\nt.celsius = 25        # setter 経由で検証される\n# t.celsius = -300    ❌ ValueError",
+        "correctedExample": "",
         "miniChecks": [
           {
             "id": "classes-objects-06-check-1",
@@ -2924,7 +3156,7 @@ export const REFERENCE_TOPICS = [
         "details": "Pythonのエラーには「構文エラー」と「実行時エラー（例外）」の2種類があります。",
         "minimalExample": {
           "code": "# SyntaxError: 構文エラー（実行前に検出）\n# print(\"hello\"   ← 括弧が閉じていない\n\n# 主な実行時エラー（例外）\n# NameError: 未定義の変数を使った\n# print(undefined_var)\n\n# TypeError: 型が合わない\n# result = \"text\" + 5\n\n# ValueError: 値が不正\n# num = int(\"abc\")\n\n# IndexError: リストの範囲外\n# lst = [1,2,3]; lst[10]\n\n# KeyError: 辞書にないキー\n# d = {}; d[\"missing\"]\n\n# ZeroDivisionError: ゼロ除算\n# 10 / 0\n\n# AttributeError: 属性がない\n# \"hello\".nonexistent()",
-          "output": "",
+          "output": "???????????????????????",
           "lineNotes": [
             "L1: SyntaxError: 構文エラー（実行前に検出）",
             "L2: print(\"hello\"   ← 括弧が閉じていない",
@@ -2960,13 +3192,33 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: エラーの種類"
         },
         "commonMistakes": [
-          "# SyntaxError: 構文エラー（実行前に検出）",
-          "# NameError: 未定義の変数を使った",
-          "# TypeError: 型が合わない",
-          "# ValueError: 値が不正",
-          "# IndexError: リストの範囲外"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "SyntaxError: 構文エラー（実行前に検出）",
+            "correct": "コードを上から追い、値の変化と出力を確認する"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "NameError: 未定義の変数を使った",
+            "correct": "コードを上から追い、値の変化と出力を確認する"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "TypeError: 型が合わない",
+            "correct": "コードを上から追い、値の変化と出力を確認する"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "ValueError: 値が不正",
+            "correct": "コードを上から追い、値の変化と出力を確認する"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "IndexError: リストの範囲外",
+            "correct": "コードを上から追い、値の変化と出力を確認する"
+          }
         ],
-        "correctedExample": "# SyntaxError: 構文エラー（実行前に検出）\n# print(\"hello\"   ← 括弧が閉じていない\n\n# 主な実行時エラー（例外）\n# NameError: 未定義の変数を使った\n# print(undefined_var)\n\n# TypeError: 型が合わない\n# result = \"text\" + 5\n\n# ValueError: 値が不正\n# num = int(\"abc\")\n\n# IndexError: リストの範囲外\n# lst = [1,2,3]; lst[10]\n\n# KeyError: 辞書にないキー\n# d = {}; d[\"missing\"]\n\n# ZeroDivisionError: ゼロ除算\n# 10 / 0\n\n# AttributeError: 属性がない\n# \"hello\".nonexistent()",
+        "correctedExample": "",
         "miniChecks": [
           {
             "id": "errors-01-check-1",
@@ -2987,7 +3239,7 @@ export const REFERENCE_TOPICS = [
         "details": "エラーが起きる可能性のある処理を try で囲み、エラー時の処理を except に書きます。",
         "minimalExample": {
           "code": "# 基本形\ntry:\n    result = 10 / 0\nexcept ZeroDivisionError:\n    print(\"0で割れません\")\n\n# エラーオブジェクトを使う\ntry:\n    num = int(\"abc\")\nexcept ValueError as e:\n    print(f\"エラー: {e}\")\n\n# 複数のエラーをキャッチ\ntry:\n    lst = [1, 2, 3]\n    print(lst[10])\nexcept (IndexError, TypeError) as e:\n    print(f\"エラー: {type(e).__name__}: {e}\")\n\n# すべてのエラーをキャッチ（非推奨、デバッグ時のみ）\ntry:\n    something_risky()\nexcept Exception as e:\n    print(f\"予期しないエラー: {e}\")",
-          "output": "",
+          "output": "0??????\n???: invalid literal for int() with base 10: 'abc'\n???: IndexError: list index out of range\n????????: name 'something_risky' is not defined",
           "lineNotes": [
             "L1: 基本形",
             "L7: エラーオブジェクトを使う",
@@ -3007,11 +3259,23 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: try-except の基本"
         },
         "commonMistakes": [
-          "except ZeroDivisionError:",
-          "except ValueError as e:",
-          "except (IndexError, TypeError) as e:"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "except ZeroDivisionError:",
+            "correct": "try:"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "except ValueError as e:",
+            "correct": "try:"
+          },
+          {
+            "wrong": "except (IndexError, TypeError) as e:",
+            "reason": "except (IndexError, TypeError) as e:",
+            "correct": "try:"
+          }
         ],
-        "correctedExample": "# 基本形\ntry:\n    result = 10 / 0\nexcept ZeroDivisionError:\n    print(\"0で割れません\")\n\n# エラーオブジェクトを使う\ntry:\n    num = int(\"abc\")\nexcept ValueError as e:\n    print(f\"エラー: {e}\")\n\n# 複数のエラーをキャッチ\ntry:\n    lst = [1, 2, 3]\n    print(lst[10])\nexcept (IndexError, TypeError) as e:\n    print(f\"エラー: {type(e).__name__}: {e}\")\n\n# すべてのエラーをキャッチ（非推奨、デバッグ時のみ）\ntry:\n    something_risky()\nexcept Exception as e:\n    print(f\"予期しないエラー: {e}\")",
+        "correctedExample": "",
         "miniChecks": [
           {
             "id": "errors-02-check-1",
@@ -3032,7 +3296,7 @@ export const REFERENCE_TOPICS = [
         "details": "finally はエラーの有無に関わらず実行、else はエラーがなかったときに実行されます。",
         "minimalExample": {
           "code": "def read_file(filename):\n    f = None\n    try:\n        f = open(filename)\n        data = f.read()\n    except FileNotFoundError:\n        print(f\"{filename} が見つかりません\")\n    except PermissionError:\n        print(\"読み取り権限がありません\")\n    else:\n        # エラーがなかったときだけ実行\n        print(f\"読み込み成功: {len(data)}文字\")\n        return data\n    finally:\n        # 必ず実行（ファイルを確実に閉じる）\n        if f:\n            f.close()\n            print(\"ファイルを閉じました\")",
-          "output": "",
+          "output": "????????????????????????????????????????????????????????????????????????",
           "lineNotes": [
             "L11: エラーがなかったときだけ実行",
             "L15: 必ず実行（ファイルを確実に閉じる）"
@@ -3048,10 +3312,18 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: finally と else"
         },
         "commonMistakes": [
-          "except FileNotFoundError:",
-          "except PermissionError:"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "except FileNotFoundError:",
+            "correct": "def read_file(filename):"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "except PermissionError:",
+            "correct": "def read_file(filename):"
+          }
         ],
-        "correctedExample": "def read_file(filename):\n    f = None\n    try:\n        f = open(filename)\n        data = f.read()\n    except FileNotFoundError:\n        print(f\"{filename} が見つかりません\")\n    except PermissionError:\n        print(\"読み取り権限がありません\")\n    else:\n        # エラーがなかったときだけ実行\n        print(f\"読み込み成功: {len(data)}文字\")\n        return data\n    finally:\n        # 必ず実行（ファイルを確実に閉じる）\n        if f:\n            f.close()\n            print(\"ファイルを閉じました\")",
+        "correctedExample": "",
         "miniChecks": [
           {
             "id": "errors-03-check-1",
@@ -3072,7 +3344,7 @@ export const REFERENCE_TOPICS = [
         "details": "自分でエラーを発生させることで、不正な入力を検出できます。",
         "minimalExample": {
           "code": "# 基本的な raise\ndef set_age(age):\n    if not isinstance(age, int):\n        raise TypeError(\"年齢は整数でなければなりません\")\n    if age < 0 or age > 150:\n        raise ValueError(f\"無効な年齢: {age}\")\n    return age\n\ntry:\n    set_age(-1)\nexcept ValueError as e:\n    print(e)   # → 無効な年齢: -1\n\n# カスタム例外クラスを作る\nclass InsufficientFundsError(Exception):\n    def __init__(self, amount, balance):\n        super().__init__(f\"残高不足: 必要額 {amount}円, 残高 {balance}円\")\n        self.amount = amount\n        self.balance = balance\n\ndef withdraw(balance, amount):\n    if amount > balance:\n        raise InsufficientFundsError(amount, balance)\n    return balance - amount",
-          "output": "",
+          "output": "無効な年齢: -1",
           "lineNotes": [
             "L1: 基本的な raise",
             "L12: → 無効な年齢: -1",
@@ -3090,13 +3362,33 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: raise で例外を発生させる"
         },
         "commonMistakes": [
-          "raise TypeError(\"年齢は整数でなければなりません\")",
-          "raise ValueError(f\"無効な年齢: {age}\")",
-          "except ValueError as e:",
-          "class InsufficientFundsError(Exception):",
-          "raise InsufficientFundsError(amount, balance)"
+          {
+            "wrong": "raise TypeError(\"年齢は整数でなければなりません\")",
+            "reason": "raise TypeError(\"年齢は整数でなければなりません\")",
+            "correct": "def set_age(age):"
+          },
+          {
+            "wrong": "raise ValueError(f\"無効な年齢: {age}\")",
+            "reason": "raise ValueError(f\"無効な年齢: {age}\")",
+            "correct": "def set_age(age):"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "except ValueError as e:",
+            "correct": "def set_age(age):"
+          },
+          {
+            "wrong": "class InsufficientFundsError(Exception):",
+            "reason": "class InsufficientFundsError(Exception):",
+            "correct": "def set_age(age):"
+          },
+          {
+            "wrong": "raise InsufficientFundsError(amount, balance)",
+            "reason": "raise InsufficientFundsError(amount, balance)",
+            "correct": "def set_age(age):"
+          }
         ],
-        "correctedExample": "# 基本的な raise\ndef set_age(age):\n    if not isinstance(age, int):\n        raise TypeError(\"年齢は整数でなければなりません\")\n    if age < 0 or age > 150:\n        raise ValueError(f\"無効な年齢: {age}\")\n    return age\n\ntry:\n    set_age(-1)\nexcept ValueError as e:\n    print(e)   # → 無効な年齢: -1\n\n# カスタム例外クラスを作る\nclass InsufficientFundsError(Exception):\n    def __init__(self, amount, balance):\n        super().__init__(f\"残高不足: 必要額 {amount}円, 残高 {balance}円\")\n        self.amount = amount\n        self.balance = balance\n\ndef withdraw(balance, amount):\n    if amount > balance:\n        raise InsufficientFundsError(amount, balance)\n    return balance - amount",
+        "correctedExample": "",
         "miniChecks": [
           {
             "id": "errors-04-check-1",
@@ -3117,7 +3409,7 @@ export const REFERENCE_TOPICS = [
         "details": "with 文を使うと、処理前後のセットアップ・クリーンアップを自動化できます。ファイル操作や DB 接続など「確実に閉じる」必要があるリソースに使います。",
         "minimalExample": {
           "code": "# ファイルを with で開く（自動でクローズされる）\nwith open(\"data.txt\", \"w\") as f:\n    f.write(\"Hello, World!\")\n# ← with ブロックを抜けると f.close() が自動実行\n\n# 複数リソースを同時に扱う\nwith open(\"input.txt\") as src, open(\"output.txt\", \"w\") as dst:\n    for line in src:\n        dst.write(line.upper())\n\n# 自作のコンテキストマネージャ\nfrom contextlib import contextmanager\n\n@contextmanager\ndef timer(label=\"\"):\n    import time\n    start = time.time()\n    yield               # ← with ブロックの中身がここで実行される\n    print(f\"{label}: {time.time() - start:.4f}秒\")\n\nwith timer(\"処理\"):\n    total = sum(range(1_000_000))",
-          "output": "",
+          "output": "??: 0.0XXX?",
           "lineNotes": [
             "L1: ファイルを with で開く（自動でクローズされる）",
             "L4: ← with ブロックを抜けると f.close() が自動実行",
@@ -3139,7 +3431,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: コンテキストマネージャ（with 文）"
         },
         "commonMistakes": [
-          "with 文を使うと、処理前後のセットアップ・クリーンアップを自動化できます。ファイル操作や DB 接続など「確実に閉じる」必要があるリソースに使います。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "with 文を使うと、処理前後のセットアップ・クリーンアップを自動化できます。ファイル操作や DB 接続など「確実に閉じる」必要があるリソースに使います。",
+            "correct": "with open(\"data.txt\", \"w\") as f:"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -3162,7 +3458,7 @@ export const REFERENCE_TOPICS = [
         "details": "エラーメッセージの読み方と、デバッグの基本的なアプローチを覚えましょう。",
         "minimalExample": {
           "code": "# Traceback の読み方\n# Traceback (most recent call last):  ← 最後のエラーが最下部\n#   File \"main.py\", line 5, in <module>\n#     result = divide(10, 0)\n#   File \"main.py\", line 2, in divide\n#     return a / b\n# ZeroDivisionError: division by zero  ← エラーの種類と内容\n\n# print デバッグ（手軽）\ndef calculate(a, b):\n    print(f\"DEBUG: a={a}, b={b}\")   # 変数の中身を確認\n    result = a / b\n    print(f\"DEBUG: result={result}\")\n    return result\n\n# breakpoint()（Python 3.7+）\ndef calculate2(a, b):\n    breakpoint()   # ← ここで一時停止してインタラクティブに調査\n    return a / b\n\n# assert でロジックのチェック\ndef get_positive(n):\n    assert n > 0, f\"正の数が必要です: n={n}\"\n    return n",
-          "output": "",
+          "output": "calculate(10, 2) ???? DEBUG: a=10, b=2 ? DEBUG: result=5.0 ???????",
           "lineNotes": [
             "L1: Traceback の読み方",
             "L2: Traceback (most recent call last):  ← 最後のエラーが最下部",
@@ -3198,9 +3494,13 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: よくあるエラーのデバッグ方法"
         },
         "commonMistakes": [
-          "# ZeroDivisionError: division by zero  ← エラーの種類と内容"
+          {
+            "wrong": "ZeroDivisionError: division by zero",
+            "reason": "← エラーの種類と内容",
+            "correct": "def calculate(a, b):"
+          }
         ],
-        "correctedExample": "# Traceback の読み方\n# Traceback (most recent call last):  ← 最後のエラーが最下部\n#   File \"main.py\", line 5, in <module>\n#     result = divide(10, 0)\n#   File \"main.py\", line 2, in divide\n#     return a / b\n# ZeroDivisionError: division by zero  ← エラーの種類と内容\n\n# print デバッグ（手軽）\ndef calculate(a, b):\n    print(f\"DEBUG: a={a}, b={b}\")   # 変数の中身を確認\n    result = a / b\n    print(f\"DEBUG: result={result}\")\n    return result\n\n# breakpoint()（Python 3.7+）\ndef calculate2(a, b):\n    breakpoint()   # ← ここで一時停止してインタラクティブに調査\n    return a / b\n\n# assert でロジックのチェック\ndef get_positive(n):\n    assert n > 0, f\"正の数が必要です: n={n}\"\n    return n",
+        "correctedExample": "",
         "miniChecks": [
           {
             "id": "errors-06-check-1",
@@ -3238,7 +3538,7 @@ export const REFERENCE_TOPICS = [
         "details": "標準ライブラリや外部パッケージを import して機能を使えます。",
         "minimalExample": {
           "code": "# モジュール全体をインポート\nimport math\nprint(math.pi)           # → 3.14159...\nprint(math.sqrt(16))     # → 4.0\n\n# 特定の関数だけインポート\nfrom math import pi, sqrt, ceil\nprint(pi)                # → 3.14159...\nprint(sqrt(25))          # → 5.0\n\n# エイリアス（別名）をつける\nimport math as m\nfrom datetime import datetime as dt\n\nprint(m.floor(3.7))      # → 3\nprint(dt.now())          # 現在日時\n\n# すべてインポート（非推奨）\n# from math import *",
-          "output": "",
+          "output": "3.14159...\n4.0\n3.14159...\n5.0\n3",
           "lineNotes": [
             "L1: モジュール全体をインポート",
             "L3: → 3.14159...",
@@ -3272,7 +3572,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: import の使い方"
         },
         "commonMistakes": [
-          "標準ライブラリや外部パッケージを import して機能を使えます。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "標準ライブラリや外部パッケージを import して機能を使えます。",
+            "correct": "import math"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -3295,7 +3599,7 @@ export const REFERENCE_TOPICS = [
         "details": "Pythonには豊富な標準ライブラリがあります。よく使うものを覚えておきましょう。",
         "minimalExample": {
           "code": "# math: 数学関数\nimport math\nmath.sqrt(4)        # → 2.0\nmath.ceil(2.1)      # → 3（切り上げ）\nmath.floor(2.9)     # → 2（切り捨て）\nmath.log(100, 10)   # → 2.0（log10）\n\n# random: 乱数\nimport random\nrandom.random()          # 0.0〜1.0の乱数\nrandom.randint(1, 6)     # サイコロ\nrandom.choice([\"A\",\"B\"]) # リストからランダム選択\nrandom.shuffle([1,2,3])  # リストをシャッフル\n\n# datetime: 日時\nfrom datetime import datetime, date\nnow = datetime.now()\nprint(now.strftime(\"%Y年%m月%d日\"))\n\n# os: ファイル・ディレクトリ操作\nimport os\nos.getcwd()          # 現在のディレクトリ\nos.listdir(\".\")      # ファイル一覧",
-          "output": "",
+          "output": "2.0\n3（切り上げ）\n2（切り捨て）\n2.0（log10）",
           "lineNotes": [
             "L1: math: 数学関数",
             "L3: → 2.0",
@@ -3331,7 +3635,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: よく使う標準ライブラリ"
         },
         "commonMistakes": [
-          "Pythonには豊富な標準ライブラリがあります。よく使うものを覚えておきましょう。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Pythonには豊富な標準ライブラリがあります。よく使うものを覚えておきましょう。",
+            "correct": "import math"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -3354,7 +3662,7 @@ export const REFERENCE_TOPICS = [
         "details": "pip コマンドで外部パッケージをインストールできます。",
         "minimalExample": {
           "code": "# ターミナルで実行（Pythonコードではない）\n# pip install requests       HTTPリクエスト\n# pip install pandas         データ分析\n# pip install numpy          数値計算\n# pip install matplotlib     グラフ描画\n# pip install flask          Webフレームワーク\n\n# インストール後はimportして使う\nimport requests\n\nresponse = requests.get(\"https://api.example.com/data\")\nprint(response.status_code)  # → 200\ndata = response.json()       # JSONをdictに変換\n\n# よく使う外部パッケージ\n# requests  → HTTPリクエスト\n# pandas    → データ分析・CSV操作\n# numpy     → 配列・数値計算\n# pillow    → 画像処理\n# selenium  → ブラウザ自動化",
-          "output": "",
+          "output": "200",
           "lineNotes": [
             "L1: ターミナルで実行（Pythonコードではない）",
             "L2: pip install requests       HTTPリクエスト",
@@ -3390,7 +3698,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: pip でパッケージをインストール"
         },
         "commonMistakes": [
-          "pip コマンドで外部パッケージをインストールできます。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "pip コマンドで外部パッケージをインストールできます。",
+            "correct": "import requests"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -3413,7 +3725,7 @@ export const REFERENCE_TOPICS = [
         "details": "itertools・collections・pathlib など、知っておくと便利なモジュールです。",
         "minimalExample": {
           "code": "# itertools: 反復処理のユーティリティ\nimport itertools\n\n# chain: 複数のイテラブルを繋ぐ\nlist(itertools.chain([1,2], [3,4], [5]))  # → [1,2,3,4,5]\n\n# product: デカルト積（全組み合わせ）\nlist(itertools.product(\"AB\", [1,2]))\n# → [('A',1),('A',2),('B',1),('B',2)]\n\n# combinations: 重複なし組み合わせ\nlist(itertools.combinations([1,2,3], 2))\n# → [(1,2),(1,3),(2,3)]\n\n# collections: 便利なデータ構造\nfrom collections import Counter, defaultdict, deque\n\nCounter(\"banana\")  # → Counter({'a':3,'n':2,'b':1})\n\nd = defaultdict(int)\nd[\"key\"] += 1      # KeyError にならない\n\n# pathlib: ファイルパス操作\nfrom pathlib import Path\np = Path(\"data\") / \"file.txt\"  # パスを結合\np.exists()         # ファイルが存在するか\np.read_text()      # ファイルを読む\np.suffix           # → \".txt\"",
-          "output": "",
+          "output": "[1,2,3,4,5]\n[('A',1),('A',2),('B',1),('B',2)]\n[(1,2),(1,3),(2,3)]\nCounter({'a':3,'n':2,'b':1})\n\".txt\"",
           "lineNotes": [
             "L1: itertools: 反復処理のユーティリティ",
             "L4: chain: 複数のイテラブルを繋ぐ",
@@ -3449,9 +3761,13 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: よく使う標準ライブラリ（応用）"
         },
         "commonMistakes": [
-          "d[\"key\"] += 1      # KeyError にならない"
+          {
+            "wrong": "d[\"key\"] += 1",
+            "reason": "# KeyError にならない",
+            "correct": "import itertools"
+          }
         ],
-        "correctedExample": "# itertools: 反復処理のユーティリティ\nimport itertools\n\n# chain: 複数のイテラブルを繋ぐ\nlist(itertools.chain([1,2], [3,4], [5]))  # → [1,2,3,4,5]\n\n# product: デカルト積（全組み合わせ）\nlist(itertools.product(\"AB\", [1,2]))\n# → [('A',1),('A',2),('B',1),('B',2)]\n\n# combinations: 重複なし組み合わせ\nlist(itertools.combinations([1,2,3], 2))\n# → [(1,2),(1,3),(2,3)]\n\n# collections: 便利なデータ構造\nfrom collections import Counter, defaultdict, deque\n\nCounter(\"banana\")  # → Counter({'a':3,'n':2,'b':1})\n\nd = defaultdict(int)\nd[\"key\"] += 1      # KeyError にならない\n\n# pathlib: ファイルパス操作\nfrom pathlib import Path\np = Path(\"data\") / \"file.txt\"  # パスを結合\np.exists()         # ファイルが存在するか\np.read_text()      # ファイルを読む\np.suffix           # → \".txt\"",
+        "correctedExample": "",
         "miniChecks": [
           {
             "id": "modules-04-check-1",
@@ -3472,7 +3788,7 @@ export const REFERENCE_TOPICS = [
         "details": "自分でモジュール（.py ファイル）を作って別のファイルからインポートできます。大きなプログラムを分割するときに使います。",
         "minimalExample": {
           "code": "# utils.py（自作モジュール）\ndef add(a, b):\n    return a + b\n\ndef greet(name):\n    return f\"Hello, {name}!\"\n\nPI = 3.14159\n\n# main.py（別ファイルから使う）\nimport utils\nprint(utils.add(3, 5))     # → 8\nprint(utils.PI)            # → 3.14159\n\n# または特定の関数だけインポート\nfrom utils import greet\nprint(greet(\"Guest\"))      # → Hello, Guest!\n\n# __name__ でスクリプト直接実行か確認\n# utils.py の末尾に追加\nif __name__ == \"__main__\":\n    # このファイルを直接実行したときだけ動く\n    print(\"テスト:\", add(1, 2))",
-          "output": "",
+          "output": "8\n3.14159\nHello, Guest!",
           "lineNotes": [
             "L1: utils.py（自作モジュール）",
             "L10: main.py（別ファイルから使う）",
@@ -3502,7 +3818,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: モジュールの作り方"
         },
         "commonMistakes": [
-          "自分でモジュール（.py ファイル）を作って別のファイルからインポートできます。大きなプログラムを分割するときに使います。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "自分でモジュール（.py ファイル）を作って別のファイルからインポートできます。大きなプログラムを分割するときに使います。",
+            "correct": "def add(a, b):"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -3542,7 +3862,7 @@ export const REFERENCE_TOPICS = [
         "details": "条件・ネスト・関数呼び出しを組み合わせた実践的な内包表記です。",
         "minimalExample": {
           "code": "# 基本（再確認）\nsquares = [x**2 for x in range(10) if x % 2 == 0]\n# → [0, 4, 16, 36, 64]\n\n# ネストしたループ\nmatrix = [[1,2,3],[4,5,6],[7,8,9]]\nflat = [n for row in matrix for n in row]\n# → [1, 2, 3, 4, 5, 6, 7, 8, 9]\n\n# 関数を適用\nwords = [\"hello\", \"world\", \"python\"]\ncapitalized = [w.capitalize() for w in words]\n# → ['Hello', 'World', 'Python']\n\n# 条件式（三項）との組み合わせ\nlabels = [\"偶数\" if x % 2 == 0 else \"奇数\" for x in range(6)]\n# → ['偶数', '奇数', '偶数', '奇数', '偶数', '奇数']",
-          "output": "",
+          "output": "[0, 4, 16, 36, 64]\n[1, 2, 3, 4, 5, 6, 7, 8, 9]\n['Hello', 'World', 'Python']\n['偶数', '奇数', '偶数', '奇数', '偶数', '奇数']",
           "lineNotes": [
             "L1: 基本（再確認）",
             "L3: → [0, 4, 16, 36, 64]",
@@ -3570,7 +3890,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: リスト内包表記の応用"
         },
         "commonMistakes": [
-          "条件・ネスト・関数呼び出しを組み合わせた実践的な内包表記です。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "条件・ネスト・関数呼び出しを組み合わせた実践的な内包表記です。",
+            "correct": "squares = [x**2 for x in range(10) if x % 2 == 0]"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -3593,7 +3917,7 @@ export const REFERENCE_TOPICS = [
         "details": "辞書（dict）と集合（set）も内包表記で作れます。",
         "minimalExample": {
           "code": "# 辞書内包表記\nwords = [\"apple\", \"banana\", \"cherry\"]\nlengths = {w: len(w) for w in words}\n# → {'apple':5, 'banana':6, 'cherry':6}\n\n# キーと値を反転\noriginal = {\"a\": 1, \"b\": 2, \"c\": 3}\ninverted = {v: k for k, v in original.items()}\n# → {1:'a', 2:'b', 3:'c'}\n\n# 集合内包表記（重複自動除去）\nnums = [1, 2, 2, 3, 3, 3, 4]\nunique_squares = {x**2 for x in nums}\n# → {1, 4, 9, 16}\n\n# フィルタリング\nscores = {\"Guest\": 85, \"Member\": 55, \"Carol\": 92, \"Dave\": 48}\npassed = {k: v for k, v in scores.items() if v >= 60}\n# → {'Guest':85, 'Carol':92}",
-          "output": "",
+          "output": "{'apple':5, 'banana':6, 'cherry':6}\n{1:'a', 2:'b', 3:'c'}\n{1, 4, 9, 16}\n{'Guest':85, 'Carol':92}",
           "lineNotes": [
             "L1: 辞書内包表記",
             "L4: → {'apple':5, 'banana':6, 'cherry':6}",
@@ -3621,7 +3945,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: 辞書・集合の内包表記"
         },
         "commonMistakes": [
-          "辞書（dict）と集合（set）も内包表記で作れます。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "辞書（dict）と集合（set）も内包表記で作れます。",
+            "correct": "words = [\"apple\", \"banana\", \"cherry\"]"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -3644,7 +3972,7 @@ export const REFERENCE_TOPICS = [
         "details": "関数型プログラミングスタイルの組み込み関数です。内包表記と使い分けましょう。",
         "minimalExample": {
           "code": "nums = [1, 2, 3, 4, 5]\n\n# map: 各要素に関数を適用\ndoubled = list(map(lambda x: x * 2, nums))\n# → [2, 4, 6, 8, 10]\n# 内包表記で書くと: [x * 2 for x in nums]\n\n# filter: 条件を満たす要素だけ残す\nevens = list(filter(lambda x: x % 2 == 0, nums))\n# → [2, 4]\n# 内包表記で書くと: [x for x in nums if x % 2 == 0]\n\n# reduce: 要素を畳み込む（累積計算）\nfrom functools import reduce\ntotal = reduce(lambda acc, x: acc + x, nums)\n# → 15（1+2+3+4+5）\n# → 組み込みの sum(nums) の方が読みやすい\n\n# 実際は内包表記 or 組み込み関数を優先\n# map/filter はイテレータを返す点に注意",
-          "output": "",
+          "output": "[2, 4, 6, 8, 10]\n[2, 4]\n15（1+2+3+4+5）\n組み込みの sum(nums) の方が読みやすい",
           "lineNotes": [
             "L3: map: 各要素に関数を適用",
             "L5: → [2, 4, 6, 8, 10]",
@@ -3678,7 +4006,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: map / filter / reduce"
         },
         "commonMistakes": [
-          "関数型プログラミングスタイルの組み込み関数です。内包表記と使い分けましょう。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "関数型プログラミングスタイルの組み込み関数です。内包表記と使い分けましょう。",
+            "correct": "nums = [1, 2, 3, 4, 5]"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -3701,7 +4033,7 @@ export const REFERENCE_TOPICS = [
         "details": "zip・enumerate はループで頻繁に使う便利な組み込み関数です。",
         "minimalExample": {
           "code": "# zip: 複数のリストを並行処理\nnames  = [\"Guest\", \"Member\", \"Carol\"]\nscores = [85, 92, 78]\ngrades = [\"A\", \"A+\", \"B+\"]\n\nfor name, score, grade in zip(names, scores, grades):\n    print(f\"{name}: {score}点 ({grade})\")\n\n# zip でリストを辞書に変換\nd = dict(zip(names, scores))\n# → {'Guest':85, 'Member':92, 'Carol':78}\n\n# zip_longest: 短い方に None を補完\nfrom itertools import zip_longest\na = [1, 2, 3]\nb = [\"x\", \"y\"]\nlist(zip_longest(a, b, fillvalue=0))\n# → [(1,'x'), (2,'y'), (3,0)]\n\n# enumerate: インデックス付きでループ\nfor i, name in enumerate(names, start=1):\n    print(f\"{i}位: {name}\")",
-          "output": "",
+          "output": "{'Guest':85, 'Member':92, 'Carol':78}\n[(1,'x'), (2,'y'), (3,0)]",
           "lineNotes": [
             "L1: zip: 複数のリストを並行処理",
             "L9: zip でリストを辞書に変換",
@@ -3725,7 +4057,11 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUG: zip と enumerate の応用"
         },
         "commonMistakes": [
-          "zip・enumerate はループで頻繁に使う便利な組み込み関数です。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "zip・enumerate はループで頻繁に使う便利な組み込み関数です。",
+            "correct": "names  = [\"Guest\", \"Member\", \"Carol\"]"
+          }
         ],
         "correctedExample": "",
         "miniChecks": [
@@ -3783,8 +4119,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 セットでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "Python の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Python の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "tags = [\"jp\", \"jp\", \"python\"]"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "tags = [\"jp\", \"jp\", \"python\"]"
+          }
         ],
         "miniChecks": [
           {
@@ -3822,8 +4166,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 セットでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "Python の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Python の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "tags = [\"jp\", \"jp\", \"python\"]"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "tags = [\"jp\", \"jp\", \"python\"]"
+          }
         ],
         "miniChecks": [
           {
@@ -3861,8 +4213,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 セットでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "Python の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Python の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "tags = [\"jp\", \"jp\", \"python\"]"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "tags = [\"jp\", \"jp\", \"python\"]"
+          }
         ],
         "miniChecks": [
           {
@@ -3921,8 +4281,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 並べ替えと絞り込みでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "Python の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Python の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "scores = [70, 95, 82]"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "scores = [70, 95, 82]"
+          }
         ],
         "miniChecks": [
           {
@@ -3960,8 +4328,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 並べ替えと絞り込みでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "Python の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Python の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "scores = [70, 95, 82]"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "scores = [70, 95, 82]"
+          }
         ],
         "miniChecks": [
           {
@@ -3999,8 +4375,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 並べ替えと絞り込みでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "Python の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Python の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "scores = [70, 95, 82]"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "scores = [70, 95, 82]"
+          }
         ],
         "miniChecks": [
           {
@@ -4058,8 +4442,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 正規表現では、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "Python の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Python の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "import re"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "import re"
+          }
         ],
         "miniChecks": [
           {
@@ -4097,8 +4489,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 正規表現では、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "Python の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Python の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "import re"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "import re"
+          }
         ],
         "miniChecks": [
           {
@@ -4136,8 +4536,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 正規表現では、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "Python の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Python の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "import re"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "import re"
+          }
         ],
         "miniChecks": [
           {
@@ -4195,8 +4603,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 日付と時刻では、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "Python の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Python の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "from datetime import datetime"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "from datetime import datetime"
+          }
         ],
         "miniChecks": [
           {
@@ -4234,8 +4650,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 日付と時刻では、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "Python の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Python の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "from datetime import datetime"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "from datetime import datetime"
+          }
         ],
         "miniChecks": [
           {
@@ -4273,8 +4697,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 日付と時刻では、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "Python の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Python の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "from datetime import datetime"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "from datetime import datetime"
+          }
         ],
         "miniChecks": [
           {
@@ -4330,8 +4762,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 Unicode正規化では、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "Python の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Python の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "import unicodedata"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "import unicodedata"
+          }
         ],
         "miniChecks": [
           {
@@ -4369,8 +4809,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 Unicode正規化では、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "Python の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Python の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "import unicodedata"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "import unicodedata"
+          }
         ],
         "miniChecks": [
           {
@@ -4408,8 +4856,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 Unicode正規化では、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "Python の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Python の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "import unicodedata"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "import unicodedata"
+          }
         ],
         "miniChecks": [
           {
@@ -4464,8 +4920,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 JSONでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "Python の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Python の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "import json"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "import json"
+          }
         ],
         "miniChecks": [
           {
@@ -4503,8 +4967,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 JSONでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "Python の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Python の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "import json"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "import json"
+          }
         ],
         "miniChecks": [
           {
@@ -4542,8 +5014,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 JSONでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "Python の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Python の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "import json"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "import json"
+          }
         ],
         "miniChecks": [
           {
@@ -4602,8 +5082,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 型ヒントでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "Python の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Python の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "def double(value: int) -> int:"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "def double(value: int) -> int:"
+          }
         ],
         "miniChecks": [
           {
@@ -4641,8 +5129,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 型ヒントでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "Python の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Python の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "def double(value: int) -> int:"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "def double(value: int) -> int:"
+          }
         ],
         "miniChecks": [
           {
@@ -4680,8 +5176,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 型ヒントでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "Python の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Python の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "def double(value: int) -> int:"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "def double(value: int) -> int:"
+          }
         ],
         "miniChecks": [
           {
@@ -4738,8 +5242,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 アンパックでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "Python の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Python の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "country, language = (\"JP\", \"python\")"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "country, language = (\"JP\", \"python\")"
+          }
         ],
         "miniChecks": [
           {
@@ -4777,8 +5289,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 アンパックでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "Python の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Python の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "country, language = (\"JP\", \"python\")"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "country, language = (\"JP\", \"python\")"
+          }
         ],
         "miniChecks": [
           {
@@ -4816,8 +5336,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 アンパックでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "Python の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Python の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "country, language = (\"JP\", \"python\")"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "country, language = (\"JP\", \"python\")"
+          }
         ],
         "miniChecks": [
           {
@@ -4876,8 +5404,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 イテレータとジェネレータでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "Python の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Python の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "def countdown():"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "def countdown():"
+          }
         ],
         "miniChecks": [
           {
@@ -4915,8 +5451,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 イテレータとジェネレータでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "Python の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Python の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "def countdown():"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "def countdown():"
+          }
         ],
         "miniChecks": [
           {
@@ -4954,8 +5498,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 イテレータとジェネレータでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "Python の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "Python の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "def countdown():"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "def countdown():"
+          }
         ],
         "miniChecks": [
           {
@@ -5012,8 +5564,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 変数と型では、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "const count = 3;"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "const count = 3;"
+          }
         ],
         "miniChecks": [
           {
@@ -5051,8 +5611,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 変数と型では、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "const count = 3;"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "const count = 3;"
+          }
         ],
         "miniChecks": [
           {
@@ -5090,8 +5658,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 変数と型では、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "const count = 3;"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "const count = 3;"
+          }
         ],
         "miniChecks": [
           {
@@ -5149,8 +5725,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 関数では、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "function addBonus(score) {"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "function addBonus(score) {"
+          }
         ],
         "miniChecks": [
           {
@@ -5188,8 +5772,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 関数では、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "function addBonus(score) {"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "function addBonus(score) {"
+          }
         ],
         "miniChecks": [
           {
@@ -5227,8 +5819,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 関数では、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "function addBonus(score) {"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "function addBonus(score) {"
+          }
         ],
         "miniChecks": [
           {
@@ -5287,8 +5887,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 配列では、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "const items = [\"decode\", \"execute\"];"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "const items = [\"decode\", \"execute\"];"
+          }
         ],
         "miniChecks": [
           {
@@ -5326,8 +5934,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 配列では、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "const items = [\"decode\", \"execute\"];"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "const items = [\"decode\", \"execute\"];"
+          }
         ],
         "miniChecks": [
           {
@@ -5365,8 +5981,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 配列では、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "const items = [\"decode\", \"execute\"];"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "const items = [\"decode\", \"execute\"];"
+          }
         ],
         "miniChecks": [
           {
@@ -5425,8 +6049,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 オブジェクトでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "const record = { country: \"JP\", cleared: true };"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "const record = { country: \"JP\", cleared: true };"
+          }
         ],
         "miniChecks": [
           {
@@ -5464,8 +6096,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 オブジェクトでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "const record = { country: \"JP\", cleared: true };"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "const record = { country: \"JP\", cleared: true };"
+          }
         ],
         "miniChecks": [
           {
@@ -5503,8 +6143,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 オブジェクトでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "const record = { country: \"JP\", cleared: true };"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "const record = { country: \"JP\", cleared: true };"
+          }
         ],
         "miniChecks": [
           {
@@ -5562,8 +6210,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 条件分岐では、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "const score = 72;"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "const score = 72;"
+          }
         ],
         "miniChecks": [
           {
@@ -5601,8 +6257,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 条件分岐では、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "const score = 72;"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "const score = 72;"
+          }
         ],
         "miniChecks": [
           {
@@ -5640,8 +6304,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 条件分岐では、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "const score = 72;"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "const score = 72;"
+          }
         ],
         "miniChecks": [
           {
@@ -5700,8 +6372,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 ループでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "let total = 0;"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "let total = 0;"
+          }
         ],
         "miniChecks": [
           {
@@ -5739,8 +6419,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 ループでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "let total = 0;"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "let total = 0;"
+          }
         ],
         "miniChecks": [
           {
@@ -5778,8 +6466,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 ループでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "let total = 0;"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "let total = 0;"
+          }
         ],
         "miniChecks": [
           {
@@ -5839,8 +6535,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 配列メソッドでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "const scores = [55, 80, 92];"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "const scores = [55, 80, 92];"
+          }
         ],
         "miniChecks": [
           {
@@ -5878,8 +6582,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 配列メソッドでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "const scores = [55, 80, 92];"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "const scores = [55, 80, 92];"
+          }
         ],
         "miniChecks": [
           {
@@ -5917,8 +6629,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 配列メソッドでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "const scores = [55, 80, 92];"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "const scores = [55, 80, 92];"
+          }
         ],
         "miniChecks": [
           {
@@ -5976,8 +6696,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 分割代入では、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "const record = { country: \"JP\", language: \"javascript\" };"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "const record = { country: \"JP\", language: \"javascript\" };"
+          }
         ],
         "miniChecks": [
           {
@@ -6015,8 +6743,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 分割代入では、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "const record = { country: \"JP\", language: \"javascript\" };"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "const record = { country: \"JP\", language: \"javascript\" };"
+          }
         ],
         "miniChecks": [
           {
@@ -6054,8 +6790,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 分割代入では、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "const record = { country: \"JP\", language: \"javascript\" };"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "const record = { country: \"JP\", language: \"javascript\" };"
+          }
         ],
         "miniChecks": [
           {
@@ -6112,8 +6856,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 テンプレートリテラルでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "const country = \"JP\";"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "const country = \"JP\";"
+          }
         ],
         "miniChecks": [
           {
@@ -6151,8 +6903,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 テンプレートリテラルでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "const country = \"JP\";"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "const country = \"JP\";"
+          }
         ],
         "miniChecks": [
           {
@@ -6190,8 +6950,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 テンプレートリテラルでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "const country = \"JP\";"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "const country = \"JP\";"
+          }
         ],
         "miniChecks": [
           {
@@ -6249,8 +7017,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 非同期とPromiseでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "async function loadScore() {"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "async function loadScore() {"
+          }
         ],
         "miniChecks": [
           {
@@ -6288,8 +7064,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 非同期とPromiseでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "async function loadScore() {"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "async function loadScore() {"
+          }
         ],
         "miniChecks": [
           {
@@ -6327,8 +7111,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 非同期とPromiseでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "async function loadScore() {"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "async function loadScore() {"
+          }
         ],
         "miniChecks": [
           {
@@ -6386,8 +7178,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 ES Modulesでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "export function formatScore(score) {"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "export function formatScore(score) {"
+          }
         ],
         "miniChecks": [
           {
@@ -6425,8 +7225,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 ES Modulesでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "export function formatScore(score) {"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "export function formatScore(score) {"
+          }
         ],
         "miniChecks": [
           {
@@ -6464,8 +7272,16 @@ export const REFERENCE_TOPICS = [
           "debug": "DEBUGでは、起きた不具合、直し方、理由を分けて考える。 ES Modulesでは、期待値と実際の値がずれた行を探す。"
         },
         "commonMistakes": [
-          "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
-          "例の中でまだ学んでいない処理を同時に読み始める。"
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "JavaScript の記号だけを覚えて、値がどう変わるかを追わない。",
+            "correct": "export function formatScore(score) {"
+          },
+          {
+            "wrong": "結果だけを暗記してコードを読まない",
+            "reason": "例の中でまだ学んでいない処理を同時に読み始める。",
+            "correct": "export function formatScore(score) {"
+          }
         ],
         "miniChecks": [
           {

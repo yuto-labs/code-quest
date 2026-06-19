@@ -98,6 +98,23 @@ function normalizeText(value) {
     .replace(/\s+/g, ' ');
 }
 
+function normalizeReferenceCode(value) {
+  return String(value || '')
+    .split('\n')
+    .map(line => line.replace(/#.*$/, '').replace(/\/\/.*$/, '').trim())
+    .filter(Boolean)
+    .join('\n');
+}
+
+function referenceExampleHasOutputCall(code) {
+  return /\bprint\s*\(|\bconsole\.log\s*\(/.test(String(code || ''));
+}
+
+function referenceMistakeText(item) {
+  if (!item || typeof item !== 'object' || Array.isArray(item)) return item;
+  return [item.wrong, item.reason, item.correct].filter(Boolean).join(' ');
+}
+
 function tokenSet(value) {
   return new Set(normalizeText(value).split(/[^a-z0-9_{}]+/).filter(Boolean));
 }
@@ -705,6 +722,18 @@ export function validateReferenceTopics(
       } else if (!Array.isArray(example.lineNotes) || example.lineNotes.length === 0) {
         errors.push({ loc: pageLoc, rule: 'invalidExample', msg: 'minimalExample needs lineNotes' });
       }
+      if (referenceExampleHasOutputCall(example?.code) && !example?.output) {
+        warnings.push({ loc: pageLoc, rule: 'missingOutput', msg: 'Reference code prints/logs a value but has no separate OUTPUT block' });
+      }
+      if (example?.code && (!Array.isArray(example.lineNotes) || example.lineNotes.length === 0)) {
+        warnings.push({ loc: pageLoc, rule: 'missingLineNotes', msg: 'Reference minimalExample needs line-by-line notes' });
+      }
+      if (page.correctedExample && normalizeReferenceCode(page.correctedExample) === normalizeReferenceCode(example?.code)) {
+        warnings.push({ loc: pageLoc, rule: 'correctedEqualsOriginal', msg: 'correctedExample duplicates the minimal code' });
+      }
+      if (page.correctedExample && normalizeReferenceCode(page.correctedExample) && normalizeReferenceCode(page.correctedExample) === normalizeReferenceCode(example?.code)) {
+        warnings.push({ loc: pageLoc, rule: 'duplicateCodeSection', msg: 'Reference repeats the same full code in minimalExample and correctedExample' });
+      }
       if (example?.code && example.code.split('\n').length > 30) {
         warnings.push({ loc: pageLoc, rule: 'fixedOversizedCode', msg: 'Reference example may be too large for beginner flow' });
       }
@@ -714,6 +743,19 @@ export function validateReferenceTopics(
       }
       if (!Array.isArray(page.commonMistakes) || page.commonMistakes.length === 0) {
         warnings.push({ loc: pageLoc, rule: 'missingMistake', msg: 'Reference page lacks commonMistakes' });
+      } else {
+        page.commonMistakes.forEach((item, index) => {
+          if (!item || typeof item !== 'object' || Array.isArray(item)) {
+            warnings.push({ loc: `${pageLoc} mistake=${index + 1}`, rule: 'missingErrorReason', msg: 'Reference commonMistakes should use {wrong, reason, correct}' });
+            return;
+          }
+          if (!item.wrong || !item.reason || !item.correct) {
+            warnings.push({ loc: `${pageLoc} mistake=${index + 1}`, rule: 'missingErrorReason', msg: 'Reference mistake pair needs wrong, reason, and correct' });
+          }
+          if (normalizeReferenceCode(item.wrong) && normalizeReferenceCode(item.wrong) === normalizeReferenceCode(item.correct)) {
+            warnings.push({ loc: `${pageLoc} mistake=${index + 1}`, rule: 'correctedEqualsOriginal', msg: 'Reference mistake correct value should differ from wrong value' });
+          }
+        });
       }
       if (!Array.isArray(page.miniChecks) || page.miniChecks.length < 2) {
         warnings.push({ loc: pageLoc, rule: 'missingMiniCheck', msg: 'Reference page should have 2-3 miniChecks' });
@@ -749,7 +791,7 @@ function referenceTextForValidation(topic) {
       page.minimalExample?.code,
       page.minimalExample?.output,
       ...(page.minimalExample?.lineNotes || []),
-      ...(page.commonMistakes || []),
+      ...(page.commonMistakes || []).map(referenceMistakeText),
       ...(page.miniChecks || []).flatMap(check => [check.prompt, check.answer]),
     ]),
   ].filter(Boolean).join(' ');

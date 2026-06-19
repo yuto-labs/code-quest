@@ -3156,7 +3156,7 @@ export const REFERENCE_TOPICS = [
         "details": "Pythonのエラーには「構文エラー」と「実行時エラー（例外）」の2種類があります。",
         "minimalExample": {
           "code": "# SyntaxError: 構文エラー（実行前に検出）\n# print(\"hello\"   ← 括弧が閉じていない\n\n# 主な実行時エラー（例外）\n# NameError: 未定義の変数を使った\n# print(undefined_var)\n\n# TypeError: 型が合わない\n# result = \"text\" + 5\n\n# ValueError: 値が不正\n# num = int(\"abc\")\n\n# IndexError: リストの範囲外\n# lst = [1,2,3]; lst[10]\n\n# KeyError: 辞書にないキー\n# d = {}; d[\"missing\"]\n\n# ZeroDivisionError: ゼロ除算\n# 10 / 0\n\n# AttributeError: 属性がない\n# \"hello\".nonexistent()",
-          "output": "???????????????????????",
+          "output": "（このコードはコメントのみのため実行結果は出ません。各行はエラーの種類を示す例です）",
           "lineNotes": [
             "L1: SyntaxError: 構文エラー（実行前に検出）",
             "L2: print(\"hello\"   ← 括弧が閉じていない",
@@ -3296,7 +3296,7 @@ export const REFERENCE_TOPICS = [
         "details": "finally はエラーの有無に関わらず実行、else はエラーがなかったときに実行されます。",
         "minimalExample": {
           "code": "def read_file(filename):\n    f = None\n    try:\n        f = open(filename)\n        data = f.read()\n    except FileNotFoundError:\n        print(f\"{filename} が見つかりません\")\n    except PermissionError:\n        print(\"読み取り権限がありません\")\n    else:\n        # エラーがなかったときだけ実行\n        print(f\"読み込み成功: {len(data)}文字\")\n        return data\n    finally:\n        # 必ず実行（ファイルを確実に閉じる）\n        if f:\n            f.close()\n            print(\"ファイルを閉じました\")",
-          "output": "????????????????????????????????????????????????????????????????????????",
+          "output": "読み込み成功: N文字\nファイルを閉じました",
           "lineNotes": [
             "L11: エラーがなかったときだけ実行",
             "L15: 必ず実行（ファイルを確実に閉じる）"

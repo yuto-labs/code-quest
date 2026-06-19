@@ -7,7 +7,7 @@ export default function CodePathsScreen({ onBack, onOpenSql }) {
         <button className="pixel-btn" style={styles.back} onClick={onBack}>[ &lt; BACK ]</button>
         <div>
           <div style={styles.title}>CODE PATHS</div>
-          <div style={styles.sub}>???????????</div>
+          <div style={styles.sub}>学びたい言語のパスを選択</div>
         </div>
       </div>
       <div style={styles.grid}>

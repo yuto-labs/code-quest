@@ -64,15 +64,15 @@ export function SqlExplanation({ explanation, fact }) {
   return (
     <div style={styles.explain}>
       <div style={styles.explainTitle}>EXPLANATION</div>
-      {explanation.correctAnswer && <Block title="??">{explanation.correctAnswer}</Block>}
-      <SqlQueryView title="?? QUERY" query={explanation.completedQuery} />
-      {explanation.executionSteps?.length > 0 && <Block title="?????">{explanation.executionSteps.join('\n')}</Block>}
+      {explanation.correctAnswer && <Block title="正解">{explanation.correctAnswer}</Block>}
+      <SqlQueryView title="完成 QUERY" query={explanation.completedQuery} />
+      {explanation.executionSteps?.length > 0 && <Block title="実行ステップ">{explanation.executionSteps.join('\n')}</Block>}
       {explanation.commonMistakes?.length > 0 && (
-        <Block title="??????????">
-          {explanation.commonMistakes.map(item => `NG: ${item.wrong}\n??: ${item.reason}\nOK: ${item.correct}`).join('\n\n')}
+        <Block title="よくある間違い">
+          {explanation.commonMistakes.map(item => `NG: ${item.wrong}\n理由: ${item.reason}\nOK: ${item.correct}`).join('\n\n')}
         </Block>
       )}
-      {explanation.sqlExplanation && <Block title="SQL??">{explanation.sqlExplanation}</Block>}
+      {explanation.sqlExplanation && <Block title="SQL解説">{explanation.sqlExplanation}</Block>}
       {fact && <ThemeCard fact={fact} sources={explanation.sourceRefs || fact.sourceRefs || []} />}
     </div>
   );
@@ -92,19 +92,19 @@ function ThemeCard({ fact, sources = [] }) {
   return (
     <details style={styles.theme}>
       <summary style={styles.themeSummary}>
-        <span style={styles.themeLabel}>?????</span>
+        <span style={styles.themeLabel}>ワールド知識</span>
         <span style={styles.themeTitle}>{fact.titleJa}</span>
-        <span style={styles.themeHint}>??????????</span>
+        <span style={styles.themeHint}>タップして詳細</span>
       </summary>
       <div style={styles.themeBody}>
-        <Block title="??">{fact.summaryJa}</Block>
-        <Block title="?????">{fact.backgroundJa}</Block>
-        <Block title="?????">{fact.historyJa}</Block>
-        <Block title="???????">{fact.episodeJa}</Block>
-        {fact.keyPointsJa?.length > 0 && <Block title="????????">{fact.keyPointsJa.map(point => `?${point}`).join('\n')}</Block>}
+        <Block title="概要">{fact.summaryJa}</Block>
+        <Block title="背景">{fact.backgroundJa}</Block>
+        <Block title="歴史">{fact.historyJa}</Block>
+        <Block title="エピソード">{fact.episodeJa}</Block>
+        {fact.keyPointsJa?.length > 0 && <Block title="重要ポイント">{fact.keyPointsJa.map(point => `・${point}`).join('\n')}</Block>}
         {sources.length > 0 && (
           <details style={styles.sources}>
-            <summary style={styles.sourceSummary}>?????</summary>
+            <summary style={styles.sourceSummary}>参考資料</summary>
             {sources.map(source => (
               <a key={source.url} href={source.url} target="_blank" rel="noreferrer noopener" style={styles.sourceLink}>
                 {source.title || source.url}

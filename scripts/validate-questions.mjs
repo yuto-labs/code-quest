@@ -19,7 +19,8 @@ let CHALLENGES, LANGUAGES, EXECUTE_CHALLENGES, EXECUTE_LANGUAGES,
     DEBUG_CHALLENGES, DEBUG_LANGUAGES, COUNTRIES, CONCEPTS,
     COUNTRY_FACTS, COUNTRY_FACTS_BY_ID, validateCountryFacts,
     QUESTION_ASSIGNMENTS, COGNITIVE_TASKS, listFinalMissions,
-    QUESTION_COUNT_TARGETS, META_KEY, packProgress, unpackProgress;
+    QUESTION_COUNT_TARGETS, META_KEY, packProgress, unpackProgress,
+    REFERENCE_TOPICS, REFERENCE_TOPIC_ALIASES, REFERENCE_RESTORE_AUDIT;
 
 function dataUrl(rel) {
   return pathToFileURL(path.join(ROOT, rel)).href;
@@ -36,6 +37,7 @@ try {
   ({ listFinalMissions } = await import(dataUrl('src/data/final_missions.js')));
   ({ QUESTION_COUNT_TARGETS } = await import(dataUrl('src/data/question_targets.js')));
   ({ META_KEY, packProgress, unpackProgress } = await import(dataUrl('src/utils/metadata.js')));
+  ({ REFERENCE_TOPICS, REFERENCE_TOPIC_ALIASES, REFERENCE_RESTORE_AUDIT } = await import(dataUrl('src/data/reference.js')));
 } catch (err) {
   console.error('Failed to import data files:', err.message);
   process.exit(1);
@@ -54,6 +56,7 @@ const WORLD_SOURCES = [
   { worldId: 'execute', challenges: EXECUTE_CHALLENGES, languages: EXECUTE_LANGUAGES, sourceFile: 'execute_challenges.js' },
   { worldId: 'debug',   challenges: DEBUG_CHALLENGES,   languages: DEBUG_LANGUAGES,   sourceFile: 'debug_challenges.js' },
 ];
+const WORLD_IDS = WORLD_SOURCES.map(source => source.worldId);
 
 const VALID_COUNTRY_IDS = new Set(COUNTRIES.map(c => c.id));
 const VALID_COGNITIVE_TASKS = new Set(COGNITIVE_TASKS);
@@ -609,6 +612,149 @@ export function validateFinalMission(mission) {
   return { errors, warnings };
 }
 
+export function validateReferenceTopics(
+  topics = REFERENCE_TOPICS,
+  aliases = REFERENCE_TOPIC_ALIASES,
+  restoreAudit = REFERENCE_RESTORE_AUDIT,
+) {
+  const errors = [];
+  const warnings = [];
+  const topicIds = new Set();
+  const pageIds = new Set();
+  const personalNameRe = /\b(Yuto|Alice|Bob)\b/i;
+
+  if (!Array.isArray(topics)) {
+    errors.push({ loc: '[reference.js]', rule: 'invalid-reference-shape', msg: 'REFERENCE_TOPICS must be an array' });
+    return { errors, warnings };
+  }
+
+  for (const topic of topics) {
+    const loc = `[reference.js] ${topic?.id ?? '(no id)'}`;
+    if (!topic?.id) {
+      errors.push({ loc, rule: 'duplicateTopicId', msg: 'Reference topic needs a stable id' });
+      continue;
+    }
+    if (topicIds.has(topic.id)) {
+      errors.push({ loc, rule: 'duplicateTopicId', msg: `Duplicate Reference topic id "${topic.id}"` });
+    }
+    topicIds.add(topic.id);
+  }
+
+  if (aliases && typeof aliases === 'object') {
+    for (const [legacyId, targetId] of Object.entries(aliases)) {
+      if (!topicIds.has(targetId)) {
+        errors.push({ loc: `[reference.js] alias=${legacyId}`, rule: 'broken-legacy-reference-link', msg: `Alias target "${targetId}" does not exist` });
+      }
+    }
+  }
+
+  for (const item of restoreAudit || []) {
+    if (item?.oldPages > 0 && item.finalPages < item.oldPages) {
+      const movedToScope = item.intentionallyRemovedDuplicates?.some(text => String(text).includes('scope'));
+      if (!movedToScope) {
+        warnings.push({ loc: `[reference.js] ${item.topicId}`, rule: 'reference-page-count-below-baseline',
+          msg: `Reference topic has ${item.finalPages}/${item.oldPages} restored baseline pages` });
+      }
+    }
+  }
+
+  for (const topic of topics) {
+    if (!topic?.id) continue;
+    const loc = `[reference.js] ${topic.id}`;
+    const languageConcepts = VALID_CONCEPTS[topic.language] || new Set();
+    if (!topic.summary) warnings.push({ loc, rule: 'missingSummary', msg: 'Reference topic has no summary' });
+    if (topic.parentId && !topicIds.has(topic.parentId)) {
+      errors.push({ loc, rule: 'brokenParent', msg: `Unknown parentId "${topic.parentId}"` });
+    }
+    for (const prereq of topic.prerequisites || []) {
+      if (!topicIds.has(prereq)) {
+        errors.push({ loc, rule: 'brokenPrerequisite', msg: `Unknown prerequisite "${prereq}"` });
+      }
+    }
+    for (const conceptId of topic.relatedConceptIds || []) {
+      if (!languageConcepts.has(conceptId)) {
+        errors.push({ loc, rule: 'missingCanonicalConcept', msg: `Unknown concept "${conceptId}" for ${topic.language}` });
+      }
+    }
+    if (personalNameRe.test(referenceTextForValidation(topic))) {
+      warnings.push({ loc, rule: 'personalName', msg: 'Reference examples should not use personal placeholder names' });
+    }
+    if (!Array.isArray(topic.pages) || topic.pages.length === 0) {
+      errors.push({ loc, rule: 'invalidExample', msg: 'Reference topic needs at least one page' });
+      continue;
+    }
+
+    const seenTemplates = new Set();
+    for (const page of topic.pages) {
+      const pageLoc = `${loc} page=${page?.id ?? '(no id)'}`;
+      if (!page?.id) {
+        errors.push({ loc: pageLoc, rule: 'duplicatePageId', msg: 'Reference page needs a stable id' });
+        continue;
+      }
+      if (pageIds.has(page.id)) {
+        errors.push({ loc: pageLoc, rule: 'duplicatePageId', msg: `Duplicate Reference page id "${page.id}"` });
+      }
+      pageIds.add(page.id);
+      if (!page.summary) warnings.push({ loc: pageLoc, rule: 'missingSummary', msg: 'Reference page has no summary' });
+      if (!page.details && !page.summary) {
+        warnings.push({ loc: pageLoc, rule: 'reference-page-lacks-explanatory-prose', msg: 'Reference page needs explanatory prose, not code only' });
+      }
+      const example = page.minimalExample;
+      if (!example?.code) {
+        warnings.push({ loc: pageLoc, rule: 'missingMinimalExample', msg: 'Reference page lacks minimalExample.code' });
+      } else if (!Array.isArray(example.lineNotes) || example.lineNotes.length === 0) {
+        errors.push({ loc: pageLoc, rule: 'invalidExample', msg: 'minimalExample needs lineNotes' });
+      }
+      if (example?.code && example.code.split('\n').length > 30) {
+        warnings.push({ loc: pageLoc, rule: 'fixedOversizedCode', msg: 'Reference example may be too large for beginner flow' });
+      }
+      const missingWorlds = WORLD_IDS.filter(wid => !page.worldExamples?.[wid]);
+      if (missingWorlds.length > 0) {
+        warnings.push({ loc: pageLoc, rule: 'missingWorldLayer', msg: `Missing worldExamples for ${missingWorlds.join(', ')}` });
+      }
+      if (!Array.isArray(page.commonMistakes) || page.commonMistakes.length === 0) {
+        warnings.push({ loc: pageLoc, rule: 'missingMistake', msg: 'Reference page lacks commonMistakes' });
+      }
+      if (!Array.isArray(page.miniChecks) || page.miniChecks.length < 2) {
+        warnings.push({ loc: pageLoc, rule: 'missingMiniCheck', msg: 'Reference page should have 2-3 miniChecks' });
+      }
+      if (topic.level === 'basic' && example?.code && example.code.split('\n').length > 18 && (!example.lineNotes || example.lineNotes.length < 2)) {
+        warnings.push({ loc: pageLoc, rule: 'multiConceptBeginnerExample', msg: 'Long beginner example needs enough line notes to explain introduced concepts' });
+      }
+      for (const check of page.miniChecks || []) {
+        if (!check?.id || !check.prompt || !check.answer) {
+          errors.push({ loc: pageLoc, rule: 'invalidPracticeQuestion', msg: 'miniChecks need id, prompt, and answer' });
+        }
+      }
+      const normalizedTemplate = normalizeText(example?.code || '');
+      if (normalizedTemplate && seenTemplates.has(normalizedTemplate)) {
+        warnings.push({ loc: pageLoc, rule: 'duplicateTemplate', msg: 'Reference topic repeats the same code template' });
+      }
+      seenTemplates.add(normalizedTemplate);
+    }
+  }
+
+  return { errors, warnings };
+}
+
+function referenceTextForValidation(topic) {
+  return [
+    topic.id,
+    topic.title,
+    topic.summary,
+    ...(topic.aliases || []),
+    ...(topic.pages || []).flatMap(page => [
+      page.title,
+      page.summary,
+      page.minimalExample?.code,
+      page.minimalExample?.output,
+      ...(page.minimalExample?.lineNotes || []),
+      ...(page.commonMistakes || []),
+      ...(page.miniChecks || []).flatMap(check => [check.prompt, check.answer]),
+    ]),
+  ].filter(Boolean).join(' ');
+}
+
 export function validateAssignmentRecord(record, ctx = {}) {
   const errors = [];
   const warnings = [];
@@ -927,6 +1073,10 @@ export function runValidation() {
   const reservedCheck = validateProgressPayload(packProgress({}, { version: 1, resume: {}, review: {}, finalMissions: {} }));
   allErrors.push(...reservedCheck.errors);
   allWarnings.push(...reservedCheck.warnings);
+
+  const referenceIssues = validateReferenceTopics(REFERENCE_TOPICS);
+  allErrors.push(...referenceIssues.errors);
+  allWarnings.push(...referenceIssues.warnings);
 
   const finalCounts = {};
   for (const mission of finalMissions) {

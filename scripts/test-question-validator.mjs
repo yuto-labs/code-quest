@@ -13,6 +13,7 @@ import {
   validateFinalMission,
   validateProgressPayload,
   validateQuestion,
+  validateReferenceTopics,
 } from './validate-questions.mjs';
 import { validateCountryFacts } from '../src/data/country_facts.js';
 import { buildFinalMissionId, getFinalMission } from '../src/data/final_missions.js';
@@ -676,6 +677,62 @@ tests.push(expectNoError(
       finalMeta.finalMissions[missionId].completedChildCount === 3 &&
       Boolean(finalMeta.finalMissions[missionId].completedAt),
     'final-lifecycle-replay-preserves-completion'
+  ));
+}
+
+// 37. Reference duplicate topic ids are structural errors
+{
+  const basePage = {
+    id: 'sample-basic',
+    title: 'basic',
+    summary: 'summary',
+    minimalExample: { code: 'value = 1', output: '1', lineNotes: ['value に 1 を入れる。'] },
+    worldExamples: { decode: 'syntax', execute: 'trace', debug: 'fix' },
+    commonMistakes: ['値の変化を追わない。'],
+    miniChecks: [
+      { id: 'sample-check-1', prompt: '何を表示しますか。', answer: '1' },
+      { id: 'sample-check-2', prompt: '値はどこで決まりますか。', answer: '代入行。' },
+    ],
+  };
+  const topics = [
+    { id: 'sample', language: 'python', title: 'sample', summary: 'sample', pages: [basePage], relatedConceptIds: ['variables'] },
+    { id: 'sample', language: 'python', title: 'sample2', summary: 'sample', pages: [{ ...basePage, id: 'sample-basic-2' }], relatedConceptIds: ['variables'] },
+  ];
+  const { errors } = validateReferenceTopics(topics);
+  tests.push(expectGeneric(
+    'reference: duplicate topic id is an error',
+    errors.some(e => e.rule === 'duplicateTopicId'),
+    'duplicateTopicId'
+  ));
+}
+
+// 38. Reference broken prerequisites are structural errors
+{
+  const topics = [{
+    id: 'sample',
+    language: 'python',
+    title: 'sample',
+    summary: 'sample',
+    prerequisites: ['missing-topic'],
+    pages: [{
+      id: 'sample-basic',
+      title: 'basic',
+      summary: 'summary',
+      minimalExample: { code: 'value = 1', output: '1', lineNotes: ['value に 1 を入れる。'] },
+      worldExamples: { decode: 'syntax', execute: 'trace', debug: 'fix' },
+      commonMistakes: ['値の変化を追わない。'],
+      miniChecks: [
+        { id: 'sample-check-1', prompt: '何を表示しますか。', answer: '1' },
+        { id: 'sample-check-2', prompt: '値はどこで決まりますか。', answer: '代入行。' },
+      ],
+    }],
+    relatedConceptIds: ['variables'],
+  }];
+  const { errors } = validateReferenceTopics(topics);
+  tests.push(expectGeneric(
+    'reference: broken prerequisite is an error',
+    errors.some(e => e.rule === 'brokenPrerequisite'),
+    'brokenPrerequisite'
   ));
 }
 

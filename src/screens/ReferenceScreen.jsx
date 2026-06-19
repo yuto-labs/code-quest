@@ -1,34 +1,56 @@
 import { useMemo, useState } from 'react';
-import { PYTHON_REFERENCE } from '../data/reference';
-import { getConceptCoreStatus, getConceptBestScores } from '../utils/progress';
+import { REFERENCE_TOPICS, resolveReferenceTopicId } from '../data/reference';
+import { CHALLENGES } from '../data/challenges';
+import { EXECUTE_CHALLENGES } from '../data/execute_challenges';
+import { DEBUG_CHALLENGES } from '../data/debug_challenges';
+import { listFinalMissions } from '../data/final_missions';
+import { CodeBlock } from '../components/ExplanationPanel';
+import { getConceptCoreStatus, getConceptBestScores, buildProgressKey } from '../utils/progress';
 import { WORLD_META, WORLD_IDS } from '../utils/stageData';
-
-// Reference topic id → CONCEPTS.python id (null = not mapped)
-const REFERENCE_CONCEPT_MAP = {
-  variables:          'variables',
-  variables_advanced: 'variables',
-  strings:            null,
-  operators:          null,
-  conditionals:       'conditions',
-  loops:              'loops',
-  functions:          'functions',
-  lists:              'lists',
-  dicts:              'dicts',
-  classes:            'classes',
-  errors:             'errors',
-  modules:            'modules',
-  comprehensions:     'comprehension',
-};
 
 const WORLD_ORDER = ['decode', 'execute', 'debug'];
 const LAYERS = ['all', '0', '1', '2', '3'];
+const CHALLENGE_SOURCES = {
+  decode: CHALLENGES,
+  execute: EXECUTE_CHALLENGES,
+  debug: DEBUG_CHALLENGES,
+};
 
-function ConceptCore({ conceptId, progress, scores, size = 'sm' }) {
+function topicConcept(topic) {
+  return topic.relatedConceptIds?.[0] || null;
+}
+
+function normalizeText(value) {
+  return String(value ?? '').toLowerCase();
+}
+
+function searchableTopic(topic) {
+  return [
+    topic.id,
+    topic.language,
+    topic.title,
+    topic.level,
+    topic.summary,
+    ...(topic.aliases || []),
+    ...(topic.relatedConceptIds || []),
+    ...(topic.pages || []).flatMap(page => [
+      page.title,
+      page.summary,
+      page.minimalExample?.code,
+      page.minimalExample?.output,
+      ...(page.minimalExample?.lineNotes || []),
+      ...(page.commonMistakes || []),
+      ...(page.miniChecks || []).flatMap(check => [check.prompt, check.answer]),
+      ...Object.values(page.worldExamples || {}),
+    ]),
+  ].filter(Boolean).join(' ');
+}
+
+function ConceptCore({ conceptId, language, progress, scores, size = 'sm' }) {
   if (!conceptId) return null;
-  const status = getConceptCoreStatus(progress || {}, conceptId);
+  const status = getConceptCoreStatus(progress || {}, conceptId, language);
   if (!status) return null;
-  const bestScores = scores ? getConceptBestScores(scores, conceptId) : null;
-
+  const bestScores = scores ? getConceptBestScores(scores, conceptId, language) : null;
   const dotSize = size === 'lg' ? 18 : 12;
   const gap = size === 'lg' ? 10 : 6;
 
@@ -39,31 +61,17 @@ function ConceptCore({ conceptId, progress, scores, size = 'sm' }) {
         const cleared = status[wid];
         const hasContent = cleared !== null;
         const best = bestScores?.[wid] || 0;
-
-        const bg = !hasContent ? 'transparent'
-          : cleared ? meta.color
-          : 'transparent';
-        const border = !hasContent ? '#333'
-          : cleared ? meta.color
-          : meta.color + '88';
-        const opacity = hasContent ? 1 : 0.25;
-
         return (
-          <div key={wid} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, opacity }}>
+          <div key={wid} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, opacity: hasContent ? 1 : 0.25 }}>
             <div style={{
               width: dotSize,
               height: dotSize,
               borderRadius: '50%',
-              background: bg,
-              border: `2px solid ${border}`,
-              boxShadow: cleared ? `0 0 6px ${meta.color}88` : 'none',
-              transition: 'all 0.2s',
+              background: hasContent && cleared ? meta.color : 'transparent',
+              border: `2px solid ${hasContent ? meta.color + (cleared ? '' : '88') : '#333'}`,
+              boxShadow: hasContent && cleared ? `0 0 6px ${meta.color}88` : 'none',
             }} />
-            {size === 'lg' && best > 0 && (
-              <div style={{ fontSize: 8, color: meta.color, fontFamily: 'var(--pixel-font)' }}>
-                {best}
-              </div>
-            )}
+            {size === 'lg' && best > 0 && <div style={styles.coreScore}>{best}</div>}
           </div>
         );
       })}
@@ -71,30 +79,89 @@ function ConceptCore({ conceptId, progress, scores, size = 'sm' }) {
   );
 }
 
-export default function ReferenceScreen({ onBack, progress, scores, review = {}, onNavigate }) {
-  const [selected, setSelected] = useState(null);
+function buildPracticeIndex() {
+  const records = [];
+  for (const [worldId, source] of Object.entries(CHALLENGE_SOURCES)) {
+    for (const [countryId, langMap] of Object.entries(source || {})) {
+      for (const [languageId, questions] of Object.entries(langMap || {})) {
+        for (const question of questions || []) {
+          records.push({ worldId, countryId, languageId, question, source: 'regular' });
+        }
+      }
+    }
+  }
+  for (const mission of listFinalMissions()) {
+    for (const question of mission.questions || []) {
+      records.push({
+        worldId: mission.worldId,
+        countryId: mission.countryId,
+        languageId: mission.languageId,
+        question,
+        source: 'final',
+      });
+    }
+  }
+  return records;
+}
+
+const PRACTICE_INDEX = buildPracticeIndex();
+
+function practiceRecommendations(topic, progress, review) {
+  const primaryConceptId = topicConcept(topic);
+  if (!primaryConceptId) return [];
+  const candidates = PRACTICE_INDEX
+    .filter(record => record.languageId === topic.language)
+    .filter(record => record.question?.conceptId === primaryConceptId || record.question?.programmingConceptIds?.[0] === primaryConceptId)
+    .map(record => {
+      const key = buildProgressKey(record.worldId, record.countryId, record.languageId);
+      const reviewDue = Boolean(review?.[record.question.id]?.reviewDue);
+      const cleared = Boolean(progress?.[key]);
+      const worldRank = record.worldId === 'decode' ? 0 : record.worldId === 'execute' ? 1 : 2;
+      const score = (reviewDue ? 100 : 0) + (!cleared ? 20 : 0) - worldRank;
+      return { ...record, score, cleared, reviewDue };
+    })
+    .sort((a, b) => b.score - a.score || a.worldId.localeCompare(b.worldId) || a.question.id.localeCompare(b.question.id));
+  const seenWorlds = new Set();
+  const unique = [];
+  for (const item of candidates) {
+    if (seenWorlds.has(item.worldId)) continue;
+    seenWorlds.add(item.worldId);
+    unique.push(item);
+    if (unique.length >= 3) break;
+  }
+  return unique;
+}
+
+export default function ReferenceScreen({
+  onBack,
+  progress,
+  scores,
+  review = {},
+  onNavigate,
+  originContext = null,
+  onReturnToOrigin,
+}) {
+  const [selectedId, setSelectedId] = useState(null);
   const [query, setQuery] = useState('');
-  const [languageFilter, setLanguageFilter] = useState('python');
+  const [languageFilter, setLanguageFilter] = useState('all');
   const [worldFilter, setWorldFilter] = useState('all');
   const [progressFilter, setProgressFilter] = useState('all');
   const [reviewFilter, setReviewFilter] = useState('all');
   const [layerFilter, setLayerFilter] = useState('all');
 
+  const selected = selectedId
+    ? REFERENCE_TOPICS.find(topic => topic.id === resolveReferenceTopicId(selectedId))
+    : null;
+
+  const languages = useMemo(() => ['all', ...new Set(REFERENCE_TOPICS.map(topic => topic.language))], []);
+
   const filteredTopics = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return PYTHON_REFERENCE.filter(topic => {
-      const conceptId = REFERENCE_CONCEPT_MAP[topic.id] ?? null;
-      const searchable = [
-        topic.title,
-        topic.summary,
-        topic.aliases?.join(' '),
-        topic.keywords?.join(' '),
-        conceptId,
-        ...(topic.sections || []).flatMap(section => [section.heading, section.text, section.code]),
-      ].filter(Boolean).join(' ').toLowerCase();
-      if (q && !searchable.includes(q)) return false;
-      if (languageFilter !== 'all' && languageFilter !== 'python') return false;
-      const status = conceptId ? getConceptCoreStatus(progress || {}, conceptId, languageFilter === 'all' ? 'python' : languageFilter) : null;
+    return REFERENCE_TOPICS.filter(topic => {
+      const conceptId = topicConcept(topic);
+      if (languageFilter !== 'all' && topic.language !== languageFilter) return false;
+      if (q && !normalizeText(searchableTopic(topic)).includes(q)) return false;
+      const status = conceptId ? getConceptCoreStatus(progress || {}, conceptId, topic.language) : null;
       if (worldFilter !== 'all' && status?.[worldFilter] === null) return false;
       if (progressFilter !== 'all') {
         const worlds = worldFilter === 'all' ? WORLD_IDS : [worldFilter];
@@ -106,7 +173,7 @@ export default function ReferenceScreen({ onBack, progress, scores, review = {},
         if (progressFilter === 'cleared' && !(total > 0 && cleared === total)) return false;
       }
       if (reviewFilter === 'review-needed') {
-        const needsReview = Object.values(review || {}).some(item => item?.reviewDue && (item?.mistakeTags || []).includes(conceptId));
+        const needsReview = Object.values(review || {}).some(item => item?.reviewDue && (item?.mistakeTags || []).some(tag => tag === conceptId || tag === topic.id));
         if (!needsReview) return false;
       }
       if (layerFilter !== 'all') {
@@ -119,7 +186,7 @@ export default function ReferenceScreen({ onBack, progress, scores, review = {},
 
   const clearFilters = () => {
     setQuery('');
-    setLanguageFilter('python');
+    setLanguageFilter('all');
     setWorldFilter('all');
     setProgressFilter('all');
     setReviewFilter('all');
@@ -130,36 +197,32 @@ export default function ReferenceScreen({ onBack, progress, scores, review = {},
     return (
       <TopicDetail
         topic={selected}
-        conceptId={REFERENCE_CONCEPT_MAP[selected.id] ?? null}
         progress={progress}
         scores={scores}
+        review={review}
         onNavigate={onNavigate}
-        onBack={() => setSelected(null)}
+        onBack={() => setSelectedId(null)}
+        originContext={originContext}
+        onReturnToOrigin={onReturnToOrigin}
       />
     );
   }
 
   return (
     <div style={styles.wrap} className="fade-in">
+      {originContext && onReturnToOrigin && <ReturnButton onClick={onReturnToOrigin} />}
       <div style={styles.header}>
         <button style={styles.backBtn} onClick={onBack}>{'[ < BACK ]'}</button>
         <div style={styles.headerText}>
-          <div style={styles.title}>📚 PYTHON REFERENCE</div>
-          <div style={styles.sub}>タップして詳細を見る</div>
+          <div style={styles.title}>REFERENCE</div>
+          <div style={styles.sub}>基礎から順に、コードと出力を分けて読む</div>
         </div>
       </div>
 
       <div style={styles.filters}>
-        <input
-          style={styles.search}
-          value={query}
-          onChange={e => setQuery(e.target.value)}
-          placeholder="Search reference"
-          aria-label="Search reference"
-        />
+        <input style={styles.search} value={query} onChange={e => setQuery(e.target.value)} placeholder="Search reference" aria-label="Search reference" />
         <select style={styles.select} value={languageFilter} onChange={e => setLanguageFilter(e.target.value)} aria-label="Language filter">
-          <option value="python">Python</option>
-          <option value="all">All languages</option>
+          {languages.map(lang => <option key={lang} value={lang}>{lang === 'all' ? 'All languages' : lang}</option>)}
         </select>
         <select style={styles.select} value={worldFilter} onChange={e => setWorldFilter(e.target.value)} aria-label="World filter">
           <option value="all">All worlds</option>
@@ -182,24 +245,18 @@ export default function ReferenceScreen({ onBack, progress, scores, review = {},
       </div>
 
       <div style={styles.grid}>
-        {filteredTopics.length === 0 && (
-          <div style={styles.empty}>No reference entries match the current filters.</div>
-        )}
-        {filteredTopics.map((topic) => {
-          const conceptId = REFERENCE_CONCEPT_MAP[topic.id] ?? null;
+        {filteredTopics.length === 0 && <div style={styles.empty}>条件に合う Reference がありません。</div>}
+        {filteredTopics.map(topic => {
+          const conceptId = topicConcept(topic);
           return (
-            <button
-              key={topic.id}
-              style={styles.card}
-              onClick={() => setSelected(topic)}
-            >
-              <span style={styles.cardEmoji}>{topic.emoji}</span>
+            <button key={topic.id} style={styles.card} onClick={() => setSelectedId(topic.id)}>
               <div style={styles.cardBody}>
+                <div style={styles.cardMeta}>{topic.language.toUpperCase()} / {topic.level}</div>
                 <div style={styles.cardTitle}>{topic.title}</div>
                 <div style={styles.cardSummary}>{topic.summary}</div>
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6, flexShrink: 0 }}>
-                <ConceptCore conceptId={conceptId} progress={progress} scores={scores} size="sm" />
+              <div style={styles.cardRight}>
+                <ConceptCore conceptId={conceptId} language={topic.language} progress={progress} scores={scores} size="sm" />
                 <span style={styles.arrow}>▶</span>
               </div>
             </button>
@@ -210,49 +267,39 @@ export default function ReferenceScreen({ onBack, progress, scores, review = {},
   );
 }
 
-function TopicDetail({ topic, conceptId, progress, scores, onNavigate, onBack }) {
-  const [sectionIdx, setSectionIdx] = useState(0);
-  const section = topic.sections[sectionIdx];
-  const isLast = sectionIdx === topic.sections.length - 1;
-  const status = conceptId ? getConceptCoreStatus(progress || {}, conceptId) : null;
+function TopicDetail({ topic, progress, scores, review, onNavigate, onBack, originContext, onReturnToOrigin }) {
+  const [pageIdx, setPageIdx] = useState(0);
+  const [practiceIdx, setPracticeIdx] = useState(0);
+  const page = topic.pages[pageIdx];
+  const conceptId = topicConcept(topic);
+  const status = conceptId ? getConceptCoreStatus(progress || {}, conceptId, topic.language) : null;
+  const recs = practiceRecommendations(topic, progress, review);
+  const practice = recs[practiceIdx % Math.max(recs.length, 1)];
+  const isLast = pageIdx === topic.pages.length - 1;
 
   return (
     <div style={styles.wrap} className="fade-in">
+      {originContext && onReturnToOrigin && <ReturnButton onClick={onReturnToOrigin} />}
       <div style={styles.header}>
         <button style={styles.backBtn} onClick={onBack}>{'[ < BACK ]'}</button>
         <div style={styles.headerText}>
-          <div style={styles.title}>{topic.emoji} {topic.title}</div>
-          <div style={styles.sub}>{sectionIdx + 1} / {topic.sections.length}</div>
+          <div style={styles.title}>{topic.title}</div>
+          <div style={styles.sub}>{topic.language.toUpperCase()} / {pageIdx + 1} / {topic.pages.length}</div>
         </div>
       </div>
 
-      {/* Concept Core status */}
       {status && (
         <div style={styles.coreBar}>
           <span style={styles.coreLabel}>CONCEPT CORE</span>
-          <ConceptCore conceptId={conceptId} progress={progress} scores={scores} size="lg" />
-          <div style={{ display: 'flex', gap: 6, marginLeft: 4 }}>
+          <ConceptCore conceptId={conceptId} language={topic.language} progress={progress} scores={scores} size="lg" />
+          <div style={styles.worldButtons}>
             {WORLD_ORDER.map(wid => {
               const meta = WORLD_META[wid];
               const cleared = status[wid];
               if (cleared === null) return null;
               return (
-                <button
-                  key={wid}
-                  style={{
-                    fontFamily: 'var(--pixel-font)',
-                    fontSize: 8,
-                    padding: '4px 8px',
-                    background: 'transparent',
-                    border: `1px solid ${meta.color}88`,
-                    color: cleared ? meta.color : meta.color + '66',
-                    cursor: onNavigate ? 'pointer' : 'default',
-                    letterSpacing: 1,
-                  }}
-                  onClick={() => onNavigate?.(wid)}
-                  title={`${meta.label} ワールドへ`}
-                >
-                  {cleared ? '✓' : '→'} {meta.label}
+                <button key={wid} style={{ ...styles.worldBtn, borderColor: `${meta.color}88`, color: cleared ? meta.color : `${meta.color}66` }} onClick={() => onNavigate?.(wid)}>
+                  {cleared ? '✓' : '□'} {meta.label}
                 </button>
               );
             })}
@@ -260,55 +307,113 @@ function TopicDetail({ topic, conceptId, progress, scores, onNavigate, onBack })
         </div>
       )}
 
-      {/* Section progress dots */}
       <div style={styles.progressWrap}>
-        {topic.sections.map((_, i) => (
-          <div
-            key={i}
-            style={{
-              ...styles.progressDot,
-              background: i <= sectionIdx ? 'var(--accent)' : 'var(--bg2)',
-              border: i === sectionIdx ? '2px solid var(--accent)' : '2px solid #333',
-            }}
-          />
+        {topic.pages.map((item, i) => (
+          <button key={item.id} style={{ ...styles.progressDot, background: i <= pageIdx ? 'var(--accent)' : 'var(--bg2)' }} onClick={() => setPageIdx(i)} aria-label={`${item.title}へ移動`} />
         ))}
       </div>
 
       <div style={styles.content}>
-        <div style={styles.sectionHeading}>{section.heading}</div>
-        <div style={styles.sectionText}>{section.text}</div>
+        <section style={styles.panel}>
+          <div style={styles.sectionHeading}>{page.title}</div>
+          <p style={styles.sectionText}>{page.summary}</p>
+          {page.details && page.details !== page.summary && (
+            <p style={styles.sectionText}>{page.details}</p>
+          )}
+        </section>
 
-        <div style={styles.codeBlock}>
-          <div style={styles.codeHeader}>
-            <span style={styles.codeLang}>🐍 Python</span>
+        <section style={styles.panel}>
+          <div style={styles.sectionHeading}>最小コード</div>
+          <CodeBlock label={`${topic.title} example`}>{page.minimalExample?.code}</CodeBlock>
+          {page.minimalExample?.output && (
+            <>
+              <div style={styles.smallHeading}>出力</div>
+              <CodeBlock label={`${topic.title} output`}>{page.minimalExample.output}</CodeBlock>
+            </>
+          )}
+          <div style={styles.noteList}>
+            {(page.minimalExample?.lineNotes || []).map(note => <div key={note} style={styles.noteItem}>{note}</div>)}
           </div>
-          <pre style={styles.code}>{section.code}</pre>
-        </div>
+        </section>
+
+        {page.minimalExample?.stateTrace?.length > 0 && (
+          <section style={styles.panel}>
+            <div style={styles.sectionHeading}>値の変化</div>
+            <div style={styles.noteList}>{page.minimalExample.stateTrace.map(step => <div key={step} style={styles.noteItem}>{step}</div>)}</div>
+          </section>
+        )}
+
+        {page.correctedExample && (
+          <section style={styles.panel}>
+            <div style={styles.sectionHeading}>修正版の例</div>
+            <CodeBlock label={`${topic.title} corrected example`}>{page.correctedExample}</CodeBlock>
+          </section>
+        )}
+
+        <section style={styles.panel}>
+          <div style={styles.sectionHeading}>ワールド別の読み方</div>
+          <div style={styles.worldGrid}>
+            {WORLD_ORDER.map(wid => (
+              <div key={wid} style={styles.worldExample}>
+                <strong style={{ color: WORLD_META[wid].color }}>{WORLD_META[wid].label}</strong>
+                <span>{page.worldExamples?.[wid]}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section style={styles.panel}>
+          <div style={styles.sectionHeading}>間違えやすいポイント</div>
+          <div style={styles.noteList}>{(page.commonMistakes || []).map(item => <div key={item} style={styles.noteItem}>{item}</div>)}</div>
+        </section>
+
+        <section style={styles.panel}>
+          <div style={styles.sectionHeading}>ミニチェック</div>
+          <div style={styles.noteList}>
+            {(page.miniChecks || []).map(check => (
+              <details key={check.id} style={styles.check}>
+                <summary>{check.prompt}</summary>
+                <div style={styles.checkAnswer}>{check.answer}</div>
+              </details>
+            ))}
+          </div>
+        </section>
+
+        {isLast && (
+          <section style={styles.panel}>
+            <div style={styles.sectionHeading}>練習</div>
+            {practice ? (
+              <div style={styles.practiceBox}>
+                <div style={styles.practiceTitle}>{WORLD_META[practice.worldId]?.label} / {practice.countryId} / {practice.languageId}</div>
+                <div style={styles.practiceQuestion}>{practice.question.title || practice.question.id}</div>
+                <div style={styles.practiceBtns}>
+                  <button style={styles.navBtn} onClick={() => setPracticeIdx(i => i + 1)}>別の問題</button>
+                  <button style={styles.navBtn} onClick={() => setPracticeIdx(i => i)}>1問だけ練習</button>
+                  <button style={styles.navBtnPrimary} onClick={() => onNavigate?.(practice.worldId)}>ステージへ</button>
+                </div>
+                <div style={styles.practiceNote}>練習表示は Reference 内だけの確認で、ハート・進捗・報酬は変更しません。</div>
+              </div>
+            ) : (
+              <div style={styles.empty}>この概念に完全一致する練習問題はまだありません。</div>
+            )}
+          </section>
+        )}
 
         <div style={styles.navRow}>
-          <button
-            style={{ ...styles.navBtn, opacity: sectionIdx === 0 ? 0.3 : 1 }}
-            onClick={() => setSectionIdx(i => Math.max(0, i - 1))}
-            disabled={sectionIdx === 0}
-          >
-            ◀ PREV
-          </button>
+          <button style={{ ...styles.navBtn, opacity: pageIdx === 0 ? 0.3 : 1 }} onClick={() => setPageIdx(i => Math.max(0, i - 1))} disabled={pageIdx === 0}>◀ PREV</button>
           {!isLast ? (
-            <button
-              style={styles.navBtnPrimary}
-              onClick={() => setSectionIdx(i => i + 1)}
-            >
-              NEXT ▶
-            </button>
+            <button style={styles.navBtnPrimary} onClick={() => setPageIdx(i => i + 1)}>NEXT ▶</button>
           ) : (
-            <button style={styles.navBtnPrimary} onClick={onBack}>
-              ✅ 完了
-            </button>
+            <button style={styles.navBtnPrimary} onClick={onBack}>完了</button>
           )}
         </div>
       </div>
     </div>
   );
+}
+
+function ReturnButton({ onClick }) {
+  return <button style={styles.returnBtn} onClick={onClick}>← 問題へ戻る</button>;
 }
 
 const styles = {
@@ -322,6 +427,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     overflow: 'hidden',
+    minWidth: 0,
   },
   header: {
     display: 'flex',
@@ -329,6 +435,7 @@ const styles = {
     gap: 16,
     padding: '14px 20px',
     borderBottom: '2px solid var(--border)',
+    flexShrink: 0,
   },
   backBtn: {
     fontFamily: 'var(--pixel-font)',
@@ -340,37 +447,23 @@ const styles = {
     cursor: 'pointer',
     flexShrink: 0,
     letterSpacing: 1,
-    textShadow: '0 0 5px #00ffcc, 0 0 12px #00ffaa, 0 0 25px #00ff88',
   },
-  headerText: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 4,
-  },
-  title: {
-    fontSize: 'clamp(12px, 3.5vw, 15px)',
-    color: 'var(--accent)',
-  },
-  sub: {
-    fontSize: 10,
-    color: 'var(--text-dim)',
-  },
-  coreBar: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 12,
-    padding: '10px 20px',
-    background: 'var(--panel)',
-    borderBottom: '1px solid var(--border2)',
-    flexWrap: 'wrap',
-  },
-  coreLabel: {
+  returnBtn: {
+    position: 'fixed',
+    right: 14,
+    bottom: 'calc(env(safe-area-inset-bottom, 0px) + 14px)',
+    zIndex: 30,
     fontFamily: 'var(--pixel-font)',
-    fontSize: 8,
-    color: 'var(--text-dim)',
-    letterSpacing: 1,
-    flexShrink: 0,
+    fontSize: 9,
+    padding: '10px 12px',
+    color: 'var(--accent)',
+    background: 'rgba(0, 12, 24, 0.94)',
+    border: '2px solid var(--accent)',
+    cursor: 'pointer',
   },
+  headerText: { display: 'flex', flexDirection: 'column', gap: 4, minWidth: 0 },
+  title: { fontSize: 'clamp(12px, 3.5vw, 15px)', color: 'var(--accent)' },
+  sub: { fontSize: 10, color: 'var(--text-dim)', lineHeight: 1.6 },
   filters: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
@@ -379,171 +472,42 @@ const styles = {
     borderBottom: '1px solid var(--border2)',
     flexShrink: 0,
   },
-  search: {
-    fontFamily: 'var(--pixel-font)',
-    fontSize: 10,
-    background: 'var(--panel)',
-    color: 'var(--text)',
-    border: '1px solid var(--border2)',
-    padding: '10px',
-    minWidth: 0,
-  },
-  select: {
-    fontFamily: 'var(--pixel-font)',
-    fontSize: 9,
-    background: 'var(--panel)',
-    color: 'var(--text)',
-    border: '1px solid var(--border2)',
-    padding: '8px',
-    minWidth: 0,
-  },
-  clearBtn: {
-    fontFamily: 'var(--pixel-font)',
-    fontSize: 9,
-    background: 'transparent',
-    color: 'var(--accent2)',
-    border: '1px solid var(--accent2)',
-    padding: '8px 10px',
-    cursor: 'pointer',
-  },
-  empty: {
-    fontSize: 10,
-    color: 'var(--text-dim)',
-    padding: 20,
-    textAlign: 'center',
-  },
-  grid: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 10,
-    padding: 20,
-    maxWidth: 680,
-    margin: '0 auto',
-    width: '100%',
-    flex: 1,
-    overflowY: 'auto',
-    WebkitOverflowScrolling: 'touch',
-  },
-  card: {
-    fontFamily: 'var(--pixel-font)',
-    display: 'flex',
-    alignItems: 'center',
-    gap: 16,
-    padding: '16px 20px',
-    background: 'var(--panel)',
-    border: '2px solid var(--border2)',
-    cursor: 'pointer',
-    transition: 'border-color 0.15s, background 0.15s',
-    textAlign: 'left',
-    width: '100%',
-  },
-  cardEmoji: {
-    fontSize: 28,
-    flexShrink: 0,
-  },
-  cardBody: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 6,
-  },
-  cardTitle: {
-    fontSize: 12,
-    color: 'var(--accent)',
-  },
-  cardSummary: {
-    fontSize: 9,
-    color: 'var(--text-dim)',
-  },
-  arrow: {
-    fontSize: 8,
-    color: 'var(--accent)',
-    flexShrink: 0,
-  },
-  progressWrap: {
-    display: 'flex',
-    gap: 8,
-    padding: '12px 20px',
-    alignItems: 'center',
-  },
-  progressDot: {
-    width: 12,
-    height: 12,
-    borderRadius: 0,
-    transition: 'all 0.2s',
-  },
-  content: {
-    flex: 1,
-    padding: '16px 20px',
-    maxWidth: 680,
-    margin: '0 auto',
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 12,
-    overflow: 'hidden',
-  },
-  sectionHeading: {
-    fontSize: 'clamp(13px, 3.5vw, 16px)',
-    color: 'var(--accent2)',
-  },
-  sectionText: {
-    fontSize: 'clamp(11px, 3vw, 13px)',
-    color: 'var(--text)',
-    lineHeight: 2.2,
-  },
-  codeBlock: {
-    background: '#0a0f1a',
-    border: '2px solid var(--border2)',
-    overflow: 'auto',
-    flex: 1,
-    WebkitOverflowScrolling: 'touch',
-  },
-  codeHeader: {
-    padding: '8px 14px',
-    borderBottom: '1px solid #1a2a4a',
-    background: '#0d1520',
-  },
-  codeLang: {
-    fontSize: 8,
-    color: 'var(--text-dim)',
-  },
-  code: {
-    fontFamily: 'monospace',
-    fontSize: 'clamp(12px, 3.5vw, 14px)',
-    color: '#a8d8a8',
-    padding: '16px',
-    margin: 0,
-    overflowX: 'auto',
-    WebkitOverflowScrolling: 'touch',
-    lineHeight: 1.9,
-    whiteSpace: 'pre',
-    display: 'block',
-  },
-  navBtn: {
-    fontFamily: 'var(--pixel-font)',
-    fontSize: 9,
-    background: 'transparent',
-    color: 'var(--text-dim)',
-    border: '2px solid var(--text-dim)',
-    padding: '12px 16px',
-    cursor: 'pointer',
-    minHeight: 48,
-  },
-  navBtnPrimary: {
-    fontFamily: 'var(--pixel-font)',
-    fontSize: 9,
-    background: 'transparent',
-    color: 'var(--accent)',
-    border: '2px solid var(--accent)',
-    padding: '12px 16px',
-    cursor: 'pointer',
-    minHeight: 48,
-  },
-  navRow: {
-    display: 'flex',
-    gap: 12,
-    flexShrink: 0,
-    paddingBottom: 'env(safe-area-inset-bottom, 16px)',
-  },
+  search: { fontFamily: 'var(--pixel-font)', fontSize: 10, background: 'var(--panel)', color: 'var(--text)', border: '1px solid var(--border2)', padding: 10, minWidth: 0 },
+  select: { fontFamily: 'var(--pixel-font)', fontSize: 9, background: 'var(--panel)', color: 'var(--text)', border: '1px solid var(--border2)', padding: 8, minWidth: 0 },
+  clearBtn: { fontFamily: 'var(--pixel-font)', fontSize: 9, background: 'transparent', color: 'var(--accent2)', border: '1px solid var(--accent2)', padding: '8px 10px', cursor: 'pointer' },
+  grid: { display: 'flex', flexDirection: 'column', gap: 10, padding: 20, maxWidth: 760, margin: '0 auto', width: '100%', flex: 1, minHeight: 0, overflowY: 'auto', overflowX: 'hidden' },
+  empty: { fontSize: 10, color: 'var(--text-dim)', padding: 12, lineHeight: 2 },
+  card: { fontFamily: 'var(--pixel-font)', display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px', background: 'var(--panel)', border: '2px solid var(--border2)', cursor: 'pointer', textAlign: 'left', width: '100%', minWidth: 0 },
+  cardBody: { flex: 1, display: 'flex', flexDirection: 'column', gap: 6, minWidth: 0 },
+  cardMeta: { fontSize: 8, color: 'var(--text-dim)' },
+  cardTitle: { fontSize: 12, color: 'var(--accent)' },
+  cardSummary: { fontSize: 9, color: 'var(--text-dim)', lineHeight: 1.8 },
+  cardRight: { display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6, flexShrink: 0 },
+  arrow: { fontSize: 8, color: 'var(--accent)' },
+  coreBar: { display: 'flex', alignItems: 'center', gap: 12, padding: '10px 20px', background: 'var(--panel)', borderBottom: '1px solid var(--border2)', flexWrap: 'wrap', flexShrink: 0 },
+  coreLabel: { fontFamily: 'var(--pixel-font)', fontSize: 8, color: 'var(--text-dim)', letterSpacing: 1 },
+  coreScore: { fontSize: 8, color: 'var(--accent)', fontFamily: 'var(--pixel-font)' },
+  worldButtons: { display: 'flex', gap: 6, flexWrap: 'wrap' },
+  worldBtn: { fontFamily: 'var(--pixel-font)', fontSize: 8, padding: '4px 8px', background: 'transparent', border: '1px solid', cursor: 'pointer' },
+  progressWrap: { display: 'flex', gap: 8, padding: '12px 20px', alignItems: 'center', flexShrink: 0 },
+  progressDot: { width: 12, height: 12, border: '2px solid #333', cursor: 'pointer' },
+  content: { flex: 1, minHeight: 0, padding: '16px 20px 84px', maxWidth: 760, margin: '0 auto', width: '100%', display: 'flex', flexDirection: 'column', gap: 12, overflowY: 'auto', overflowX: 'hidden' },
+  panel: { background: 'var(--panel)', border: '1px solid var(--border2)', padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 10, minWidth: 0 },
+  sectionHeading: { fontSize: 'clamp(12px, 3.4vw, 15px)', color: 'var(--accent2)' },
+  smallHeading: { fontFamily: 'var(--pixel-font)', fontSize: 8, color: 'var(--text-dim)', marginTop: 4 },
+  sectionText: { fontSize: 'clamp(11px, 3vw, 13px)', color: 'var(--text)', lineHeight: 2, margin: 0 },
+  noteList: { display: 'flex', flexDirection: 'column', gap: 7 },
+  noteItem: { fontSize: 10, color: 'var(--text)', lineHeight: 2, wordBreak: 'break-word' },
+  worldGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 8 },
+  worldExample: { display: 'flex', flexDirection: 'column', gap: 6, border: '1px solid rgba(255,255,255,0.12)', padding: 10, fontSize: 10, lineHeight: 1.8 },
+  check: { fontSize: 10, color: 'var(--text)', lineHeight: 2 },
+  checkAnswer: { padding: '6px 0 0 12px', color: 'var(--accent)' },
+  practiceBox: { display: 'flex', flexDirection: 'column', gap: 8 },
+  practiceTitle: { fontSize: 9, color: 'var(--accent2)' },
+  practiceQuestion: { fontSize: 11, color: 'var(--text)', lineHeight: 1.8 },
+  practiceBtns: { display: 'flex', flexWrap: 'wrap', gap: 8 },
+  practiceNote: { fontSize: 9, color: 'var(--text-dim)', lineHeight: 1.8 },
+  navRow: { display: 'flex', gap: 12, flexShrink: 0 },
+  navBtn: { fontFamily: 'var(--pixel-font)', fontSize: 9, background: 'transparent', color: 'var(--text-dim)', border: '2px solid var(--text-dim)', padding: '10px 14px', cursor: 'pointer', minHeight: 44 },
+  navBtnPrimary: { fontFamily: 'var(--pixel-font)', fontSize: 9, background: 'transparent', color: 'var(--accent)', border: '2px solid var(--accent)', padding: '10px 14px', cursor: 'pointer', minHeight: 44 },
 };

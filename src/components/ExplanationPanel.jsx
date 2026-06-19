@@ -3,7 +3,7 @@ function TextBlock({ children }) {
   return <div style={styles.text}>{children}</div>;
 }
 
-function CodeBlock({ children, label = 'CODE' }) {
+export function CodeBlock({ children, label = 'CODE' }) {
   if (!children) return null;
   const code = String(children);
   const lines = code.split('\n');

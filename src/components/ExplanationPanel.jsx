@@ -49,6 +49,63 @@ function Section({ title, children }) {
   );
 }
 
+function SourceList({ sources = [] }) {
+  if (!sources?.length) return null;
+  return (
+    <div style={styles.sourceList}>
+      {sources.map(source => (
+        <a
+          key={source.url}
+          href={source.url}
+          target="_blank"
+          rel="noreferrer noopener"
+          style={styles.sourceLink}
+        >
+          <span style={styles.sourceTitle}>{source.title}</span>
+          {source.organization && <span style={styles.sourceOrg}>{source.organization}</span>}
+        </a>
+      ))}
+    </div>
+  );
+}
+
+function CountryKnowledgeCard({ notes = [] }) {
+  if (!notes?.length) return null;
+  return (
+    <details style={styles.countryCard}>
+      <summary style={styles.countrySummary}>
+        <span style={styles.countrySummaryTitle}>この国の知識 / COUNTRY NOTE</span>
+        <span style={styles.countrySummaryHint}>タップして詳しく見る</span>
+      </summary>
+      <div style={styles.countryBody}>
+        {notes.map(note => (
+          <article key={note.factId} style={styles.countryItem}>
+            <div style={styles.countryTitleRow}>
+              <div style={styles.countryTitle}>{note.titleJa}</div>
+              {note.statusLabel && <span style={styles.statusLabel}>{note.statusLabel}</span>}
+            </div>
+            {note.summaryJa && <div style={styles.countrySummaryText}>{note.summaryJa}</div>}
+            {note.detailJa && <TextBlock>{note.detailJa}</TextBlock>}
+            {note.keyPointsJa?.length > 0 && (
+              <ul style={styles.keyPointList}>
+                {note.keyPointsJa.map(point => (
+                  <li key={point} style={styles.keyPoint}>{point}</li>
+                ))}
+              </ul>
+            )}
+            {note.sourceRefs?.length > 0 && (
+              <details style={styles.noteSources}>
+                <summary style={styles.summary}>出典を見る</summary>
+                <SourceList sources={note.sourceRefs} />
+              </details>
+            )}
+          </article>
+        ))}
+      </div>
+    </details>
+  );
+}
+
 export default function ExplanationPanel({ data, title = '解説' }) {
   if (!data) return null;
   const debug = data.debugExplanation || null;
@@ -60,6 +117,7 @@ export default function ExplanationPanel({ data, title = '解説' }) {
     data.commonMistakes ||
     data.programmingExplanation ||
     data.countryNote ||
+    data.countryKnowledge?.length ||
     debug ||
     data.sourceRefs?.length,
   );
@@ -140,23 +198,12 @@ export default function ExplanationPanel({ data, title = '解説' }) {
         </Section>
       )}
 
+      <CountryKnowledgeCard notes={data.countryKnowledge} />
+
       {data.sourceRefs?.length > 0 && (
         <details style={styles.sources}>
           <summary style={styles.summary}>出典を見る</summary>
-          <div style={styles.sourceList}>
-            {data.sourceRefs.map(source => (
-              <a
-                key={source.url}
-                href={source.url}
-                target="_blank"
-                rel="noreferrer noopener"
-                style={styles.sourceLink}
-              >
-                <span style={styles.sourceTitle}>{source.title}</span>
-                {source.organization && <span style={styles.sourceOrg}>{source.organization}</span>}
-              </a>
-            ))}
-          </div>
+          <SourceList sources={data.sourceRefs} />
         </details>
       )}
     </div>
@@ -314,5 +361,85 @@ const styles = {
   sourceOrg: {
     fontSize: 8,
     color: 'var(--text-dim)',
+  },
+  countryCard: {
+    border: '1px solid rgba(0,255,136,0.28)',
+    background: 'rgba(0,255,136,0.045)',
+    padding: '10px 12px',
+    maxWidth: '100%',
+  },
+  countrySummary: {
+    cursor: 'pointer',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 4,
+    color: 'var(--accent)',
+  },
+  countrySummaryTitle: {
+    fontFamily: 'var(--pixel-font)',
+    fontSize: 9,
+    lineHeight: 1.8,
+  },
+  countrySummaryHint: {
+    fontSize: 9,
+    color: 'var(--text-dim)',
+    lineHeight: 1.6,
+  },
+  countryBody: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 12,
+    marginTop: 12,
+    minWidth: 0,
+  },
+  countryItem: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 7,
+    minWidth: 0,
+  },
+  countryTitleRow: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: 8,
+    alignItems: 'center',
+  },
+  countryTitle: {
+    fontFamily: 'var(--pixel-font)',
+    fontSize: 9,
+    color: 'var(--accent2)',
+    lineHeight: 1.8,
+  },
+  statusLabel: {
+    border: '1px solid rgba(255,204,0,0.45)',
+    color: '#ffcc55',
+    background: 'rgba(255,204,0,0.08)',
+    padding: '2px 6px',
+    fontSize: 8,
+    lineHeight: 1.6,
+  },
+  countrySummaryText: {
+    fontSize: 10,
+    color: 'var(--text)',
+    lineHeight: 1.9,
+    fontWeight: 700,
+    wordBreak: 'break-word',
+  },
+  keyPointList: {
+    margin: 0,
+    paddingLeft: 18,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 4,
+  },
+  keyPoint: {
+    fontSize: 10,
+    color: 'var(--text)',
+    lineHeight: 1.8,
+  },
+  noteSources: {
+    marginTop: 2,
+    borderTop: '1px solid rgba(0,255,136,0.16)',
+    paddingTop: 7,
   },
 };

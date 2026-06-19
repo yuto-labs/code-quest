@@ -133,6 +133,31 @@ function countryNoteText(q, facts) {
   return notes.join('\n');
 }
 
+function factStatusLabel(factStatus) {
+  if (factStatus === 'traditional') return '伝統・慣習として扱う知識';
+  if (factStatus === 'disputed') return '見解に幅がある知識';
+  return '';
+}
+
+function countryKnowledgeNotes(facts) {
+  return facts
+    .map(fact => {
+      const hasStructuredNote = fact?.titleJa || fact?.summaryJa || fact?.detailJa || fact?.keyPointsJa?.length;
+      if (!hasStructuredNote) return null;
+      return {
+        factId: fact.factId,
+        titleJa: fact.titleJa || fact.statement || fact.factId,
+        summaryJa: fact.summaryJa || '',
+        detailJa: fact.detailJa || fact.detail || fact.statement || '',
+        keyPointsJa: Array.isArray(fact.keyPointsJa) ? fact.keyPointsJa.filter(Boolean) : [],
+        factStatus: fact.factStatus,
+        statusLabel: factStatusLabel(fact.factStatus),
+        sourceRefs: uniqueSources(Array.isArray(fact.sourceRefs) ? fact.sourceRefs : []),
+      };
+    })
+    .filter(Boolean);
+}
+
 export function normalizeExplanation({
   q,
   qType,
@@ -153,6 +178,7 @@ export function normalizeExplanation({
   );
   const debugExplanation = isDebug ? debugDetails(q, currentStep) : null;
   const countryNote = countryNoteText(q, facts);
+  const countryKnowledge = countryKnowledgeNotes(facts);
   const sources = uniqueSources([
     ...(Array.isArray(q?.sourceRefs) ? q.sourceRefs : []),
     ...facts.flatMap(fact => Array.isArray(fact.sourceRefs) ? fact.sourceRefs : []),
@@ -167,6 +193,7 @@ export function normalizeExplanation({
     commonMistakes: asText(currentStep?.commonMistakes || q?.commonMistakes),
     programmingExplanation,
     countryNote,
+    countryKnowledge,
     debugExplanation,
     sourceRefs: sources,
   };

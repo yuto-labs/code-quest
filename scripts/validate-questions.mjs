@@ -165,6 +165,85 @@ function validateSourceRefs(sourceRefs, loc, errors) {
   });
 }
 
+function assignedFactIdsByCountry(assignments = QUESTION_ASSIGNMENTS) {
+  const used = new Map();
+  for (const record of assignments) {
+    if (!record?.countryId || !Array.isArray(record.factIds)) continue;
+    const countrySet = used.get(record.countryId) ?? new Set();
+    for (const factId of record.factIds) countrySet.add(factId);
+    used.set(record.countryId, countrySet);
+  }
+  return used;
+}
+
+function japaneseCharLength(value) {
+  return String(value || '').trim().length;
+}
+
+function validateCountryFactNotes(facts, assignments, errors, warnings) {
+  const factsById = Object.fromEntries(facts.map(fact => [fact.factId, fact]));
+  const usedByCountry = assignedFactIdsByCountry(assignments);
+  const entityByCountry = new Map();
+
+  for (const record of assignments) {
+    for (const factId of record.factIds ?? []) {
+      if (!factsById[factId]) {
+        errors.push({
+          loc: `[question_assignments.js] ${record.questionId}`,
+          rule: 'assignedFactMissing',
+          msg: `Assigned factId "${factId}" is not registered`,
+        });
+      }
+    }
+  }
+
+  for (const fact of facts) {
+    const countryMap = entityByCountry.get(fact.countryId) ?? new Map();
+    for (const entityKey of fact.entityKeys ?? []) {
+      if (countryMap.has(entityKey) && countryMap.get(entityKey) !== fact.factId) {
+        errors.push({
+          loc: `[country_facts.js] ${fact.factId}`,
+          rule: 'duplicateEntityWithinCountry',
+          msg: `entityKey "${entityKey}" is already used by ${countryMap.get(entityKey)} in ${fact.countryId}`,
+        });
+      }
+      countryMap.set(entityKey, fact.factId);
+    }
+    entityByCountry.set(fact.countryId, countryMap);
+  }
+
+  for (const countryId of ['JP', 'US']) {
+    for (const factId of usedByCountry.get(countryId) ?? []) {
+      const fact = factsById[factId];
+      if (!fact) continue;
+      const loc = `[country_facts.js] ${fact.factId}`;
+      if (!fact.titleJa) warnings.push({ loc, rule: 'missingTitleJa', msg: 'Assigned JP/US fact should include titleJa' });
+      if (!fact.summaryJa) warnings.push({ loc, rule: 'missingSummaryJa', msg: 'Assigned JP/US fact should include summaryJa' });
+      if (japaneseCharLength(fact.detailJa) < 120) warnings.push({ loc, rule: 'detailJaTooShort', msg: 'detailJa should be beginner-readable and roughly 150-300 Japanese characters' });
+      if (!Array.isArray(fact.keyPointsJa) || fact.keyPointsJa.length < 2) warnings.push({ loc, rule: 'missingKeyPointsJa', msg: 'keyPointsJa should include 2-4 short facts' });
+      if (fact.summaryJa && fact.detailJa && normalizeText(fact.summaryJa) === normalizeText(fact.detailJa)) {
+        warnings.push({ loc, rule: 'detailRepeatsSummary', msg: 'detailJa should not merely repeat summaryJa' });
+      }
+      if (fact.factStatus === 'traditional' && !/伝統|慣習|文化的|断定しすぎず/.test(String(fact.detailJa || ''))) {
+        warnings.push({ loc, rule: 'traditionalWithoutLabel', msg: 'traditional facts should be labelled cautiously in detailJa' });
+      }
+    }
+  }
+}
+
+function buildFactUsageReport(facts, assignments) {
+  const usedByCountry = assignedFactIdsByCountry(assignments);
+  const report = {};
+  for (const fact of facts) {
+    const countryReport = report[fact.countryId] ?? { used: 0, unused: 0, total: 0 };
+    countryReport.total += 1;
+    if (usedByCountry.get(fact.countryId)?.has(fact.factId)) countryReport.used += 1;
+    else countryReport.unused += 1;
+    report[fact.countryId] = countryReport;
+  }
+  return report;
+}
+
 function hasDetailedExplanation(q) {
   return EXPLANATION_CONTRACT_FIELDS.some(field => {
     if (field === 'sourceRefs') return Array.isArray(q.sourceRefs) && q.sourceRefs.length > 0;
@@ -1099,6 +1178,7 @@ export function runValidation() {
       msg: issue.msg,
     });
   }
+  validateCountryFactNotes(COUNTRY_FACTS, QUESTION_ASSIGNMENTS, allErrors, allWarnings);
 
   const finalMissionKeys = new Set(finalMissions.map(m => `${m.worldId}_${m.countryId}_${m.languageId}`));
   for (const { worldId, challenges } of WORLD_SOURCES) {
@@ -1130,7 +1210,7 @@ export function runValidation() {
     };
   }
 
-  return { errors: allErrors, warnings: allWarnings, counts, finalCounts };
+  return { errors: allErrors, warnings: allWarnings, counts, finalCounts, factUsage: buildFactUsageReport(COUNTRY_FACTS, QUESTION_ASSIGNMENTS) };
 }
 
 // ---------------------------------------------------------------------------
@@ -1180,6 +1260,13 @@ function printFinalCounts(finalCounts) {
   }
 }
 
+function printFactUsage(factUsage) {
+  console.log('\nCOUNTRY FACT USAGE\n');
+  for (const [countryId, counts] of Object.entries(factUsage)) {
+    console.log(`    ${countryId}  used=${counts.used} unused=${counts.unused} total=${counts.total}`);
+  }
+}
+
 const RED   = '\x1b[31m';
 const YELLOW= '\x1b[33m';
 const GREEN = '\x1b[32m';
@@ -1193,9 +1280,10 @@ const isMain = process.argv[1] === fileURLToPath(import.meta.url);
 
 if (isMain) {
   console.log(`${BOLD}🔍 Code Quest — Question Validator${RESET}`);
-  const { errors, warnings, counts, finalCounts } = runValidation();
+  const { errors, warnings, counts, finalCounts, factUsage } = runValidation();
   printCounts(counts);
   printFinalCounts(finalCounts);
+  printFactUsage(factUsage);
   printIssues('⚠️  WARNINGS', warnings, YELLOW);
   printIssues('❌ ERRORS',   errors,   RED);
 

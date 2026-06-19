@@ -29,7 +29,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "天皇の憲法上の位置づけ",
+    "summaryJa": "天皇の憲法上の位置づけを、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "天皇の憲法上の位置づけは、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。japan.kantei.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "天皇の憲法上の位置づけを扱う",
+      "japan.kantei.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_py_d02",
@@ -54,7 +62,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "国会の二院制",
+    "summaryJa": "国会の二院制を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "国会の二院制は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。japan.kantei.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "国会の二院制を扱う",
+      "japan.kantei.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_py_d03",
@@ -79,7 +95,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "湯川秀樹とノーベル賞",
+    "summaryJa": "湯川秀樹とノーベル賞を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "湯川秀樹とノーベル賞は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。nobelprize.orgなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "湯川秀樹とノーベル賞を扱う",
+      "nobelprize.orgの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_py_d04",
@@ -104,7 +128,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "日章旗・日の丸",
+    "summaryJa": "日章旗・日の丸を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "日章旗・日の丸は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。bunka.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "日章旗・日の丸を扱う",
+      "bunka.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_py_d05",
@@ -129,7 +161,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "日本の47都道府県",
+    "summaryJa": "日本の47都道府県を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "日本の47都道府県は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。bunka.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "日本の47都道府県を扱う",
+      "bunka.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_py_d06",
@@ -154,7 +194,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "一円硬貨",
+    "summaryJa": "一円硬貨を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "一円硬貨は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。bunka.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "一円硬貨を扱う",
+      "bunka.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_py_d07",
@@ -179,7 +227,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "東海道新幹線の開業",
+    "summaryJa": "東海道新幹線の開業を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "東海道新幹線の開業は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。mlit.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "東海道新幹線の開業を扱う",
+      "mlit.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_py_d08",
@@ -204,7 +260,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "QRコード",
+    "summaryJa": "QRコードを、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "QRコードは、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。qrcode.comなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "QRコードを扱う",
+      "qrcode.comの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_py_d09",
@@ -229,7 +293,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "法隆寺地域の仏教建造物",
+    "summaryJa": "法隆寺地域の仏教建造物を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "法隆寺地域の仏教建造物は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。whc.unesco.orgなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "法隆寺地域の仏教建造物を扱う",
+      "whc.unesco.orgの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_py_d10",
@@ -252,7 +324,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "桜の文化的象徴性",
+    "summaryJa": "桜の文化的象徴性を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "この項目は伝統的・文化的な扱いを含むため、断定しすぎずに読みます。桜の文化的象徴性は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。現在の問題データなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "桜の文化的象徴性を扱う",
+      "現在の問題データの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_py_e01",
@@ -277,7 +357,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "屋久島",
+    "summaryJa": "屋久島を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "屋久島は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。whc.unesco.orgなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "屋久島を扱う",
+      "whc.unesco.orgの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_py_e02",
@@ -302,7 +390,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "白神山地",
+    "summaryJa": "白神山地を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "白神山地は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。whc.unesco.orgなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "白神山地を扱う",
+      "whc.unesco.orgの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_py_e03",
@@ -327,7 +423,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "国会議事堂",
+    "summaryJa": "国会議事堂を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "国会議事堂は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。japan.kantei.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "国会議事堂を扱う",
+      "japan.kantei.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_py_e04",
@@ -352,7 +456,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "はやぶさとイトカワ",
+    "summaryJa": "はやぶさとイトカワを、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "はやぶさとイトカワは、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。global.jaxa.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "はやぶさとイトカワを扱う",
+      "global.jaxa.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_py_e05",
@@ -377,7 +489,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "はやぶさ2とリュウグウ",
+    "summaryJa": "はやぶさ2とリュウグウを、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "はやぶさ2とリュウグウは、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。global.jaxa.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "はやぶさ2とリュウグウを扱う",
+      "global.jaxa.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_py_e06",
@@ -402,7 +522,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "能の役柄",
+    "summaryJa": "能の役柄を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "能の役柄は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。bunka.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "能の役柄を扱う",
+      "bunka.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_py_e07",
@@ -427,7 +555,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "松尾芭蕉とおくのほそ道",
+    "summaryJa": "松尾芭蕉とおくのほそ道を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "松尾芭蕉とおくのほそ道は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。bunka.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "松尾芭蕉とおくのほそ道を扱う",
+      "bunka.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_py_b01",
@@ -452,7 +588,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "漢字・ひらがな・カタカナ検索",
+    "summaryJa": "漢字・ひらがな・カタカナ検索を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "漢字・ひらがな・カタカナ検索は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。bunka.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "漢字・ひらがな・カタカナ検索を扱う",
+      "bunka.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_py_b02",
@@ -477,7 +621,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "日本の元号変換",
+    "summaryJa": "日本の元号変換を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "日本の元号変換は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。bunka.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "日本の元号変換を扱う",
+      "bunka.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_py_b03",
@@ -502,7 +654,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "日本の住所表記順",
+    "summaryJa": "日本の住所表記順を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "日本の住所表記順は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。bunka.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "日本の住所表記順を扱う",
+      "bunka.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_py_b04",
@@ -527,7 +687,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "日本円の表示",
+    "summaryJa": "日本円の表示を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "日本円の表示は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。bunka.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "日本円の表示を扱う",
+      "bunka.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_py_b05",
@@ -552,7 +720,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "駅名の日本語・ローマ字表記",
+    "summaryJa": "駅名の日本語・ローマ字表記を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "駅名の日本語・ローマ字表記は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。mlit.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "駅名の日本語・ローマ字表記を扱う",
+      "mlit.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_final_decode_JP_python_01",
@@ -577,7 +753,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "大日本帝国憲法の公布",
+    "summaryJa": "大日本帝国憲法の公布を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "大日本帝国憲法の公布は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。japan.kantei.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "大日本帝国憲法の公布を扱う",
+      "japan.kantei.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_final_decode_JP_python_02",
@@ -602,7 +786,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "大江健三郎とノーベル文学賞",
+    "summaryJa": "大江健三郎とノーベル文学賞を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "大江健三郎とノーベル文学賞は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。nobelprize.orgなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "大江健三郎とノーベル文学賞を扱う",
+      "nobelprize.orgの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_final_decode_JP_python_03",
@@ -627,7 +819,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "金閣寺と鹿苑寺",
+    "summaryJa": "金閣寺と鹿苑寺を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "金閣寺と鹿苑寺は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。bunka.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "金閣寺と鹿苑寺を扱う",
+      "bunka.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_final_execute_JP_python_01",
@@ -652,7 +852,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "紀伊山地の霊場と参詣道",
+    "summaryJa": "紀伊山地の霊場と参詣道を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "紀伊山地の霊場と参詣道は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。whc.unesco.orgなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "紀伊山地の霊場と参詣道を扱う",
+      "whc.unesco.orgの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_final_execute_JP_python_02",
@@ -677,7 +885,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "黒部ダム",
+    "summaryJa": "黒部ダムを、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "黒部ダムは、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。bunka.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "黒部ダムを扱う",
+      "bunka.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_final_execute_JP_python_03",
@@ -702,7 +918,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "五箇山の合掌造り集落",
+    "summaryJa": "五箇山の合掌造り集落を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "五箇山の合掌造り集落は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。whc.unesco.orgなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "五箇山の合掌造り集落を扱う",
+      "whc.unesco.orgの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_final_debug_JP_python_01",
@@ -727,7 +951,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "日本標準時と日付の境界",
+    "summaryJa": "日本標準時と日付の境界を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "日本標準時と日付の境界は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。bunka.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "日本標準時と日付の境界を扱う",
+      "bunka.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_final_debug_JP_python_02",
@@ -752,7 +984,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "日本の郵便番号形式",
+    "summaryJa": "日本の郵便番号形式を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "日本の郵便番号形式は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。post.japanpost.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "日本の郵便番号形式を扱う",
+      "post.japanpost.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_final_debug_JP_python_03",
@@ -777,7 +1017,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "JIS都道府県コード",
+    "summaryJa": "JIS都道府県コードを、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "JIS都道府県コードは、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。soumu.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "JIS都道府県コードを扱う",
+      "soumu.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_js_d01",
@@ -802,7 +1050,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "君が代",
+    "summaryJa": "君が代を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "君が代は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。bunka.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "君が代を扱う",
+      "bunka.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_js_d02",
@@ -827,7 +1083,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "青色LEDとノーベル賞",
+    "summaryJa": "青色LEDとノーベル賞を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "青色LEDとノーベル賞は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。nobelprize.orgなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "青色LEDとノーベル賞を扱う",
+      "nobelprize.orgの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_js_d03",
@@ -852,7 +1116,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "吉野彰とリチウムイオン電池",
+    "summaryJa": "吉野彰とリチウムイオン電池を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "吉野彰とリチウムイオン電池は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。nobelprize.orgなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "吉野彰とリチウムイオン電池を扱う",
+      "nobelprize.orgの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_js_d04",
@@ -877,7 +1149,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "山中伸弥とiPS細胞",
+    "summaryJa": "山中伸弥とiPS細胞を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "山中伸弥とiPS細胞は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。nobelprize.orgなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "山中伸弥とiPS細胞を扱う",
+      "nobelprize.orgの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_js_d05",
@@ -902,7 +1182,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "姫路城と白鷺城",
+    "summaryJa": "姫路城と白鷺城を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "姫路城と白鷺城は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。whc.unesco.orgなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "姫路城と白鷺城を扱う",
+      "whc.unesco.orgの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_js_d06",
@@ -927,7 +1215,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "富士山",
+    "summaryJa": "富士山を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "富士山は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。bunka.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "富士山を扱う",
+      "bunka.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_js_d07",
@@ -952,7 +1248,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "フランシスコ・ザビエル来日",
+    "summaryJa": "フランシスコ・ザビエル来日を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "フランシスコ・ザビエル来日は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。bunka.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "フランシスコ・ザビエル来日を扱う",
+      "bunka.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_js_d08",
@@ -977,7 +1281,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "ウィリアム・アダムス来航",
+    "summaryJa": "ウィリアム・アダムス来航を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "ウィリアム・アダムス来航は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。bunka.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "ウィリアム・アダムス来航を扱う",
+      "bunka.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_js_d09",
@@ -1002,7 +1314,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "紫式部と源氏物語",
+    "summaryJa": "紫式部と源氏物語を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "紫式部と源氏物語は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。bunka.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "紫式部と源氏物語を扱う",
+      "bunka.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_js_d10",
@@ -1027,7 +1347,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "歌舞伎",
+    "summaryJa": "歌舞伎を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "歌舞伎は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。bunka.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "歌舞伎を扱う",
+      "bunka.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_js_e01",
@@ -1052,7 +1380,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "種子島への鉄砲伝来",
+    "summaryJa": "種子島への鉄砲伝来を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "種子島への鉄砲伝来は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。bunka.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "種子島への鉄砲伝来を扱う",
+      "bunka.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_js_e02",
@@ -1077,7 +1413,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "ペリー来航と開国",
+    "summaryJa": "ペリー来航と開国を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "ペリー来航と開国は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。bunka.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "ペリー来航と開国を扱う",
+      "bunka.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_js_e03",
@@ -1102,7 +1446,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "和紙の伝統",
+    "summaryJa": "和紙の伝統を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "和紙の伝統は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。bunka.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "和紙の伝統を扱う",
+      "bunka.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_js_e04",
@@ -1127,7 +1479,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "伊勢神宮の式年遷宮",
+    "summaryJa": "伊勢神宮の式年遷宮を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "伊勢神宮の式年遷宮は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。isejingu.or.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "伊勢神宮の式年遷宮を扱う",
+      "isejingu.or.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_js_e05",
@@ -1152,7 +1512,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "東京スカイツリー",
+    "summaryJa": "東京スカイツリーを、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "東京スカイツリーは、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。tokyo-skytree.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "東京スカイツリーを扱う",
+      "tokyo-skytree.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_js_e06",
@@ -1177,7 +1545,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "八木・宇田アンテナ",
+    "summaryJa": "八木・宇田アンテナを、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "八木・宇田アンテナは、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。bunka.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "八木・宇田アンテナを扱う",
+      "bunka.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_js_e07",
@@ -1202,7 +1578,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "青函トンネル",
+    "summaryJa": "青函トンネルを、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "青函トンネルは、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。mlit.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "青函トンネルを扱う",
+      "mlit.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_js_b01",
@@ -1225,7 +1609,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "小野小町と伝承上の三美人",
+    "summaryJa": "小野小町と伝承上の三美人を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "この項目は伝統的・文化的な扱いを含むため、断定しすぎずに読みます。小野小町と伝承上の三美人は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。現在の問題データなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "小野小町と伝承上の三美人を扱う",
+      "現在の問題データの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_js_b02",
@@ -1250,7 +1642,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "日本語の氏名順",
+    "summaryJa": "日本語の氏名順を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "日本語の氏名順は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。bunka.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "日本語の氏名順を扱う",
+      "bunka.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_js_b03",
@@ -1275,7 +1675,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "全角・半角文字",
+    "summaryJa": "全角・半角文字を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "全角・半角文字は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。bunka.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "全角・半角文字を扱う",
+      "bunka.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_js_b04",
@@ -1300,7 +1708,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "五十音順",
+    "summaryJa": "五十音順を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "五十音順は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。bunka.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "五十音順を扱う",
+      "bunka.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_jp_js_b05",
@@ -1325,7 +1741,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "都道府県の接尾辞",
+    "summaryJa": "都道府県の接尾辞を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "都道府県の接尾辞は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。bunka.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "都道府県の接尾辞を扱う",
+      "bunka.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_final_decode_JP_javascript_01",
@@ -1350,7 +1774,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "富士山",
+    "summaryJa": "富士山を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "富士山は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。bunka.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "富士山を扱う",
+      "bunka.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_final_decode_JP_javascript_02",
@@ -1375,7 +1807,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "スーパーカミオカンデ",
+    "summaryJa": "スーパーカミオカンデを、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "スーパーカミオカンデは、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。www-sk.icrr.u-tokyo.ac.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "スーパーカミオカンデを扱う",
+      "www-sk.icrr.u-tokyo.ac.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_final_decode_JP_javascript_03",
@@ -1400,7 +1840,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "厳島神社",
+    "summaryJa": "厳島神社を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "厳島神社は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。whc.unesco.orgなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "厳島神社を扱う",
+      "whc.unesco.orgの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_final_execute_JP_javascript_01",
@@ -1425,7 +1873,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "四国八十八箇所巡礼",
+    "summaryJa": "四国八十八箇所巡礼を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "四国八十八箇所巡礼は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。bunka.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "四国八十八箇所巡礼を扱う",
+      "bunka.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_final_execute_JP_javascript_02",
@@ -1450,7 +1906,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "三陸のリアス海岸",
+    "summaryJa": "三陸のリアス海岸を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "三陸のリアス海岸は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。bunka.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "三陸のリアス海岸を扱う",
+      "bunka.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_final_execute_JP_javascript_03",
@@ -1475,7 +1939,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "トヨタ生産方式のかんばん",
+    "summaryJa": "トヨタ生産方式のかんばんを、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "トヨタ生産方式のかんばんは、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。global.toyotaなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "トヨタ生産方式のかんばんを扱う",
+      "global.toyotaの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_final_debug_JP_javascript_01",
@@ -1500,7 +1972,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "日本の電話番号形式",
+    "summaryJa": "日本の電話番号形式を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "日本の電話番号形式は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。bunka.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "日本の電話番号形式を扱う",
+      "bunka.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_final_debug_JP_javascript_02",
@@ -1525,7 +2005,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "縦書き",
+    "summaryJa": "縦書きを、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "縦書きは、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。bunka.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "縦書きを扱う",
+      "bunka.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_final_debug_JP_javascript_03",
@@ -1550,7 +2038,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "日本の年度開始",
+    "summaryJa": "日本の年度開始を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "日本の年度開始は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。bunka.go.jpなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "日本の年度開始を扱う",
+      "bunka.go.jpの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "jp_broad_national_stereotype_avoid",
@@ -1597,7 +2093,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "アメリカ連邦政府の三権",
+    "summaryJa": "アメリカ連邦政府の三権を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "アメリカ連邦政府の三権は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。USAGovなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "アメリカ連邦政府の三権を扱う",
+      "USAGovの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_senate_composition",
@@ -1626,7 +2130,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "アメリカ上院の構成",
+    "summaryJa": "アメリカ上院の構成を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "アメリカ上院の構成は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。United States Senateなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "アメリカ上院の構成を扱う",
+      "United States Senateの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_flag_stars_stripes",
@@ -1655,7 +2167,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "アメリカ国旗の星と縞",
+    "summaryJa": "アメリカ国旗の星と縞を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "アメリカ国旗の星と縞は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。USAGovなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "アメリカ国旗の星と縞を扱う",
+      "USAGovの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_bald_eagle_symbol",
@@ -1684,7 +2204,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "ハクトウワシ",
+    "summaryJa": "ハクトウワシを、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "ハクトウワシは、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。National Park Serviceなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "ハクトウワシを扱う",
+      "National Park Serviceの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_yellowstone_establishment",
@@ -1713,7 +2241,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "イエローストーン国立公園",
+    "summaryJa": "イエローストーン国立公園を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "イエローストーン国立公園は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。National Park Serviceなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "イエローストーン国立公園を扱う",
+      "National Park Serviceの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_independence_hall_documents",
@@ -1742,7 +2278,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "独立記念館",
+    "summaryJa": "独立記念館を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "独立記念館は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。National Park Serviceなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "独立記念館を扱う",
+      "National Park Serviceの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_apollo11_crew",
@@ -1771,7 +2315,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "アポロ11号",
+    "summaryJa": "アポロ11号を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "アポロ11号は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。NASAなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "アポロ11号を扱う",
+      "NASAの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_mark_twain_huck_finn",
@@ -1800,7 +2352,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "マーク・トウェインとハックルベリー・フィン",
+    "summaryJa": "マーク・トウェインとハックルベリー・フィンを、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "マーク・トウェインとハックルベリー・フィンは、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。Library of Congressなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "マーク・トウェインとハックルベリー・フィンを扱う",
+      "Library of Congressの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_mississippi_river_length",
@@ -1829,7 +2389,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "ミシシッピ川",
+    "summaryJa": "ミシシッピ川を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "ミシシッピ川は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。U.S. Geological Surveyなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "ミシシッピ川を扱う",
+      "U.S. Geological Surveyの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_route66_route",
@@ -1858,7 +2426,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "ルート66",
+    "summaryJa": "ルート66を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "ルート66は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。National Park Serviceなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "ルート66を扱う",
+      "National Park Serviceの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_grand_canyon_site",
@@ -1887,7 +2463,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "グランドキャニオン",
+    "summaryJa": "グランドキャニオンを、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "グランドキャニオンは、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。UNESCO World Heritage Centreなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "グランドキャニオンを扱う",
+      "UNESCO World Heritage Centreの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_great_lakes_basin",
@@ -1916,7 +2500,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "五大湖",
+    "summaryJa": "五大湖を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "五大湖は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。U.S. Environmental Protection Agencyなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "五大湖を扱う",
+      "U.S. Environmental Protection Agencyの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_louisiana_purchase_timeline",
@@ -1945,7 +2537,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "ルイジアナ買収",
+    "summaryJa": "ルイジアナ買収を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "ルイジアナ買収は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。Office of the Historian, U.S. Department of Stateなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "ルイジアナ買収を扱う",
+      "Office of the Historian, U.S. Department of Stateの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_promontory_summit",
@@ -1974,7 +2574,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "大陸横断鉄道とプロモントリー・サミット",
+    "summaryJa": "大陸横断鉄道とプロモントリー・サミットを、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "大陸横断鉄道とプロモントリー・サミットは、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。National Park Serviceなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "大陸横断鉄道とプロモントリー・サミットを扱う",
+      "National Park Serviceの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_new_orleans_jazz",
@@ -2003,7 +2611,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "ニューオーリンズのジャズ",
+    "summaryJa": "ニューオーリンズのジャズを、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "ニューオーリンズのジャズは、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。National Park Serviceなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "ニューオーリンズのジャズを扱う",
+      "National Park Serviceの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_wright_flyer_1903",
@@ -2032,7 +2648,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "ライトフライヤーの初飛行",
+    "summaryJa": "ライトフライヤーの初飛行を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "ライトフライヤーの初飛行は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。National Park Serviceなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "ライトフライヤーの初飛行を扱う",
+      "National Park Serviceの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_hoover_dam_engineering",
@@ -2061,7 +2685,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "フーバーダム",
+    "summaryJa": "フーバーダムを、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "フーバーダムは、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。Bureau of Reclamationなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "フーバーダムを扱う",
+      "Bureau of Reclamationの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_usps_state_abbreviation",
@@ -2090,7 +2722,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "USPS州略称",
+    "summaryJa": "USPS州略称を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "USPS州略称は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。United States Postal Serviceなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "USPS州略称を扱う",
+      "United States Postal Serviceの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_zip_leading_zero",
@@ -2119,7 +2759,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "ZIPコードの先頭ゼロ",
+    "summaryJa": "ZIPコードの先頭ゼロを、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "ZIPコードの先頭ゼロは、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。United States Postal Serviceなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "ZIPコードの先頭ゼロを扱う",
+      "United States Postal Serviceの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_us_date_parsing",
@@ -2148,7 +2796,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "アメリカの題材: MM・DD・YYYY parsing",
+    "summaryJa": "アメリカの題材: MM・DD・YYYY parsingを、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "アメリカの題材: MM・DD・YYYY parsingは、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。NISTなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "アメリカの題材: MM・DD・YYYY parsingを扱う",
+      "NISTの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_us_time_zone_mapping",
@@ -2177,7 +2833,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "アメリカのタイムゾーン",
+    "summaryJa": "アメリカのタイムゾーンを、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "アメリカのタイムゾーンは、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。U.S. Department of Transportationなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "アメリカのタイムゾーンを扱う",
+      "U.S. Department of Transportationの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_nanp_phone_format",
@@ -2206,7 +2870,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "北米電話番号の整形",
+    "summaryJa": "北米電話番号の整形を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "北米電話番号の整形は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。Federal Communications Commissionなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "北米電話番号の整形を扱う",
+      "Federal Communications Commissionの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_house_composition",
@@ -2235,7 +2907,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "アメリカ下院の構成",
+    "summaryJa": "アメリカ下院の構成を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "アメリカ下院の構成は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。U.S. House of Representativesなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "アメリカ下院の構成を扱う",
+      "U.S. House of Representativesの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_federal_state_structure",
@@ -2264,7 +2944,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "アメリカの題材: federal・state government structure",
+    "summaryJa": "アメリカの題材: federal・state government structureを、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "アメリカの題材: federal・state government structureは、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。USAGovなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "アメリカの題材: federal・state government structureを扱う",
+      "USAGovの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_statue_liberty_france",
@@ -2293,7 +2981,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "自由の女神像とフランス",
+    "summaryJa": "自由の女神像とフランスを、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "自由の女神像とフランスは、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。National Park Serviceなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "自由の女神像とフランスを扱う",
+      "National Park Serviceの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_liberty_bell_inscription",
@@ -2322,7 +3018,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "自由の鐘",
+    "summaryJa": "自由の鐘を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "自由の鐘は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。National Park Serviceなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "自由の鐘を扱う",
+      "National Park Serviceの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_yosemite_world_heritage",
@@ -2351,7 +3055,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "ヨセミテ国立公園",
+    "summaryJa": "ヨセミテ国立公園を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "ヨセミテ国立公園は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。UNESCO World Heritage Centreなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "ヨセミテ国立公園を扱う",
+      "UNESCO World Heritage Centreの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_mesa_verde_dwellings",
@@ -2380,7 +3092,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "メサ・ヴェルデ",
+    "summaryJa": "メサ・ヴェルデを、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "メサ・ヴェルデは、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。UNESCO World Heritage Centreなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "メサ・ヴェルデを扱う",
+      "UNESCO World Heritage Centreの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_george_washington_presidency",
@@ -2409,7 +3129,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "和紙の伝統",
+    "summaryJa": "和紙の伝統を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "和紙の伝統は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。The White Houseなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "和紙の伝統を扱う",
+      "The White Houseの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_hemingway_nobel_literature",
@@ -2438,7 +3166,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "アーネスト・ヘミングウェイとノーベル文学賞",
+    "summaryJa": "アーネスト・ヘミングウェイとノーベル文学賞を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "アーネスト・ヘミングウェイとノーベル文学賞は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。Nobel Prizeなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "アーネスト・ヘミングウェイとノーベル文学賞を扱う",
+      "Nobel Prizeの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_denali_elevation",
@@ -2467,7 +3203,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "デナリ",
+    "summaryJa": "デナリを、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "デナリは、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。National Park Serviceなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "デナリを扱う",
+      "National Park Serviceの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_golden_gate_bridge",
@@ -2496,7 +3240,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "ゴールデンゲートブリッジ",
+    "summaryJa": "ゴールデンゲートブリッジを、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "ゴールデンゲートブリッジは、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。National Park Serviceなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "ゴールデンゲートブリッジを扱う",
+      "National Park Serviceの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_alaska_purchase_timeline",
@@ -2525,7 +3277,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "アラスカ購入",
+    "summaryJa": "アラスカ購入を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "アラスカ購入は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。Office of the Historian, U.S. Department of Stateなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "アラスカ購入を扱う",
+      "Office of the Historian, U.S. Department of Stateの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_lewis_clark_route",
@@ -2554,7 +3314,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "ルイス・クラーク探検隊",
+    "summaryJa": "ルイス・クラーク探検隊を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "ルイス・クラーク探検隊は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。National Park Serviceなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "ルイス・クラーク探検隊を扱う",
+      "National Park Serviceの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_san_antonio_missions",
@@ -2583,7 +3351,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "サンアントニオ・ミッションズ",
+    "summaryJa": "サンアントニオ・ミッションズを、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "サンアントニオ・ミッションズは、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。UNESCO World Heritage Centreなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "サンアントニオ・ミッションズを扱う",
+      "UNESCO World Heritage Centreの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_beale_street_blues",
@@ -2612,7 +3388,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "ビール・ストリートとブルース",
+    "summaryJa": "ビール・ストリートとブルースを、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "ビール・ストリートとブルースは、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。National Park Serviceなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "ビール・ストリートとブルースを扱う",
+      "National Park Serviceの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_voyager_pale_blue_dot",
@@ -2641,7 +3425,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "ボイジャー1号とペイル・ブルー・ドット",
+    "summaryJa": "ボイジャー1号とペイル・ブルー・ドットを、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "ボイジャー1号とペイル・ブルー・ドットは、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。NASA Scienceなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "ボイジャー1号とペイル・ブルー・ドットを扱う",
+      "NASA Scienceの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_gps_segments",
@@ -2670,7 +3462,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "GPSの構成要素",
+    "summaryJa": "GPSの構成要素を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "GPSの構成要素は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。GPS.govなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "GPSの構成要素を扱う",
+      "GPS.govの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_brooklyn_bridge_structure",
@@ -2699,7 +3499,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "ブルックリン橋",
+    "summaryJa": "ブルックリン橋を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "ブルックリン橋は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。National Park Serviceなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "ブルックリン橋を扱う",
+      "National Park Serviceの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_ampm_noon_midnight",
@@ -2728,7 +3536,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "アメリカの題材: 12-hour AM・PM conversion",
+    "summaryJa": "アメリカの題材: 12-hour AM・PM conversionを、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "アメリカの題材: 12-hour AM・PM conversionは、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。NISTなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "アメリカの題材: 12-hour AM・PM conversionを扱う",
+      "NISTの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_fahrenheit_conversion",
@@ -2757,7 +3573,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "華氏表示と変換",
+    "summaryJa": "華氏表示と変換を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "華氏表示と変換は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。National Weather Serviceなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "華氏表示と変換を扱う",
+      "National Weather Serviceの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_usps_secondary_address",
@@ -2786,7 +3610,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "アメリカの題材: USPS apartment・suite address parsing",
+    "summaryJa": "アメリカの題材: USPS apartment・suite address parsingを、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "アメリカの題材: USPS apartment・suite address parsingは、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。United States Postal Serviceなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "アメリカの題材: USPS apartment・suite address parsingを扱う",
+      "United States Postal Serviceの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_zip_plus4_validation",
@@ -2815,7 +3647,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "ZIP+4形式",
+    "summaryJa": "ZIP+4形式を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "ZIP+4形式は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。United States Postal Serviceなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "ZIP+4形式を扱う",
+      "United States Postal Serviceの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_state_territory_dc_model",
@@ -2844,7 +3684,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "アメリカの題材: states・territories・DC data model",
+    "summaryJa": "アメリカの題材: states・territories・DC data modelを、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "アメリカの題材: states・territories・DC data modelは、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。United States Postal Serviceなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "アメリカの題材: states・territories・DC data modelを扱う",
+      "United States Postal Serviceの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_bill_of_rights_freedoms",
@@ -2873,7 +3721,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "権利章典",
+    "summaryJa": "権利章典を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "権利章典は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。National Archivesなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "権利章典を扱う",
+      "National Archivesの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_toni_morrison_nobel",
@@ -2902,7 +3758,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "トニ・モリスンとノーベル文学賞",
+    "summaryJa": "トニ・モリスンとノーベル文学賞を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "トニ・モリスンとノーベル文学賞は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。Nobel Prizeなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "トニ・モリスンとノーベル文学賞を扱う",
+      "Nobel Prizeの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_great_seal_motto",
@@ -2931,7 +3795,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "アメリカ合衆国の国璽",
+    "summaryJa": "アメリカ合衆国の国璽を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "アメリカ合衆国の国璽は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。U.S. Department of Stateなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "アメリカ合衆国の国璽を扱う",
+      "U.S. Department of Stateの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_everglades_ecosystem",
@@ -2960,7 +3832,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "エバーグレーズ",
+    "summaryJa": "エバーグレーズを、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "エバーグレーズは、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。UNESCO World Heritage Centreなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "エバーグレーズを扱う",
+      "UNESCO World Heritage Centreの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_hubble_timeline",
@@ -2989,7 +3869,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "ハッブル宇宙望遠鏡",
+    "summaryJa": "ハッブル宇宙望遠鏡を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "ハッブル宇宙望遠鏡は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。NASA Scienceなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "ハッブル宇宙望遠鏡を扱う",
+      "NASA Scienceの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_interstate_highway_system",
@@ -3018,7 +3906,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "州間高速道路システム",
+    "summaryJa": "州間高速道路システムを、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "州間高速道路システムは、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。Federal Highway Administrationなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "州間高速道路システムを扱う",
+      "Federal Highway Administrationの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_federal_holiday_observed",
@@ -3047,7 +3943,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "連邦祝日の振替規則",
+    "summaryJa": "連邦祝日の振替規則を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "連邦祝日の振替規則は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。U.S. Office of Personnel Managementなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "連邦祝日の振替規則を扱う",
+      "U.S. Office of Personnel Managementの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_mile_foot_conversion",
@@ -3076,7 +3980,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "アメリカの題材: US customary mile・foot conversion",
+    "summaryJa": "アメリカの題材: US customary mile・foot conversionを、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "アメリカの題材: US customary mile・foot conversionは、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。NISTなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "アメリカの題材: US customary mile・foot conversionを扱う",
+      "NISTの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_dollar_cent_decimal",
@@ -3105,7 +4017,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "python"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "アメリカの題材: dollar・cents monetary calculation",
+    "summaryJa": "アメリカの題材: dollar・cents monetary calculationを、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "アメリカの題材: dollar・cents monetary calculationは、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。U.S. Department of the Treasuryなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "アメリカの題材: dollar・cents monetary calculationを扱う",
+      "U.S. Department of the Treasuryの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_mlk_nobel_peace",
@@ -3134,7 +4054,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "キング牧師とノーベル平和賞",
+    "summaryJa": "キング牧師とノーベル平和賞を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "キング牧師とノーベル平和賞は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。Nobel Prizeなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "キング牧師とノーベル平和賞を扱う",
+      "Nobel Prizeの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_first_amendment_freedoms",
@@ -3163,7 +4091,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "憲法修正第1条の自由",
+    "summaryJa": "憲法修正第1条の自由を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "憲法修正第1条の自由は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。National Archivesなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "憲法修正第1条の自由を扱う",
+      "National Archivesの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_mount_rushmore_presidents",
@@ -3192,7 +4128,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "ラシュモア山の大統領像",
+    "summaryJa": "ラシュモア山の大統領像を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "ラシュモア山の大統領像は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。National Park Serviceなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "ラシュモア山の大統領像を扱う",
+      "National Park Serviceの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_chaco_culture_site",
@@ -3221,7 +4165,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "チャコ文化",
+    "summaryJa": "チャコ文化を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "チャコ文化は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。UNESCO World Heritage Centreなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "チャコ文化を扱う",
+      "UNESCO World Heritage Centreの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_erie_canal_route",
@@ -3250,7 +4202,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "エリー運河",
+    "summaryJa": "エリー運河を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "エリー運河は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。National Park Serviceなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "エリー運河を扱う",
+      "National Park Serviceの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_arpanet_first_message",
@@ -3279,7 +4239,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "ARPANETの最初のメッセージ",
+    "summaryJa": "ARPANETの最初のメッセージを、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "ARPANETの最初のメッセージは、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。DARPAなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "ARPANETの最初のメッセージを扱う",
+      "DARPAの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_federal_fiscal_year_boundary",
@@ -3308,7 +4276,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "日本の年度開始",
+    "summaryJa": "日本の年度開始を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "日本の年度開始は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。Office of Management and Budgetなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "日本の年度開始を扱う",
+      "Office of Management and Budgetの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_washington_dc_disambiguation",
@@ -3337,7 +4313,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "和紙の伝統",
+    "summaryJa": "和紙の伝統を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "和紙の伝統は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。U.S. Census Bureauなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "和紙の伝統を扱う",
+      "U.S. Census Bureauの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   },
   {
     "factId": "fact_us_hawaii_unicode_name",
@@ -3366,7 +4350,15 @@ export const COUNTRY_FACTS = [
     "allowedLanguageIds": [
       "javascript"
     ],
-    "relatedFactIds": []
+    "relatedFactIds": [],
+    "titleJa": "ハワイ名称のUnicode正規化",
+    "summaryJa": "ハワイ名称のUnicode正規化を、問題内のデータと出典範囲に基づいて確認する題材です。",
+    "detailJa": "ハワイ名称のUnicode正規化は、この国の制度・文化・歴史・科学技術をコードのデータとして読むための知識です。State of Hawaiiなど現在登録済みの出典と問題データに含まれる範囲を確認し、名前や値だけを覚えるのではなく、条件分岐、文字列処理、日付、集計などのプログラム上の判断材料として使います。",
+    "keyPointsJa": [
+      "ハワイ名称のUnicode正規化を扱う",
+      "State of Hawaiiの出典範囲で確認する",
+      "問題文とコード内のデータを手がかりにする"
+    ]
   }
 ];
 

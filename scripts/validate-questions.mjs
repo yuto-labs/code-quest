@@ -180,10 +180,15 @@ function japaneseCharLength(value) {
   return String(value || '').trim().length;
 }
 
+const TOPIC_BANNED_TERMS = /コード課題で扱う|問題文とコード|プログラム上の判断材料|データとして読むため|手がかりにする|出典範囲で確認する|コード|プログラム|問題文/;
+const SOURCE_DOMAIN_IN_PROSE = /https?:|www\.|\.go\.jp|\.gov|\.edu|\.org|\.com/i;
+const UNSUPPORTED_RANKING = /世界(一|初|最大|最長|最高)|日本(一|初|最大|最長|最高)|アメリカ(一|初|最大|最長|最高)|最も|唯一/;
+
 function validateCountryFactNotes(facts, assignments, errors, warnings) {
   const factsById = Object.fromEntries(facts.map(fact => [fact.factId, fact]));
   const usedByCountry = assignedFactIdsByCountry(assignments);
   const entityByCountry = new Map();
+  const explanationSeen = new Map();
 
   for (const record of assignments) {
     for (const factId of record.factIds ?? []) {
@@ -217,15 +222,40 @@ function validateCountryFactNotes(facts, assignments, errors, warnings) {
       const fact = factsById[factId];
       if (!fact) continue;
       const loc = `[country_facts.js] ${fact.factId}`;
-      if (!fact.titleJa) warnings.push({ loc, rule: 'missingTitleJa', msg: 'Assigned JP/US fact should include titleJa' });
-      if (!fact.summaryJa) warnings.push({ loc, rule: 'missingSummaryJa', msg: 'Assigned JP/US fact should include summaryJa' });
-      if (fact.detailJa && japaneseCharLength(fact.detailJa) < 120) warnings.push({ loc, rule: 'detailJaTooShort', msg: 'detailJa should be beginner-readable and roughly 150-300 Japanese characters' });
-      if (!Array.isArray(fact.keyPointsJa) || fact.keyPointsJa.length < 2) warnings.push({ loc, rule: 'missingKeyPointsJa', msg: 'keyPointsJa should include 2-4 short facts' });
-      if (fact.summaryJa && fact.detailJa && normalizeText(fact.summaryJa) === normalizeText(fact.detailJa)) {
-        warnings.push({ loc, rule: 'detailRepeatsSummary', msg: 'detailJa should not merely repeat summaryJa' });
+      const title = String(fact.titleJa || '').trim();
+      const summary = String(fact.summaryJa || '').trim();
+      const background = String(fact.backgroundJa || '').trim();
+      const history = String(fact.historyJa || '').trim();
+      const episode = String(fact.episodeJa || '').trim();
+      const keyPoints = Array.isArray(fact.keyPointsJa) ? fact.keyPointsJa.filter(Boolean) : [];
+      const prose = [title, summary, background, history, episode, ...keyPoints].join('\n');
+      const explanationText = [summary, background, history, episode].filter(Boolean).join('\n');
+
+      if (!title) errors.push({ loc, rule: 'missingTitleJa', msg: 'Assigned JP/US fact must include titleJa' });
+      if (!summary) errors.push({ loc, rule: 'missingSummaryJa', msg: 'Assigned JP/US fact must include summaryJa' });
+      if (!background) errors.push({ loc, rule: 'missingBackgroundJa', msg: 'Assigned JP/US fact must include backgroundJa' });
+      if (keyPoints.length < 3) errors.push({ loc, rule: 'missingKeyPointsJa', msg: 'keyPointsJa must include 3-5 factual points' });
+
+      if (explanationText && japaneseCharLength(explanationText) < 300) {
+        warnings.push({ loc, rule: 'shortExplanation', msg: 'Topic explanation should usually be 300-700 Japanese characters' });
       }
-      if (fact.factStatus === 'traditional' && fact.detailJa && !/伝統|慣習|文化的|断定しすぎず/.test(String(fact.detailJa || ''))) {
-        warnings.push({ loc, rule: 'traditionalWithoutLabel', msg: 'traditional facts should be labelled cautiously in detailJa' });
+      if (TOPIC_BANNED_TERMS.test(prose)) {
+        warnings.push({ loc, rule: 'programmingTermsInTopicText', msg: 'Topic card text should explain the subject, not programming mechanics' });
+      }
+      if (SOURCE_DOMAIN_IN_PROSE.test(prose)) {
+        warnings.push({ loc, rule: 'sourceDomainInProse', msg: 'Source/domain names should stay in sourceRefs, not prose' });
+      }
+      if (UNSUPPORTED_RANKING.test(prose) && !/初めて|初の/.test(summary + background + history + episode)) {
+        warnings.push({ loc, rule: 'unsupportedRanking', msg: 'Ranking/superlative claim should be clearly supported' });
+      }
+      const normalizedExplanation = normalizeText(explanationText);
+      if (normalizedExplanation) {
+        const duplicate = explanationSeen.get(normalizedExplanation);
+        if (duplicate) warnings.push({ loc, rule: 'duplicateExplanation', msg: `Topic explanation duplicates ${duplicate}` });
+        else explanationSeen.set(normalizedExplanation, fact.factId);
+      }
+      if (fact.factStatus === 'traditional' && !/伝統|慣習|文化的|断定しすぎず|断定と分けて/.test(prose)) {
+        warnings.push({ loc, rule: 'traditionalWithoutQualifier', msg: 'traditional facts should state uncertainty or tradition' });
       }
     }
   }
@@ -948,6 +978,133 @@ function metadataKeyList(values = []) {
   return values.map(value => String(value)).sort().join('|');
 }
 
+function answerFingerprint(q) {
+  const answer = q.correctAnswer ?? q.answer ?? q.blank ?? q.blanks;
+  if (Array.isArray(answer)) return answer.map(item => normalizeKey(item)).join('|');
+  return normalizeKey(answer);
+}
+
+function normalizeQuestionCodeShape(code = '') {
+  return String(code)
+    .replace(/#.*$/gm, '')
+    .replace(/\/\/.*$/gm, '')
+    .replace(/(['"`])(?:\\.|(?!\1).)*\1/g, 'STR')
+    .replace(/\b\d+(?:\.\d+)?\b/g, 'NUM')
+    .replace(/\b([A-Za-z_]+)_\d+\b/g, '$1_N')
+    .replace(/\b(final_(?:decode|execute|debug)_[A-Z]{2}_[a-z]+)_\d+\b/g, '$1_N')
+    .replace(/___BLANK(?:_\d+)?___/g, 'BLANK')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function explanationFingerprint(q) {
+  return normalizeText([
+    q.hint,
+    q.explanation,
+    q.programmingExplanation,
+    Array.isArray(q.executionSteps) ? q.executionSteps.join(' ') : q.executionSteps,
+    Array.isArray(q.commonMistakes) ? q.commonMistakes.join(' ') : q.commonMistakes,
+  ].filter(Boolean).join(' '));
+}
+
+function conceptMatchesCode(q, metadata) {
+  const concepts = new Set([
+    q.conceptId,
+    ...(Array.isArray(metadata.programmingConceptIds) ? metadata.programmingConceptIds : []),
+  ].filter(Boolean));
+  const code = String(q.code || '');
+  if (concepts.has('dicts') && /{\s*["'][^"']+["']\s*:/.test(code)) return true;
+  if (concepts.has('lists') && /\[[^\]]*,[^\]]*\]/.test(code)) return true;
+  if (concepts.has('tuples') && /\([^)]*,[^)]*\)/.test(code)) return true;
+  if (concepts.has('strings') && /["'][^"']+["']/.test(code)) return true;
+  if (concepts.has('conditions') && /\b(if|else|elif|&&|\|\||\?)\b/.test(code)) return true;
+  if (concepts.has('loops') && /\b(for|while)\b/.test(code)) return true;
+  if (concepts.has('functions') && /\b(def|function)\b|=>/.test(code)) return true;
+  if (concepts.has('variables') && /=/.test(code)) return true;
+  return concepts.size === 0 || !code;
+}
+
+function analyzeAdjacentQuestions(records, allErrors, allWarnings) {
+  const targetRecords = records.filter(record => ['JP', 'US'].includes(record.countryId));
+  const groups = new Map();
+  for (const record of targetRecords) {
+    const key = `${record.worldId}:${record.countryId}:${record.languageId}`;
+    groups.set(key, [...(groups.get(key) ?? []), record]);
+  }
+
+  for (const group of groups.values()) {
+    for (let index = 0; index < group.length - 1; index++) {
+      const a = group[index];
+      const b = group[index + 1];
+      const answerA = answerFingerprint(a.q);
+      const answerB = answerFingerprint(b.q);
+      const codeA = normalizeQuestionCodeShape(a.q.code);
+      const codeB = normalizeQuestionCodeShape(b.q.code);
+      const explanationA = explanationFingerprint(a.q);
+      const explanationB = explanationFingerprint(b.q);
+      const sameAnswer = answerA && answerA === answerB;
+      const sameCode = codeA && codeA === codeB;
+      const sameExplanation = explanationA && explanationA === explanationB;
+      const sameTask = a.metadata.cognitiveTask && a.metadata.cognitiveTask === b.metadata.cognitiveTask;
+      const isDebugPair = (a.q.questionType || '') === 'debug-step' || (b.q.questionType || '') === 'debug-step';
+      const textSimilarity = jaccardSimilarity(questionTextSignature(a.q), questionTextSignature(b.q));
+
+      if (sameAnswer && sameCode && sameExplanation && !isDebugPair) {
+        allErrors.push({
+          loc: `${a.loc} | ${b.loc}`,
+          rule: 'adjacentSameNormalizedCodeAndAnswer',
+          msg: 'Adjacent JP/US questions share the same normalized code shape, answer, and explanation',
+        });
+      } else if (sameAnswer) {
+        allWarnings.push({
+          loc: `${a.loc} | ${b.loc}`,
+          rule: 'adjacentSameAnswer',
+          msg: 'Adjacent JP/US questions share the same answer token',
+        });
+      }
+
+      if (sameCode && !isDebugPair && (sameAnswer || textSimilarity >= 0.9)) {
+        allWarnings.push({
+          loc: `${a.loc} | ${b.loc}`,
+          rule: 'literalOnlyQuestionVariation',
+          msg: 'Adjacent JP/US questions differ mainly by literals while keeping the same code shape',
+        });
+      }
+      if (sameExplanation && !isDebugPair) {
+        allWarnings.push({
+          loc: `${a.loc} | ${b.loc}`,
+          rule: 'duplicateExplanationFingerprint',
+          msg: 'Adjacent JP/US questions share the same hint/explanation fingerprint',
+        });
+      }
+      if (sameTask && sameCode && !isDebugPair) {
+        allWarnings.push({
+          loc: `${a.loc} | ${b.loc}`,
+          rule: 'repeatedCognitiveTask',
+          msg: 'Adjacent JP/US questions reuse the same cognitive task',
+        });
+      }
+      if (codeA && codeB && !isDebugPair && jaccardSimilarity(codeA, codeB) >= 0.86 && !sameCode) {
+        allWarnings.push({
+          loc: `${a.loc} | ${b.loc}`,
+          rule: 'highCodeTemplateSimilarity',
+          msg: 'Adjacent JP/US questions have highly similar normalized code shapes',
+        });
+      }
+    }
+  }
+
+  for (const record of targetRecords) {
+    if (!conceptMatchesCode(record.q, record.metadata)) {
+      allWarnings.push({
+        loc: record.loc,
+        rule: 'titleConceptMismatch',
+        msg: 'Declared concept does not appear to match the code structure',
+      });
+    }
+  }
+}
+
 export function analyzeQuestionSet(records, allErrors, allWarnings, factLookups) {
   const byFact = new Map();
   const byEntity = new Map();
@@ -1063,6 +1220,8 @@ export function analyzeQuestionSet(records, allErrors, allWarnings, factLookups)
       }
     }
   }
+
+  analyzeAdjacentQuestions(records, allErrors, allWarnings);
 }
 
 // ---------------------------------------------------------------------------

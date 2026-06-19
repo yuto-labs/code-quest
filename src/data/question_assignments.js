@@ -91,9 +91,9 @@ export const QUESTION_ASSIGNMENTS = [
     ],
     "learningObjectiveId": "lo_jp_py_d04",
     "programmingConceptIds": [
-      "variables"
+      "lists"
     ],
-    "cognitiveTask": "complete-syntax",
+    "cognitiveTask": "recall-from-given-context",
     "progressionGroupId": ""
   },
   {

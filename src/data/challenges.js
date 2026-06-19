@@ -61,51 +61,55 @@ export const CHALLENGES = {
         "languageId": "python",
         "conceptId": "variables",
         "questionType": "fill-blank",
-        "title": "Hideki Yukawa Nobel Prize: data-access",
-        "description": "湯川秀樹が日本人初のノーベル賞受賞者として知られることを題材に、Python のvariablesを使ってコードを完成させます。",
-        "hint": "空欄の前後を見て、どのキーまたは添字を使えば topic/note が取り出せるか確認します。",
-        "code": "record_3 = {\"topic\": \"Hideki Yukawa Nobel Prize\", \"note\": \"湯川秀樹が日本人初のノーベル賞受賞者として知られること\", \"country\": \"JP\"}\nlabel = record_3[___BLANK___]\nprint(label)",
-        "blank": "\"note\"",
-        "explanation": "空欄に \"note\" を入れると、湯川秀樹が日本人初のノーベル賞受賞者として知られることに関するデータから目的の値を取り出せます。",
-        "correctAnswer": "\"note\"",
-        "completedCode": "record_3 = {\"topic\": \"Hideki Yukawa Nobel Prize\", \"note\": \"湯川秀樹が日本人初のノーベル賞受賞者として知られること\", \"country\": \"JP\"}\nlabel = record_3[\"note\"]\nprint(label)",
+        "title": "湯川秀樹とノーベル賞: タプルの分解",
+        "description": "湯川秀樹が日本人初のノーベル賞受賞者として知られることを題材に、Python のタプル分解で名前と受賞年を取り出します。",
+        "hint": "右辺のタプルには3つの値があります。左辺にも同じ数の変数名を並べると、順番に値を受け取れます。",
+        "code": "laureate = (\"Hideki Yukawa\", 1949, \"Physics\")\nname, year, field = ___BLANK___\nsummary = f\"{name}: {year} {field}\"\nprint(summary)",
+        "blank": "laureate",
+        "explanation": "空欄にはタプルそのものを表す laureate を入れます。左辺の name, year, field が、タプルの1番目、2番目、3番目の値を順番に受け取ります。",
+        "correctAnswer": "laureate",
+        "completedCode": "laureate = (\"Hideki Yukawa\", 1949, \"Physics\")\nname, year, field = laureate\nsummary = f\"{name}: {year} {field}\"\nprint(summary)",
         "executionSteps": [
-          "データ構造に国別の事実を入れる。",
-          "空欄に正しいキーまたは添字を入れて値を取り出す。",
-          "print で取り出した値を表示する。"
+          "1行目で、人物名・受賞年・分野を1つのタプル laureate にまとめます。",
+          "2行目で name, year, field にタプルの値を左から順番に代入します。",
+          "3行目で f-string を使い、3つの値を読みやすい文字列に整えます。",
+          "4行目で完成した summary を表示します。"
         ],
         "commonMistakes": [
-          "値そのものではなく、値を取り出すためのキーや添字を書く必要があります。",
-          "文字列キーは引用符を含めて書きます。"
+          "空欄に \"note\" を入れると辞書キーではないため、このコードの構造と合いません。",
+          "name だけを書くと、3つの変数へ値を分解する右辺として不足します。",
+          "タプルの要素数と左辺の変数数が合わないと、分解代入は失敗します。"
         ],
-        "programmingExplanation": "variablesを使ってデータから値を読む問題です。事実はデータに入っているため、暗記ではなくコード上の参照先を追うことが主な作業です。",
-        "countryNote": "湯川秀樹が日本人初のノーベル賞受賞者として知られることを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
+        "programmingExplanation": "この問題の中心はタプルの分解代入です。laureate は3要素のタプルなので、左辺に3つの変数を並べると、対応する位置の値が順番に入ります。辞書アクセスではなく、位置による対応を読む練習です。",
+        "countryNote": "湯川秀樹は、日本人として初めてノーベル賞を受けた科学者として知られます。ここでは人物名、年、分野を分けて扱い、受賞情報のまとまりを読み取ります。"
       },
       {
         "id": "jp_py_d04",
         "worldId": "decode",
         "languageId": "python",
-        "conceptId": "variables",
+        "conceptId": "lists",
         "questionType": "fill-blank",
-        "title": "Nisshoki/Hinomaru: data-access",
-        "description": "日章旗が一般に日の丸とも呼ばれることを題材に、Python のvariablesを使ってコードを完成させます。",
-        "hint": "空欄の前後を見て、どのキーまたは添字を使えば topic/note が取り出せるか確認します。",
-        "code": "record_4 = {\"topic\": \"Nisshoki/Hinomaru\", \"note\": \"日章旗が一般に日の丸とも呼ばれること\", \"country\": \"JP\"}\nlabel = record_4[___BLANK___]\nprint(label)",
-        "blank": "\"note\"",
-        "explanation": "空欄に \"note\" を入れると、日章旗が一般に日の丸とも呼ばれることに関するデータから目的の値を取り出せます。",
-        "correctAnswer": "\"note\"",
-        "completedCode": "record_4 = {\"topic\": \"Nisshoki/Hinomaru\", \"note\": \"日章旗が一般に日の丸とも呼ばれること\", \"country\": \"JP\"}\nlabel = record_4[\"note\"]\nprint(label)",
+        "title": "日章旗・日の丸: 文字列の比較",
+        "description": "日章旗が一般に日の丸とも呼ばれることを題材に、Python の文字列比較で別名が含まれるかを判定します。",
+        "hint": "aliases は別名のリストです。ある文字列がリストに含まれるかを調べるには、in を使います。",
+        "code": "official_name = \"日章旗\"\naliases = [\"日の丸\", \"Nisshoki\"]\nuses_alias = ___BLANK___ in aliases\nprint(uses_alias)",
+        "blank": "\"日の丸\"",
+        "explanation": "空欄には調べたい別名である \"日の丸\" を入れます。\"日の丸\" in aliases は、リスト aliases の中に同じ文字列があるかを調べ、True を返します。",
+        "correctAnswer": "\"日の丸\"",
+        "completedCode": "official_name = \"日章旗\"\naliases = [\"日の丸\", \"Nisshoki\"]\nuses_alias = \"日の丸\" in aliases\nprint(uses_alias)",
         "executionSteps": [
-          "データ構造に国別の事実を入れる。",
-          "空欄に正しいキーまたは添字を入れて値を取り出す。",
-          "print で取り出した値を表示する。"
+          "1行目で正式名称を official_name に入れます。",
+          "2行目で別名の候補を aliases リストにまとめます。",
+          "3行目で \"日の丸\" が aliases に含まれるかを in で判定します。",
+          "4行目で判定結果 True を表示します。"
         ],
         "commonMistakes": [
-          "値そのものではなく、値を取り出すためのキーや添字を書く必要があります。",
-          "文字列キーは引用符を含めて書きます。"
+          "空欄に note を入れる形ではなく、ここでは調べたい文字列そのものが必要です。",
+          "日章旗を入れると aliases の中にはないため、この判定では False になります。",
+          "in は部分一致ではなく、リストの要素として同じ値があるかを調べます。"
         ],
-        "programmingExplanation": "variablesを使ってデータから値を読む問題です。事実はデータに入っているため、暗記ではなくコード上の参照先を追うことが主な作業です。",
-        "countryNote": "日章旗が一般に日の丸とも呼ばれることを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
+        "programmingExplanation": "この問題の中心は membership 判定です。文字列 \"日の丸\" が aliases リストの要素として存在するかを in で調べます。前問のタプル分解とは違い、複数候補の中から一致する値を探す処理です。",
+        "countryNote": "日章旗は日本の国旗の正式名称で、一般には日の丸とも呼ばれます。正式名称と通称を分けて見ると、同じ対象に複数の呼び方があることを整理できます。"
       },
       {
         "id": "jp_py_d05",

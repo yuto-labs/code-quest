@@ -74,10 +74,12 @@ function CountryKnowledgeCard({ notes = [] }) {
   const sources = Array.from(
     new Map(notes.flatMap(note => note.sourceRefs || []).map(source => [source.url, source])).values(),
   );
+  const primaryTitle = notes[0]?.titleJa || 'テーマ解説';
   return (
     <details style={styles.countryCard}>
       <summary style={styles.countrySummary}>
-        <span style={styles.countrySummaryTitle}>問題詳細</span>
+        <span style={styles.countrySummaryTitle}>テーマ解説</span>
+        <span style={styles.countrySummaryTopic}>{primaryTitle}</span>
         <span style={styles.countrySummaryHint}>タップして詳しく見る</span>
       </summary>
       <div style={styles.countryBody}>
@@ -87,14 +89,39 @@ function CountryKnowledgeCard({ notes = [] }) {
               <div style={styles.countryTitle}>{note.titleJa}</div>
               {note.statusLabel && <span style={styles.statusLabel}>{note.statusLabel}</span>}
             </div>
-            {note.summaryJa && <div style={styles.countrySummaryText}>{note.summaryJa}</div>}
-            {note.detailJa && <TextBlock>{note.detailJa}</TextBlock>}
+            {note.summaryJa && (
+              <div style={styles.topicSection}>
+                <div style={styles.topicSectionTitle}>概要</div>
+                <TextBlock>{note.summaryJa}</TextBlock>
+              </div>
+            )}
+            {note.backgroundJa && (
+              <div style={styles.topicSection}>
+                <div style={styles.topicSectionTitle}>背景・経緯</div>
+                <TextBlock>{note.backgroundJa}</TextBlock>
+              </div>
+            )}
+            {note.historyJa && (
+              <div style={styles.topicSection}>
+                <div style={styles.topicSectionTitle}>歴史的背景</div>
+                <TextBlock>{note.historyJa}</TextBlock>
+              </div>
+            )}
+            {note.episodeJa && (
+              <div style={styles.topicSection}>
+                <div style={styles.topicSectionTitle}>関連エピソード</div>
+                <TextBlock>{note.episodeJa}</TextBlock>
+              </div>
+            )}
             {note.keyPointsJa?.length > 0 && (
-              <ul style={styles.keyPointList}>
-                {note.keyPointsJa.map(point => (
-                  <li key={point} style={styles.keyPoint}>{point}</li>
-                ))}
-              </ul>
+              <div style={styles.topicSection}>
+                <div style={styles.topicSectionTitle}>覚えておきたい点</div>
+                <ul style={styles.keyPointList}>
+                  {note.keyPointsJa.map(point => (
+                    <li key={point} style={styles.keyPoint}>{point}</li>
+                  ))}
+                </ul>
+              </div>
             )}
           </article>
         ))}
@@ -195,7 +222,7 @@ export default function ExplanationPanel({ data, title = '解説' }) {
       )}
 
       {data.countryNote && !data.countryKnowledge?.length && (
-        <Section title="問題詳細">
+        <Section title="テーマ解説">
           <TextBlock>{data.countryNote}</TextBlock>
         </Section>
       )}
@@ -375,6 +402,12 @@ const styles = {
     fontSize: 9,
     lineHeight: 1.8,
   },
+  countrySummaryTopic: {
+    fontSize: 11,
+    color: 'var(--text)',
+    lineHeight: 1.7,
+    wordBreak: 'break-word',
+  },
   countrySummaryHint: {
     fontSize: 9,
     color: 'var(--text-dim)',
@@ -413,12 +446,17 @@ const styles = {
     fontSize: 8,
     lineHeight: 1.6,
   },
-  countrySummaryText: {
-    fontSize: 10,
-    color: 'var(--text)',
-    lineHeight: 1.9,
-    fontWeight: 700,
-    wordBreak: 'break-word',
+  topicSection: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 4,
+    minWidth: 0,
+  },
+  topicSectionTitle: {
+    fontFamily: 'var(--pixel-font)',
+    fontSize: 8,
+    color: 'var(--accent)',
+    lineHeight: 1.8,
   },
   keyPointList: {
     margin: 0,

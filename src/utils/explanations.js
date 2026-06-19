@@ -142,13 +142,15 @@ function factStatusLabel(factStatus) {
 function countryKnowledgeNotes(facts) {
   return facts
     .map(fact => {
-      const hasStructuredNote = fact?.titleJa || fact?.summaryJa || fact?.detailJa || fact?.keyPointsJa?.length;
+      const hasStructuredNote = fact?.titleJa || fact?.summaryJa || fact?.backgroundJa || fact?.detailJa || fact?.keyPointsJa?.length;
       if (!hasStructuredNote) return null;
       return {
         factId: fact.factId,
         titleJa: fact.titleJa || fact.statement || fact.factId,
         summaryJa: fact.summaryJa || '',
-        detailJa: fact.detailJa || fact.detail || fact.statement || '',
+        backgroundJa: fact.backgroundJa || fact.detailJa || '',
+        historyJa: fact.historyJa || '',
+        episodeJa: fact.episodeJa || '',
         keyPointsJa: Array.isArray(fact.keyPointsJa) ? fact.keyPointsJa.filter(Boolean) : [],
         factStatus: fact.factStatus,
         statusLabel: factStatusLabel(fact.factStatus),

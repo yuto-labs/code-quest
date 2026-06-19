@@ -11,17 +11,31 @@ export const EXECUTE_CHALLENGES = {
         conceptId: "comprehension",
         questionType: "output-predict",
         title: "Yakushima World Heritage criteria/context: nested-filter",
-        prompt: "Yakushima World Heritage criteria/context をコード内データとして使い、nested-filter を確認します。",
-        code: "record = {\"name\": \"Yakushima World Heritage criteria/context\", \"values\": [1, 2, 3]}\nprint(sum(record[\"values\"]))",
+        prompt: "屋久島は日本の世界遺産のひとつです。次のデータでは、各地域の登録理由に関するタグと評価値を持たせています。自然遺産で、criteria に `vii` を含む地域の score 合計を追跡してください。",
+        code: "sites = [\n    {\"name\": \"Yakushima\", \"type\": \"natural\", \"criteria\": [\"vii\", \"ix\"], \"score\": 2},\n    {\"name\": \"Himeji Castle\", \"type\": \"cultural\", \"criteria\": [\"i\", \"iv\"], \"score\": 5},\n    {\"name\": \"Shirakami-Sanchi\", \"type\": \"natural\", \"criteria\": [\"ix\"], \"score\": 3}\n]\nselected = []\nfor site in sites:\n    if site[\"type\"] == \"natural\" and \"vii\" in site[\"criteria\"]:\n        selected.append(site)\npoints = [site[\"score\"] for site in selected]\nprint(sum(points))",
         options: [
-          "6",
-          "other",
-          "1",
+          "2",
+          "5",
+          "3",
           "Error"
         ],
-        answer: "6",
-        hint: "record[\"values\"] は [1, 2, 3] です。sum() はこの合計を出します。",
-        explanation: "表示データにある Yakushima World Heritage criteria/context を使い、処理の流れを追うと 6 が出力されます。"
+        answer: "2",
+        hint: "`type` が `natural` で、さらに `criteria` の中に `vii` があるものだけ残ります。屋久島だけが両方の条件を満たします。",
+        explanation: "条件を満たすのは Yakushima だけなので、`points` は `[2]` になり、`sum(points)` は `2` です。",
+        correctAnswer: "2",
+        executionSteps: [
+          "`sites` には屋久島、姫路城、白神山地の3件が入っている。",
+          "for 文で1件ずつ見て、`type == \"natural\"` と `\"vii\" in criteria` の両方を確認する。",
+          "Yakushima だけが条件を通るため `selected` に追加される。",
+          "`points` は選ばれた site の `score` だけを集めるので `[2]` になる。",
+          "`sum(points)` により `2` が出力される。"
+        ],
+        commonMistakes: [
+          "`type` だけで選ぶと Shirakami-Sanchi も入ってしまいます。",
+          "`criteria` はリストなので、完全一致ではなく `in` で含まれるかを見ます。"
+        ],
+        programmingExplanation: "この問題は、ネストした辞書リストを for 文で走査し、複数条件で filter してから数値を集計するトレース問題です。条件の順番よりも、両方の条件を満たしたものだけを残すことが重要です。",
+        countryNote: "屋久島は日本の世界遺産登録地のひとつで、自然遺産として扱われます。"
       },
       {
         id: "jp_py_e02",

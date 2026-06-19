@@ -31,16 +31,29 @@ function sanitizeAttempt(a) {
     countryId:        a.countryId   || '',
     languageId:       a.languageId  || '',
     missionId:        a.missionId   || null,
+    questionIndex:    Number.isInteger(a.questionIndex) ? Math.max(0, a.questionIndex) : 0,
+    questionId:       a.questionId || '',
+    debugStepIndex:   Number.isInteger(a.debugStepIndex) ? Math.max(0, a.debugStepIndex) : 0,
+    debugAnswers:     Array.isArray(a.debugAnswers) ? a.debugAnswers : [],
     remainingLives:   Number.isInteger(a.remainingLives)
                         ? Math.max(0, Math.min(a.remainingLives, MAX_LIVES))
                         : MAX_LIVES,
     maxLives:         Number.isInteger(a.maxLives) ? a.maxLives : MAX_LIVES,
     wrongQuestionIds: Array.isArray(a.wrongQuestionIds) ? a.wrongQuestionIds : [],
+    failedQuestion:   isObj(a.failedQuestion) ? a.failedQuestion : null,
     startedAt:        a.startedAt   || '',
     updatedAt:        a.updatedAt   || '',
     status:           ['active', 'completed', 'failed'].includes(a.status) ? a.status : 'active',
     revision:         Number.isInteger(a.revision) ? Math.max(0, a.revision) : 0,
   };
+}
+
+export function resolveStageEntry(meta, attemptId, isCleared = false) {
+  const attempt = sanitizeMeta(meta).attempts?.[attemptId] || null;
+  if (attempt?.status === 'active') return { mode: 'active', attempt };
+  if (attempt?.status === 'failed') return { mode: 'failed', attempt };
+  if (isCleared) return { mode: 'cleared', attempt };
+  return { mode: 'fresh', attempt: null };
 }
 
 function normalizeLegacyFinalMissionId(id) {

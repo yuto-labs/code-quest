@@ -1586,6 +1586,34 @@ export function getCountryFacts({ countryId, worldId, languageId, includeAvoid =
   });
 }
 
+function isValidHttpUrl(value) {
+  try {
+    const url = new URL(value);
+    return url.protocol === 'https:' || url.protocol === 'http:';
+  } catch {
+    return false;
+  }
+}
+
+function validateSourceRef(ref, index, factId, issues) {
+  if (typeof ref === 'string') {
+    if (!isValidHttpUrl(ref)) {
+      issues.push({ factId, rule: 'invalid-sourceRef-url', msg: `sourceRefs[${index}] must be an http(s) URL` });
+    }
+    return;
+  }
+  if (!ref || typeof ref !== 'object' || Array.isArray(ref)) {
+    issues.push({ factId, rule: 'invalid-sourceRef-shape', msg: `sourceRefs[${index}] must be a URL string or object` });
+    return;
+  }
+  if (!ref.url || !isValidHttpUrl(ref.url)) {
+    issues.push({ factId, rule: 'invalid-sourceRef-url', msg: `sourceRefs[${index}].url must be an http(s) URL` });
+  }
+  if (!ref.title && !ref.organization && !ref.org && !ref.publisher) {
+    issues.push({ factId, rule: 'invalid-sourceRef-shape', msg: `sourceRefs[${index}] needs title or organization metadata` });
+  }
+}
+
 export function validateCountryFacts(facts = COUNTRY_FACTS) {
   const issues = [];
   const ids = new Set();
@@ -1620,6 +1648,9 @@ export function validateCountryFacts(facts = COUNTRY_FACTS) {
 
     if (fact?.factStatus === FACT_STATUS.VERIFIED && (!Array.isArray(fact.sourceRefs) || fact.sourceRefs.length === 0)) {
       issues.push({ factId, rule: 'verified-missing-sourceRefs', msg: 'verified facts must include sourceRefs' });
+    }
+    if (Array.isArray(fact?.sourceRefs)) {
+      fact.sourceRefs.forEach((ref, index) => validateSourceRef(ref, index, factId, issues));
     }
 
     if (fact?.factStatus === FACT_STATUS.AVOID) {

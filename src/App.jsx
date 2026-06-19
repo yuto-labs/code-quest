@@ -16,7 +16,7 @@ import { DEBUG_CHALLENGES } from './data/debug_challenges';
 import { useAuth } from './hooks/useAuth';
 import { loadCloudProgress, saveCloudProgress, mergeProgressData } from './lib/sync';
 import { buildProgressKey, migrateProgressKeys } from './utils/progress';
-import { emptyMeta, sanitizeMeta, MAX_LIVES } from './utils/metadata';
+import { emptyMeta, sanitizeMeta, MAX_LIVES, resolveStageEntry, isFinalMissionCleared } from './utils/metadata';
 import { getFinalMission } from './data/final_missions';
 
 const WORLD_CHALLENGES = { decode: CHALLENGES, execute: EXECUTE_CHALLENGES, debug: DEBUG_CHALLENGES };
@@ -44,19 +44,25 @@ function buildAttemptId(worldId, countryId, langId, missionId = null) {
 
 function getInitialLives(meta, attemptId) {
   const attempt = meta?.attempts?.[attemptId];
-  if (!attempt || attempt.status === 'completed' || attempt.status === 'failed') return MAX_LIVES;
+  if (!attempt || attempt.status === 'completed') return MAX_LIVES;
+  if (attempt.status === 'failed') return 0;
   return typeof attempt.remainingLives === 'number' ? attempt.remainingLives : MAX_LIVES;
 }
 
-function updateAttemptLives(meta, attemptId, remainingLives, worldId, countryId, langId, missionId = null) {
+function updateAttempt(meta, attemptId, patch, worldId, countryId, langId, missionId = null) {
   const now = new Date().toISOString();
   const existing = meta?.attempts?.[attemptId] || {};
+  const remainingLives = Number.isInteger(patch.remainingLives)
+    ? patch.remainingLives
+    : (Number.isInteger(existing.remainingLives) ? existing.remainingLives : MAX_LIVES);
+  const nextStatus = patch.status || (remainingLives <= 0 ? 'failed' : 'active');
   return {
     ...meta,
     attempts: {
       ...(meta.attempts || {}),
       [attemptId]: {
         ...existing,
+        ...patch,
         worldId,
         countryId,
         languageId: langId,
@@ -65,11 +71,15 @@ function updateAttemptLives(meta, attemptId, remainingLives, worldId, countryId,
         maxLives: MAX_LIVES,
         startedAt: existing.startedAt || now,
         updatedAt: now,
-        status: remainingLives <= 0 ? 'failed' : 'active',
+        status: nextStatus,
         revision: (existing.revision || 0) + 1,
       },
     },
   };
+}
+
+function updateAttemptLives(meta, attemptId, remainingLives, worldId, countryId, langId, missionId = null, patch = {}) {
+  return updateAttempt(meta, attemptId, { ...patch, remainingLives }, worldId, countryId, langId, missionId);
 }
 
 function resetAttemptLives(meta, attemptId) {
@@ -81,8 +91,14 @@ function resetAttemptLives(meta, attemptId) {
       ...(meta.attempts || {}),
       [attemptId]: {
         ...existing,
+        questionIndex: 0,
+        questionId: '',
+        debugStepIndex: 0,
+        debugAnswers: [],
+        failedQuestion: null,
         remainingLives: MAX_LIVES,
         status: 'active',
+        startedAt: now,
         updatedAt: now,
         revision: (existing.revision || 0) + 1,
       },
@@ -385,6 +401,14 @@ export default function App() {
     return { ...resume, countryObj, questionIndex, questions, mission, screen: resume.screen === 'finalMission' ? 'finalMission' : 'challenge' };
   };
 
+  const resolveAttemptIndex = (attempt, questions = []) => {
+    if (!attempt || questions.length === 0) return 0;
+    const byId = attempt.questionId ? questions.findIndex(q => q.id === attempt.questionId) : -1;
+    if (byId >= 0) return byId;
+    const fallback = Number.isInteger(attempt.questionIndex) ? attempt.questionIndex : 0;
+    return Math.min(Math.max(fallback, 0), questions.length - 1);
+  };
+
   const handleContinue = () => {
     const target = resolveResume();
     if (!target) return;
@@ -409,8 +433,28 @@ export default function App() {
     const next = { ...qp, [key]: idx };
     setQuizProgress(next);
     saveToLocal(getStorageKey(uid, 'quiz'), next);
+    const attemptId = buildAttemptId(worldId, countryId, langId);
+    const existingAttempt = mt.attempts?.[attemptId];
+    const baseMeta = updateAttempt(
+      mt,
+      attemptId,
+      {
+        questionIndex: idx,
+        questionId: resumePatch.questionId || '',
+        debugStepIndex: Number.isInteger(resumePatch.debugStepIndex) ? resumePatch.debugStepIndex : 0,
+        debugAnswers: Array.isArray(resumePatch.debugAnswers) ? resumePatch.debugAnswers : [],
+        failedQuestion: null,
+        remainingLives: !existingAttempt || existingAttempt.status === 'failed' || existingAttempt.status === 'completed'
+          ? MAX_LIVES
+          : existingAttempt.remainingLives,
+        status: 'active',
+      },
+      worldId,
+      countryId,
+      langId,
+    );
     const nextMeta = {
-      ...mt,
+      ...baseMeta,
       resume: {
         worldId,
         countryId,
@@ -484,10 +528,31 @@ export default function App() {
     const uid = latestRef.current.user?.id;
     const existing = mt.finalMissions?.[mission.id] || {};
     const targetChildCount = mission.targetChildCount || mission.childQuestionIds?.length || 3;
+    const attemptId = buildAttemptId(mission.worldId, mission.countryId, mission.languageId, mission.id);
+    const existingAttempt = mt.attempts?.[attemptId];
+    const baseMeta = updateAttempt(
+      mt,
+      attemptId,
+      {
+        questionIndex: childIndex,
+        questionId: resumePatch.questionId || '',
+        debugStepIndex: Number.isInteger(resumePatch.debugStepIndex) ? resumePatch.debugStepIndex : 0,
+        debugAnswers: Array.isArray(resumePatch.debugAnswers) ? resumePatch.debugAnswers : [],
+        failedQuestion: null,
+        remainingLives: !existingAttempt || existingAttempt.status === 'failed' || existingAttempt.status === 'completed'
+          ? MAX_LIVES
+          : existingAttempt.remainingLives,
+        status: 'active',
+      },
+      mission.worldId,
+      mission.countryId,
+      mission.languageId,
+      mission.id,
+    );
     const nextMeta = {
-      ...mt,
+      ...baseMeta,
       finalMissions: {
-        ...(mt.finalMissions || {}),
+        ...(baseMeta.finalMissions || {}),
         [mission.id]: {
           ...existing,
           missionId: mission.id,
@@ -698,20 +763,29 @@ export default function App() {
 
       {screen === 'challenge' && country && language && (() => {
         const attemptId = buildAttemptId(world, country.id, language.id);
+        const progressKey = buildProgressKey(world, country.id, language.id);
+        const questions = (WORLD_CHALLENGES[world] || {})[country.id]?.[language.id] || [];
+        const entryState = resolveStageEntry(meta, attemptId, !!progress[progressKey]);
+        const entryIdx = entryState.mode === 'active'
+          ? resolveAttemptIndex(entryState.attempt, questions)
+          : 0;
         return (
           <ChallengeScreen
             key={`${world}_${country.id}_${language.id}`}
             country={country}
             language={language}
             world={world}
-            initialIdx={quizProgress[`${world}_${country.id}_${language.id}`] || 0}
-            initialLives={getInitialLives(meta, attemptId)}
+            initialIdx={entryIdx}
+            initialDebugStepIndex={entryState.attempt?.debugStepIndex || 0}
+            initialDebugAnswers={entryState.attempt?.debugAnswers}
+            initialLives={entryState.mode === 'fresh' || entryState.mode === 'cleared' ? MAX_LIVES : getInitialLives(meta, attemptId)}
+            entryState={entryState}
             onSaveIdx={(idx, resumePatch) => saveQuizIdx(world, country.id, language.id, idx, resumePatch)}
             onSaveScore={(s) => saveScore(world, country.id, language.id, s)}
             onMistake={(qId) => saveMistake(world, country.id, language.id, qId)}
-            onLivesChange={(lives) => {
+            onLivesChange={(lives, patch = {}) => {
               const { meta: mt } = latestRef.current;
-              const nextMeta = updateAttemptLives(mt, attemptId, lives, world, country.id, language.id);
+              const nextMeta = updateAttemptLives(mt, attemptId, lives, world, country.id, language.id, null, patch);
               setMeta(nextMeta);
               saveToLocal(getStorageKey(latestRef.current.user?.id, 'meta'), nextMeta);
               syncToCloud();
@@ -724,6 +798,7 @@ export default function App() {
               syncToCloud();
             }}
             onBack={() => setScreen('language')}
+            onWorldMap={() => setScreen('map')}
             onComplete={(cId) => handleComplete(world, cId, language.id)}
           />
         );
@@ -732,6 +807,11 @@ export default function App() {
       {screen === 'finalMission' && country && language && (() => {
         const mission = getFinalMission(world, country.id, language.id);
         const attemptId = buildAttemptId(world, country.id, language.id, mission?.id);
+        const isCleared = mission ? isFinalMissionCleared(meta, mission.id) : false;
+        const entryState = resolveStageEntry(meta, attemptId, isCleared);
+        const entryIdx = entryState.mode === 'active'
+          ? resolveAttemptIndex(entryState.attempt, mission?.questions || [])
+          : 0;
         return (
           <ChallengeScreen
             key={`${world}_${country.id}_${language.id}_final`}
@@ -739,15 +819,16 @@ export default function App() {
             language={language}
             world={world}
             mission={mission}
-            initialIdx={meta.resume?.screen === 'finalMission' && meta.resume?.missionId === mission?.id
-              ? (meta.resume.questionIndexFallback || 0)
-              : 0}
-            initialLives={getInitialLives(meta, attemptId)}
+            initialIdx={entryIdx}
+            initialDebugStepIndex={entryState.attempt?.debugStepIndex || 0}
+            initialDebugAnswers={entryState.attempt?.debugAnswers}
+            initialLives={entryState.mode === 'fresh' || entryState.mode === 'cleared' ? MAX_LIVES : getInitialLives(meta, attemptId)}
+            entryState={entryState}
             onSaveScore={(s) => saveScore(world, country.id, language.id, s)}
             onMistake={(qId) => saveMistake(world, country.id, language.id, qId)}
-            onLivesChange={(lives) => {
+            onLivesChange={(lives, patch = {}) => {
               const { meta: mt } = latestRef.current;
-              const nextMeta = updateAttemptLives(mt, attemptId, lives, world, country.id, language.id, mission?.id);
+              const nextMeta = updateAttemptLives(mt, attemptId, lives, world, country.id, language.id, mission?.id, patch);
               setMeta(nextMeta);
               saveToLocal(getStorageKey(latestRef.current.user?.id, 'meta'), nextMeta);
               syncToCloud();
@@ -760,6 +841,7 @@ export default function App() {
               syncToCloud();
             }}
             onBack={() => setScreen('language')}
+            onWorldMap={() => setScreen('map')}
             onSaveIdx={(idx, resumePatch) => {
               if (mission) {
                 saveFinalMissionProgress({ ...mission, worldId: world, countryId: country.id, languageId: language.id }, idx, resumePatch);

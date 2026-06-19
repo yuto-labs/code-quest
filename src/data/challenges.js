@@ -10,11 +10,24 @@ export const CHALLENGES = {
         conceptId: "dicts",
         questionType: "fill-blank",
         title: "Emperor constitutional role: dict-access",
-        description: "Emperor constitutional role をコード内データとして使い、dict-access を確認します。",
-        hint: "辞書 fact には role と topic があります。表示したい symbol はどちらのキーに入っているか見ます。",
-        code: "fact = {\"role\": \"symbol\", \"topic\": \"Emperor\"}\nprint(fact[___BLANK___])",
+        description: "日本国憲法では天皇は国政を行う人ではなく、日本国と日本国民統合の「象徴」とされています。次の辞書から role の値を表示してください。",
+        hint: "辞書 `emperor` のキーは `role` と `basis` です。表示したい値 `symbol` が入っているキー名を角かっこの中に書きます。",
+        code: "emperor = {\n    \"role\": \"symbol\",\n    \"basis\": \"Constitution of Japan\"\n}\nvalue = emperor[___BLANK___]\nprint(value)",
         blank: "\"role\"",
-        explanation: "辞書の \"role\" キーを読むので symbol が表示されます。 Emperor constitutional role は問題文とコード内データに示されています。"
+        explanation: "`emperor[\"role\"]` は辞書から `role` キーの値を取り出すので、`symbol` が表示されます。",
+        correctAnswer: "\"role\"",
+        completedCode: "emperor = {\n    \"role\": \"symbol\",\n    \"basis\": \"Constitution of Japan\"\n}\nvalue = emperor[\"role\"]\nprint(value)",
+        executionSteps: [
+          "`emperor` という辞書に、天皇の役割と根拠を入れる。",
+          "`emperor[\"role\"]` で `role` キーに対応する値を取り出す。",
+          "取り出した `symbol` を `print` で表示する。"
+        ],
+        commonMistakes: [
+          "`\"symbol\"` をキーとして書くと、辞書にそのキーがないため `KeyError` になります。",
+          "`role` の引用符を外すと、Python は変数名として読もうとします。"
+        ],
+        programmingExplanation: "Python の辞書は `辞書名[キー]` で値を取得します。この問題では、国の知識そのものを暗記するよりも、表示したい値がどのキーに入っているかをコードから読むことがポイントです。",
+        countryNote: "日本国憲法第1条では、天皇は日本国および日本国民統合の象徴とされています。"
       },
       {
         id: "jp_py_d02",

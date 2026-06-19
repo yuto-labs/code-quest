@@ -17,7 +17,7 @@ import {
 import { validateCountryFacts } from '../src/data/country_facts.js';
 import { buildFinalMissionId, getFinalMission } from '../src/data/final_missions.js';
 import { getLanguageEmblemTier } from '../src/utils/progress.js';
-import { emptyMeta, mergeMeta, mergeReview, packProgress, unpackProgress } from '../src/utils/metadata.js';
+import { emptyMeta, MAX_LIVES, mergeMeta, mergeReview, packProgress, resolveStageEntry, unpackProgress } from '../src/utils/metadata.js';
 
 const RED   = '\x1b[31m';
 const GREEN = '\x1b[32m';
@@ -416,6 +416,40 @@ tests.push(expectFactIssue(
   'verified-missing-sourceRefs'
 ));
 
+tests.push(expectFactIssue(
+  'invalid sourceRef URL: registry rejects non-http URLs',
+  [
+    {
+      factId: 'bad_source_fact',
+      countryId: 'JP',
+      category: 'test',
+      entityKeys: ['bad_source'],
+      aliases: ['bad source'],
+      statement: 'A sourced fact.',
+      detail: 'D',
+      factStatus: 'verified',
+      sourceRefs: ['not-a-url'],
+      allowedWorlds: [],
+      allowedLanguageIds: [],
+      relatedFactIds: [],
+    },
+  ],
+  'invalid-sourceRef-url'
+));
+
+{
+  const ctx = makeCtx();
+  const { warnings } = validateQuestion(
+    { id: 'test_detail_warning', title: 'T', questionType: 'fill-blank', blank: 'x', code: '___BLANK___', hint: 'h', explanation: 'short' },
+    ctx,
+  );
+  tests.push(expectGeneric(
+    'missing detailed explanation fields are warnings only',
+    warnings.some(w => w.rule === 'missing-detailed-explanation-fields'),
+    'missing-detailed-explanation-fields',
+  ));
+}
+
 // 16. invalid progression / invalid assignment record
 tests.push(expectAssignmentError(
   'invalid assignment: missing required assignment fields',
@@ -497,6 +531,153 @@ tests.push(expectNoError(
   },
   'debug-step:later-step-context-unresolved'
 ));
+
+// 32. stage lifecycle active resume
+{
+  const attemptId = 'decode_JP_python';
+  const entry = resolveStageEntry({
+    attempts: {
+      [attemptId]: {
+        status: 'active',
+        questionIndex: 4,
+        questionId: 'jp_py_d05',
+        debugStepIndex: 2,
+        debugAnswers: ['cause', 'fix'],
+        remainingLives: 1,
+        revision: 3,
+      },
+    },
+  }, attemptId, true);
+  tests.push(expectGeneric(
+    'stage lifecycle: active attempt resumes exact question/debug/hearts before cleared state',
+    entry.mode === 'active' &&
+      entry.attempt.questionIndex === 4 &&
+      entry.attempt.debugStepIndex === 2 &&
+      entry.attempt.debugAnswers.length === 2 &&
+      entry.attempt.remainingLives === 1,
+    'stage-lifecycle-active-resume'
+  ));
+}
+
+// 33. stage lifecycle failed reopen
+{
+  const attemptId = 'execute_JP_python';
+  const entry = resolveStageEntry({
+    attempts: {
+      [attemptId]: {
+        status: 'failed',
+        questionIndex: 2,
+        questionId: 'jp_py_e03',
+        remainingLives: 0,
+        failedQuestion: { userAnswer: 'A', correctAnswer: 'B' },
+        revision: 4,
+      },
+    },
+  }, attemptId, false);
+  tests.push(expectGeneric(
+    'stage lifecycle: failed attempt reopens failed screen instead of question',
+    entry.mode === 'failed' &&
+      entry.attempt.remainingLives === 0 &&
+      entry.attempt.failedQuestion.correctAnswer === 'B',
+    'stage-lifecycle-failed-reopen'
+  ));
+}
+
+// 34. stage lifecycle cleared replay gate
+{
+  const attemptId = 'debug_JP_javascript';
+  const entry = resolveStageEntry({
+    attempts: {
+      [attemptId]: {
+        status: 'completed',
+        questionIndex: 4,
+        remainingLives: MAX_LIVES,
+        revision: 8,
+      },
+    },
+  }, attemptId, true);
+  tests.push(expectGeneric(
+    'stage lifecycle: cleared stage shows cleared/replay instead of old final index',
+    entry.mode === 'cleared',
+    'stage-lifecycle-cleared-replay'
+  ));
+}
+
+// 35. stage lifecycle retry/replay reset model
+{
+  const failed = {
+    status: 'failed',
+    questionIndex: 2,
+    questionId: 'old',
+    debugStepIndex: 1,
+    debugAnswers: ['old'],
+    remainingLives: 0,
+    failedQuestion: { userAnswer: 'old' },
+    revision: 9,
+  };
+  const retried = {
+    ...failed,
+    status: 'active',
+    questionIndex: 0,
+    questionId: '',
+    debugStepIndex: 0,
+    debugAnswers: [],
+    remainingLives: MAX_LIVES,
+    failedQuestion: null,
+    revision: failed.revision + 1,
+  };
+  tests.push(expectGeneric(
+    'stage lifecycle: retry starts index 0 with full hearts and clears temporary answers',
+    retried.status === 'active' &&
+      retried.questionIndex === 0 &&
+      retried.debugStepIndex === 0 &&
+      retried.debugAnswers.length === 0 &&
+      retried.remainingLives === MAX_LIVES &&
+      retried.failedQuestion === null &&
+      retried.revision > failed.revision,
+    'stage-lifecycle-retry-reset'
+  ));
+}
+
+// 36. final lifecycle replay starts child 01 and preserves earned completion
+{
+  const missionId = buildFinalMissionId('decode', 'JP', 'python');
+  const finalMeta = {
+    finalMissions: {
+      [missionId]: {
+        missionId,
+        completedAt: '2026-01-01T00:00:00.000Z',
+        completedChildCount: 3,
+        targetChildCount: 3,
+        currentChildIndex: 3,
+      },
+    },
+    attempts: {
+      [`decode_JP_python_m_${missionId}`]: {
+        status: 'completed',
+        questionIndex: 2,
+        remainingLives: MAX_LIVES,
+        revision: 5,
+      },
+    },
+  };
+  const entry = resolveStageEntry(finalMeta, `decode_JP_python_m_${missionId}`, true);
+  const replayAttempt = {
+    ...finalMeta.attempts[`decode_JP_python_m_${missionId}`],
+    status: 'active',
+    questionIndex: 0,
+    remainingLives: MAX_LIVES,
+    revision: 6,
+  };
+  tests.push(expectGeneric(
+    'final lifecycle: replay starts child 01 and earned 3/3 completion remains',
+    entry.mode === 'cleared' &&
+      replayAttempt.questionIndex === 0 &&
+      finalMeta.finalMissions[missionId].completedChildCount === 3 &&
+      Boolean(finalMeta.finalMissions[missionId].completedAt),
+    'final-lifecycle-replay-preserves-completion'
+  ));
+}
 
 // Report -------------------------------------------------------------------
 

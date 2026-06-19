@@ -16,52 +16,72 @@ export const DEBUG_CHALLENGES = {
         conceptId: "variables",
         questionType: "debug-step",
         title: "kanji-hiragana-katakana search: unicode-normalization",
-        description: "kanji-hiragana-katakana search をコード内データとして使い、unicode-normalization を確認します。",
-        code: "data = {\"kanjihi\": \"kanji-hiragana-katakana search\"}\nkey = \"kanji-hi\"\nprint(data[key])",
+        description: "日本語の検索では、半角カタカナと全角カタカナ、濁点の持ち方などが違うだけで一致しないことがあります。次の検索コードは、見た目が同じ『フジ』を見つけられません。",
+        code: "import unicodedata\n\nentries = [\n    {\"script\": \"kanji\", \"label\": \"富士\", \"keyword\": \"富士\"},\n    {\"script\": \"katakana\", \"label\": \"フジ\", \"keyword\": \"ﾌｼﾞ\"},\n    {\"script\": \"hiragana\", \"label\": \"ふじ\", \"keyword\": \"ふじ\"}\n]\nquery = \"フジ\"\n\nfor entry in entries:\n    if entry[\"keyword\"] == query:\n        print(entry[\"label\"])",
         steps: [
           {
             stepNum: 1,
             stepTitle: "原因を特定",
-            prompt: "kanji-hiragana-katakana search をコード内データとして使い、unicode-normalization を確認します。",
+            prompt: "検索語 `フジ` とデータ側の `ﾌｼﾞ` は見た目が近いですが、Unicode では別の表現です。コードは正規化せずに直接比較しています。",
             question: "この不具合の主な原因はどれですか。",
             options: [
-              "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
-              "配列の長さが長すぎる",
-              "コメントがない"
+              "検索語とデータ側の文字列を Unicode 正規化せずに比較している",
+              "for 文が entries の最後の要素を読み飛ばしている",
+              "print に渡す値が label ではなく script になっている"
             ],
-            answer: "検索キーを正規化せず、大文字小文字または表記がデータ側と一致していない",
-            hint: "data 側のキー名と、検索に使っている key の文字列を見比べます。表記ゆれや余分な文字があると見つかりません。",
-            explanation: "kanji-hiragana-katakana search のデータは存在しますが、キー表記が揃っていません。"
+            answer: "検索語とデータ側の文字列を Unicode 正規化せずに比較している",
+            hint: "`フジ` と `ﾌｼﾞ` は画面では似ています。比較の前に同じ表現へそろえている処理があるかを探します。",
+            explanation: "`entry[\"keyword\"] == query` は、文字の見た目ではなく Unicode の実際の並びを比較します。半角カタカナと全角カタカナをそのまま比べると一致しません。"
           },
           {
             stepNum: 2,
             stepTitle: "修正を選ぶ",
-            prompt: "Step 1 の原因を踏まえて、最も安全な修正を選びます。",
-            question: "正しい修正はどれですか。",
+            prompt: "Step 1 の原因を踏まえ、検索語とデータ側の keyword を同じ Unicode 表現へそろえてから比較します。",
+            question: "最も安全な修正はどれですか。",
             options: [
-              "key = key.lower() のように、検索前にキー表記を揃える",
-              "データを空にする",
-              "エラーを無視する"
+              "比較前に `unicodedata.normalize(\"NFKC\", text)` を query と keyword の両方に適用する",
+              "query を空文字にして、すべての項目を一致させる",
+              "katakana の行だけ entries から削除する"
             ],
-            answer: "key = key.lower() のように、検索前にキー表記を揃える",
-            hint: "データを消すのではなく、検索前の key を data 側のキーと同じ形にそろえる修正を選びます。",
-            explanation: "正規化してから検索すると、表記揺れに強くなります。"
+            answer: "比較前に `unicodedata.normalize(\"NFKC\", text)` を query と keyword の両方に適用する",
+            hint: "片方だけではなく、入力側と保存データ側の両方を同じルールで変換する修正を選びます。",
+            explanation: "NFKC 正規化を両方にかけると、半角カタカナなどの互換文字を比較しやすい形にそろえられます。"
           },
           {
             stepNum: 3,
             stepTitle: "理由と影響",
-            prompt: "修正後の影響を確認します。",
-            question: "この修正の理由または影響として正しいものはどれですか。",
+            prompt: "修正後は、日本語の入力表記が多少違っても同じ項目を探しやすくなります。",
+            question: "この修正の理由・影響として正しいものはどれですか。",
             options: [
-              "同じ事実データを、入力表記の揺れで見失わずに取得できる",
-              "事実データが不要になる",
-              "常に最初の項目だけを返す"
+              "入力と保存データを同じ正規化形式にそろえるため、半角/全角の違いで検索漏れしにくくなる",
+              "辞書のキーをすべて英語に変えるため、日本語データが不要になる",
+              "for 文の回数を半分に減らすため、必ず高速化する"
             ],
-            answer: "同じ事実データを、入力表記の揺れで見失わずに取得できる",
-            hint: "入力や表示のゆれを吸収すると、同じ事実データを安全に再利用できるかを考えます。",
-            explanation: "キーの正規化はローカライズされた検索や表示で起きやすい不一致を減らします。"
+            answer: "入力と保存データを同じ正規化形式にそろえるため、半角/全角の違いで検索漏れしにくくなる",
+            hint: "検索結果が増える理由は、ループ回数ではなく、比較前の文字列表現をそろえたことです。",
+            explanation: "日本語の検索では、見た目が近い文字でも内部表現が異なることがあります。正規化により、表記ゆれによる取りこぼしを減らせます。"
           }
-        ]
+        ],
+        correctAnswer: "検索語とデータ側の文字列を Unicode 正規化せずに比較している / NFKC 正規化を両方に適用する / 検索漏れを減らす",
+        correctedCode: "import unicodedata\n\nentries = [\n    {\"script\": \"kanji\", \"label\": \"富士\", \"keyword\": \"富士\"},\n    {\"script\": \"katakana\", \"label\": \"フジ\", \"keyword\": \"ﾌｼﾞ\"},\n    {\"script\": \"hiragana\", \"label\": \"ふじ\", \"keyword\": \"ふじ\"}\n]\nquery = unicodedata.normalize(\"NFKC\", \"フジ\")\n\nfor entry in entries:\n    keyword = unicodedata.normalize(\"NFKC\", entry[\"keyword\"])\n    if keyword == query:\n        print(entry[\"label\"])",
+        executionSteps: [
+          "検索語 `フジ` を受け取る。",
+          "各 entry の keyword と query を直接比較する。",
+          "正規化がないため、`ﾌｼﾞ` と `フジ` が一致せず、期待する label が表示されない。"
+        ],
+        commonMistakes: [
+          "`lower()` は英字の大文字小文字には効きますが、半角/全角カタカナの差は解決しません。",
+          "データを削除して合わせると、実データを失ってしまいます。"
+        ],
+        programmingExplanation: "`unicodedata.normalize(\"NFKC\", text)` は互換文字を比較しやすい形にそろえるために使えます。検索では、入力と保存データの両方へ同じ前処理をかけることが大切です。",
+        countryNote: "日本語では漢字・ひらがな・カタカナに加えて、半角/全角などの表記ゆれも扱う必要があります。",
+        debugExplanation: {
+          cause: "`フジ` と `ﾌｼﾞ` を正規化せず直接比較しているため、見た目が似ていても一致しない。",
+          fix: "query と entry の keyword の両方に `unicodedata.normalize(\"NFKC\", ...)` を適用してから比較する。",
+          why: "同じ意味の文字列を同じ Unicode 表現へそろえることで、比較条件が期待通りに働く。",
+          impact: "半角/全角の違いによる日本語検索の取りこぼしが減り、実データを削除せずに検索品質を上げられる。",
+          correctedCode: "import unicodedata\n\nentries = [\n    {\"script\": \"kanji\", \"label\": \"富士\", \"keyword\": \"富士\"},\n    {\"script\": \"katakana\", \"label\": \"フジ\", \"keyword\": \"ﾌｼﾞ\"},\n    {\"script\": \"hiragana\", \"label\": \"ふじ\", \"keyword\": \"ふじ\"}\n]\nquery = unicodedata.normalize(\"NFKC\", \"フジ\")\n\nfor entry in entries:\n    keyword = unicodedata.normalize(\"NFKC\", entry[\"keyword\"])\n    if keyword == query:\n        print(entry[\"label\"])"
+        }
       },
       {
         id: "jp_py_b02",

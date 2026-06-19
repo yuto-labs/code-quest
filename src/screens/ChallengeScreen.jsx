@@ -1,10 +1,12 @@
-/* eslint-disable react-hooks/refs, react-hooks/set-state-in-effect */
+﻿/* eslint-disable react-hooks/refs, react-hooks/set-state-in-effect */
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { CHALLENGES } from '../data/challenges';
 import { EXECUTE_CHALLENGES } from '../data/execute_challenges';
 import { DEBUG_CHALLENGES } from '../data/debug_challenges';
 import WireframeBackground from '../components/WireframeBackground';
+import ExplanationPanel from '../components/ExplanationPanel';
 import { getColorForCountry } from '../utils/mapColors';
+import { normalizeExplanation } from '../utils/explanations';
 
 const WORLD_CHALLENGES = {
   decode:  CHALLENGES,
@@ -14,6 +16,7 @@ const WORLD_CHALLENGES = {
 
 const MAX_HEARTS = 3;
 const BASE_SCORE = 100;
+const EMPTY_DEBUG_ANSWERS = [];
 
 function clampInitialQuestionIndex(initialIdx, questionCount) {
   if (questionCount <= 0) return 0;
@@ -24,7 +27,8 @@ function clampInitialQuestionIndex(initialIdx, questionCount) {
 export default function ChallengeScreen({
   country, language, world = 'decode', onBack, onComplete,
   initialIdx = 0, onSaveIdx, onSaveScore, onMistake, mission = null,
-  initialLives = MAX_HEARTS, onLivesChange, onRestart,
+  initialLives = MAX_HEARTS, onLivesChange, onRestart, onWorldMap,
+  initialDebugStepIndex = 0, initialDebugAnswers = EMPTY_DEBUG_ANSWERS, entryState = { mode: 'fresh', attempt: null },
 }) {
   const isPC = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   const questions = useMemo(
@@ -41,7 +45,9 @@ export default function ChallengeScreen({
   const [hearts, setHearts]     = useState(initialLives);
   const [score, setScore]       = useState(0);
   const [combo, setCombo]       = useState(0);
-  const [gameOver, setGameOver] = useState(initialLives <= 0);
+  const [entryMode, setEntryMode] = useState(entryState.mode || 'fresh');
+  const [failSummary, setFailSummary] = useState(entryState.attempt?.failedQuestion || null);
+  const [gameOver, setGameOver] = useState(entryState.mode === 'failed' || initialLives <= 0);
 
   // Effect triggers
   const [screenEffect, setScreenEffect]         = useState(null);
@@ -64,7 +70,7 @@ export default function ChallengeScreen({
   const clearedJustNow = useRef(false);
   // Track which question indices have already shown the CORRECT overlay this session
   const correctShownForIdx = useRef(new Set());
-  // Continent color for this country — used on clear panel and effects
+  // Continent color for this country 窶・used on clear panel and effects
   const continentColor = getColorForCountry(country.id);
 
   // fix: track all timers so we can cancel them on unmount / retry
@@ -103,25 +109,21 @@ export default function ChallengeScreen({
     const q = questions[idx];
     if (q?.questionType !== 'debug-step') return;
 
+    const nextAnswers = entryMode === 'active' && q.id === entryState.attempt?.questionId && Array.isArray(initialDebugAnswers)
+      ? initialDebugAnswers
+      : [];
+    const nextStep = entryMode === 'active' && q.id === entryState.attempt?.questionId && Number.isInteger(initialDebugStepIndex)
+      ? Math.min(Math.max(initialDebugStepIndex, 0), Math.max((q.steps?.length || 1) - 1, 0))
+      : 0;
     const storageKey = `cq_debug_step_${world}_${country.id}_${language.id}_${q.id}`;
     debugSkipPersistRef.current = storageKey;
-    try {
-      const saved = JSON.parse(localStorage.getItem(storageKey) || '{}');
-      const nextAnswers = Array.isArray(saved.answers) ? saved.answers : [];
-      const nextStep = Number.isInteger(saved.stepIdx)
-        ? Math.min(Math.max(saved.stepIdx, 0), Math.max((q.steps?.length || 1) - 1, 0))
-        : 0;
-      setDebugStepAnswers(nextAnswers);
-      setDebugStepIdx(nextStep);
-      setSelectedOption(nextAnswers[nextStep] ?? null);
-    } catch {
-      setDebugStepAnswers([]);
-      setDebugStepIdx(0);
-      setSelectedOption(null);
-    }
-  }, [world, country.id, language.id, idx, questions]);
+    setDebugStepAnswers(nextAnswers);
+    setDebugStepIdx(nextStep);
+    setSelectedOption(nextAnswers[nextStep] ?? null);
+  }, [world, country.id, language.id, idx, questions, entryMode, entryState.attempt?.questionId, initialDebugAnswers, initialDebugStepIndex]);
 
   useEffect(() => {
+    if (entryMode === 'failed' || entryMode === 'cleared') return;
     const q = questions[idx];
     if (q?.questionType !== 'debug-step') return;
 
@@ -135,9 +137,10 @@ export default function ChallengeScreen({
       stepIdx: debugStepIdx,
       answers: debugStepAnswers,
     }));
-  }, [world, country.id, language.id, idx, questions, debugStepIdx, debugStepAnswers]);
+  }, [world, country.id, language.id, idx, questions, debugStepIdx, debugStepAnswers, entryMode]);
 
   useEffect(() => {
+    if (entryMode === 'failed' || entryMode === 'cleared') return;
     const q = questions[idx];
     if (!q) return;
     onSaveIdx?.(idx, {
@@ -147,9 +150,8 @@ export default function ChallengeScreen({
       screen: mission ? 'finalMission' : 'challenge',
       missionId: mission?.id,
     });
-  }, [idx, debugStepIdx, debugStepAnswers, mission, onSaveIdx, questions]);
+  }, [idx, debugStepIdx, debugStepAnswers, entryMode, mission, onSaveIdx, questions]);
 
-  // Enterキーを document レベルで捕捉（input が disabled でも発火）
   const enterActionRef = useRef(null);
   useEffect(() => {
     const handler = (e) => {
@@ -163,6 +165,8 @@ export default function ChallengeScreen({
 
   const resetGame = () => {
     clearTimers();
+    setEntryMode('active');
+    setFailSummary(null);
     clearedJustNow.current = false;
     correctShownForIdx.current = new Set();
     setIdx(0);
@@ -181,8 +185,8 @@ export default function ChallengeScreen({
     setDebugStepIdx(0);
     setDebugStepAnswers([]);
     setOrderingSelection([]);
-    onSaveIdx?.(0, { questionId: questions[0]?.id, debugStepIndex: 0, debugAnswers: [] });
     onRestart?.();
+    onSaveIdx?.(0, { questionId: questions[0]?.id, debugStepIndex: 0, debugAnswers: [] });
   };
 
   const handleBack = () => {
@@ -190,16 +194,75 @@ export default function ChallengeScreen({
     onBack();
   };
 
-  // ── ゲームオーバー画面 ────────────────────────
+  const handleWorldMap = () => {
+    clearTimers();
+    if (onWorldMap) onWorldMap();
+    else onBack();
+  };
+
+  const renderFailureDetails = () => {
+    const details = failSummary || {};
+    return (
+      <div style={styles.failureDetails}>
+        <div style={styles.failureRow}>
+          <span style={styles.failureLabel}>QUESTION</span>
+          <span>{details.title || 'Current question'}</span>
+        </div>
+        <div style={styles.failureRow}>
+          <span style={styles.failureLabel}>YOUR ANSWER</span>
+          <code style={styles.answerCode}>{details.userAnswer || 'No answer'}</code>
+        </div>
+        <ExplanationPanel data={details.explanationData} title="REVIEW" />
+      </div>
+    );
+  };
+
+  // 笏笏 繧ｲ繝ｼ繝繧ｪ繝ｼ繝舌・逕ｻ髱｢ 笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏
   if (gameOver) {
     enterActionRef.current = resetGame;
     return (
       <div style={styles.wrap} className="fade-in">
         <WireframeBackground countryId={country.id} />
         <div style={{ ...styles.complete, position: 'relative', zIndex: 1 }}>
-          <div style={{ fontSize: 'clamp(48px, 12vw, 72px)' }}>💀</div>
+          <div style={{ fontSize: 'clamp(42px, 10vw, 64px)' }}>!</div>
           <div style={{ ...styles.completeTitle, color: 'var(--danger)' }}>GAME OVER</div>
-          <div style={styles.completeSub}>ライフがなくなりました</div>
+          <div style={styles.completeSub}>STAGE FAILED</div>
+          <div style={styles.finalScore}>
+            <span style={{ fontSize: 7, color: 'var(--text-dim)' }}>SCORE</span>
+            <span style={{ fontSize: 'clamp(18px, 5vw, 28px)', color: 'var(--accent2)' }}>
+              {score.toLocaleString()}
+            </span>
+          </div>
+          {renderFailureDetails()}
+          <div style={{ display: 'flex', gap: 12, marginTop: 20, flexWrap: 'wrap', justifyContent: 'center' }}>
+            <button
+              className="pixel-btn"
+              style={{ borderColor: 'var(--danger)', color: 'var(--danger)', fontSize: 8 }}
+              onClick={resetGame}
+            >
+              RETRY FROM START
+            </button>
+            <button className="pixel-btn" style={{ fontSize: 8 }} onClick={handleBack}>
+              REVIEW LATER
+            </button>
+            <button className="pixel-btn" style={{ fontSize: 8 }} onClick={handleWorldMap}>
+              WORLD MAP
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (gameOver) {
+    enterActionRef.current = resetGame;
+    return (
+      <div style={styles.wrap} className="fade-in">
+        <WireframeBackground countryId={country.id} />
+        <div style={{ ...styles.complete, position: 'relative', zIndex: 1 }}>
+          <div style={{ fontSize: 'clamp(48px, 12vw, 72px)' }}>!</div>
+          <div style={{ ...styles.completeTitle, color: 'var(--danger)' }}>GAME OVER</div>
+          <div style={styles.completeSub}>繝ｩ繧､繝輔′縺ｪ縺上↑繧翫∪縺励◆</div>
           <div style={styles.finalScore}>
             <span style={{ fontSize: 7, color: 'var(--text-dim)' }}>SCORE</span>
             <span style={{ fontSize: 'clamp(18px, 5vw, 28px)', color: 'var(--accent2)' }}>
@@ -212,10 +275,10 @@ export default function ChallengeScreen({
               style={{ borderColor: 'var(--danger)', color: 'var(--danger)', fontSize: 8 }}
               onClick={resetGame}
             >
-              🔄 RETRY
+              RETRY
             </button>
             <button className="pixel-btn" style={{ fontSize: 8 }} onClick={handleBack}>
-              ◀ BACK
+              笳 BACK
             </button>
           </div>
         </div>
@@ -223,7 +286,53 @@ export default function ChallengeScreen({
     );
   }
 
-  // ── クリア画面 ────────────────────────────────
+  // 笏笏 繧ｯ繝ｪ繧｢逕ｻ髱｢ 笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏
+  if (entryMode === 'cleared') {
+    enterActionRef.current = resetGame;
+    return (
+      <div style={{ ...styles.wrap, display: 'block', overflowY: 'auto' }} className="fade-in">
+        <WireframeBackground countryId={country.id} />
+        <div style={{
+          ...styles.complete,
+          position: 'relative',
+          zIndex: 1,
+          minHeight: '100dvh',
+          flex: 'none',
+        }}>
+          <div style={{ fontSize: 'clamp(40px, 10vw, 60px)' }}>{country.emoji}</div>
+          <div style={{
+            fontSize: 'clamp(16px, 4.5vw, 26px)',
+            color: continentColor,
+            textShadow: `0 0 10px ${continentColor}aa, 0 0 24px ${continentColor}55`,
+            letterSpacing: 3,
+          }}>
+            {country.nameJa || country.name}
+          </div>
+          <div style={{
+            ...styles.completeTitle,
+            color: continentColor,
+            textShadow: `0 0 14px ${continentColor}, 0 0 32px ${continentColor}88`,
+          }}>
+            CLEARED
+          </div>
+          <div style={styles.completeSub}>REPLAY AVAILABLE</div>
+          <div style={{ display: 'flex', gap: 12, marginTop: 20, flexWrap: 'wrap', justifyContent: 'center' }}>
+            <button
+              className="pixel-btn"
+              style={{ borderColor: continentColor, color: continentColor, fontSize: 8 }}
+              onClick={resetGame}
+            >
+              REPLAY FROM START
+            </button>
+            <button className="pixel-btn" style={{ fontSize: 8 }} onClick={handleWorldMap}>
+              WORLD MAP
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (!questions[idx]) {
     const isNewClear = clearedJustNow.current;
     const handleReturn = () => {
@@ -236,19 +345,19 @@ export default function ChallengeScreen({
     enterActionRef.current = handleReturn;
 
     const STARS = [
-      { top: '18%', left: '12%',  delay: '0s',    char: '✦' },
-      { top: '14%', right: '14%', delay: '0.12s', char: '★' },
-      { top: '38%', left: '6%',   delay: '0.22s', char: '✧' },
-      { top: '35%', right: '8%',  delay: '0.08s', char: '✦' },
-      { top: '62%', left: '10%',  delay: '0.18s', char: '✴' },
-      { top: '60%', right: '10%', delay: '0.30s', char: '✧' },
+      { top: '18%', left: '12%',  delay: '0s',    char: '*' },
+      { top: '14%', right: '14%', delay: '0.12s', char: '*' },
+      { top: '38%', left: '6%',   delay: '0.22s', char: '*' },
+      { top: '35%', right: '8%',  delay: '0.08s', char: '*' },
+      { top: '62%', left: '10%',  delay: '0.18s', char: '*' },
+      { top: '60%', right: '10%', delay: '0.30s', char: '*' },
     ];
 
     return (
       <div style={{ ...styles.wrap, display: 'block', overflowY: 'auto' }} className="fade-in">
         <WireframeBackground countryId={country.id} />
 
-        {/* Stars — only on fresh clear */}
+        {/* Stars 窶・only on fresh clear */}
         {isNewClear && STARS.map((s, i) => (
           <div
             key={i}
@@ -341,12 +450,12 @@ export default function ChallengeScreen({
           }}>
             {Array.from({ length: MAX_HEARTS }).map((_, i) => (
               <span key={i} style={{ fontSize: 22, opacity: i < hearts ? 1 : 0.2 }}>
-                {i < hearts ? '❤️' : '🖤'}
+                {i < hearts ? '♥' : '·'}
               </span>
             ))}
           </div>
 
-          {/* Button — always visible and interactive immediately */}
+          {/* Button 窶・always visible and interactive immediately */}
           <button
             className="pixel-btn"
             style={{
@@ -357,14 +466,13 @@ export default function ChallengeScreen({
             }}
             onClick={handleReturn}
           >
-            ワールドマップへ戻る
-          </button>
+            繝ｯ繝ｼ繝ｫ繝峨・繝・・縺ｸ謌ｻ繧・          </button>
         </div>
       </div>
     );
   }
 
-  // ── 通常クイズ ────────────────────────────────
+  // 笏笏 騾壼ｸｸ繧ｯ繧､繧ｺ 笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏
   const q = questions[idx];
   const qType        = q.questionType || 'fill-blank';
   const isDebugStep  = qType === 'debug-step';
@@ -393,6 +501,13 @@ export default function ChallengeScreen({
   const currentOptions     = isDebugStep ? (currentStep?.options ?? []) : (q.options ?? []);
   const correctAnswer      = isDebugStep ? (currentStep?.answer ?? '') : (q.answer ?? q.blank ?? '');
   const priorDebugAnswers  = isDebugStep ? debugStepAnswers.slice(0, debugStepIdx) : [];
+  const currentExplanationData = normalizeExplanation({
+    q,
+    qType,
+    correctAnswer,
+    currentStep,
+    fallbackExplanation: currentExplanation,
+  });
 
   // fix: (idx+1)/length so Q1 shows > 0%
   const progress        = Math.round(((idx + 1) / questions.length) * 100);
@@ -404,6 +519,38 @@ export default function ChallengeScreen({
     if (qType === 'code-ordering')     return orderingSelection.length === (q.blocks?.length ?? 0);
     return selectedOption !== null; // multiple-choice, output-predict, implementation-selection, debug-step
   })();
+
+  const formatUserAnswer = () => {
+    if (qType === 'fill-blank') return answer.trim();
+    if (qType === 'multiple-blanks') return blankAnswers.map(a => a.trim()).join(', ');
+    if (qType === 'code-ordering') {
+      return orderingSelection.map(i => (q.blocks || [])[i] || `block ${i + 1}`).join(' -> ');
+    }
+    return selectedOption || '';
+  };
+
+  const formatCorrectAnswer = () => {
+    if (qType === 'multiple-blanks') return (q.blanks || []).join(', ');
+    if (qType === 'code-ordering') {
+      return (q.answer || []).map(i => (q.blocks || [])[i] || `block ${i + 1}`).join(' -> ');
+    }
+    return String(correctAnswer || '');
+  };
+
+  const buildFailureSummary = () => ({
+    questionId: q.id,
+    title: q.title,
+    userAnswer: formatUserAnswer(),
+    correctAnswer: formatCorrectAnswer(),
+    explanationData: normalizeExplanation({
+      q,
+      qType,
+      correctAnswer: formatCorrectAnswer(),
+      currentStep,
+      userAnswer: formatUserAnswer(),
+      fallbackExplanation: currentExplanation,
+    }),
+  });
 
   const fireCorrect = () => {
     const newCombo = combo + 1;
@@ -424,7 +571,7 @@ export default function ChallengeScreen({
     setScreenEffect('correct');
     schedule(() => setScreenEffect(null), 400);
 
-    // CORRECT overlay — once per question index per session
+    // CORRECT overlay 窶・once per question index per session
     if (!correctShownForIdx.current.has(idx)) {
       correctShownForIdx.current.add(idx);
       setShowCorrectOverlay(true);
@@ -434,15 +581,38 @@ export default function ChallengeScreen({
 
   const fireWrong = () => {
     const newHearts = hearts - 1;
+    const currentDebugAnswers = isDebugStep
+      ? (() => {
+          const next = debugStepAnswers.slice(0, debugStepIdx);
+          if (selectedOption !== null) next[debugStepIdx] = selectedOption;
+          return next;
+        })()
+      : [];
+    const failureSummary = newHearts <= 0 ? buildFailureSummary() : null;
     setCombo(0);
     setHearts(newHearts);
     setShakingHeartIdx(newHearts);
     setScreenEffect('wrong');
     schedule(() => setScreenEffect(null), 400);
     schedule(() => setShakingHeartIdx(-1), 500);
-    if (newHearts <= 0) schedule(() => setGameOver(true), 750);
+    if (newHearts <= 0) {
+      setFailSummary(failureSummary);
+      schedule(() => setGameOver(true), 750);
+    }
     if (q?.id) onMistake?.(q.id);
-    onLivesChange?.(newHearts);
+    onLivesChange?.(newHearts, failureSummary ? {
+      questionIndex: idx,
+      questionId: q.id,
+      debugStepIndex: isDebugStep ? debugStepIdx : 0,
+      debugAnswers: currentDebugAnswers,
+      failedQuestion: failureSummary,
+      status: 'failed',
+    } : {
+      questionIndex: idx,
+      questionId: q.id,
+      debugStepIndex: isDebugStep ? debugStepIdx : 0,
+      debugAnswers: currentDebugAnswers,
+    });
   };
 
   const handleSubmit = () => {
@@ -544,7 +714,7 @@ export default function ChallengeScreen({
       className={screenEffect !== 'wrong' ? 'fade-in' : undefined}
     >
       <WireframeBackground countryId={country.id} />
-      {/* スクリーンフラッシュオーバーレイ */}
+      {/* 繧ｹ繧ｯ繝ｪ繝ｼ繝ｳ繝輔Λ繝・す繝･繧ｪ繝ｼ繝舌・繝ｬ繧､ */}
       {screenEffect && (
         <div style={{
           position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 200,
@@ -555,7 +725,7 @@ export default function ChallengeScreen({
         }} />
       )}
 
-      {/* CORRECT overlay — neon LED dot-matrix style, non-blocking */}
+      {/* CORRECT overlay 窶・neon LED dot-matrix style, non-blocking */}
       {showCorrectOverlay && (
         <div style={{
           position: 'fixed', inset: 0,
@@ -564,14 +734,14 @@ export default function ChallengeScreen({
           animation: 'correctFade 0.95s ease forwards',
         }}>
           <div style={{ position: 'relative', textAlign: 'center', animation: 'correctScale 0.95s ease forwards' }}>
-            {/* Sparkle stars — absolute inside scaled container */}
+            {/* Sparkle stars 窶・absolute inside scaled container */}
             {[
-              { top: -28, left:  6,  char: '✦', delay: '0s'    },
-              { top: -24, right: 8,  char: '★', delay: '0.08s' },
-              { top:  6,  left: -30, char: '✧', delay: '0.15s' },
-              { top:  6,  right:-30, char: '✴', delay: '0.06s' },
-              { bottom:-24, left: 18, char: '✦', delay: '0.20s' },
-              { bottom:-20, right:14, char: '✧', delay: '0.28s' },
+              { top: -28, left:  6,  char: '*', delay: '0s'    },
+              { top: -24, right: 8,  char: '*', delay: '0.08s' },
+              { top:  6,  left: -30, char: '*', delay: '0.15s' },
+              { top:  6,  right:-30, char: '*', delay: '0.06s' },
+              { bottom:-24, left: 18, char: '*', delay: '0.20s' },
+              { bottom:-20, right:14, char: '*', delay: '0.28s' },
             ].map((s, i) => (
               <div
                 key={i}
@@ -608,7 +778,7 @@ export default function ChallengeScreen({
         </div>
       )}
 
-      {/* コンボポップアップ */}
+      {/* 繧ｳ繝ｳ繝懊・繝・・繧｢繝・・ */}
       {showCombo && (
         <div style={{
           position: 'fixed', top: '28%', left: '50%',
@@ -620,15 +790,15 @@ export default function ChallengeScreen({
             color: 'var(--accent2)',
             textShadow: '3px 3px 0 #332200, 0 0 20px #ff8800',
           }}>
-            🔥 {comboDisplay} COMBO!
+            {comboDisplay} COMBO!
           </div>
           <div style={{ fontSize: 8, color: 'var(--accent)', marginTop: 4 }}>
-            ×{Math.min(comboDisplay, 5)} BONUS
+            x{Math.min(comboDisplay, 5)} BONUS
           </div>
         </div>
       )}
 
-      {/* フローティングスコアテキスト */}
+      {/* 繝輔Ο繝ｼ繝・ぅ繝ｳ繧ｰ繧ｹ繧ｳ繧｢繝・く繧ｹ繝・*/}
       {floatKey > 0 && (
         <div
           key={floatKey}
@@ -646,16 +816,16 @@ export default function ChallengeScreen({
         </div>
       )}
 
-      {/* 途中再開バナー */}
+      {/* 騾比ｸｭ蜀埼幕繝舌リ繝ｼ */}
       {initialIdx > 0 && idx === initialIdx && (
         <div style={styles.resumeBanner}>
-          ▶ Q{initialIdx + 1}から再開しました
+          笆ｶ Q{initialIdx + 1}縺九ｉ蜀埼幕縺励∪縺励◆
         </div>
       )}
 
-      {/* ヘッダー */}
+      {/* 繝倥ャ繝繝ｼ */}
       <div style={styles.header}>
-        <button style={styles.back} onClick={handleBack}>◀ BACK</button>
+        <button style={styles.back} onClick={handleBack}>笳 BACK</button>
 
         <div style={{ display: 'flex', gap: 3, alignItems: 'center' }}>
           {Array.from({ length: MAX_HEARTS }).map((_, i) => (
@@ -669,7 +839,7 @@ export default function ChallengeScreen({
                 transition: 'opacity 0.4s',
               }}
             >
-              {i < hearts ? '❤️' : '🖤'}
+              {i < hearts ? '♥' : '·'}
             </span>
           ))}
         </div>
@@ -690,7 +860,7 @@ export default function ChallengeScreen({
             {score.toLocaleString()}
           </div>
           {combo >= 2 && (
-            <div style={{ fontSize: 6, color: '#ff8800' }}>×{comboMultiplier}</div>
+            <div style={{ fontSize: 6, color: '#ff8800' }}>x{comboMultiplier}</div>
           )}
         </div>
 
@@ -702,13 +872,13 @@ export default function ChallengeScreen({
         </div>
       </div>
 
-      {/* メインコンテンツ */}
+      {/* 繝｡繧､繝ｳ繧ｳ繝ｳ繝・Φ繝・*/}
       <div style={styles.content}>
         <div style={styles.questionNum}>{mission ? 'FINAL MISSION' : `QUESTION ${idx + 1}`}</div>
         <div style={styles.title}>{mission?.title || q.title}</div>
         {mission && <div style={styles.missionBadge}>{mission.type}</div>}
 
-        {/* debug-step ステップ進捗ヘッダー */}
+        {/* debug-step 繧ｹ繝・ャ繝鈴ｲ謐励・繝・ム繝ｼ */}
         {isDebugStep && (
           <div style={styles.debugStepHeader}>
             <span style={styles.debugStepNum}>STEP {debugStepIdx + 1} / {stepCount}</span>
@@ -723,7 +893,7 @@ export default function ChallengeScreen({
         )}
         <div style={styles.description}>{situationText}</div>
 
-        {/* コードブロック（コードがある場合のみ） */}
+        {/* 繧ｳ繝ｼ繝峨ヶ繝ｭ繝・け・医さ繝ｼ繝峨′縺ゅｋ蝣ｴ蜷医・縺ｿ・・*/}
         {codeLines.length > 0 && (
           <>
             {isDebugStep && (
@@ -778,15 +948,15 @@ export default function ChallengeScreen({
           </div>
         )}
 
-        {/* debug-step: 実際の質問ラベル（prompt の後、選択肢の前） */}
+        {/* debug-step: 螳滄圀縺ｮ雉ｪ蝠上Λ繝吶Ν・・rompt 縺ｮ蠕後・∈謚櫁い縺ｮ蜑搾ｼ・*/}
         {questionLabel && (
           <div style={styles.debugQuestion}>{questionLabel}</div>
         )}
 
-        {/* コードブロック並び替え (code-ordering) */}
+        {/* 繧ｳ繝ｼ繝峨ヶ繝ｭ繝・け荳ｦ縺ｳ譖ｿ縺・(code-ordering) */}
         {qType === 'code-ordering' && (
           <div style={styles.orderingList}>
-            <div style={styles.orderingInstr}>クリックして正しい順序に選択（再クリックで解除）</div>
+            <div style={styles.orderingInstr}>Click blocks in the correct order.</div>
             {(q.blocks || []).map((block, i) => {
               const pos     = orderingSelection.indexOf(i);
               const chosen  = pos !== -1;
@@ -828,7 +998,7 @@ export default function ChallengeScreen({
           </div>
         )}
 
-        {/* 選択肢（multiple-choice / output-predict / implementation-selection / debug-step） */}
+        {/* 驕ｸ謚櫁い・・ultiple-choice / output-predict / implementation-selection / debug-step・・*/}
         {showMCOptions && (
           <div style={styles.optionsList}>
             {currentOptions.map((opt, i) => {
@@ -875,43 +1045,39 @@ export default function ChallengeScreen({
           </div>
         )}
 
-        {/* ヒント */}
+        {/* 繝偵Φ繝・*/}
         {showHint && currentHint && (
-          <div style={styles.hint}>💡 HINT: {currentHint}</div>
+          <div style={styles.hint}>HINT: {currentHint}</div>
         )}
 
-        {/* フィードバック */}
+        {/* 繝輔ぅ繝ｼ繝峨ヰ繝・け */}
         {status === 'correct' && (
           <div style={styles.feedbackCorrect} className="fade-in">
-            ✅ CORRECT!
+            CORRECT!
             {qType === 'fill-blank' && (
-              <> &nbsp; 答え: <code style={styles.answerCode}>{q.blank ?? q.answer}</code></>
+              <> &nbsp; 遲斐∴: <code style={styles.answerCode}>{q.blank ?? q.answer}</code></>
             )}
             {qType === 'multiple-blanks' && (
-              <> &nbsp; 答え: {(q.blanks ?? []).map((b, i) => (
+              <> &nbsp; 遲斐∴: {(q.blanks ?? []).map((b, i) => (
                 <code key={i} style={{ ...styles.answerCode, marginRight: 4 }}>{b}</code>
               ))}</>
             )}
             {isDebugStep && debugStepIdx < stepCount - 1 && (
-              <span style={{ color: 'var(--text-dim)', fontSize: 9, marginLeft: 8 }}>→ 次のステップへ</span>
+              <span style={{ color: 'var(--text-dim)', fontSize: 9, marginLeft: 8 }}>竊・谺｡縺ｮ繧ｹ繝・ャ繝励∈</span>
             )}
           </div>
         )}
         {status === 'wrong' && (
           <div style={styles.feedbackWrong} className="fade-in">
-            ❌ WRONG! &nbsp; 残りライフ: {hearts} / {MAX_HEARTS}
+            WRONG! &nbsp; HEARTS: {hearts} / {MAX_HEARTS}
           </div>
         )}
 
-        {/* 解説 */}
-        {showExplanation && currentExplanation && (
-          <div style={styles.explanation} className="fade-in">
-            <div style={styles.explanationTitle}>📖 解説</div>
-            <div style={styles.explanationText}>{currentExplanation}</div>
-          </div>
+        {showExplanation && (
+          <ExplanationPanel data={currentExplanationData} />
         )}
 
-        {/* ボタン群 */}
+        {/* 繝懊ち繝ｳ鄒､ */}
         <div style={styles.btnRow}>
           {status === 'idle' && (
             <>
@@ -920,7 +1086,7 @@ export default function ChallengeScreen({
                 style={{ fontSize: 9, color: 'var(--text-dim)', borderColor: 'var(--text-dim)' }}
                 onClick={() => setShowHint(h => !h)}
               >
-                💡 HINT
+                HINT
               </button>
               <button
                 className="pixel-btn"
@@ -928,7 +1094,7 @@ export default function ChallengeScreen({
                 disabled={!canSubmit}
                 style={!canSubmit ? { opacity: 0.4 } : undefined}
               >
-                ▶ ANSWER
+                笆ｶ ANSWER
               </button>
             </>
           )}
@@ -938,12 +1104,12 @@ export default function ChallengeScreen({
               style={{ borderColor: 'var(--danger)', color: 'var(--danger)' }}
               onClick={handleRetry}
             >
-              🔄 RETRY
+              RETRY
             </button>
           )}
           {status === 'correct' && (
             <button className="pixel-btn" onClick={handleNext}>
-              {isDebugStep && debugStepIdx < stepCount - 1 ? 'NEXT STEP ▶' : 'NEXT ▶'}
+              {isDebugStep && debugStepIdx < stepCount - 1 ? 'NEXT STEP 笆ｶ' : 'NEXT 笆ｶ'}
             </button>
           )}
         </div>

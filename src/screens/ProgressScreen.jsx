@@ -3,6 +3,7 @@ import { COUNTRIES } from '../data/countries';
 import { CHALLENGES } from '../data/challenges';
 import { EXECUTE_CHALLENGES } from '../data/execute_challenges';
 import { DEBUG_CHALLENGES } from '../data/debug_challenges';
+import ExplanationPanel from '../components/ExplanationPanel';
 import { buildProgressKey, getUnlockedIds, getClearedCountryIds, getLanguageEmblemTier, getCountrySealTier } from '../utils/progress';
 import { AVAILABLE_STAGES, WORLD_META, WORLD_IDS } from '../utils/stageData';
 
@@ -219,6 +220,11 @@ export default function ProgressScreen({ progress, quizProgress, scores = {}, mi
                   <div style={{ fontSize: 8, color: 'var(--text-dim)' }}>
                     wrong {item.wrongCount || 0} / hints {item.hintCount || 0}
                   </div>
+                  {item.explanationData && (
+                    <div style={{ marginTop: 8 }}>
+                      <ExplanationPanel data={item.explanationData} title="REVIEW" />
+                    </div>
+                  )}
                 </div>
                 <span style={{ fontSize: 9, color: '#ff4466' }}>REVIEW</span>
               </div>

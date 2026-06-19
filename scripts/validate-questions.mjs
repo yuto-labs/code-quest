@@ -65,6 +65,16 @@ const QUESTION_METADATA_FIELDS = [
   'cognitiveTask',
   'progressionGroupId',
 ];
+const EXPLANATION_CONTRACT_FIELDS = [
+  'correctAnswer',
+  'completedCode',
+  'executionSteps',
+  'commonMistakes',
+  'programmingExplanation',
+  'countryNote',
+  'debugExplanation',
+  'sourceRefs',
+];
 
 // Build conceptId → languages map from CONCEPTS
 const VALID_CONCEPTS = {};
@@ -98,6 +108,50 @@ function jaccardSimilarity(a, b) {
     if (right.has(token)) intersection++;
   }
   return intersection / (left.size + right.size - intersection || 1);
+}
+
+function isValidHttpUrl(value) {
+  try {
+    const url = new URL(value);
+    return url.protocol === 'https:' || url.protocol === 'http:';
+  } catch {
+    return false;
+  }
+}
+
+function validateSourceRefs(sourceRefs, loc, errors) {
+  if (sourceRefs === undefined) return;
+  if (!Array.isArray(sourceRefs)) {
+    errors.push({ loc, rule: 'invalid-sourceRef-shape', msg: 'sourceRefs must be an array when present' });
+    return;
+  }
+  sourceRefs.forEach((ref, index) => {
+    if (typeof ref === 'string') {
+      if (!isValidHttpUrl(ref)) {
+        errors.push({ loc, rule: 'invalid-sourceRef-url', msg: `sourceRefs[${index}] must be an http(s) URL` });
+      }
+      return;
+    }
+    if (!ref || typeof ref !== 'object' || Array.isArray(ref)) {
+      errors.push({ loc, rule: 'invalid-sourceRef-shape', msg: `sourceRefs[${index}] must be a URL string or object` });
+      return;
+    }
+    if (!ref.url || !isValidHttpUrl(ref.url)) {
+      errors.push({ loc, rule: 'invalid-sourceRef-url', msg: `sourceRefs[${index}].url must be an http(s) URL` });
+    }
+    if (!ref.title && !ref.organization && !ref.org && !ref.publisher) {
+      errors.push({ loc, rule: 'invalid-sourceRef-shape', msg: `sourceRefs[${index}] needs title or organization metadata` });
+    }
+  });
+}
+
+function hasDetailedExplanation(q) {
+  return EXPLANATION_CONTRACT_FIELDS.some(field => {
+    if (field === 'sourceRefs') return Array.isArray(q.sourceRefs) && q.sourceRefs.length > 0;
+    if (field === 'debugExplanation') return q.debugExplanation && typeof q.debugExplanation === 'object';
+    if (Array.isArray(q[field])) return q[field].length > 0;
+    return Boolean(q[field]);
+  });
 }
 
 export function buildFactLookups(facts = COUNTRY_FACTS) {
@@ -247,6 +301,11 @@ export function validateQuestion(q, ctx) {
   if (!q.explanation && !q.steps) {
     warnings.push({ loc, rule: 'missing-explanation', msg: 'No explanation provided' });
   }
+  validateSourceRefs(q.sourceRefs, loc, errors);
+  if (!hasDetailedExplanation(q)) {
+    warnings.push({ loc, rule: 'missing-detailed-explanation-fields',
+      msg: `Optional explanation contract fields are absent: ${EXPLANATION_CONTRACT_FIELDS.join(', ')}` });
+  }
 
   const qType = q.questionType || 'fill-blank';
 
@@ -269,6 +328,13 @@ export function validateQuestion(q, ctx) {
     validateChoiceType(q, loc, errors, warnings);
   } else if (qType === 'debug-step') {
     validateDebugStep(q, loc, errors, warnings);
+    const dbg = q.debugExplanation || {};
+    for (const field of ['cause', 'fix', 'why', 'impact']) {
+      if (!dbg[field]) {
+        warnings.push({ loc, rule: 'debug-explanation-missing-field',
+          msg: `DEBUG explanation is missing debugExplanation.${field}` });
+      }
+    }
   }
 
   return { errors, warnings };
@@ -515,6 +581,18 @@ export function validateFinalMission(mission) {
     const expectedId = expectedChildIds[index];
     if (q.id !== expectedId) {
       errors.push({ loc, rule: 'invalid-final-child-id-order', msg: `Child ${index + 1} must be "${expectedId}", found "${q.id}"` });
+    }
+    const explanationText = normalizeText([
+      q.explanation,
+      q.programmingExplanation,
+      q.countryNote,
+      q.commonMistakes,
+      q.debugExplanation ? Object.values(q.debugExplanation).join(' ') : '',
+      Array.isArray(q.executionSteps) ? q.executionSteps.join(' ') : q.executionSteps,
+    ].filter(Boolean).join(' '));
+    if (!hasDetailedExplanation(q) || explanationText.length < 80) {
+      warnings.push({ loc: `${loc} child=${q.id}`, rule: 'final-explanation-less-detailed',
+        msg: 'Final mission explanation is shorter or less detailed than expected for capstone content' });
     }
   });
   if (mission.type === 'DEBUG_FINAL') {

@@ -23,7 +23,7 @@ export function CodeBlock({ children, label = 'CODE' }) {
                 </span>
               ))}
             </pre>
-            <div style={styles.closeHint}>閉じるには「コードを拡大」をもう一度押す</div>
+            <div style={styles.closeHint}>閉じるには「コードを拡大」をもう一度押してください</div>
           </div>
         </details>
       )}
@@ -71,10 +71,13 @@ function SourceList({ sources = [] }) {
 
 function CountryKnowledgeCard({ notes = [] }) {
   if (!notes?.length) return null;
+  const sources = Array.from(
+    new Map(notes.flatMap(note => note.sourceRefs || []).map(source => [source.url, source])).values(),
+  );
   return (
     <details style={styles.countryCard}>
       <summary style={styles.countrySummary}>
-        <span style={styles.countrySummaryTitle}>この国の知識 / COUNTRY NOTE</span>
+        <span style={styles.countrySummaryTitle}>問題詳細</span>
         <span style={styles.countrySummaryHint}>タップして詳しく見る</span>
       </summary>
       <div style={styles.countryBody}>
@@ -93,14 +96,14 @@ function CountryKnowledgeCard({ notes = [] }) {
                 ))}
               </ul>
             )}
-            {note.sourceRefs?.length > 0 && (
-              <details style={styles.noteSources}>
-                <summary style={styles.summary}>出典を見る</summary>
-                <SourceList sources={note.sourceRefs} />
-              </details>
-            )}
           </article>
         ))}
+        {sources.length > 0 && (
+          <details style={styles.noteSources}>
+            <summary style={styles.summary}>出典を見る</summary>
+            <SourceList sources={sources} />
+          </details>
+        )}
       </div>
     </details>
   );
@@ -118,8 +121,7 @@ export default function ExplanationPanel({ data, title = '解説' }) {
     data.programmingExplanation ||
     data.countryNote ||
     data.countryKnowledge?.length ||
-    debug ||
-    data.sourceRefs?.length,
+    debug,
   );
   if (!hasAny) return null;
 
@@ -192,20 +194,13 @@ export default function ExplanationPanel({ data, title = '解説' }) {
         </Section>
       )}
 
-      {data.countryNote && (
-        <Section title="COUNTRY NOTE">
+      {data.countryNote && !data.countryKnowledge?.length && (
+        <Section title="問題詳細">
           <TextBlock>{data.countryNote}</TextBlock>
         </Section>
       )}
 
       <CountryKnowledgeCard notes={data.countryKnowledge} />
-
-      {data.sourceRefs?.length > 0 && (
-        <details style={styles.sources}>
-          <summary style={styles.summary}>出典を見る</summary>
-          <SourceList sources={data.sourceRefs} />
-        </details>
-      )}
     </div>
   );
 }

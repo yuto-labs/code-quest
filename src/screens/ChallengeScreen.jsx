@@ -65,6 +65,7 @@ export default function ChallengeScreen({
   const [debugStepIdx,      setDebugStepIdx]      = useState(0);
   const [debugStepAnswers,  setDebugStepAnswers]  = useState([]);
   const [orderingSelection, setOrderingSelection] = useState([]);
+  const resultBodyRef = useRef(null);
 
   // Track whether clear was earned this session (vs reload with initialIdx >= questions.length)
   const clearedJustNow = useRef(false);
@@ -87,6 +88,24 @@ export default function ChallengeScreen({
   };
 
   useEffect(() => () => clearTimers(), []);
+
+  useEffect(() => {
+    if (gameOver) {
+      requestAnimationFrame(() => {
+        if (resultBodyRef.current) resultBodyRef.current.scrollTop = 0;
+      });
+    }
+  }, [gameOver, failSummary?.questionId]);
+
+  const clearTemporaryAnswerState = () => {
+    setAnswer('');
+    setSelectedOption(null);
+    setBlankAnswers([]);
+    setOrderingSelection([]);
+    setDebugStepIdx(0);
+    setDebugStepAnswers([]);
+    if (typeof document !== 'undefined') document.activeElement?.blur?.();
+  };
 
   useEffect(() => {
     if (clearedJustNow.current) return;
@@ -176,15 +195,10 @@ export default function ChallengeScreen({
     setComboDisplay(0);
     setGameOver(false);
     setStatus('idle');
-    setAnswer('');
+    clearTemporaryAnswerState();
     setScreenEffect(null);
     setShowCorrectOverlay(false);
     setShakingHeartIdx(-1);
-    setSelectedOption(null);
-    setBlankAnswers([]);
-    setDebugStepIdx(0);
-    setDebugStepAnswers([]);
-    setOrderingSelection([]);
     onRestart?.();
     onSaveIdx?.(0, { questionId: questions[0]?.id, debugStepIndex: 0, debugAnswers: [] });
   };
@@ -217,24 +231,26 @@ export default function ChallengeScreen({
     );
   };
 
-  // 笏笏 繧ｲ繝ｼ繝繧ｪ繝ｼ繝舌・逕ｻ髱｢ 笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏
+  // Game over screen
   if (gameOver) {
     enterActionRef.current = resetGame;
     return (
       <div style={styles.wrap} className="fade-in">
         <WireframeBackground countryId={country.id} />
-        <div style={{ ...styles.complete, position: 'relative', zIndex: 1 }}>
-          <div style={{ fontSize: 'clamp(42px, 10vw, 64px)' }}>!</div>
-          <div style={{ ...styles.completeTitle, color: 'var(--danger)' }}>GAME OVER</div>
-          <div style={styles.completeSub}>STAGE FAILED</div>
-          <div style={styles.finalScore}>
-            <span style={{ fontSize: 7, color: 'var(--text-dim)' }}>SCORE</span>
-            <span style={{ fontSize: 'clamp(18px, 5vw, 28px)', color: 'var(--accent2)' }}>
-              {score.toLocaleString()}
-            </span>
+        <div style={styles.resultShell}>
+          <div ref={resultBodyRef} style={styles.resultBody}>
+            <div style={{ fontSize: 'clamp(42px, 10vw, 64px)' }}>!</div>
+            <div style={{ ...styles.completeTitle, color: 'var(--danger)' }}>GAME OVER</div>
+            <div style={styles.completeSub}>STAGE FAILED</div>
+            <div style={styles.finalScore}>
+              <span style={{ fontSize: 7, color: 'var(--text-dim)' }}>SCORE</span>
+              <span style={{ fontSize: 'clamp(18px, 5vw, 28px)', color: 'var(--accent2)' }}>
+                {score.toLocaleString()}
+              </span>
+            </div>
+            {renderFailureDetails()}
           </div>
-          {renderFailureDetails()}
-          <div style={{ display: 'flex', gap: 12, marginTop: 20, flexWrap: 'wrap', justifyContent: 'center' }}>
+          <div style={styles.resultFooter}>
             <button
               className="pixel-btn"
               style={{ borderColor: 'var(--danger)', color: 'var(--danger)', fontSize: 8 }}
@@ -254,39 +270,7 @@ export default function ChallengeScreen({
     );
   }
 
-  if (gameOver) {
-    enterActionRef.current = resetGame;
-    return (
-      <div style={styles.wrap} className="fade-in">
-        <WireframeBackground countryId={country.id} />
-        <div style={{ ...styles.complete, position: 'relative', zIndex: 1 }}>
-          <div style={{ fontSize: 'clamp(48px, 12vw, 72px)' }}>!</div>
-          <div style={{ ...styles.completeTitle, color: 'var(--danger)' }}>GAME OVER</div>
-          <div style={styles.completeSub}>繝ｩ繧､繝輔′縺ｪ縺上↑繧翫∪縺励◆</div>
-          <div style={styles.finalScore}>
-            <span style={{ fontSize: 7, color: 'var(--text-dim)' }}>SCORE</span>
-            <span style={{ fontSize: 'clamp(18px, 5vw, 28px)', color: 'var(--accent2)' }}>
-              {score.toLocaleString()}
-            </span>
-          </div>
-          <div style={{ display: 'flex', gap: 12, marginTop: 20 }}>
-            <button
-              className="pixel-btn"
-              style={{ borderColor: 'var(--danger)', color: 'var(--danger)', fontSize: 8 }}
-              onClick={resetGame}
-            >
-              RETRY
-            </button>
-            <button className="pixel-btn" style={{ fontSize: 8 }} onClick={handleBack}>
-              笳 BACK
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // 笏笏 繧ｯ繝ｪ繧｢逕ｻ髱｢ 笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏
+  // Cleared / replay screen
   if (entryMode === 'cleared') {
     enterActionRef.current = resetGame;
     return (
@@ -455,7 +439,7 @@ export default function ChallengeScreen({
             ))}
           </div>
 
-          {/* Button 窶・always visible and interactive immediately */}
+          {/* Button: always visible and interactive immediately */}
           <button
             className="pixel-btn"
             style={{
@@ -466,13 +450,14 @@ export default function ChallengeScreen({
             }}
             onClick={handleReturn}
           >
-            繝ｯ繝ｼ繝ｫ繝峨・繝・・縺ｸ謌ｻ繧・          </button>
+            ワールドマップへ戻る
+          </button>
         </div>
       </div>
     );
   }
 
-  // 笏笏 騾壼ｸｸ繧ｯ繧､繧ｺ 笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏
+  // Active challenge screen
   const q = questions[idx];
   const qType        = q.questionType || 'fill-blank';
   const isDebugStep  = qType === 'debug-step';
@@ -597,6 +582,8 @@ export default function ChallengeScreen({
     schedule(() => setShakingHeartIdx(-1), 500);
     if (newHearts <= 0) {
       setFailSummary(failureSummary);
+      setShowExplanation(false);
+      clearTemporaryAnswerState();
       schedule(() => setGameOver(true), 750);
     }
     if (q?.id) onMistake?.(q.id);
@@ -660,8 +647,7 @@ export default function ChallengeScreen({
 
   const handleRetry = () => {
     setStatus('idle');
-    setAnswer('');
-    if (qType === 'code-ordering') setOrderingSelection([]);
+    clearTemporaryAnswerState();
   };
 
   // Enter key bindings
@@ -714,7 +700,7 @@ export default function ChallengeScreen({
       className={screenEffect !== 'wrong' ? 'fade-in' : undefined}
     >
       <WireframeBackground countryId={country.id} />
-      {/* 繧ｹ繧ｯ繝ｪ繝ｼ繝ｳ繝輔Λ繝・す繝･繧ｪ繝ｼ繝舌・繝ｬ繧､ */}
+      {/* Screen flash overlay */}
       {screenEffect && (
         <div style={{
           position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 200,
@@ -778,7 +764,7 @@ export default function ChallengeScreen({
         </div>
       )}
 
-      {/* 繧ｳ繝ｳ繝懊・繝・・繧｢繝・・ */}
+      {/* Combo effect */}
       {showCombo && (
         <div style={{
           position: 'fixed', top: '28%', left: '50%',
@@ -798,7 +784,7 @@ export default function ChallengeScreen({
         </div>
       )}
 
-      {/* 繝輔Ο繝ｼ繝・ぅ繝ｳ繧ｰ繧ｹ繧ｳ繧｢繝・く繧ｹ繝・*/}
+      {/* Floating score text */}
       {floatKey > 0 && (
         <div
           key={floatKey}
@@ -816,16 +802,16 @@ export default function ChallengeScreen({
         </div>
       )}
 
-      {/* 騾比ｸｭ蜀埼幕繝舌リ繝ｼ */}
+      {/* Resume banner */}
       {initialIdx > 0 && idx === initialIdx && (
         <div style={styles.resumeBanner}>
-          笆ｶ Q{initialIdx + 1}縺九ｉ蜀埼幕縺励∪縺励◆
+          Q{initialIdx + 1} から再開しました
         </div>
       )}
 
-      {/* 繝倥ャ繝繝ｼ */}
+      {/* Header */}
       <div style={styles.header}>
-        <button style={styles.back} onClick={handleBack}>笳 BACK</button>
+        <button style={styles.back} onClick={handleBack}>BACK</button>
 
         <div style={{ display: 'flex', gap: 3, alignItems: 'center' }}>
           {Array.from({ length: MAX_HEARTS }).map((_, i) => (
@@ -872,13 +858,13 @@ export default function ChallengeScreen({
         </div>
       </div>
 
-      {/* 繝｡繧､繝ｳ繧ｳ繝ｳ繝・Φ繝・*/}
+      {/* Main content */}
       <div style={styles.content}>
         <div style={styles.questionNum}>{mission ? 'FINAL MISSION' : `QUESTION ${idx + 1}`}</div>
         <div style={styles.title}>{mission?.title || q.title}</div>
         {mission && <div style={styles.missionBadge}>{mission.type}</div>}
 
-        {/* debug-step 繧ｹ繝・ャ繝鈴ｲ謐励・繝・ム繝ｼ */}
+        {/* Debug step progress header */}
         {isDebugStep && (
           <div style={styles.debugStepHeader}>
             <span style={styles.debugStepNum}>STEP {debugStepIdx + 1} / {stepCount}</span>
@@ -893,7 +879,7 @@ export default function ChallengeScreen({
         )}
         <div style={styles.description}>{situationText}</div>
 
-        {/* 繧ｳ繝ｼ繝峨ヶ繝ｭ繝・け・医さ繝ｼ繝峨′縺ゅｋ蝣ｴ蜷医・縺ｿ・・*/}
+        {/* Code block */}
         {codeLines.length > 0 && (
           <>
             {isDebugStep && (
@@ -948,12 +934,12 @@ export default function ChallengeScreen({
           </div>
         )}
 
-        {/* debug-step: 螳滄圀縺ｮ雉ｪ蝠上Λ繝吶Ν・・rompt 縺ｮ蠕後・∈謚櫁い縺ｮ蜑搾ｼ・*/}
+        {/* Debug-step question */}
         {questionLabel && (
           <div style={styles.debugQuestion}>{questionLabel}</div>
         )}
 
-        {/* 繧ｳ繝ｼ繝峨ヶ繝ｭ繝・け荳ｦ縺ｳ譖ｿ縺・(code-ordering) */}
+        {/* Code ordering */}
         {qType === 'code-ordering' && (
           <div style={styles.orderingList}>
             <div style={styles.orderingInstr}>Click blocks in the correct order.</div>
@@ -1045,25 +1031,25 @@ export default function ChallengeScreen({
           </div>
         )}
 
-        {/* 繝偵Φ繝・*/}
+        {/* Hint */}
         {showHint && currentHint && (
           <div style={styles.hint}>HINT: {currentHint}</div>
         )}
 
-        {/* 繝輔ぅ繝ｼ繝峨ヰ繝・け */}
+        {/* Feedback */}
         {status === 'correct' && (
           <div style={styles.feedbackCorrect} className="fade-in">
             CORRECT!
             {qType === 'fill-blank' && (
-              <> &nbsp; 遲斐∴: <code style={styles.answerCode}>{q.blank ?? q.answer}</code></>
+              <> &nbsp; 答え: <code style={styles.answerCode}>{q.blank ?? q.answer}</code></>
             )}
             {qType === 'multiple-blanks' && (
-              <> &nbsp; 遲斐∴: {(q.blanks ?? []).map((b, i) => (
+              <> &nbsp; 答え: {(q.blanks ?? []).map((b, i) => (
                 <code key={i} style={{ ...styles.answerCode, marginRight: 4 }}>{b}</code>
               ))}</>
             )}
             {isDebugStep && debugStepIdx < stepCount - 1 && (
-              <span style={{ color: 'var(--text-dim)', fontSize: 9, marginLeft: 8 }}>竊・谺｡縺ｮ繧ｹ繝・ャ繝励∈</span>
+              <span style={{ color: 'var(--text-dim)', fontSize: 9, marginLeft: 8 }}>次のステップへ</span>
             )}
           </div>
         )}
@@ -1077,7 +1063,7 @@ export default function ChallengeScreen({
           <ExplanationPanel data={currentExplanationData} />
         )}
 
-        {/* 繝懊ち繝ｳ鄒､ */}
+        {/* Actions */}
         <div style={styles.btnRow}>
           {status === 'idle' && (
             <>
@@ -1094,7 +1080,7 @@ export default function ChallengeScreen({
                 disabled={!canSubmit}
                 style={!canSubmit ? { opacity: 0.4 } : undefined}
               >
-                笆ｶ ANSWER
+                ANSWER
               </button>
             </>
           )}
@@ -1109,7 +1095,7 @@ export default function ChallengeScreen({
           )}
           {status === 'correct' && (
             <button className="pixel-btn" onClick={handleNext}>
-              {isDebugStep && debugStepIdx < stepCount - 1 ? 'NEXT STEP 笆ｶ' : 'NEXT 笆ｶ'}
+              {isDebugStep && debugStepIdx < stepCount - 1 ? 'NEXT STEP' : 'NEXT'}
             </button>
           )}
         </div>
@@ -1477,6 +1463,40 @@ const styles = {
     position: 'relative',
     zIndex: 1,
   },
+  resultShell: {
+    position: 'relative',
+    zIndex: 1,
+    flex: 1,
+    minHeight: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+    maxWidth: 760,
+    margin: '0 auto',
+    padding: '16px 16px calc(12px + env(safe-area-inset-bottom, 0px))',
+  },
+  resultBody: {
+    flex: 1,
+    minHeight: 0,
+    overflowY: 'auto',
+    WebkitOverflowScrolling: 'touch',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: 14,
+    textAlign: 'center',
+    padding: '10px 4px 18px',
+  },
+  resultFooter: {
+    flexShrink: 0,
+    display: 'flex',
+    gap: 12,
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    paddingTop: 12,
+    borderTop: '1px solid rgba(0,255,136,0.18)',
+    background: 'rgba(0,0,16,0.92)',
+  },
   completeTitle: {
     fontSize: 'clamp(18px, 5vw, 32px)',
     color: 'var(--accent2)',
@@ -1495,5 +1515,30 @@ const styles = {
     border: '2px solid var(--accent2)',
     padding: '16px 32px',
     marginTop: 4,
+  },
+  failureDetails: {
+    width: '100%',
+    maxWidth: 680,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 10,
+    textAlign: 'left',
+  },
+  failureRow: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: 8,
+    alignItems: 'center',
+    background: 'rgba(255,68,68,0.07)',
+    border: '1px solid rgba(255,68,68,0.22)',
+    padding: '8px 10px',
+    fontSize: 10,
+    lineHeight: 1.8,
+  },
+  failureLabel: {
+    fontFamily: 'var(--pixel-font)',
+    fontSize: 8,
+    color: 'var(--danger)',
+    minWidth: 90,
   },
 };

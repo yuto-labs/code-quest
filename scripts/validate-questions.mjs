@@ -219,12 +219,12 @@ function validateCountryFactNotes(facts, assignments, errors, warnings) {
       const loc = `[country_facts.js] ${fact.factId}`;
       if (!fact.titleJa) warnings.push({ loc, rule: 'missingTitleJa', msg: 'Assigned JP/US fact should include titleJa' });
       if (!fact.summaryJa) warnings.push({ loc, rule: 'missingSummaryJa', msg: 'Assigned JP/US fact should include summaryJa' });
-      if (japaneseCharLength(fact.detailJa) < 120) warnings.push({ loc, rule: 'detailJaTooShort', msg: 'detailJa should be beginner-readable and roughly 150-300 Japanese characters' });
+      if (fact.detailJa && japaneseCharLength(fact.detailJa) < 120) warnings.push({ loc, rule: 'detailJaTooShort', msg: 'detailJa should be beginner-readable and roughly 150-300 Japanese characters' });
       if (!Array.isArray(fact.keyPointsJa) || fact.keyPointsJa.length < 2) warnings.push({ loc, rule: 'missingKeyPointsJa', msg: 'keyPointsJa should include 2-4 short facts' });
       if (fact.summaryJa && fact.detailJa && normalizeText(fact.summaryJa) === normalizeText(fact.detailJa)) {
         warnings.push({ loc, rule: 'detailRepeatsSummary', msg: 'detailJa should not merely repeat summaryJa' });
       }
-      if (fact.factStatus === 'traditional' && !/伝統|慣習|文化的|断定しすぎず/.test(String(fact.detailJa || ''))) {
+      if (fact.factStatus === 'traditional' && fact.detailJa && !/伝統|慣習|文化的|断定しすぎず/.test(String(fact.detailJa || ''))) {
         warnings.push({ loc, rule: 'traditionalWithoutLabel', msg: 'traditional facts should be labelled cautiously in detailJa' });
       }
     }

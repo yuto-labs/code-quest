@@ -1,3 +1,5 @@
+import { mergeSqlProgress } from './sqlProgress.js';
+
 export const META_KEY = '__cq_meta';
 
 export const MAX_LIVES = 3;
@@ -8,6 +10,7 @@ export const DEFAULT_META = Object.freeze({
   review: {},
   finalMissions: {},
   attempts: {},
+  codePaths: {},
 });
 
 function isObj(value) {
@@ -21,6 +24,7 @@ export function emptyMeta() {
     review: {},
     finalMissions: {},
     attempts: {},
+    codePaths: {},
   };
 }
 
@@ -102,6 +106,7 @@ export function sanitizeMeta(meta) {
     review:        isObj(input.review)        ? input.review        : {},
     finalMissions: sanitizeFinalMissions(input.finalMissions),
     attempts,
+    codePaths:     isObj(input.codePaths)     ? input.codePaths     : {},
   };
 }
 
@@ -183,6 +188,14 @@ function mergeAttempts(local = {}, cloud = {}) {
   return merged;
 }
 
+function mergeCodePaths(local = {}, cloud = {}) {
+  return {
+    ...cloud,
+    ...local,
+    sql: mergeSqlProgress(local.sql, cloud.sql),
+  };
+}
+
 export function mergeMeta(localMeta, cloudMeta) {
   const local = sanitizeMeta(localMeta);
   const cloud = sanitizeMeta(cloudMeta);
@@ -195,6 +208,7 @@ export function mergeMeta(localMeta, cloudMeta) {
       ...local.finalMissions,
     },
     attempts: mergeAttempts(local.attempts, cloud.attempts),
+    codePaths: mergeCodePaths(local.codePaths, cloud.codePaths),
   };
 }
 

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { REFERENCE_TOPICS, resolveReferenceTopicId } from '../data/reference';
+import { SQL_REFERENCE_TOPICS } from '../data/sql/reference';
 import { CHALLENGES } from '../data/challenges';
 import { EXECUTE_CHALLENGES } from '../data/execute_challenges';
 import { DEBUG_CHALLENGES } from '../data/debug_challenges';
@@ -124,6 +125,7 @@ function buildPracticeIndex() {
 }
 
 const PRACTICE_INDEX = buildPracticeIndex();
+const ALL_REFERENCE_TOPICS = [...REFERENCE_TOPICS, ...SQL_REFERENCE_TOPICS];
 
 function practiceRecommendations(topic, progress, review) {
   const primaryConceptId = topicConcept(topic);
@@ -169,14 +171,14 @@ export default function ReferenceScreen({
   const [layerFilter, setLayerFilter] = useState('all');
 
   const selected = selectedId
-    ? REFERENCE_TOPICS.find(topic => topic.id === resolveReferenceTopicId(selectedId))
+    ? ALL_REFERENCE_TOPICS.find(topic => topic.id === resolveReferenceTopicId(selectedId) || topic.id === selectedId)
     : null;
 
-  const languages = useMemo(() => ['all', ...new Set(REFERENCE_TOPICS.map(topic => topic.language))], []);
+  const languages = useMemo(() => ['all', ...new Set(ALL_REFERENCE_TOPICS.map(topic => topic.language))], []);
 
   const filteredTopics = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return REFERENCE_TOPICS.filter(topic => {
+    return ALL_REFERENCE_TOPICS.filter(topic => {
       const conceptId = topicConcept(topic);
       if (languageFilter !== 'all' && topic.language !== languageFilter) return false;
       if (q && !normalizeText(searchableTopic(topic)).includes(q)) return false;

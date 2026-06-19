@@ -14,11 +14,14 @@ import {
   validateProgressPayload,
   validateQuestion,
   validateReferenceTopics,
+  validateSqlPath,
 } from './validate-questions.mjs';
 import { validateCountryFacts } from '../src/data/country_facts.js';
 import { buildFinalMissionId, getFinalMission } from '../src/data/final_missions.js';
 import { getLanguageEmblemTier } from '../src/utils/progress.js';
 import { emptyMeta, MAX_LIVES, mergeMeta, mergeReview, packProgress, resolveStageEntry, unpackProgress } from '../src/utils/metadata.js';
+import { completeSqlQuestion, emptySqlProgress, mergeSqlProgress } from '../src/utils/sqlProgress.js';
+import { SQL_QUESTIONS } from '../src/data/sql/questions.js';
 
 const RED   = '\x1b[31m';
 const GREEN = '\x1b[32m';
@@ -733,6 +736,41 @@ tests.push(expectNoError(
     'reference: broken prerequisite is an error',
     errors.some(e => e.rule === 'brokenPrerequisite'),
     'brokenPrerequisite'
+  ));
+}
+
+// 39. SQL PATH count and structure
+{
+  const { errors, warnings } = validateSqlPath();
+  tests.push(expectGeneric(
+    'sql path: shipped SQL content has valid structure and exact 80 questions',
+    errors.length === 0 && SQL_QUESTIONS.length === 80 && !warnings.some(w => w.rule === 'chapterCountShortage'),
+    'sql-path-structure',
+  ));
+}
+
+// 40. SQL DEBUG requires three ordered steps
+{
+  const bad = SQL_QUESTIONS.map(q => q.id === 'sql01_b01' ? { ...q, debugSteps: q.debugSteps.slice(0, 2) } : q);
+  const { errors } = validateSqlPath({ questions: bad });
+  tests.push(expectGeneric(
+    'sql path: DEBUG missing step is structural',
+    errors.some(e => e.rule === 'missingDebugSteps'),
+    'missingDebugSteps',
+  ));
+}
+
+// 41. SQL resume merge is commutative/idempotent
+{
+  const a = { ...emptySqlProgress(), resume: { chapterId: '01_select', questionId: 'sql01_d01', hearts: 2, updatedAt: '2026-01-01T00:00:00.000Z' } };
+  const b = { ...completeSqlQuestion(emptySqlProgress(), 'sql01_d01'), resume: { chapterId: '01_select', questionId: 'sql01_d02', hearts: 3, updatedAt: '2026-01-02T00:00:00.000Z' } };
+  const ab = mergeSqlProgress(a, b);
+  const ba = mergeSqlProgress(b, a);
+  const aa = mergeSqlProgress(a, a);
+  tests.push(expectGeneric(
+    'sql path: progress merge is commutative and idempotent',
+    JSON.stringify(ab.chapters) === JSON.stringify(ba.chapters) && aa.resume.questionId === 'sql01_d01',
+    'sql-progress-merge',
   ));
 }
 

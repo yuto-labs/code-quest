@@ -1,0 +1,65 @@
+import { SQL_COURSE } from '../data/sql/course';
+import { getSqlChapterStatus, getSqlCourseCounts, getSqlQuestionState } from '../utils/sqlProgress';
+import { SqlChapterProgress } from '../components/SqlComponents';
+
+export default function SqlPathScreen({ meta, onBack, onOpenChapter, onContinue }) {
+  const sql = meta?.codePaths?.sql;
+  const counts = getSqlCourseCounts(sql);
+  const hasResume = Boolean(sql?.resume?.questionId);
+  return (
+    <div style={styles.wrap} className="fade-in">
+      <div style={styles.header}>
+        <button className="pixel-btn" style={styles.back} onClick={onBack}>[ &lt; BACK ]</button>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={styles.title}>SQL PATH</div>
+          <div style={styles.sub}>世界のデータからSQLを学ぶ</div>
+          <SqlChapterProgress completed={counts.completed} total={counts.total} />
+        </div>
+      </div>
+      {hasResume && (
+        <button style={styles.continueBtn} onClick={onContinue}>
+          <span style={styles.continueTitle}>CONTINUE</span>
+          <span style={styles.continueSub}>{sql.resume.chapterId} / {sql.resume.questionId} / HEARTS {sql.resume.hearts ?? 3}</span>
+        </button>
+      )}
+      <div style={styles.chapterGrid}>
+        {SQL_COURSE.chapters.map(chapter => {
+          const status = getSqlChapterStatus(sql, chapter.id);
+          const state = getSqlQuestionState(sql, chapter.id);
+          const completed = state.chapter.completedQuestionIds.length + (state.chapter.missionCompleted ? 1 : 0);
+          return (
+            <button
+              key={chapter.id}
+              style={{ ...styles.chapter, opacity: status === 'LOCKED' ? 0.45 : 1, borderColor: status === 'CLEARED' ? 'var(--accent2)' : 'var(--accent)' }}
+              disabled={status === 'LOCKED'}
+              onClick={() => onOpenChapter(chapter.id)}
+            >
+              <div style={styles.chapterNo}>{String(chapter.order).padStart(2, '0')}</div>
+              <div style={styles.chapterTitle}>{chapter.title}</div>
+              <div style={styles.chapterSub}>{chapter.subtitle}</div>
+              <SqlChapterProgress completed={completed} total={10} />
+              <div style={styles.status}>{status}</div>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+const styles = {
+  wrap: { height: '100dvh', overflowY: 'auto', background: 'var(--bg)', padding: '24px 20px', display: 'flex', flexDirection: 'column', gap: 18 },
+  header: { width: '100%', maxWidth: 1040, margin: '0 auto', display: 'flex', gap: 16, alignItems: 'flex-start' },
+  back: { fontSize: 8, padding: '10px 12px' },
+  title: { color: 'var(--accent)', fontSize: 'clamp(24px, 7vw, 44px)' },
+  sub: { color: 'var(--text-dim)', fontSize: 12, lineHeight: 1.8, marginBottom: 12 },
+  continueBtn: { width: '100%', maxWidth: 1040, margin: '0 auto', fontFamily: 'var(--pixel-font)', background: 'rgba(255,221,0,0.08)', border: '2px solid var(--accent2)', color: 'var(--accent2)', padding: 14, textAlign: 'left', cursor: 'pointer', display: 'flex', flexDirection: 'column', gap: 6 },
+  continueTitle: { fontSize: 11 },
+  continueSub: { fontSize: 9, color: 'var(--text)' },
+  chapterGrid: { width: '100%', maxWidth: 1040, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 14 },
+  chapter: { fontFamily: 'var(--pixel-font)', background: 'var(--panel)', border: '2px solid var(--accent)', color: 'var(--text)', padding: 16, minHeight: 190, textAlign: 'left', display: 'flex', flexDirection: 'column', gap: 10, cursor: 'pointer' },
+  chapterNo: { color: 'var(--accent2)', fontSize: 10 },
+  chapterTitle: { color: 'var(--accent)', fontSize: 12, lineHeight: 1.6 },
+  chapterSub: { color: 'var(--text-dim)', fontSize: 10, lineHeight: 1.8 },
+  status: { marginTop: 'auto', color: 'var(--accent2)', fontSize: 8 },
+};

@@ -8,6 +8,10 @@ import LanguageScreen from './screens/LanguageScreen';
 import ChallengeScreen from './screens/ChallengeScreen';
 import ReferenceScreen from './screens/ReferenceScreen';
 import ProgressScreen from './screens/ProgressScreen';
+import CodePathsScreen from './screens/CodePathsScreen';
+import SqlPathScreen from './screens/SqlPathScreen';
+import SqlChapterScreen from './screens/SqlChapterScreen';
+import SqlChallengeScreen from './screens/SqlChallengeScreen';
 import RewardToast from './components/RewardToast';
 import { COUNTRIES } from './data/countries';
 import { CHALLENGES } from './data/challenges';
@@ -17,7 +21,9 @@ import { useAuth } from './hooks/useAuth';
 import { loadCloudProgress, saveCloudProgress, mergeProgressData } from './lib/sync';
 import { buildProgressKey, migrateProgressKeys } from './utils/progress';
 import { emptyMeta, sanitizeMeta, MAX_LIVES, resolveStageEntry, isFinalMissionCleared } from './utils/metadata';
+import { completeSqlQuestion, emptySqlProgress, saveSqlResume, sanitizeSqlProgress, SQL_MAX_HEARTS } from './utils/sqlProgress';
 import { getFinalMission } from './data/final_missions';
+import { SQL_QUESTIONS_BY_ID, getSqlQuestionsForChapter } from './data/sql/questions';
 
 const WORLD_CHALLENGES = { decode: CHALLENGES, execute: EXECUTE_CHALLENGES, debug: DEBUG_CHALLENGES };
 
@@ -143,6 +149,9 @@ export default function App() {
   const [reward, setReward] = useState(null);
   const [isUserDataLoading, setIsUserDataLoading] = useState(true);
   const [migrationDone, setMigrationDone] = useState(() => localStorage.getItem('cq_migrated') === 'true');
+  const [sqlChapterId, setSqlChapterId] = useState('01_select');
+  const [sqlQuestionId, setSqlQuestionId] = useState('');
+  const [referenceOrigin, setReferenceOrigin] = useState(null);
 
   const saveDebounceTimerRef = useRef(null);
   const saveRevisionRef      = useRef(0);   // monotonic revision for BUG_C
@@ -426,6 +435,54 @@ export default function App() {
     setScreen(target.screen === 'finalMission' ? 'finalMission' : 'challenge');
   };
 
+  const getSqlMeta = (mt = latestRef.current.meta) => sanitizeSqlProgress(mt?.codePaths?.sql || emptySqlProgress());
+
+  const saveSqlMeta = (nextSql) => {
+    const uid = latestRef.current.user?.id;
+    const nextMeta = {
+      ...latestRef.current.meta,
+      codePaths: {
+        ...(latestRef.current.meta.codePaths || {}),
+        sql: sanitizeSqlProgress(nextSql),
+      },
+    };
+    setMeta(nextMeta);
+    saveToLocal(getStorageKey(uid, 'meta'), nextMeta);
+    syncToCloud();
+  };
+
+  const openSqlResume = () => {
+    const sql = getSqlMeta();
+    const resume = sql.resume || {};
+    if (resume.questionId && SQL_QUESTIONS_BY_ID[resume.questionId]) {
+      setSqlChapterId(resume.chapterId || SQL_QUESTIONS_BY_ID[resume.questionId].chapterId);
+      setSqlQuestionId(resume.questionId);
+      setScreen('sqlChallenge');
+      return;
+    }
+    setSqlChapterId(sql.activeChapterId || '01_select');
+    setScreen('sqlChapter');
+  };
+
+  const completeSql = (question) => {
+    const current = getSqlMeta();
+    const next = completeSqlQuestion(current, question.id);
+    saveSqlMeta(next);
+    const chapterQuestions = getSqlQuestionsForChapter(question.chapterId);
+    const nextQuestion = chapterQuestions.find(q => q.order > question.order);
+    if (nextQuestion) {
+      setSqlQuestionId(nextQuestion.id);
+      setScreen('sqlChallenge');
+    } else {
+      setSqlChapterId(question.chapterId);
+      setScreen('sqlChapter');
+    }
+  };
+
+  const saveSqlChallengeResume = (patch) => {
+    saveSqlMeta(saveSqlResume(getSqlMeta(), patch));
+  };
+
   const saveQuizIdx = (worldId, countryId, langId, idx, resumePatch = {}) => {
     const key = `${worldId}_${countryId}_${langId}`;
     const uid = latestRef.current.user?.id;
@@ -697,7 +754,10 @@ export default function App() {
           progress={progress}
           resume={resolveResume()}
           onContinue={handleContinue}
-          onNavigate={(s) => setScreen(s === 'map' ? 'world' : s)}
+          onNavigate={(s) => {
+            setReferenceOrigin(null);
+            setScreen(s === 'map' ? 'world' : s);
+          }}
           user={user}
           syncing={syncing}
           onSendOtp={sendOtp}
@@ -707,6 +767,48 @@ export default function App() {
           onResetData={handleResetData}
           syncError={syncError}
           cloudStats={cloudStats}
+        />
+      )}
+
+      {screen === 'codePaths' && (
+        <CodePathsScreen
+          onBack={() => setScreen('home')}
+          onOpenSql={() => setScreen('sqlPath')}
+        />
+      )}
+
+      {screen === 'sqlPath' && (
+        <SqlPathScreen
+          meta={meta}
+          onBack={() => setScreen('home')}
+          onContinue={openSqlResume}
+          onOpenChapter={(chapterId) => { setSqlChapterId(chapterId); setScreen('sqlChapter'); }}
+        />
+      )}
+
+      {screen === 'sqlChapter' && (
+        <SqlChapterScreen
+          chapterId={sqlChapterId}
+          meta={meta}
+          onBack={() => setScreen('sqlPath')}
+          onOpenQuestion={(questionId) => { setSqlQuestionId(questionId); setScreen('sqlChallenge'); }}
+        />
+      )}
+
+      {screen === 'sqlChallenge' && (
+        <SqlChallengeScreen
+          key={sqlQuestionId}
+          questionId={sqlQuestionId}
+          meta={meta}
+          onBack={() => setScreen('sqlChapter')}
+          onOpenReference={() => {
+            setReferenceOrigin({ type: 'sql', chapterId: sqlChapterId, questionId: sqlQuestionId });
+            setScreen('reference');
+          }}
+          onSaveResume={saveSqlChallengeResume}
+          onRetry={(question) => saveSqlChallengeResume({ screen: 'sqlChallenge', chapterId: question.chapterId, questionId: question.id, hearts: SQL_MAX_HEARTS, debugStepIndex: 0, debugAnswers: [] })}
+          onFail={(question) => saveSqlChallengeResume({ screen: 'sqlChallenge', chapterId: question.chapterId, questionId: question.id, hearts: 0 })}
+          onComplete={completeSql}
         />
       )}
 
@@ -729,12 +831,26 @@ export default function App() {
 
       {screen === 'reference' && (
         <ReferenceScreen
-          onBack={() => setScreen('home')}
+          onBack={() => {
+            setReferenceOrigin(null);
+            setScreen('home');
+          }}
           progress={progress}
           scores={scores}
           meta={meta}
           review={meta.review}
           onNavigate={(worldId) => { setWorld(worldId); setScreen('map'); }}
+          originContext={referenceOrigin}
+          onReturnToOrigin={() => {
+            if (referenceOrigin?.type === 'sql') {
+              setSqlChapterId(referenceOrigin.chapterId || '01_select');
+              setSqlQuestionId(referenceOrigin.questionId || '');
+              setScreen('sqlChallenge');
+              return;
+            }
+            setReferenceOrigin(null);
+            setScreen('home');
+          }}
         />
       )}
 

@@ -272,12 +272,12 @@ const styles = {
   },
   code: {
     margin: 0,
-    padding: '10px 12px',
+    padding: '14px 16px',
     background: 'rgba(0,5,25,0.92)',
     border: '1px solid rgba(0,102,255,0.35)',
     color: '#a8d8a8',
-    fontSize: 11,
-    lineHeight: 1.8,
+    fontSize: 13,
+    lineHeight: 1.9,
     overflowX: 'auto',
     overflowY: 'visible',
     whiteSpace: 'pre',
@@ -290,7 +290,7 @@ const styles = {
   },
   codeLine: {
     display: 'grid',
-    gridTemplateColumns: '3.2em max-content',
+    gridTemplateColumns: '4em max-content',
     minWidth: 'max-content',
   },
   lineNo: {
@@ -326,15 +326,15 @@ const styles = {
   },
   expandedCode: {
     margin: 0,
-    padding: '12px 14px',
+    padding: '16px 18px',
     flex: 1,
     minHeight: 0,
     overflow: 'auto',
     background: 'rgba(0,0,0,0.55)',
     border: '1px solid rgba(0,255,136,0.28)',
     color: '#a8d8a8',
-    fontSize: 12,
-    lineHeight: 1.8,
+    fontSize: 14,
+    lineHeight: 1.9,
     whiteSpace: 'pre',
   },
   closeHint: {

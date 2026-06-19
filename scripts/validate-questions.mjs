@@ -20,7 +20,8 @@ let CHALLENGES, LANGUAGES, EXECUTE_CHALLENGES, EXECUTE_LANGUAGES,
     COUNTRY_FACTS, COUNTRY_FACTS_BY_ID, validateCountryFacts,
     QUESTION_ASSIGNMENTS, COGNITIVE_TASKS, listFinalMissions,
     QUESTION_COUNT_TARGETS, META_KEY, packProgress, unpackProgress,
-    REFERENCE_TOPICS, REFERENCE_TOPIC_ALIASES, REFERENCE_RESTORE_AUDIT;
+    REFERENCE_TOPICS, REFERENCE_TOPIC_ALIASES, REFERENCE_RESTORE_AUDIT,
+    SQL_COURSE, SQL_QUESTIONS, SQL_GLOBAL_FACTS, SQL_REFERENCE_TOPICS;
 
 function dataUrl(rel) {
   return pathToFileURL(path.join(ROOT, rel)).href;
@@ -38,6 +39,10 @@ try {
   ({ QUESTION_COUNT_TARGETS } = await import(dataUrl('src/data/question_targets.js')));
   ({ META_KEY, packProgress, unpackProgress } = await import(dataUrl('src/utils/metadata.js')));
   ({ REFERENCE_TOPICS, REFERENCE_TOPIC_ALIASES, REFERENCE_RESTORE_AUDIT } = await import(dataUrl('src/data/reference.js')));
+  ({ SQL_COURSE } = await import(dataUrl('src/data/sql/course.js')));
+  ({ SQL_QUESTIONS } = await import(dataUrl('src/data/sql/questions.js')));
+  ({ SQL_GLOBAL_FACTS } = await import(dataUrl('src/data/sql/global_facts.js')));
+  ({ SQL_REFERENCE_TOPICS } = await import(dataUrl('src/data/sql/reference.js')));
 } catch (err) {
   console.error('Failed to import data files:', err.message);
   process.exit(1);
@@ -787,6 +792,7 @@ export function validateReferenceTopics(
   for (const topic of topics) {
     if (!topic?.id) continue;
     const loc = `[reference.js] ${topic.id}`;
+    const isSqlTopic = topic.language === 'sql';
     const languageConcepts = VALID_CONCEPTS[topic.language] || new Set();
     if (!topic.summary) warnings.push({ loc, rule: 'missingSummary', msg: 'Reference topic has no summary' });
     if (topic.parentId && !topicIds.has(topic.parentId)) {
@@ -798,7 +804,7 @@ export function validateReferenceTopics(
       }
     }
     for (const conceptId of topic.relatedConceptIds || []) {
-      if (!languageConcepts.has(conceptId)) {
+      if (!isSqlTopic && !languageConcepts.has(conceptId)) {
         errors.push({ loc, rule: 'missingCanonicalConcept', msg: `Unknown concept "${conceptId}" for ${topic.language}` });
       }
     }
@@ -904,6 +910,154 @@ function referenceTextForValidation(topic) {
       ...(page.miniChecks || []).flatMap(check => [check.prompt, check.answer]),
     ]),
   ].filter(Boolean).join(' ');
+}
+
+function normalizeSqlTemplate(value) {
+  return normalizeText(value)
+    .replace(/'[^']*'/g, '{string}')
+    .replace(/\b\d+\b/g, '{number}')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+export function validateSqlPath({
+  course = SQL_COURSE,
+  questions = SQL_QUESTIONS,
+  globalFacts = SQL_GLOBAL_FACTS,
+  referenceTopics = SQL_REFERENCE_TOPICS,
+} = {}) {
+  const errors = [];
+  const warnings = [];
+  const questionIds = new Set();
+  const childOrderByChapter = new Map();
+  const factsById = new Map((globalFacts || []).map(fact => [fact.globalFactId, fact]));
+  const sqlConceptIds = new Set((referenceTopics || []).flatMap(topic => topic.relatedConceptIds || []));
+  const entityByKey = new Map();
+
+  if (!course?.chapters?.length) {
+    errors.push({ loc: '[sql/course.js]', rule: 'invalidChapter', msg: 'SQL course needs chapters' });
+  }
+
+  for (const fact of globalFacts || []) {
+    const loc = `[sql/global_facts.js] ${fact?.globalFactId || '(missing)'}`;
+    if (!fact?.globalFactId) {
+      errors.push({ loc, rule: 'duplicateGlobalFactId', msg: 'globalFactId is required' });
+      continue;
+    }
+    validateSourceRefs(fact.sourceRefs, loc, errors);
+    for (const key of fact.entityKeys || []) {
+      if (entityByKey.has(key) && fact.progressionGroupId !== entityByKey.get(key).progressionGroupId) {
+        warnings.push({ loc, rule: 'duplicateGlobalEntity', msg: `entityKey "${key}" is reused in SQL PATH` });
+      }
+      entityByKey.set(key, fact);
+    }
+    for (const field of ['titleJa', 'summaryJa', 'backgroundJa']) {
+      if (!fact[field]) warnings.push({ loc, rule: 'missingThemeExplanation', msg: `Missing ${field}` });
+    }
+  }
+
+  for (const question of questions || []) {
+    const loc = `[sql/questions.js] ${question?.id || '(missing)'}`;
+    if (!question?.id || questionIds.has(question.id)) {
+      errors.push({ loc, rule: 'duplicateQuestionId', msg: `Duplicate or missing SQL question id "${question?.id}"` });
+      continue;
+    }
+    questionIds.add(question.id);
+    const chapter = course.chapters?.find(item => item.id === question.chapterId);
+    if (!chapter) errors.push({ loc, rule: 'invalidChapter', msg: `Unknown chapter "${question.chapterId}"` });
+    if (!['decode', 'execute', 'debug', 'mission'].includes(question.mode)) {
+      errors.push({ loc, rule: 'invalidMode', msg: `Unknown mode "${question.mode}"` });
+    }
+    if (!Number.isInteger(question.order) || question.order < 1 || question.order > 10) {
+      errors.push({ loc, rule: 'invalidOrder', msg: 'SQL question order must be 1..10' });
+    }
+    const orderKey = `${question.chapterId}:${question.order}`;
+    if (childOrderByChapter.has(orderKey)) {
+      errors.push({ loc, rule: 'invalidOrder', msg: `Duplicate order ${question.order} in ${question.chapterId}` });
+    }
+    childOrderByChapter.set(orderKey, question.id);
+
+    if (!Array.isArray(question.tables) || question.tables.length === 0) {
+      errors.push({ loc, rule: 'invalidTableShape', msg: 'SQL question needs at least one table' });
+    }
+    for (const table of question.tables || []) {
+      if (!table?.id || !Array.isArray(table.columns) || !Array.isArray(table.rows)) {
+        errors.push({ loc, rule: 'invalidTableShape', msg: 'Table needs id, columns[], rows[]' });
+        continue;
+      }
+      for (const row of table.rows) {
+        if (!Array.isArray(row) || row.length !== table.columns.length) {
+          errors.push({ loc, rule: 'invalidTableShape', msg: `Table "${table.id}" row length does not match columns` });
+        }
+      }
+    }
+    if (!question.query || !String(question.query).includes('__')) {
+      if (question.mode === 'decode') {
+        errors.push({ loc, rule: 'invalidExpectedResult', msg: 'DECODE question needs a query blank' });
+      }
+    }
+    if (!question.expectedResult?.columns?.length || !Array.isArray(question.expectedResult.rows)) {
+      errors.push({ loc, rule: 'invalidExpectedResult', msg: 'SQL question needs expectedResult table' });
+    }
+    if ((question.mode === 'execute' || question.mode === 'mission') && !question.options?.some(option => option.id === question.answer)) {
+      errors.push({ loc, rule: 'answerNotInOptions', msg: 'SQL answer must match an option id' });
+    }
+    if (question.mode === 'debug') {
+      if (!Array.isArray(question.debugSteps) || question.debugSteps.length !== 3) {
+        errors.push({ loc, rule: 'missingDebugSteps', msg: 'DEBUG SQL question needs exactly 3 steps' });
+      }
+      const stepTypes = (question.debugSteps || []).map(step => step.type).join(',');
+      if (stepTypes !== 'cause,fix,reason-impact') {
+        errors.push({ loc, rule: 'missingDebugSteps', msg: `DEBUG step order must be cause,fix,reason-impact; got ${stepTypes}` });
+      }
+    }
+    for (const conceptId of question.sqlConceptIds || []) {
+      if (!sqlConceptIds.has(conceptId)) warnings.push({ loc, rule: 'brokenConceptId', msg: `Unknown SQL concept "${conceptId}"` });
+    }
+    for (const factId of question.globalFactIds || []) {
+      if (!factsById.has(factId)) errors.push({ loc, rule: 'brokenGlobalFactId', msg: `Unknown globalFactId "${factId}"` });
+    }
+    validateSourceRefs(question.explanation?.sourceRefs, loc, errors);
+    if (question.mode === 'decode' && !question.expectedResult) {
+      warnings.push({ loc, rule: 'missingExpectedOutput', msg: 'DECODE prompt should show expected result' });
+    }
+    if (/テーマと一致|note/.test(`${question.prompt} ${question.hint} ${question.explanation?.sqlExplanation}`)) {
+      warnings.push({ loc, rule: 'vaguePrompt', msg: 'Question may contain vague theme wording or stray note explanation' });
+    }
+    if (/SQL PATH|プログラム|コード課題|コードとして|ソースコード/.test(`${question.explanation?.themeExplanation || ''}`)) {
+      warnings.push({ loc, rule: 'themeContainsProgrammingText', msg: 'Theme explanation should be world knowledge only' });
+    }
+  }
+
+  for (const chapter of course.chapters || []) {
+    const items = (questions || []).filter(question => question.chapterId === chapter.id);
+    const counts = {
+      decode: items.filter(q => q.mode === 'decode').length,
+      execute: items.filter(q => q.mode === 'execute').length,
+      debug: items.filter(q => q.mode === 'debug').length,
+      mission: items.filter(q => q.mode === 'mission').length,
+    };
+    for (const [mode, target] of Object.entries(chapter.targets || {})) {
+      if (mode === 'total') continue;
+      if (counts[mode] !== target) {
+        const issue = { loc: `[sql/course.js] ${chapter.id}`, rule: mode === 'mission' ? 'missingMission' : 'chapterCountShortage',
+          msg: `${mode} count is ${counts[mode]}/${target}` };
+        if (mode === 'mission' && counts[mode] === 0) errors.push(issue);
+        else warnings.push(issue);
+      }
+    }
+    const sorted = [...items].sort((a, b) => a.order - b.order);
+    for (let i = 1; i < sorted.length; i += 1) {
+      if (sorted[i - 1].answer === sorted[i].answer) {
+        warnings.push({ loc: `[sql/questions.js] ${sorted[i - 1].id} -> ${sorted[i].id}`, rule: 'adjacentSameAnswer', msg: 'Adjacent SQL questions have the same answer' });
+      }
+      if (normalizeSqlTemplate(sorted[i - 1].query) === normalizeSqlTemplate(sorted[i].query)) {
+        warnings.push({ loc: `[sql/questions.js] ${sorted[i - 1].id} -> ${sorted[i].id}`, rule: 'duplicateNormalizedSql', msg: 'Adjacent SQL questions share the same normalized SQL template' });
+      }
+    }
+  }
+
+  return { errors, warnings };
 }
 
 export function validateAssignmentRecord(record, ctx = {}) {
@@ -1358,6 +1512,12 @@ export function runValidation() {
   const referenceIssues = validateReferenceTopics(REFERENCE_TOPICS);
   allErrors.push(...referenceIssues.errors);
   allWarnings.push(...referenceIssues.warnings);
+  const sqlReferenceIssues = validateReferenceTopics(SQL_REFERENCE_TOPICS, {}, []);
+  allErrors.push(...sqlReferenceIssues.errors);
+  allWarnings.push(...sqlReferenceIssues.warnings);
+  const sqlIssues = validateSqlPath();
+  allErrors.push(...sqlIssues.errors);
+  allWarnings.push(...sqlIssues.warnings);
 
   const finalCounts = {};
   for (const mission of finalMissions) {
@@ -1369,7 +1529,19 @@ export function runValidation() {
     };
   }
 
-  return { errors: allErrors, warnings: allWarnings, counts, finalCounts, factUsage: buildFactUsageReport(COUNTRY_FACTS, QUESTION_ASSIGNMENTS) };
+  const sqlCounts = Object.fromEntries(SQL_COURSE.chapters.map(chapter => {
+    const items = SQL_QUESTIONS.filter(question => question.chapterId === chapter.id);
+    return [chapter.id, {
+      decode: items.filter(q => q.mode === 'decode').length,
+      execute: items.filter(q => q.mode === 'execute').length,
+      debug: items.filter(q => q.mode === 'debug').length,
+      mission: items.filter(q => q.mode === 'mission').length,
+      total: items.length,
+      target: chapter.targets.total,
+    }];
+  }));
+
+  return { errors: allErrors, warnings: allWarnings, counts, finalCounts, factUsage: buildFactUsageReport(COUNTRY_FACTS, QUESTION_ASSIGNMENTS), sqlCounts };
 }
 
 // ---------------------------------------------------------------------------
@@ -1419,6 +1591,13 @@ function printFinalCounts(finalCounts) {
   }
 }
 
+function printSqlCounts(sqlCounts) {
+  console.log('\nSQL PATH COUNTS BY CHAPTER\n');
+  for (const [chapterId, count] of Object.entries(sqlCounts || {})) {
+    console.log(`    ${chapterId}  ${count.total}/${count.target}q  [decode:${count.decode} execute:${count.execute} debug:${count.debug} mission:${count.mission}]`);
+  }
+}
+
 function printFactUsage(factUsage) {
   console.log('\nCOUNTRY FACT USAGE\n');
   for (const [countryId, counts] of Object.entries(factUsage)) {
@@ -1439,9 +1618,10 @@ const isMain = process.argv[1] === fileURLToPath(import.meta.url);
 
 if (isMain) {
   console.log(`${BOLD}🔍 Code Quest — Question Validator${RESET}`);
-  const { errors, warnings, counts, finalCounts, factUsage } = runValidation();
+  const { errors, warnings, counts, finalCounts, factUsage, sqlCounts } = runValidation();
   printCounts(counts);
   printFinalCounts(finalCounts);
+  printSqlCounts(sqlCounts);
   printFactUsage(factUsage);
   printIssues('⚠️  WARNINGS', warnings, YELLOW);
   printIssues('❌ ERRORS',   errors,   RED);

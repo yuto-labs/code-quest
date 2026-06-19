@@ -10,6 +10,7 @@ export default function HomeScreen({ onNavigate, progress, resume, onContinue, u
 
   const menuItems = [
     { id: 'map',       emoji: '🌍', label: 'WORLD MAP',  sub: '国を選んでクエストへ',   color: 'var(--accent)'  },
+    { id: 'codePaths', emoji: 'SQL', label: 'CODE PATHS', sub: '???????????', color: 'var(--accent)' },
     { id: 'reference', emoji: '📚', label: 'REFERENCE',  sub: 'Python基礎を学ぶ',       color: 'var(--accent2)' },
     { id: 'progress',  emoji: '📊', label: 'PROGRESS',   sub: '達成状況を確認する',     color: 'var(--border2)' },
   ];

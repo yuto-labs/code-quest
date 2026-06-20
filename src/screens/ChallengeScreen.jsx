@@ -71,7 +71,7 @@ export default function ChallengeScreen({
   const clearedJustNow = useRef(false);
   // Track which question indices have already shown the CORRECT overlay this session
   const correctShownForIdx = useRef(new Set());
-  // Continent color for this country 窶・used on clear panel and effects
+  // Continent color for this country -- used on clear panel and effects
   const continentColor = getColorForCountry(country.id);
 
   // fix: track all timers so we can cancel them on unmount / retry
@@ -341,7 +341,7 @@ export default function ChallengeScreen({
       <div style={{ ...styles.wrap, display: 'block', overflowY: 'auto' }} className="fade-in">
         <WireframeBackground countryId={country.id} />
 
-        {/* Stars 窶・only on fresh clear */}
+        {/* Stars -- only on fresh clear */}
         {isNewClear && STARS.map((s, i) => (
           <div
             key={i}
@@ -556,7 +556,7 @@ export default function ChallengeScreen({
     setScreenEffect('correct');
     schedule(() => setScreenEffect(null), 400);
 
-    // CORRECT overlay 窶・once per question index per session
+    // CORRECT overlay -- once per question index per session
     if (!correctShownForIdx.current.has(idx)) {
       correctShownForIdx.current.add(idx);
       setShowCorrectOverlay(true);
@@ -711,7 +711,7 @@ export default function ChallengeScreen({
         }} />
       )}
 
-      {/* CORRECT overlay 窶・neon LED dot-matrix style, non-blocking */}
+      {/* CORRECT overlay -- neon LED dot-matrix style, non-blocking */}
       {showCorrectOverlay && (
         <div style={{
           position: 'fixed', inset: 0,
@@ -720,7 +720,7 @@ export default function ChallengeScreen({
           animation: 'correctFade 0.95s ease forwards',
         }}>
           <div style={{ position: 'relative', textAlign: 'center', animation: 'correctScale 0.95s ease forwards' }}>
-            {/* Sparkle stars 窶・absolute inside scaled container */}
+            {/* Sparkle stars -- absolute inside scaled container */}
             {[
               { top: -28, left:  6,  char: '*', delay: '0s'    },
               { top: -24, right: 8,  char: '*', delay: '0.08s' },
@@ -984,7 +984,7 @@ export default function ChallengeScreen({
           </div>
         )}
 
-        {/* 驕ｸ謚櫁い・・ultiple-choice / output-predict / implementation-selection / debug-step・・*/}
+        {/* 選択肢（multiple-choice / output-predict / implementation-selection / debug-step）*/}
         {showMCOptions && (
           <div style={styles.optionsList}>
             {currentOptions.map((opt, i) => {

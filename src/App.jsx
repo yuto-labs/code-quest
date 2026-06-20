@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/refs */
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import TitleScreen from './screens/TitleScreen';
 import HomeScreen from './screens/HomeScreen';
 import WorldScreen from './screens/WorldScreen';
@@ -711,6 +711,23 @@ export default function App() {
     syncToCloud();
   };
 
+  // Stable callback identities for ChallengeScreen's onSaveIdx prop.
+  // ChallengeScreen's debug-step save effect lists onSaveIdx as a dependency;
+  // an inline arrow function here would get a new identity on every App
+  // render, re-firing that effect every render and creating an infinite
+  // save -> setMeta -> re-render -> save loop, which visibly flickers the
+  // debug-step options and "answer" text.
+  const handleChallengeSaveIdx = useCallback((idx, resumePatch) => {
+    if (!country || !language) return;
+    saveQuizIdx(world, country.id, language.id, idx, resumePatch);
+  }, [world, country?.id, language?.id]);
+
+  const handleFinalMissionSaveIdx = useCallback((idx, resumePatch) => {
+    if (!country || !language) return;
+    const m = getFinalMission(world, country.id, language.id);
+    if (m) saveFinalMissionProgress({ ...m, worldId: world, countryId: country.id, languageId: language.id }, idx, resumePatch);
+  }, [world, country?.id, language?.id]);
+
   if (authLoading || isUserDataLoading) {
     return (
       <div style={{ width: '100%', height: '100dvh', background: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -896,7 +913,7 @@ export default function App() {
             initialDebugAnswers={entryState.attempt?.debugAnswers}
             initialLives={entryState.mode === 'fresh' || entryState.mode === 'cleared' ? MAX_LIVES : getInitialLives(meta, attemptId)}
             entryState={entryState}
-            onSaveIdx={(idx, resumePatch) => saveQuizIdx(world, country.id, language.id, idx, resumePatch)}
+            onSaveIdx={handleChallengeSaveIdx}
             onSaveScore={(s) => saveScore(world, country.id, language.id, s)}
             onMistake={(qId) => saveMistake(world, country.id, language.id, qId)}
             onLivesChange={(lives, patch = {}) => {
@@ -958,11 +975,7 @@ export default function App() {
             }}
             onBack={() => setScreen('language')}
             onWorldMap={() => setScreen('map')}
-            onSaveIdx={(idx, resumePatch) => {
-              if (mission) {
-                saveFinalMissionProgress({ ...mission, worldId: world, countryId: country.id, languageId: language.id }, idx, resumePatch);
-              }
-            }}
+            onSaveIdx={handleFinalMissionSaveIdx}
             onComplete={(_, completion) => {
               if (mission) handleFinalMissionComplete({ ...mission, worldId: world, countryId: country.id, languageId: language.id }, completion);
             }}

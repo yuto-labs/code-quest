@@ -1,4 +1,5 @@
 import { WORLDS } from '../data/worlds';
+import BackButton from '../components/BackButton';
 
 export default function WorldScreen({ onSelectWorld, onBack }) {
   return (
@@ -6,7 +7,7 @@ export default function WorldScreen({ onSelectWorld, onBack }) {
       <div style={s.crtScanlines} />
 
       <div style={s.header}>
-        <button style={s.backBtn} onClick={onBack}>{'[ < BACK ]'}</button>
+        <BackButton onClick={onBack} />
         <span style={s.title}>{'> SELECT_WORLD'}<span style={s.cursor}>_</span></span>
       </div>
 
@@ -75,17 +76,6 @@ const s = {
     alignItems: 'center',
     gap: 16,
     borderBottom: '1px solid rgba(0,255,136,0.15)',
-  },
-  backBtn: {
-    fontFamily: 'var(--pixel-font)',
-    fontSize: 'clamp(9px, 2.5vw, 11px)',
-    background: 'transparent',
-    color: '#00ffcc',
-    border: 'none',
-    cursor: 'pointer',
-    letterSpacing: 1,
-    textShadow: '0 0 5px #00ffcc, 0 0 12px #00ffaa',
-    padding: 0,
   },
   title: {
     fontFamily: 'var(--pixel-font)',

@@ -6,6 +6,7 @@ import { EXECUTE_CHALLENGES } from '../data/execute_challenges';
 import { DEBUG_CHALLENGES } from '../data/debug_challenges';
 import { listFinalMissions } from '../data/final_missions';
 import { CodeBlock } from '../components/ExplanationPanel';
+import BackButton from '../components/BackButton';
 import { getConceptCoreStatus, getConceptBestScores, buildProgressKey } from '../utils/progress';
 import { WORLD_META, WORLD_IDS } from '../utils/stageData';
 
@@ -233,7 +234,7 @@ export default function ReferenceScreen({
     <div style={styles.wrap} className="fade-in">
       {originContext && onReturnToOrigin && <ReturnButton onClick={onReturnToOrigin} />}
       <div style={styles.header}>
-        <button style={styles.backBtn} onClick={onBack}>{'[ < BACK ]'}</button>
+        <BackButton onClick={onBack} />
         <div style={styles.headerText}>
           <div style={styles.title}>REFERENCE</div>
           <div style={styles.sub}>基礎から順に、コードと出力を分けて読む</div>
@@ -322,7 +323,7 @@ function TopicDetail({ topic, progress, scores, review, onNavigate, onBack, orig
     <div style={styles.wrap} className="fade-in">
       {originContext && onReturnToOrigin && <ReturnButton onClick={onReturnToOrigin} />}
       <div style={styles.header}>
-        <button style={styles.backBtn} onClick={onBack}>{'[ < BACK ]'}</button>
+        <BackButton onClick={onBack} />
         <div style={styles.headerText}>
           <div style={styles.title}>{topic.title}</div>
           <div style={styles.sub}>{topic.language.toUpperCase()} / {pageIdx + 1} / {topic.pages.length}</div>
@@ -490,17 +491,6 @@ const styles = {
     padding: '14px 20px',
     borderBottom: '2px solid var(--border)',
     flexShrink: 0,
-  },
-  backBtn: {
-    fontFamily: 'var(--pixel-font)',
-    fontSize: 8,
-    background: 'transparent',
-    color: '#00ffcc',
-    border: 'none',
-    padding: '8px 4px',
-    cursor: 'pointer',
-    flexShrink: 0,
-    letterSpacing: 1,
   },
   returnBtn: {
     position: 'fixed',

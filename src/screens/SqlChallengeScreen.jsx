@@ -3,6 +3,7 @@ import { SQL_QUESTIONS_BY_ID } from '../data/sql/questions';
 import { SQL_GLOBAL_FACTS_BY_ID } from '../data/sql/global_facts';
 import { SqlExplanation, SqlQueryView, SqlResultTable, SqlTableView } from '../components/SqlComponents';
 import { SQL_MAX_HEARTS } from '../utils/sqlProgress';
+import BackButton from '../components/BackButton';
 
 export default function SqlChallengeScreen({
   questionId,
@@ -56,7 +57,7 @@ export default function SqlChallengeScreen({
     return (
       <div style={styles.wrap}>
         <div style={styles.empty}>準備中</div>
-        <button className="pixel-btn" onClick={onBack}>BACK</button>
+        <BackButton onClick={onBack} />
       </div>
     );
   }
@@ -138,7 +139,7 @@ export default function SqlChallengeScreen({
           <div style={styles.footer}>
             <button className="pixel-btn" onClick={handleRetry}>RETRY FROM START</button>
             <button className="pixel-btn" onClick={onBack}>REVIEW LATER</button>
-            <button className="pixel-btn" onClick={onBack}>SQL PATH</button>
+            <BackButton onClick={onBack} />
           </div>
         </div>
       </div>
@@ -148,7 +149,7 @@ export default function SqlChallengeScreen({
   return (
     <div style={styles.wrap} className="fade-in">
       <div style={styles.top}>
-        <button className="pixel-btn" style={styles.smallBtn} onClick={onBack}>[ &lt; CHAPTER ]</button>
+        <BackButton onClick={onBack} />
         <button className="pixel-btn" style={styles.smallBtn} onClick={onOpenReference}>REFERENCE</button>
       </div>
       <main style={styles.main}>

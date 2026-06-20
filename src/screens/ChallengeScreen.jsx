@@ -5,6 +5,7 @@ import { EXECUTE_CHALLENGES } from '../data/execute_challenges';
 import { DEBUG_CHALLENGES } from '../data/debug_challenges';
 import WireframeBackground from '../components/WireframeBackground';
 import ExplanationPanel from '../components/ExplanationPanel';
+import BackButton from '../components/BackButton';
 import { getColorForCountry } from '../utils/mapColors';
 import { normalizeExplanation } from '../utils/explanations';
 
@@ -812,7 +813,7 @@ export default function ChallengeScreen({
 
       {/* Header */}
       <div style={styles.header}>
-        <button style={styles.back} onClick={handleBack}>BACK</button>
+        <BackButton onClick={handleBack} />
 
         <div style={{ display: 'flex', gap: 3, alignItems: 'center' }}>
           {Array.from({ length: MAX_HEARTS }).map((_, i) => (
@@ -1140,16 +1141,6 @@ const styles = {
     WebkitBackdropFilter: 'blur(10px)',
     position: 'relative',
     zIndex: 1,
-  },
-  back: {
-    fontFamily: 'var(--pixel-font)',
-    fontSize: 8,
-    background: 'transparent',
-    color: 'var(--text-dim)',
-    border: '2px solid var(--text-dim)',
-    padding: '8px 12px',
-    cursor: 'pointer',
-    minHeight: 40,
   },
   info: {
     display: 'flex',

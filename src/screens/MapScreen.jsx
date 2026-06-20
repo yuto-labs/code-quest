@@ -13,6 +13,7 @@ import {
   getGeoFillRgba,
   getColorForCountry,
 } from '../utils/mapColors';
+import BackButton from '../components/BackButton';
 
 const GEO_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
 
@@ -141,9 +142,7 @@ export default function MapScreen({ onSelectCountry, onBack, progress, quizProgr
 
       {/* ── HUD: all fixed to viewport, outside the map/SVG transform ── */}
       <div style={{ ...styles.header, top: `calc(${safeTop} + 12px)` }}>
-        <button style={styles.backBtn} onClick={onBack}>
-          {'[ < BACK ]'}
-        </button>
+        <BackButton onClick={onBack} />
         <span style={styles.title}>
           {'> WORLD_MAP'}<span style={styles.cursor}>_</span>
         </span>
@@ -396,17 +395,6 @@ const styles = {
     alignItems: 'center',
     gap: 14,
     pointerEvents: 'auto',
-  },
-  backBtn: {
-    fontFamily: 'var(--pixel-font)',
-    fontSize: 8,
-    background: 'transparent',
-    color: '#00ffcc',
-    border: 'none',
-    padding: '8px 4px',
-    cursor: 'pointer',
-    letterSpacing: 1,
-    textShadow: '0 0 5px #00ffcc, 0 0 12px #00ffaa, 0 0 25px #00ff88',
   },
   title: {
     fontFamily: 'var(--pixel-font)',

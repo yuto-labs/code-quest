@@ -4,6 +4,7 @@ import { CHALLENGES } from '../data/challenges';
 import { EXECUTE_CHALLENGES } from '../data/execute_challenges';
 import { DEBUG_CHALLENGES } from '../data/debug_challenges';
 import ExplanationPanel from '../components/ExplanationPanel';
+import BackButton from '../components/BackButton';
 import { buildProgressKey, getUnlockedIds, getClearedCountryIds, getLanguageEmblemTier, getCountrySealTier } from '../utils/progress';
 import { AVAILABLE_STAGES, WORLD_META, WORLD_IDS } from '../utils/stageData';
 
@@ -71,7 +72,7 @@ export default function ProgressScreen({ progress, quizProgress, scores = {}, mi
   return (
     <div style={styles.wrap} className="fade-in">
       <div style={styles.header}>
-        <button style={styles.backBtn} onClick={onBack}>{'[ < BACK ]'}</button>
+        <BackButton onClick={onBack} />
         <div>
           <div style={styles.title}>📊 PROGRESS</div>
           <div style={styles.sub}>あなたの冒険の記録</div>
@@ -342,18 +343,6 @@ const styles = {
     overflowX: 'hidden',
     WebkitOverflowScrolling: 'touch',
     paddingBottom: 'env(safe-area-inset-bottom, 16px)',
-  },
-  backBtn: {
-    fontFamily: 'var(--pixel-font)',
-    fontSize: 8,
-    background: 'transparent',
-    color: '#00ffcc',
-    border: 'none',
-    padding: '8px 4px',
-    cursor: 'pointer',
-    flexShrink: 0,
-    letterSpacing: 1,
-    textShadow: '0 0 5px #00ffcc, 0 0 12px #00ffaa, 0 0 25px #00ff88',
   },
   title: {
     fontSize: 'clamp(11px, 3vw, 14px)',

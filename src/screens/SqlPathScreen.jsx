@@ -1,6 +1,7 @@
 import { SQL_COURSE } from '../data/sql/course';
 import { getSqlChapterStatus, getSqlCourseCounts, getSqlQuestionState } from '../utils/sqlProgress';
 import { SqlChapterProgress } from '../components/SqlComponents';
+import BackButton from '../components/BackButton';
 
 export default function SqlPathScreen({ meta, onBack, onOpenChapter, onContinue }) {
   const sql = meta?.codePaths?.sql;
@@ -9,7 +10,7 @@ export default function SqlPathScreen({ meta, onBack, onOpenChapter, onContinue 
   return (
     <div style={styles.wrap} className="fade-in">
       <div style={styles.header}>
-        <button className="pixel-btn" style={styles.back} onClick={onBack}>[ &lt; BACK ]</button>
+        <BackButton onClick={onBack} />
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={styles.title}>SQL PATH</div>
           <div style={styles.sub}>世界のデータからSQLを学ぶ</div>
@@ -50,7 +51,6 @@ export default function SqlPathScreen({ meta, onBack, onOpenChapter, onContinue 
 const styles = {
   wrap: { height: '100dvh', overflowY: 'auto', background: 'var(--bg)', padding: '24px 20px', display: 'flex', flexDirection: 'column', gap: 18 },
   header: { width: '100%', maxWidth: 1040, margin: '0 auto', display: 'flex', gap: 16, alignItems: 'flex-start' },
-  back: { fontSize: 8, padding: '10px 12px' },
   title: { color: 'var(--accent)', fontSize: 'clamp(24px, 7vw, 44px)' },
   sub: { color: 'var(--text-dim)', fontSize: 12, lineHeight: 1.8, marginBottom: 12 },
   continueBtn: { width: '100%', maxWidth: 1040, margin: '0 auto', fontFamily: 'var(--pixel-font)', background: 'rgba(255,221,0,0.08)', border: '2px solid var(--accent2)', color: 'var(--accent2)', padding: 14, textAlign: 'left', cursor: 'pointer', display: 'flex', flexDirection: 'column', gap: 6 },

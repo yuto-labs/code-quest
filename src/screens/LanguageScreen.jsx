@@ -6,6 +6,7 @@ import { AVAILABLE_STAGES, WORLD_META } from '../utils/stageData';
 import { buildProgressKey, getLanguageEmblemTier, getCountrySealTier } from '../utils/progress';
 import { getFinalMission } from '../data/final_missions';
 import { isFinalMissionCleared } from '../utils/metadata';
+import BackButton from '../components/BackButton';
 
 const GEO_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
 
@@ -73,7 +74,9 @@ export default function LanguageScreen({ country, world = 'decode', progress, me
 
       <div style={styles.mapFade} />
 
-      <button style={styles.back} onClick={onBack}>◀ BACK</button>
+      <div style={styles.backSlot}>
+        <BackButton onClick={onBack} />
+      </div>
 
       <div style={styles.center}>
         <div style={{ position: 'relative', display: 'inline-block' }}>
@@ -196,6 +199,12 @@ const styles = {
     overflow: 'hidden',
     overscrollBehavior: 'none',
   },
+  backSlot: {
+    position: 'absolute',
+    top: 20,
+    left: 20,
+    zIndex: 1,
+  },
   mapBg: {
     position: 'absolute',
     inset: 0,
@@ -207,19 +216,6 @@ const styles = {
     inset: 0,
     background: 'radial-gradient(ellipse at center, transparent 30%, var(--bg) 80%)',
     pointerEvents: 'none',
-  },
-  back: {
-    position: 'absolute',
-    top: 20,
-    left: 20,
-    fontFamily: 'var(--pixel-font)',
-    fontSize: 9,
-    background: 'transparent',
-    color: 'var(--text-dim)',
-    border: '2px solid var(--text-dim)',
-    padding: '8px 12px',
-    cursor: 'pointer',
-    zIndex: 1,
   },
   center: {
     display: 'flex',

@@ -1,6 +1,7 @@
 import { SQL_COURSE } from '../data/sql/course';
 import { getSqlQuestionsForChapter } from '../data/sql/questions';
 import { getSqlQuestionState, isSqlQuestionUnlocked } from '../utils/sqlProgress';
+import BackButton from '../components/BackButton';
 
 const MODE_LABELS = { decode: 'DECODE', execute: 'EXECUTE', debug: 'DEBUG', mission: 'MISSION' };
 
@@ -13,7 +14,7 @@ export default function SqlChapterScreen({ chapterId, meta, onBack, onOpenQuesti
   return (
     <div style={styles.wrap} className="fade-in">
       <div style={styles.header}>
-        <button className="pixel-btn" style={styles.back} onClick={onBack}>[ &lt; SQL PATH ]</button>
+        <BackButton onClick={onBack} />
         <div>
           <div style={styles.title}>{chapter?.title || chapterId}</div>
           <div style={styles.sub}>{chapter?.subtitle}</div>
@@ -52,7 +53,6 @@ export default function SqlChapterScreen({ chapterId, meta, onBack, onOpenQuesti
 const styles = {
   wrap: { height: '100dvh', overflowY: 'auto', background: 'var(--bg)', padding: '24px 20px', display: 'flex', flexDirection: 'column', gap: 20 },
   header: { maxWidth: 1040, width: '100%', margin: '0 auto', display: 'flex', gap: 16, alignItems: 'flex-start' },
-  back: { fontSize: 8, padding: '10px 12px' },
   title: { color: 'var(--accent)', fontSize: 'clamp(20px, 6vw, 36px)' },
   sub: { color: 'var(--text-dim)', fontSize: 11, lineHeight: 1.8, marginTop: 8 },
   sections: { maxWidth: 1040, width: '100%', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: 14 },

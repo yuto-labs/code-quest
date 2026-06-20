@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import BackButton from './BackButton';
 
 export default function SettingsModal({ user, syncing, onSendOtp, onVerifyOtp, onRefreshSync, onClose, syncError, cloudStats, localStats }) {
   const [step, setStep] = useState('email');
@@ -95,9 +96,7 @@ export default function SettingsModal({ user, syncing, onSendOtp, onVerifyOtp, o
               <button style={styles.primaryBtn} onClick={handleVerify} disabled={loading}>
                 {loading ? '確認中...' : 'ログイン'}
               </button>
-              <button style={styles.backBtn} onClick={() => { setStep('email'); setCode(''); setError(''); }}>
-                ← 戻る
-              </button>
+              <BackButton onClick={() => { setStep('email'); setCode(''); setError(''); }} />
               {error && <div style={styles.error}>{error}</div>}
             </div>
           )}
@@ -201,15 +200,6 @@ const styles = {
     padding: '13px',
     cursor: 'pointer',
     letterSpacing: 1,
-  },
-  backBtn: {
-    fontFamily: 'var(--pixel-font)',
-    fontSize: 8,
-    background: 'transparent',
-    color: 'var(--text-dim)',
-    border: '1px solid #333',
-    padding: '8px',
-    cursor: 'pointer',
   },
   error: {
     fontSize: 8,

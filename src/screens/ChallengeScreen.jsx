@@ -666,6 +666,7 @@ export default function ChallengeScreen({
       return (
         <input
           key={j}
+          className="blank-input"
           style={{
             ...styles.blankInput,
             borderColor: status === 'correct' ? 'var(--accent)'
@@ -893,6 +894,7 @@ export default function ChallengeScreen({
                   <span style={styles.codeText}>
                     {line.split('___BLANK___')[0]}
                     <input
+                      className="blank-input"
                       style={{
                         ...styles.blankInput,
                         borderColor: status === 'correct' ? 'var(--accent)'
@@ -919,6 +921,14 @@ export default function ChallengeScreen({
             ))}
             </div>
           </>
+        )}
+
+        {/* Expected output — same idea as the SQL course's "EXPECTED RESULT" box */}
+        {q.expectedOutput && status !== 'correct' && (
+          <div style={styles.expectedResult}>
+            <div style={styles.expectedResultLabel}>EXPECTED RESULT</div>
+            <pre style={styles.expectedResultBody}>{q.expectedOutput}</pre>
+          </div>
         )}
 
         {priorDebugAnswers.length > 0 && (
@@ -1211,6 +1221,29 @@ const styles = {
     overflowX: 'auto',
     WebkitOverflowScrolling: 'touch',
     flexShrink: 0,
+  },
+  expectedResult: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 7,
+    flexShrink: 0,
+  },
+  expectedResultLabel: {
+    fontFamily: 'var(--pixel-font)',
+    fontSize: 9,
+    color: 'var(--accent)',
+    letterSpacing: 1,
+  },
+  expectedResultBody: {
+    margin: 0,
+    padding: '12px 14px',
+    background: 'rgba(0,25,15,0.7)',
+    border: '2px solid rgba(0,255,136,0.4)',
+    color: 'var(--accent)',
+    fontFamily: 'monospace',
+    fontSize: 'clamp(12px, 3.5vw, 15px)',
+    whiteSpace: 'pre-wrap',
+    wordBreak: 'break-word',
   },
   codeLine: {
     display: 'flex',

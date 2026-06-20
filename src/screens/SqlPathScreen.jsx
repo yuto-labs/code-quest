@@ -3,7 +3,7 @@ import { getSqlChapterStatus, getSqlCourseCounts, getSqlQuestionState } from '..
 import { SqlChapterProgress } from '../components/SqlComponents';
 import BackButton from '../components/BackButton';
 
-export default function SqlPathScreen({ meta, onBack, onOpenChapter, onContinue }) {
+export default function SqlPathScreen({ meta, onBack, onOpenChapter, onContinue, unlockNotice }) {
   const sql = meta?.codePaths?.sql;
   const counts = getSqlCourseCounts(sql);
   const hasResume = Boolean(sql?.resume?.questionId);
@@ -20,7 +20,7 @@ export default function SqlPathScreen({ meta, onBack, onOpenChapter, onContinue 
       {hasResume && (
         <button style={styles.continueBtn} onClick={onContinue}>
           <span style={styles.continueTitle}>CONTINUE</span>
-          <span style={styles.continueSub}>{sql.resume.chapterId} / {sql.resume.questionId} / HEARTS {sql.resume.hearts ?? 3}</span>
+          <span style={styles.continueSub}>{sql.resume.chapterId} / {sql.resume.questionId}</span>
         </button>
       )}
       <div style={styles.chapterGrid}>
@@ -28,9 +28,11 @@ export default function SqlPathScreen({ meta, onBack, onOpenChapter, onContinue 
           const status = getSqlChapterStatus(sql, chapter.id);
           const state = getSqlQuestionState(sql, chapter.id);
           const completed = state.chapter.completedQuestionIds.length + (state.chapter.missionCompleted ? 1 : 0);
+          const justUnlocked = unlockNotice?.unlockedChapterId === chapter.id;
           return (
             <button
               key={chapter.id}
+              className={justUnlocked ? 'sql-new-unlock' : undefined}
               style={{ ...styles.chapter, opacity: status === 'LOCKED' ? 0.45 : 1, borderColor: status === 'CLEARED' ? 'var(--accent2)' : 'var(--accent)' }}
               disabled={status === 'LOCKED'}
               onClick={() => onOpenChapter(chapter.id)}

@@ -815,7 +815,7 @@ export default function ChallengeScreen({
       {/* Header */}
       <div style={styles.header}>
         <BackButton onClick={handleBack} />
-        <button className="pixel-btn" style={styles.referenceBtn} onClick={onOpenReference}>
+        <button className="pixel-btn world-reference-btn" style={styles.referenceBtn} onClick={onOpenReference}>
           REFERENCE
         </button>
 

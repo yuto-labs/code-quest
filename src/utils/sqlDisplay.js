@@ -91,6 +91,13 @@ function evaluateExpression(expression, rows, row, selectExpressions) {
   return row?.[cleaned] ?? null;
 }
 
+export const SQL_MODE_LABELS = {
+  decode: 'WRITE',
+  execute: 'READ',
+  debug: 'FIX',
+  mission: 'MISSION',
+};
+
 export function buildCompletedSql(query, answer) {
   return String(query || '').replace(/___BLANK___/g, answer || '');
 }

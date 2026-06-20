@@ -14,7 +14,7 @@ const backButtonStyle = {
 
 export default function BackButton({ onClick, children = BACK_BUTTON_LABEL, ...props }) {
   return (
-    <button type="button" style={backButtonStyle} onClick={onClick} {...props}>
+    <button type="button" className="back-button" style={backButtonStyle} onClick={onClick} {...props}>
       {children}
     </button>
   );

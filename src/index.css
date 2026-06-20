@@ -71,6 +71,150 @@ body {
   transform: translate(2px, 2px);
 }
 
+.back-button {
+  min-height: 32px;
+  line-height: 1.2;
+}
+
+.back-button:hover,
+.back-button:focus-visible {
+  color: var(--accent);
+  text-shadow: 0 0 5px var(--accent), 0 0 12px rgba(0,255,136,0.75);
+  outline: none;
+}
+
+.back-button:active {
+  transform: translate(1px, 1px);
+}
+
+.world-reference-btn {
+  font-size: 7px !important;
+  padding: 7px 9px !important;
+  min-height: 30px !important;
+  border-width: 2px !important;
+  letter-spacing: 0.5px;
+}
+
+.sql-step-route {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(18px, 1fr));
+  gap: 5px;
+  width: 100%;
+  min-width: 0;
+}
+
+.sql-step-node {
+  position: relative;
+  min-width: 0;
+  min-height: 24px;
+  border: 1px solid rgba(0,255,136,0.2);
+  color: rgba(224,224,224,0.42);
+  background: rgba(0,5,25,0.74);
+  display: grid;
+  place-items: center;
+  font-size: 8px;
+}
+
+.sql-step-node::after {
+  content: '';
+  position: absolute;
+  left: calc(100% + 1px);
+  top: 50%;
+  width: 5px;
+  height: 1px;
+  background: rgba(0,255,136,0.18);
+}
+
+.sql-step-node:last-child::after {
+  display: none;
+}
+
+.sql-step-node-done {
+  color: var(--bg);
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 10px rgba(0,255,136,0.35);
+}
+
+.sql-step-node-current {
+  color: var(--accent2);
+  border-color: var(--accent2);
+  animation: sqlStepPulse 1.15s ease-in-out infinite alternate;
+}
+
+.sql-step-node-mission {
+  border-color: var(--accent2);
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+
+.sql-step-route-advance .sql-step-node-current::after {
+  background: var(--accent2);
+  box-shadow: 0 0 8px rgba(255,221,0,0.55);
+  animation: sqlStepAdvance 0.55s ease-out both;
+}
+
+.sql-feedback-query mark {
+  animation: sqlAnswerGlow 0.75s ease-out both;
+}
+
+.sql-feedback-result {
+  animation: sqlSoftPop 0.35s ease-out both;
+}
+
+.sql-feedback-fix code:last-child {
+  animation: sqlAnswerGlow 0.75s ease-out both;
+}
+
+.sql-result-row-reveal {
+  opacity: 0;
+  animation: sqlRowReveal 0.42s ease-out forwards;
+}
+
+.sql-route-card-current {
+  box-shadow: 0 0 12px rgba(0,255,136,0.18);
+}
+
+.sql-route-card-mission {
+  background: linear-gradient(135deg, rgba(0,5,25,0.7), rgba(255,221,0,0.06)) !important;
+}
+
+.sql-new-unlock,
+.sql-chapter-complete {
+  animation: sqlUnlockGlow 1.25s ease-out both;
+}
+
+@keyframes sqlStepPulse {
+  from { box-shadow: 0 0 5px rgba(255,221,0,0.22); }
+  to { box-shadow: 0 0 13px rgba(255,221,0,0.48); }
+}
+
+@keyframes sqlStepAdvance {
+  from { transform: scaleX(0); transform-origin: left center; }
+  to { transform: scaleX(1); transform-origin: left center; }
+}
+
+@keyframes sqlAnswerGlow {
+  0% { box-shadow: 0 0 0 rgba(255,221,0,0); }
+  35% { box-shadow: 0 0 14px rgba(255,221,0,0.55); }
+  100% { box-shadow: 0 0 4px rgba(255,221,0,0.2); }
+}
+
+@keyframes sqlSoftPop {
+  from { transform: translateY(4px); opacity: 0.72; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes sqlRowReveal {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes sqlUnlockGlow {
+  0% { box-shadow: 0 0 0 rgba(255,221,0,0); }
+  35% { box-shadow: 0 0 18px rgba(255,221,0,0.5); }
+  100% { box-shadow: 0 0 5px rgba(255,221,0,0.15); }
+}
+
 /* Fill-blank input placeholder ("???") — browser default placeholder
    opacity is too low against the dark code-block background. */
 .blank-input::placeholder {
@@ -215,6 +359,46 @@ input, select, textarea {
   76%,100% { opacity: 1; }
 }
 .pip-blink { animation: pipBlink 4s ease-in-out infinite; }
+
+@media (max-width: 600px) {
+  .world-reference-btn {
+    font-size: 7px !important;
+    padding: 6px 8px !important;
+    min-height: 30px !important;
+  }
+
+  .sql-step-route {
+    gap: 3px;
+  }
+
+  .sql-step-node {
+    min-height: 20px;
+    font-size: 7px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-in,
+  .sql-step-node-current,
+  .sql-step-route-advance .sql-step-node-current::after,
+  .sql-feedback-query mark,
+  .sql-feedback-result,
+  .sql-feedback-fix code:last-child,
+  .sql-result-row-reveal,
+  .sql-new-unlock,
+  .sql-chapter-complete {
+    animation: none !important;
+  }
+
+  .xp-fill,
+  .pixel-btn {
+    transition: none !important;
+  }
+
+  .sql-result-row-reveal {
+    opacity: 1;
+  }
+}
 
 .reward-toast {
   position: fixed;

@@ -3,7 +3,7 @@ import { SQL_QUESTIONS_BY_ID } from '../data/sql/questions';
 import { SQL_GLOBAL_FACTS_BY_ID } from '../data/sql/global_facts';
 import { SqlExplanation, SqlQueryView, SqlResultTable, SqlTableView } from '../components/SqlComponents';
 import { SQL_MAX_HEARTS } from '../utils/sqlProgress';
-import { buildCompletedSql, buildSqlHint, evaluateSqlResult, normalizeSqlOptionLabel } from '../utils/sqlDisplay';
+import { buildCompletedSql, buildSqlHint, evaluateSqlResult, normalizeSqlOptionLabel, SQL_MODE_LABELS } from '../utils/sqlDisplay';
 import BackButton from '../components/BackButton';
 
 export default function SqlChallengeScreen({
@@ -30,7 +30,14 @@ export default function SqlChallengeScreen({
   const [showHint, setShowHint] = useState(false);
   const resultBodyRef = useRef(null);
   const onSaveResumeRef = useRef(onSaveResume);
+  const navigatingRef = useRef(false);
   const fact = useMemo(() => SQL_GLOBAL_FACTS_BY_ID[question?.globalFactIds?.[0]], [question]);
+  const chapterQuestions = useMemo(() => {
+    if (!question) return [];
+    return Object.values(SQL_QUESTIONS_BY_ID)
+      .filter(item => item.chapterId === question.chapterId)
+      .sort((a, b) => a.order - b.order);
+  }, [question]);
 
   useEffect(() => {
     onSaveResumeRef.current = onSaveResume;
@@ -64,7 +71,6 @@ export default function SqlChallengeScreen({
   const completedQuery = question ? buildCompletedSql(question.query, currentCorrect) : '';
   const displayedQuery = question ? (isDebug && debugStep === 1 ? question.explanation?.completedQuery : question.query) : '';
   const expectedResult = question ? (isDecode ? evaluateSqlResult(question, completedQuery) : question.expectedResult) : null;
-  const progressPercent = question ? Math.round((question.order / 10) * 100) : 0;
   const currentHint = question ? buildSqlHint(question, currentDebug) : '';
   const correctOption = question && !isDecode && !isDebug ? question.options?.find(option => option.id === currentCorrect) : null;
   const displayCorrectAnswer = correctOption ? normalizeSqlOptionLabel(correctOption) : currentCorrect;
@@ -117,7 +123,11 @@ export default function SqlChallengeScreen({
     }
   };
 
-  const handleNext = () => onComplete?.(question);
+  const handleNext = () => {
+    if (navigatingRef.current || !question) return;
+    navigatingRef.current = true;
+    onComplete?.(question);
+  };
 
   useEffect(() => {
     const handler = (event) => {
@@ -149,6 +159,85 @@ export default function SqlChallengeScreen({
     completedQuery: isDecode ? completedQuery : question.explanation?.completedQuery,
   };
 
+  const renderChapterRoute = () => {
+    const completed = new Set(progress?.chapters?.[question.chapterId]?.completedQuestionIds || []);
+    const missionDone = Boolean(progress?.chapters?.[question.chapterId]?.missionCompleted);
+    return (
+      <div
+        className={`sql-step-route ${status === 'correct' ? 'sql-step-route-advance' : ''}`}
+        aria-label={`SQL chapter progress ${question.order} of 10`}
+      >
+        {chapterQuestions.map(item => {
+          const isMission = item.mode === 'mission';
+          const isCompleted = isMission ? missionDone : completed.has(item.id) || (status === 'correct' && item.id === question.id);
+          const isCurrent = item.id === question.id;
+          return (
+            <div
+              key={item.id}
+              className={[
+                'sql-step-node',
+                isCompleted ? 'sql-step-node-done' : '',
+                isCurrent ? 'sql-step-node-current' : '',
+                isMission ? 'sql-step-node-mission' : '',
+              ].filter(Boolean).join(' ')}
+              title={`${item.order}. ${SQL_MODE_LABELS[item.mode] || item.mode}`}
+            >
+              {item.order}
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
+  const renderCorrectFeedback = () => {
+    if (isDecode || String(question.query || '').includes('___BLANK___')) {
+      const [beforeBlank, afterBlank = ''] = String(question.query || '').split('___BLANK___');
+      return (
+        <div style={styles.feedbackCorrect} className="sql-feedback-query">
+          <div style={styles.feedbackTitle}>QUERY COMPLETED</div>
+          <pre style={styles.completedQuery}>
+            <span>{beforeBlank}</span>
+            <mark style={styles.answerMark}>{currentCorrect}</mark>
+            <span>{afterBlank}</span>
+          </pre>
+        </div>
+      );
+    }
+
+    if (question.mode === 'execute') {
+      return (
+        <div style={styles.feedbackCorrect} className="sql-feedback-result">
+          <div style={styles.feedbackTitle}>RESULT VERIFIED</div>
+          <SqlResultTable title="VERIFIED RESULT" result={expectedResult} animateRows />
+        </div>
+      );
+    }
+
+    if (isDebug) {
+      return (
+        <div style={styles.feedbackCorrect} className="sql-feedback-fix">
+          <div style={styles.feedbackTitle}>FIX APPLIED</div>
+          <div style={styles.fixSwap}>
+            <code style={styles.fixBad}>{submittedAnswer || 'incorrect fragment'}</code>
+            <span style={styles.fixArrow}>→</span>
+            <code style={styles.fixGood}>{displayCorrectAnswer}</code>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div style={styles.feedbackCorrect}>
+        <div style={styles.feedbackTitle}>CORRECT!</div>
+        <div style={styles.answerLine}>
+          <span>ANSWER</span>
+          <code>{displayCorrectAnswer}</code>
+        </div>
+      </div>
+    );
+  };
+
   const renderDecodeQuery = () => {
     const [beforeBlank, afterBlank = ''] = String(question.query || '').split('___BLANK___');
     return (
@@ -160,10 +249,11 @@ export default function SqlChallengeScreen({
             style={styles.inlineBlank}
             value={status === 'correct' ? currentCorrect : answer}
             onChange={event => {
-              if (status !== 'idle') return;
+              if (status === 'correct') return;
               setAnswer(event.target.value);
+              if (status === 'wrong') setStatus('idle');
             }}
-            disabled={status !== 'idle'}
+            disabled={status === 'correct' || gameOver}
             placeholder="ここに入力"
             autoFocus
           />
@@ -183,8 +273,12 @@ export default function SqlChallengeScreen({
           <button
             key={value}
             style={{ ...styles.option, borderColor: selectedNow ? 'var(--accent2)' : 'var(--border2)' }}
-            onClick={() => status === 'idle' && setSelected(value)}
-            disabled={status !== 'idle'}
+            onClick={() => {
+              if (status === 'correct' || gameOver) return;
+              setSelected(value);
+              if (status === 'wrong') setStatus('idle');
+            }}
+            disabled={status === 'correct' || gameOver}
           >
             <span>{normalizeSqlOptionLabel(option)}</span>
             {optionResult && <SqlResultTable result={optionResult} />}
@@ -248,18 +342,10 @@ export default function SqlChallengeScreen({
       <main style={styles.main}>
         <header style={styles.header}>
           <div style={styles.statusBar}>
-            <div style={styles.kicker}>{question.chapterId} / {question.mode.toUpperCase()} / Q{question.order}/10</div>
-            <div style={styles.hearts} aria-label={`hearts ${hearts} of ${SQL_MAX_HEARTS}`}>
-              {Array.from({ length: SQL_MAX_HEARTS }).map((_, index) => (
-                <span key={index} style={{ opacity: index < hearts ? 1 : 0.2 }}>
-                  {index < hearts ? '笙･' : 'ﾂｷ'}
-                </span>
-              ))}
-            </div>
+            <div style={styles.kicker}>{question.chapterId} / {SQL_MODE_LABELS[question.mode] || question.mode.toUpperCase()} / Q{question.order}/10</div>
+            <div style={styles.tryState}>{status === 'wrong' ? 'CHECK AGAIN' : 'SQL PATH'}</div>
           </div>
-          <div className="xp-bar" style={styles.progressBar}>
-            <div className="xp-fill" style={{ width: `${progressPercent}%` }} />
-          </div>
+          {renderChapterRoute()}
           <h1 style={styles.title}>{question.title}</h1>
           <p style={styles.prompt}>{isDebug ? currentDebug?.question : question.prompt}</p>
         </header>
@@ -274,19 +360,11 @@ export default function SqlChallengeScreen({
 
         {showHint && currentHint && <div style={styles.hint}>HINT: {currentHint}</div>}
 
-        {status === 'correct' && (
-          <div style={styles.feedbackCorrect}>
-            <div style={styles.feedbackTitle}>CORRECT!</div>
-            <div style={styles.answerLine}>
-              <span>ANSWER</span>
-              <code>{displayCorrectAnswer}</code>
-            </div>
-          </div>
-        )}
+        {status === 'correct' && renderCorrectFeedback()}
         {status === 'correct' && <SqlExplanation explanation={explanation} fact={fact} />}
         {status === 'wrong' && (
           <div style={styles.wrong}>
-            Incorrect. TABLE、QUERY、EXPECTED RESULT をもう一度見比べてください。残り HEARTS: {hearts}/{SQL_MAX_HEARTS}
+            Incorrect. TABLE、QUERY、EXPECTED RESULT をもう一度見比べてください。
           </div>
         )}
       </main>
@@ -305,7 +383,7 @@ const styles = {
   header: { display: 'flex', flexDirection: 'column', gap: 10 },
   statusBar: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 },
   kicker: { color: 'var(--accent2)', fontSize: 9 },
-  hearts: { display: 'flex', gap: 5, color: 'var(--danger)', fontSize: 18, textShadow: '0 0 8px rgba(255,68,68,0.45)' },
+  tryState: { color: 'var(--text-dim)', fontSize: 8 },
   progressBar: { height: 10, width: '100%' },
   title: { margin: 0, color: 'var(--accent)', fontSize: 'clamp(18px, 5vw, 30px)', lineHeight: 1.5 },
   sub: { color: 'var(--text-dim)', fontSize: 11 },
@@ -321,7 +399,13 @@ const styles = {
   actionInner: { width: '100%', maxWidth: 980, margin: '0 auto', display: 'flex', justifyContent: 'flex-end', gap: 10 },
   feedbackCorrect: { border: '2px solid rgba(0,255,136,0.45)', background: 'rgba(0,255,136,0.07)', color: 'var(--accent)', padding: 14, display: 'flex', flexDirection: 'column', gap: 10 },
   feedbackTitle: { fontFamily: 'var(--pixel-font)', fontSize: 12, textShadow: '0 0 10px rgba(0,255,136,0.45)' },
+  completedQuery: { margin: 0, overflowX: 'auto', color: '#b6f7d2', fontSize: 12, lineHeight: 1.9, whiteSpace: 'pre', fontFamily: 'var(--mono-font, ui-monospace, SFMono-Regular, Consolas, monospace)' },
+  answerMark: { background: 'rgba(255,221,0,0.18)', color: 'var(--accent2)', border: '1px solid rgba(255,221,0,0.45)', padding: '2px 5px' },
   answerLine: { display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap', fontSize: 10, color: 'var(--text)' },
+  fixSwap: { display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', fontSize: 11, lineHeight: 1.8 },
+  fixBad: { color: 'var(--danger)', textDecoration: 'line-through' },
+  fixArrow: { color: 'var(--accent2)' },
+  fixGood: { color: 'var(--accent)', textShadow: '0 0 8px rgba(0,255,136,0.35)' },
   hint: { border: '1px solid rgba(255,221,0,0.35)', background: 'rgba(255,221,0,0.06)', color: 'var(--accent2)', padding: 12, fontSize: 11, lineHeight: 1.9 },
   wrong: { color: 'var(--danger)', border: '1px solid rgba(255,68,68,0.35)', padding: 12, fontSize: 11, lineHeight: 1.8 },
   resultShell: { height: '100%', minHeight: 0, display: 'flex', flexDirection: 'column' },

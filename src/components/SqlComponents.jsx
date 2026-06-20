@@ -36,7 +36,7 @@ export function SqlQueryView({ query, title = 'QUERY' }) {
   );
 }
 
-export function SqlResultTable({ result, title = 'RESULT' }) {
+export function SqlResultTable({ result, title = 'RESULT', animateRows = false }) {
   if (!result?.columns?.length) return null;
   return (
     <section style={styles.section}>
@@ -46,7 +46,11 @@ export function SqlResultTable({ result, title = 'RESULT' }) {
           <thead><tr>{result.columns.map(column => <th key={column} style={styles.th}>{column}</th>)}</tr></thead>
           <tbody>
             {result.rows.map((row, index) => (
-              <tr key={index}>
+              <tr
+                key={index}
+                className={animateRows ? 'sql-result-row-reveal' : undefined}
+                style={animateRows ? { animationDelay: `${index * 70}ms` } : undefined}
+              >
                 {row.map((cell, cellIndex) => (
                   <td key={cellIndex} style={styles.td}>{cell === null ? <span style={styles.null}>NULL</span> : String(cell)}</td>
                 ))}

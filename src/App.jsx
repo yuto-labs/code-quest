@@ -151,6 +151,7 @@ export default function App() {
   const [migrationDone, setMigrationDone] = useState(() => localStorage.getItem('cq_migrated') === 'true');
   const [sqlChapterId, setSqlChapterId] = useState('01_select');
   const [sqlQuestionId, setSqlQuestionId] = useState('');
+  const [sqlUnlockNotice, setSqlUnlockNotice] = useState(null);
   const [referenceOrigin, setReferenceOrigin] = useState(null);
 
   const saveDebounceTimerRef = useRef(null);
@@ -163,6 +164,12 @@ export default function App() {
     setReward({ type, message });
     rewardTimerRef.current = setTimeout(() => setReward(null), 1200);
   };
+
+  useEffect(() => {
+    if (!sqlUnlockNotice) return undefined;
+    const timer = setTimeout(() => setSqlUnlockNotice(null), 1800);
+    return () => clearTimeout(timer);
+  }, [sqlUnlockNotice]);
 
   // iOS keyboard: track visualViewport offset to prevent fixed screens jumping
   useEffect(() => {
@@ -467,7 +474,15 @@ export default function App() {
 
   const completeSql = (question) => {
     const current = getSqlMeta();
+    const wasComplete = Boolean(current.chapters?.[question.chapterId]?.completed);
     const next = completeSqlQuestion(current, question.id);
+    const isNowComplete = Boolean(next.chapters?.[question.chapterId]?.completed);
+    if (!wasComplete && isNowComplete) {
+      setSqlUnlockNotice({
+        completedChapterId: question.chapterId,
+        unlockedChapterId: next.activeChapterId,
+      });
+    }
     saveSqlMeta(next);
     const chapterQuestions = getSqlQuestionsForChapter(question.chapterId);
     const nextQuestion = chapterQuestions.find(q => q.order > question.order);
@@ -798,6 +813,7 @@ export default function App() {
       {screen === 'sqlPath' && (
         <SqlPathScreen
           meta={meta}
+          unlockNotice={sqlUnlockNotice}
           onBack={() => setScreen('home')}
           onContinue={openSqlResume}
           onOpenChapter={(chapterId) => { setSqlChapterId(chapterId); setScreen('sqlChapter'); }}
@@ -808,6 +824,7 @@ export default function App() {
         <SqlChapterScreen
           chapterId={sqlChapterId}
           meta={meta}
+          unlockNotice={sqlUnlockNotice}
           onBack={() => setScreen('sqlPath')}
           onOpenQuestion={(questionId) => { setSqlQuestionId(questionId); setScreen('sqlChallenge'); }}
         />

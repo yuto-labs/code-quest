@@ -29,7 +29,7 @@ export const EXECUTE_CHALLENGES = {
           "片方の条件だけで選ぶと、余分な項目が混ざります。",
           "出力は辞書全体ではなく name の文字列です。"
         ],
-        "programmingExplanation": "for 文、if 条件、リストへの追加を組み合わせて出力を追跡します。",
+        "programmingExplanation": "この問題はコードの実行結果を予測する問題です。for文で各要素を1つずつ確認し、if文の条件に合う場合だけ結果に追加していく処理を、要素ごとに手を動かして追跡します。この問題では「country が \"JP\" と一致する」かつ「score が 3 以上」という2つの条件を両方満たす要素だけが選ばれる点に注目してください。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
         "countryNote": "屋久島が日本の世界自然遺産として知られることを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
       },
       {
@@ -60,7 +60,7 @@ export const EXECUTE_CHALLENGES = {
           "片方の条件だけで選ぶと、余分な項目が混ざります。",
           "出力は辞書全体ではなく name の文字列です。"
         ],
-        "programmingExplanation": "for 文、if 条件、リストへの追加を組み合わせて出力を追跡します。",
+        "programmingExplanation": "この問題はコードの実行結果を予測する問題です。for文で各要素を1つずつ確認し、if文の条件に合う場合だけ結果に追加していく処理を、要素ごとに手を動かして追跡します。この問題では「country が \"JP\" と一致する」かつ「score が 4 以上」という2つの条件を両方満たす要素だけが選ばれる点に注目してください。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
         "countryNote": "白神山地のブナ林が自然遺産として知られることを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
       },
       {
@@ -91,7 +91,7 @@ export const EXECUTE_CHALLENGES = {
           "片方の条件だけで選ぶと、余分な項目が混ざります。",
           "出力は辞書全体ではなく name の文字列です。"
         ],
-        "programmingExplanation": "for 文、if 条件、リストへの追加を組み合わせて出力を追跡します。",
+        "programmingExplanation": "この問題はコードの実行結果を予測する問題です。for文で各要素を1つずつ確認し、if文の条件に合う場合だけ結果に追加していく処理を、要素ごとに手を動かして追跡します。この問題では「country が \"JP\" と一致する」かつ「score が 2 以上」という2つの条件を両方満たす要素だけが選ばれる点に注目してください。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
         "countryNote": "国会議事堂の建築と議会機能を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
       },
       {
@@ -122,7 +122,7 @@ export const EXECUTE_CHALLENGES = {
           "片方の条件だけで選ぶと、余分な項目が混ざります。",
           "出力は辞書全体ではなく name の文字列です。"
         ],
-        "programmingExplanation": "for 文、if 条件、リストへの追加を組み合わせて出力を追跡します。",
+        "programmingExplanation": "この問題はコードの実行結果を予測する問題です。for文で各要素を1つずつ確認し、if文の条件に合う場合だけ結果に追加していく処理を、要素ごとに手を動かして追跡します。この問題では「country が \"JP\" と一致する」かつ「score が 3 以上」という2つの条件を両方満たす要素だけが選ばれる点に注目してください。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
         "countryNote": "探査機はやぶさと小惑星イトカワを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
       },
       {
@@ -153,7 +153,7 @@ export const EXECUTE_CHALLENGES = {
           "片方の条件だけで選ぶと、余分な項目が混ざります。",
           "出力は辞書全体ではなく name の文字列です。"
         ],
-        "programmingExplanation": "for 文、if 条件、リストへの追加を組み合わせて出力を追跡します。",
+        "programmingExplanation": "この問題はコードの実行結果を予測する問題です。for文で各要素を1つずつ確認し、if文の条件に合う場合だけ結果に追加していく処理を、要素ごとに手を動かして追跡します。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
         "countryNote": "探査機はやぶさ2と小惑星リュウグウを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
       },
       {
@@ -184,7 +184,7 @@ export const EXECUTE_CHALLENGES = {
           "片方の条件だけで選ぶと、余分な項目が混ざります。",
           "出力は辞書全体ではなく name の文字列です。"
         ],
-        "programmingExplanation": "for 文、if 条件、リストへの追加を組み合わせて出力を追跡します。",
+        "programmingExplanation": "この問題はコードの実行結果を予測する問題です。for文で各要素を1つずつ確認し、if文の条件に合う場合だけ結果に追加していく処理を、要素ごとに手を動かして追跡します。この問題では「country が \"JP\" と一致する」かつ「score が 2 以上」という2つの条件を両方満たす要素だけが選ばれる点に注目してください。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
         "countryNote": "能の役柄構造を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
       },
       {
@@ -215,7 +215,7 @@ export const EXECUTE_CHALLENGES = {
           "片方の条件だけで選ぶと、余分な項目が混ざります。",
           "出力は辞書全体ではなく name の文字列です。"
         ],
-        "programmingExplanation": "for 文、if 条件、リストへの追加を組み合わせて出力を追跡します。",
+        "programmingExplanation": "この問題はコードの実行結果を予測する問題です。for文で各要素を1つずつ確認し、if文の条件に合う場合だけ結果に追加していく処理を、要素ごとに手を動かして追跡します。この問題では「country が \"JP\" と一致する」かつ「score が 3 以上」という2つの条件を両方満たす要素だけが選ばれる点に注目してください。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
         "countryNote": "松尾芭蕉とおくのほそ道を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
       }
     ],
@@ -248,7 +248,7 @@ export const EXECUTE_CHALLENGES = {
           "filter 後の配列と map 後の配列を混同しやすいです。",
           "other country の高い score は JP 条件で除外されます。"
         ],
-        "programmingExplanation": "JavaScript の配列処理を読む問題です。regular では filter と map を中心に追跡します。",
+        "programmingExplanation": "この問題はコードの実行結果を予測する問題です。filter で条件に合う要素だけを残し、map で必要な値だけを取り出すという2段階の処理を順番に追跡します。この問題では「country が \"JP\" と一致する」かつ「score が 3 以上」という2つの条件を両方満たす要素だけが選ばれる点に注目してください。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
         "countryNote": "鉄砲伝来と種子島を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
       },
       {
@@ -279,7 +279,7 @@ export const EXECUTE_CHALLENGES = {
           "filter 後の配列と map 後の配列を混同しやすいです。",
           "other country の高い score は JP 条件で除外されます。"
         ],
-        "programmingExplanation": "JavaScript の配列処理を読む問題です。regular では filter と map を中心に追跡します。",
+        "programmingExplanation": "この問題はコードの実行結果を予測する問題です。filter で条件に合う要素だけを残し、map で必要な値だけを取り出すという2段階の処理を順番に追跡します。この問題では「country が \"JP\" と一致する」かつ「score が 4 以上」という2つの条件を両方満たす要素だけが選ばれる点に注目してください。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
         "countryNote": "ペリー来航と開国までの流れを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
       },
       {
@@ -310,7 +310,7 @@ export const EXECUTE_CHALLENGES = {
           "filter 後の配列と map 後の配列を混同しやすいです。",
           "other country の高い score は JP 条件で除外されます。"
         ],
-        "programmingExplanation": "JavaScript の配列処理を読む問題です。regular では filter と map を中心に追跡します。",
+        "programmingExplanation": "この問題はコードの実行結果を予測する問題です。filter で条件に合う要素だけを残し、map で必要な値だけを取り出すという2段階の処理を順番に追跡します。この問題では「country が \"JP\" と一致する」かつ「score が 2 以上」という2つの条件を両方満たす要素だけが選ばれる点に注目してください。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
         "countryNote": "和紙の伝統を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
       },
       {
@@ -341,7 +341,7 @@ export const EXECUTE_CHALLENGES = {
           "filter 後の配列と map 後の配列を混同しやすいです。",
           "other country の高い score は JP 条件で除外されます。"
         ],
-        "programmingExplanation": "JavaScript の配列処理を読む問題です。regular では filter と map を中心に追跡します。",
+        "programmingExplanation": "この問題はコードの実行結果を予測する問題です。filter で条件に合う要素だけを残し、map で必要な値だけを取り出すという2段階の処理を順番に追跡します。この問題では「country が \"JP\" と一致する」かつ「score が 3 以上」という2つの条件を両方満たす要素だけが選ばれる点に注目してください。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
         "countryNote": "伊勢神宮の式年遷宮を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
       },
       {
@@ -372,7 +372,7 @@ export const EXECUTE_CHALLENGES = {
           "filter 後の配列と map 後の配列を混同しやすいです。",
           "other country の高い score は JP 条件で除外されます。"
         ],
-        "programmingExplanation": "JavaScript の配列処理を読む問題です。regular では filter と map を中心に追跡します。",
+        "programmingExplanation": "この問題はコードの実行結果を予測する問題です。filter で条件に合う要素だけを残し、map で必要な値だけを取り出すという2段階の処理を順番に追跡します。この問題では「country が \"JP\" と一致する」かつ「score が 4 以上」という2つの条件を両方満たす要素だけが選ばれる点に注目してください。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
         "countryNote": "東京スカイツリーを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
       },
       {
@@ -403,7 +403,7 @@ export const EXECUTE_CHALLENGES = {
           "filter 後の配列と map 後の配列を混同しやすいです。",
           "other country の高い score は JP 条件で除外されます。"
         ],
-        "programmingExplanation": "JavaScript の配列処理を読む問題です。regular では filter と map を中心に追跡します。",
+        "programmingExplanation": "この問題はコードの実行結果を予測する問題です。filter で条件に合う要素だけを残し、map で必要な値だけを取り出すという2段階の処理を順番に追跡します。この問題では「country が \"JP\" と一致する」かつ「score が 2 以上」という2つの条件を両方満たす要素だけが選ばれる点に注目してください。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
         "countryNote": "八木・宇田アンテナを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
       },
       {
@@ -434,7 +434,7 @@ export const EXECUTE_CHALLENGES = {
           "filter 後の配列と map 後の配列を混同しやすいです。",
           "other country の高い score は JP 条件で除外されます。"
         ],
-        "programmingExplanation": "JavaScript の配列処理を読む問題です。regular では filter と map を中心に追跡します。",
+        "programmingExplanation": "この問題はコードの実行結果を予測する問題です。for文で各要素を1つずつ確認し、if文の条件に合う場合だけ結果に追加していく処理を、要素ごとに手を動かして追跡します。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
         "countryNote": "青函トンネルを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
       }
     ]
@@ -469,7 +469,7 @@ export const EXECUTE_CHALLENGES = {
           "scoreだけを見ると他国やcontextデータを選んでしまいます。",
           "出力はデータ全体ではなく、最後に組み立てたnameまたはlabelです。"
         ],
-        "programmingExplanation": "通常問題なのでfilter/loopと条件追跡を中心にします。",
+        "programmingExplanation": "この問題はコードの実行結果を予測する問題です。for文で各要素を1つずつ確認し、if文の条件に合う場合だけ結果に追加していく処理を、要素ごとに手を動かして追跡します。この問題では「country が \"US\" と一致する」かつ「score が 5 以上」という2つの条件を両方満たす要素だけが選ばれる点に注目してください。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
         "countryNote": "Grand Canyon geologic/site data は Grand Canyon National Park（UNESCO World Heritage Centre） をもとにした題材です。",
         "sourceRefs": [
           {
@@ -513,7 +513,7 @@ export const EXECUTE_CHALLENGES = {
           "scoreだけを見ると他国やcontextデータを選んでしまいます。",
           "出力はデータ全体ではなく、最後に組み立てたnameまたはlabelです。"
         ],
-        "programmingExplanation": "通常問題なのでfilter/loopと条件追跡を中心にします。",
+        "programmingExplanation": "この問題はコードの実行結果を予測する問題です。for文で各要素を1つずつ確認し、if文の条件に合う場合だけ結果に追加していく処理を、要素ごとに手を動かして追跡します。この問題では「country が \"US\" と一致する」かつ「score が 6 以上」という2つの条件を両方満たす要素だけが選ばれる点に注目してください。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
         "countryNote": "Great Lakes basin data は Great Lakes（U.S. Environmental Protection Agency） をもとにした題材です。",
         "sourceRefs": [
           {
@@ -557,7 +557,7 @@ export const EXECUTE_CHALLENGES = {
           "scoreだけを見ると他国やcontextデータを選んでしまいます。",
           "出力はデータ全体ではなく、最後に組み立てたnameまたはlabelです。"
         ],
-        "programmingExplanation": "通常問題なのでfilter/loopと条件追跡を中心にします。",
+        "programmingExplanation": "この問題はコードの実行結果を予測する問題です。for文で各要素を1つずつ確認し、if文の条件に合う場合だけ結果に追加していく処理を、要素ごとに手を動かして追跡します。この問題では「country が \"US\" と一致する」かつ「score が 7 以上」という2つの条件を両方満たす要素だけが選ばれる点に注目してください。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
         "countryNote": "Louisiana Purchase timeline は Louisiana Purchase（Office of the Historian, U.S. Department of State） をもとにした題材です。",
         "sourceRefs": [
           {
@@ -601,7 +601,7 @@ export const EXECUTE_CHALLENGES = {
           "scoreだけを見ると他国やcontextデータを選んでしまいます。",
           "出力はデータ全体ではなく、最後に組み立てたnameまたはlabelです。"
         ],
-        "programmingExplanation": "通常問題なのでfilter/loopと条件追跡を中心にします。",
+        "programmingExplanation": "この問題はコードの実行結果を予測する問題です。for文で各要素を1つずつ確認し、if文の条件に合う場合だけ結果に追加していく処理を、要素ごとに手を動かして追跡します。この問題では「country が \"US\" と一致する」かつ「score が 8 以上」という2つの条件を両方満たす要素だけが選ばれる点に注目してください。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
         "countryNote": "transcontinental railroad/Promontory Summit は Golden Spike history（National Park Service） をもとにした題材です。",
         "sourceRefs": [
           {
@@ -645,7 +645,7 @@ export const EXECUTE_CHALLENGES = {
           "scoreだけを見ると他国やcontextデータを選んでしまいます。",
           "出力はデータ全体ではなく、最後に組み立てたnameまたはlabelです。"
         ],
-        "programmingExplanation": "通常問題なのでfilter/loopと条件追跡を中心にします。",
+        "programmingExplanation": "この問題はコードの実行結果を予測する問題です。for文で各要素を1つずつ確認し、if文の条件に合う場合だけ結果に追加していく処理を、要素ごとに手を動かして追跡します。この問題では「country が \"US\" と一致する」かつ「score が 9 以上」という2つの条件を両方満たす要素だけが選ばれる点に注目してください。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
         "countryNote": "jazz origins/New Orleans は New Orleans Jazz history（National Park Service） をもとにした題材です。",
         "sourceRefs": [
           {
@@ -689,7 +689,7 @@ export const EXECUTE_CHALLENGES = {
           "scoreだけを見ると他国やcontextデータを選んでしまいます。",
           "出力はデータ全体ではなく、最後に組み立てたnameまたはlabelです。"
         ],
-        "programmingExplanation": "通常問題なのでfilter/loopと条件追跡を中心にします。",
+        "programmingExplanation": "この問題はコードの実行結果を予測する問題です。for文で各要素を1つずつ確認し、if文の条件に合う場合だけ結果に追加していく処理を、要素ごとに手を動かして追跡します。この問題では「country が \"US\" と一致する」かつ「score が 10 以上」という2つの条件を両方満たす要素だけが選ばれる点に注目してください。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
         "countryNote": "Wright Flyer 1903 flight data は The First Flight（National Park Service） をもとにした題材です。",
         "sourceRefs": [
           {
@@ -733,7 +733,7 @@ export const EXECUTE_CHALLENGES = {
           "scoreだけを見ると他国やcontextデータを選んでしまいます。",
           "出力はデータ全体ではなく、最後に組み立てたnameまたはlabelです。"
         ],
-        "programmingExplanation": "通常問題なのでfilter/loopと条件追跡を中心にします。",
+        "programmingExplanation": "この問題はコードの実行結果を予測する問題です。for文で各要素を1つずつ確認し、if文の条件に合う場合だけ結果に追加していく処理を、要素ごとに手を動かして追跡します。この問題では「country が \"US\" と一致する」かつ「score が 11 以上」という2つの条件を両方満たす要素だけが選ばれる点に注目してください。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
         "countryNote": "Hoover Dam engineering data は Hoover Dam FAQ（Bureau of Reclamation） をもとにした題材です。",
         "sourceRefs": [
           {
@@ -779,7 +779,7 @@ export const EXECUTE_CHALLENGES = {
           "scoreだけを見ると他国やcontextデータを選んでしまいます。",
           "出力はデータ全体ではなく、最後に組み立てたnameまたはlabelです。"
         ],
-        "programmingExplanation": "通常問題なのでfilter/loopと条件追跡を中心にします。",
+        "programmingExplanation": "この問題はコードの実行結果を予測する問題です。filter で条件に合う要素だけを残し、map で必要な値だけを取り出すという2段階の処理を順番に追跡します。この問題では「country が \"US\" と一致する」かつ「score が 5 以上」という2つの条件を両方満たす要素だけが選ばれる点に注目してください。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
         "countryNote": "Alaska Purchase timeline は Alaska Purchase（Office of the Historian, U.S. Department of State） をもとにした題材です。",
         "sourceRefs": [
           {
@@ -823,7 +823,7 @@ export const EXECUTE_CHALLENGES = {
           "scoreだけを見ると他国やcontextデータを選んでしまいます。",
           "出力はデータ全体ではなく、最後に組み立てたnameまたはlabelです。"
         ],
-        "programmingExplanation": "通常問題なのでfilter/loopと条件追跡を中心にします。",
+        "programmingExplanation": "この問題はコードの実行結果を予測する問題です。filter で条件に合う要素だけを残し、map で必要な値だけを取り出すという2段階の処理を順番に追跡します。この問題では「country が \"US\" と一致する」かつ「score が 6 以上」という2つの条件を両方満たす要素だけが選ばれる点に注目してください。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
         "countryNote": "Lewis and Clark expedition route は Lewis and Clark Trail（National Park Service） をもとにした題材です。",
         "sourceRefs": [
           {
@@ -867,7 +867,7 @@ export const EXECUTE_CHALLENGES = {
           "scoreだけを見ると他国やcontextデータを選んでしまいます。",
           "出力はデータ全体ではなく、最後に組み立てたnameまたはlabelです。"
         ],
-        "programmingExplanation": "通常問題なのでfilter/loopと条件追跡を中心にします。",
+        "programmingExplanation": "この問題はコードの実行結果を予測する問題です。filter で条件に合う要素だけを残し、map で必要な値だけを取り出すという2段階の処理を順番に追跡します。この問題では「country が \"US\" と一致する」かつ「score が 7 以上」という2つの条件を両方満たす要素だけが選ばれる点に注目してください。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
         "countryNote": "San Antonio Missions は San Antonio Missions（UNESCO World Heritage Centre） をもとにした題材です。",
         "sourceRefs": [
           {
@@ -911,7 +911,7 @@ export const EXECUTE_CHALLENGES = {
           "scoreだけを見ると他国やcontextデータを選んでしまいます。",
           "出力はデータ全体ではなく、最後に組み立てたnameまたはlabelです。"
         ],
-        "programmingExplanation": "通常問題なのでfilter/loopと条件追跡を中心にします。",
+        "programmingExplanation": "この問題はコードの実行結果を予測する問題です。filter で条件に合う要素だけを残し、map で必要な値だけを取り出すという2段階の処理を順番に追跡します。この問題では「country が \"US\" と一致する」かつ「score が 8 以上」という2つの条件を両方満たす要素だけが選ばれる点に注目してください。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
         "countryNote": "blues music/Beale Street context は Beale Street Historic District（National Park Service） をもとにした題材です。",
         "sourceRefs": [
           {
@@ -955,7 +955,7 @@ export const EXECUTE_CHALLENGES = {
           "scoreだけを見ると他国やcontextデータを選んでしまいます。",
           "出力はデータ全体ではなく、最後に組み立てたnameまたはlabelです。"
         ],
-        "programmingExplanation": "通常問題なのでfilter/loopと条件追跡を中心にします。",
+        "programmingExplanation": "この問題はコードの実行結果を予測する問題です。filter で条件に合う要素だけを残し、map で必要な値だけを取り出すという2段階の処理を順番に追跡します。この問題では「country が \"US\" と一致する」かつ「score が 9 以上」という2つの条件を両方満たす要素だけが選ばれる点に注目してください。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
         "countryNote": "Voyager 1 Pale Blue Dot は Voyager（NASA Science） をもとにした題材です。",
         "sourceRefs": [
           {
@@ -999,7 +999,7 @@ export const EXECUTE_CHALLENGES = {
           "scoreだけを見ると他国やcontextデータを選んでしまいます。",
           "出力はデータ全体ではなく、最後に組み立てたnameまたはlabelです。"
         ],
-        "programmingExplanation": "通常問題なのでfilter/loopと条件追跡を中心にします。",
+        "programmingExplanation": "この問題はコードの実行結果を予測する問題です。filter で条件に合う要素だけを残し、map で必要な値だけを取り出すという2段階の処理を順番に追跡します。この問題では「country が \"US\" と一致する」かつ「score が 10 以上」という2つの条件を両方満たす要素だけが選ばれる点に注目してください。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
         "countryNote": "GPS system segments は GPS system segments（GPS.gov） をもとにした題材です。",
         "sourceRefs": [
           {
@@ -1043,7 +1043,7 @@ export const EXECUTE_CHALLENGES = {
           "scoreだけを見ると他国やcontextデータを選んでしまいます。",
           "出力はデータ全体ではなく、最後に組み立てたnameまたはlabelです。"
         ],
-        "programmingExplanation": "通常問題なのでfilter/loopと条件追跡を中心にします。",
+        "programmingExplanation": "この問題はコードの実行結果を予測する問題です。filter で条件に合う要素だけを残し、map で必要な値だけを取り出すという2段階の処理を順番に追跡します。この問題では「country が \"US\" と一致する」かつ「score が 11 以上」という2つの条件を両方満たす要素だけが選ばれる点に注目してください。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
         "countryNote": "Brooklyn Bridge opening/structure data は Brooklyn Bridge（National Park Service） をもとにした題材です。",
         "sourceRefs": [
           {

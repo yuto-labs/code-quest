@@ -56,7 +56,7 @@ export const FINAL_MISSIONS = {
               "値そのものではなく、値を取り出すためのキーや添字を書く必要があります。",
               "文字列キーは引用符を含めて書きます。"
             ],
-            "programmingExplanation": "dictsを使ってデータから値を読む問題です。事実はデータに入っているため、暗記ではなくコード上の参照先を追うことが主な作業です。",
+            "programmingExplanation": "この問題は辞書（dict）のキーアクセスを扱う問題です。record という辞書から「name」というキーを指定して値を取り出し、変数に代入しています。キー名を1文字でも間違えると、PythonではKeyErrorになったり意図しない値が表示されたりするため、コード中に書かれているキー名を正確に読み取ることが重要です。",
             "countryNote": "大日本帝国憲法の公布を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
           },
           {
@@ -82,7 +82,7 @@ export const FINAL_MISSIONS = {
               "値そのものではなく、値を取り出すためのキーや添字を書く必要があります。",
               "文字列キーは引用符を含めて書きます。"
             ],
-            "programmingExplanation": "dictsを使ってデータから値を読む問題です。事実はデータに入っているため、暗記ではなくコード上の参照先を追うことが主な作業です。",
+            "programmingExplanation": "この問題は辞書（dict）のキーアクセスを扱う問題です。record という辞書から「name」というキーを指定して値を取り出し、変数に代入しています。キー名を1文字でも間違えると、PythonではKeyErrorになったり意図しない値が表示されたりするため、コード中に書かれているキー名を正確に読み取ることが重要です。",
             "countryNote": "大江健三郎とノーベル文学賞を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
           },
           {
@@ -108,7 +108,7 @@ export const FINAL_MISSIONS = {
               "値そのものではなく、値を取り出すためのキーや添字を書く必要があります。",
               "文字列キーは引用符を含めて書きます。"
             ],
-            "programmingExplanation": "conditionsを使ってデータから値を読む問題です。事実はデータに入っているため、暗記ではなくコード上の参照先を追うことが主な作業です。",
+            "programmingExplanation": "この問題は辞書（dict）のキーアクセスを扱う問題です。record という辞書から「name」というキーを指定して値を取り出し、変数に代入しています。キー名を1文字でも間違えると、PythonではKeyErrorになったり意図しない値が表示されたりするため、コード中に書かれているキー名を正確に読み取ることが重要です。",
             "countryNote": "金閣寺と鹿苑寺という名称を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
           }
         ]
@@ -144,7 +144,7 @@ export const FINAL_MISSIONS = {
               "値そのものを入れるのではなく、参照に必要なプロパティ名や添字を入れます。",
               "JavaScript のドット記法ではプロパティ名に引用符を付けません。"
             ],
-            "programmingExplanation": "JavaScript のデータ参照を読む問題です。Final では find と条件判定も組み合わせています。",
+            "programmingExplanation": "この問題はオブジェクトのプロパティ（属性）アクセスを扱う問題です。record というオブジェクトが持つ「name」という名前のプロパティを取り出しています。ドット記法でアクセスする場合、プロパティ名はクォートを付けずにそのまま書く点が、文字列キーでの角かっこアクセスとの違いです。",
             "countryNote": "葛飾北斎と富嶽三十六景を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
           },
           {
@@ -170,7 +170,7 @@ export const FINAL_MISSIONS = {
               "値そのものを入れるのではなく、参照に必要なプロパティ名や添字を入れます。",
               "JavaScript のドット記法ではプロパティ名に引用符を付けません。"
             ],
-            "programmingExplanation": "JavaScript のデータ参照を読む問題です。Final では find と条件判定も組み合わせています。",
+            "programmingExplanation": "この問題はオブジェクトのプロパティ（属性）アクセスを扱う問題です。record というオブジェクトが持つ「name」という名前のプロパティを取り出しています。ドット記法でアクセスする場合、プロパティ名はクォートを付けずにそのまま書く点が、文字列キーでの角かっこアクセスとの違いです。",
             "countryNote": "スーパーカミオカンデを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
           },
           {
@@ -196,7 +196,7 @@ export const FINAL_MISSIONS = {
               "値そのものを入れるのではなく、参照に必要なプロパティ名や添字を入れます。",
               "JavaScript のドット記法ではプロパティ名に引用符を付けません。"
             ],
-            "programmingExplanation": "JavaScript のデータ参照を読む問題です。Final では find と条件判定も組み合わせています。",
+            "programmingExplanation": "この問題はオブジェクトのプロパティ（属性）アクセスを扱う問題です。record というオブジェクトが持つ「name」という名前のプロパティを取り出しています。ドット記法でアクセスする場合、プロパティ名はクォートを付けずにそのまま書く点が、文字列キーでの角かっこアクセスとの違いです。",
             "countryNote": "厳島神社を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
           }
         ]
@@ -234,7 +234,7 @@ export const FINAL_MISSIONS = {
               "空欄や選択肢には、事実名そのものではなくコードが必要としている \"freedoms\" を選びます。",
               "問題に必要な米国データはコード内に入っているので、外部知識だけで答えを推測しません。"
             ],
-            "programmingExplanation": "dict-plus-membership の構文を、実データ参照に使う練習です。",
+            "programmingExplanation": "この問題は辞書（dict）のキーアクセスを扱う問題です。record という辞書から「freedoms」というキーを指定して値を取り出し、変数に代入しています。キー名を1文字でも間違えると、PythonではKeyErrorになったり意図しない値が表示されたりするため、コード中に書かれているキー名を正確に読み取ることが重要です。",
             "countryNote": "Bill of Rights amendments/freedoms は Bill of Rights（National Archives） をもとにした題材です。必要な情報は問題文とコード内にも示しています。",
             "sourceRefs": [
               {
@@ -273,7 +273,7 @@ export const FINAL_MISSIONS = {
               "空欄や選択肢には、事実名そのものではなくコードが必要としている sorted(records, key=lambda item: item[\"year\"])[-1][\"name\"] を選びます。",
               "問題に必要な米国データはコード内に入っているので、外部知識だけで答えを推測しません。"
             ],
-            "programmingExplanation": "list-plus-sort-key の構文を、実データ参照に使う練習です。",
+            "programmingExplanation": "この問題は sorted関数とラムダ式、負のインデックスを組み合わせた問題です。sorted(records, key=lambda item: item[\"year\"]) は records を year の値で並べ替えた新しいリストを作り、[-1] でその最後の要素（最も year が大きい要素）を取り出し、[\"name\"] でその名前を取り出しています。",
             "countryNote": "Toni Morrison Nobel Literature は Toni Morrison facts（Nobel Prize） をもとにした題材です。必要な情報は問題文とコード内にも示しています。",
             "sourceRefs": [
               {
@@ -312,7 +312,7 @@ export const FINAL_MISSIONS = {
               "空欄や選択肢には、事実名そのものではなくコードが必要としている \"E Pluribus Unum\" in aliases を選びます。",
               "問題に必要な米国データはコード内に入っているので、外部知識だけで答えを推測しません。"
             ],
-            "programmingExplanation": "alias-plus-string-membership の構文を、実データ参照に使う練習です。",
+            "programmingExplanation": "この問題は「in」演算子によるメンバーシップ判定を扱う問題です。\"E Pluribus Unum\" in aliases は、指定した文字列がリスト aliases の要素として存在するかどうかを調べ、真偽値を返します。",
             "countryNote": "Great Seal/E-Pluribus-Unum は Great Seal（U.S. Department of State） をもとにした題材です。必要な情報は問題文とコード内にも示しています。",
             "sourceRefs": [
               {
@@ -361,7 +361,7 @@ export const FINAL_MISSIONS = {
               "空欄や選択肢には、事実名そのものではなくコードが必要としている winner.name を選びます。",
               "問題に必要な米国データはコード内に入っているので、外部知識だけで答えを推測しません。"
             ],
-            "programmingExplanation": "find-plus-template の構文を、実データ参照に使う練習です。",
+            "programmingExplanation": "この問題は配列の find メソッドで条件に合う要素を1つ探し、そのプロパティを取り出す問題です。winners.find(item => item.prize === \"Peace\") は条件に一致する最初の要素を返し、winner.name でその要素の name プロパティを取り出しています。",
             "countryNote": "Martin Luther King Jr Nobel Peace Prize は Martin Luther King Jr. facts（Nobel Prize） をもとにした題材です。必要な情報は問題文とコード内にも示しています。",
             "sourceRefs": [
               {
@@ -400,7 +400,7 @@ export const FINAL_MISSIONS = {
               "空欄や選択肢には、事実名そのものではなくコードが必要としている freedoms.has(\"speech\") && freedoms.has(\"religion\") を選びます。",
               "問題に必要な米国データはコード内に入っているので、外部知識だけで答えを推測しません。"
             ],
-            "programmingExplanation": "Set-plus-membership の構文を、実データ参照に使う練習です。",
+            "programmingExplanation": "この問題は Set オブジェクトの has メソッドと論理演算子 && を組み合わせた問題です。has メソッドはその値が Set に含まれているかどうかを真偽値で返し、&& は両方の条件が真である場合にだけ true を返します。",
             "countryNote": "First Amendment five freedoms は Bill of Rights transcript（National Archives） をもとにした題材です。必要な情報は問題文とコード内にも示しています。",
             "sourceRefs": [
               {
@@ -439,7 +439,7 @@ export const FINAL_MISSIONS = {
               "空欄や選択肢には、事実名そのものではなくコードが必要としている records.map(item => item.president).join(\" / \") を選びます。",
               "問題に必要な米国データはコード内に入っているので、外部知識だけで答えを推測しません。"
             ],
-            "programmingExplanation": "array-plus-object の構文を、実データ参照に使う練習です。",
+            "programmingExplanation": "この問題は配列の map メソッドと join メソッドを組み合わせた問題です。map で各要素から president プロパティだけを取り出した新しい配列を作り、join(\" / \") でそれらを区切り文字でつないだ1つの文字列にしています。",
             "countryNote": "Mount Rushmore represented presidents は Mount Rushmore history（National Park Service） をもとにした題材です。必要な情報は問題文とコード内にも示しています。",
             "sourceRefs": [
               {
@@ -497,7 +497,7 @@ export const FINAL_MISSIONS = {
               "片方の条件だけで選ぶと、余分な項目が混ざります。",
               "出力は辞書全体ではなく name の文字列です。"
             ],
-            "programmingExplanation": "for 文、if 条件、リストへの追加を組み合わせて出力を追跡します。Final ではさらに sort とリスト内包表記が加わります。",
+            "programmingExplanation": "この問題はコードの実行結果を予測する問題です。for文で各要素を1つずつ確認し、if文の条件に合う場合だけ結果に追加していく処理を、要素ごとに手を動かして追跡します。この問題では「country が \"JP\" と一致する」かつ「score が 5 以上」という2つの条件を両方満たす要素だけが選ばれる点に注目してください。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
             "countryNote": "紀伊山地の霊場と参詣道を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
           },
           {
@@ -528,7 +528,7 @@ export const FINAL_MISSIONS = {
               "片方の条件だけで選ぶと、余分な項目が混ざります。",
               "出力は辞書全体ではなく name の文字列です。"
             ],
-            "programmingExplanation": "for 文、if 条件、リストへの追加を組み合わせて出力を追跡します。Final ではさらに sort とリスト内包表記が加わります。",
+            "programmingExplanation": "この問題はコードの実行結果を予測する問題です。for文で各要素を1つずつ確認し、if文の条件に合う場合だけ結果に追加していく処理を、要素ごとに手を動かして追跡します。この問題では「country が \"JP\" と一致する」かつ「score が 6 以上」という2つの条件を両方満たす要素だけが選ばれる点に注目してください。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
             "countryNote": "黒部ダムを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
           },
           {
@@ -559,7 +559,7 @@ export const FINAL_MISSIONS = {
               "片方の条件だけで選ぶと、余分な項目が混ざります。",
               "出力は辞書全体ではなく name の文字列です。"
             ],
-            "programmingExplanation": "for 文、if 条件、リストへの追加を組み合わせて出力を追跡します。Final ではさらに sort とリスト内包表記が加わります。",
+            "programmingExplanation": "この問題はコードの実行結果を予測する問題です。for文で各要素を1つずつ確認し、if文の条件に合う場合だけ結果に追加していく処理を、要素ごとに手を動かして追跡します。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
             "countryNote": "五箇山の合掌造り集落を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
           }
         ]
@@ -600,7 +600,7 @@ export const FINAL_MISSIONS = {
               "filter 後の配列と map 後の配列を混同しやすいです。",
               "other country の高い score は JP 条件で除外されます。"
             ],
-            "programmingExplanation": "JavaScript の配列処理を読む問題です。Final では複数 filter、sort、map を続けて評価します。",
+            "programmingExplanation": "この問題はコードの実行結果を予測する問題です。filter で条件に合う要素だけを残し、map で必要な値だけを取り出すという2段階の処理を順番に追跡します。この問題では「country が \"JP\" と一致する」かつ「score が 6 以上」という2つの条件を両方満たす要素だけが選ばれる点に注目してください。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
             "countryNote": "四国八十八箇所巡礼を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
           },
           {
@@ -631,7 +631,7 @@ export const FINAL_MISSIONS = {
               "filter 後の配列と map 後の配列を混同しやすいです。",
               "other country の高い score は JP 条件で除外されます。"
             ],
-            "programmingExplanation": "JavaScript の配列処理を読む問題です。Final では複数 filter、sort、map を続けて評価します。",
+            "programmingExplanation": "この問題はコードの実行結果を予測する問題です。各行の処理を順番に実行し、変数の値がどのように変化していくかを追跡します。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
             "countryNote": "三陸のリアス海岸を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
           },
           {
@@ -662,7 +662,7 @@ export const FINAL_MISSIONS = {
               "filter 後の配列と map 後の配列を混同しやすいです。",
               "other country の高い score は JP 条件で除外されます。"
             ],
-            "programmingExplanation": "JavaScript の配列処理を読む問題です。Final では複数 filter、sort、map を続けて評価します。",
+            "programmingExplanation": "この問題はコードの実行結果を予測する問題です。filter で条件に合う要素だけを残し、map で必要な値だけを取り出すという2段階の処理を順番に追跡します。この問題では「country が \"JP\" と一致する」かつ「score が 8 以上」という2つの条件を両方満たす要素だけが選ばれる点に注目してください。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
             "countryNote": "トヨタ生産方式のかんばんを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
           }
         ]
@@ -705,7 +705,7 @@ export const FINAL_MISSIONS = {
               "scoreだけを見ると他国やcontextデータを選んでしまいます。",
               "出力はデータ全体ではなく、最後に組み立てたnameまたはlabelです。"
             ],
-            "programmingExplanation": "Finalなので複数条件、並べ替え、ラベル作成を組み合わせます。",
+            "programmingExplanation": "この問題はコードの実行結果を予測する問題です。for文で各要素を1つずつ確認し、if文の条件に合う場合だけ結果に追加していく処理を、要素ごとに手を動かして追跡します。この問題では「country が \"US\" と一致する」かつ「score が 8 以上」という2つの条件を両方満たす要素だけが選ばれる点に注目してください。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
             "countryNote": "Everglades ecosystem/site data は Everglades National Park（UNESCO World Heritage Centre） をもとにした題材です。",
             "sourceRefs": [
               {
@@ -749,7 +749,7 @@ export const FINAL_MISSIONS = {
               "scoreだけを見ると他国やcontextデータを選んでしまいます。",
               "出力はデータ全体ではなく、最後に組み立てたnameまたはlabelです。"
             ],
-            "programmingExplanation": "Finalなので複数条件、並べ替え、ラベル作成を組み合わせます。",
+            "programmingExplanation": "この問題はコードの実行結果を予測する問題です。for文で各要素を1つずつ確認し、if文の条件に合う場合だけ結果に追加していく処理を、要素ごとに手を動かして追跡します。この問題では「country が \"US\" と一致する」かつ「score が 9 以上」という2つの条件を両方満たす要素だけが選ばれる点に注目してください。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
             "countryNote": "Hubble launch/servicing timeline は Hubble Space Telescope（NASA Science） をもとにした題材です。",
             "sourceRefs": [
               {
@@ -793,7 +793,7 @@ export const FINAL_MISSIONS = {
               "scoreだけを見ると他国やcontextデータを選んでしまいます。",
               "出力はデータ全体ではなく、最後に組み立てたnameまたはlabelです。"
             ],
-            "programmingExplanation": "Finalなので複数条件、並べ替え、ラベル作成を組み合わせます。",
+            "programmingExplanation": "この問題はコードの実行結果を予測する問題です。for文で各要素を1つずつ確認し、if文の条件に合う場合だけ結果に追加していく処理を、要素ごとに手を動かして追跡します。この問題では「country が \"US\" と一致する」かつ「score が 10 以上」という2つの条件を両方満たす要素だけが選ばれる点に注目してください。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
             "countryNote": "Interstate Highway System route data は Interstate Highway System history（Federal Highway Administration） をもとにした題材です。",
             "sourceRefs": [
               {
@@ -847,7 +847,7 @@ export const FINAL_MISSIONS = {
               "scoreだけを見ると他国やcontextデータを選んでしまいます。",
               "出力はデータ全体ではなく、最後に組み立てたnameまたはlabelです。"
             ],
-            "programmingExplanation": "Finalなので複数条件、並べ替え、ラベル作成を組み合わせます。",
+            "programmingExplanation": "この問題はコードの実行結果を予測する問題です。filter で条件に合う要素だけを残し、map で必要な値だけを取り出すという2段階の処理を順番に追跡します。この問題では「country が \"US\" と一致する」かつ「score が 8 以上」という2つの条件を両方満たす要素だけが選ばれる点に注目してください。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
             "countryNote": "Chaco Culture site data は Chaco Culture（UNESCO World Heritage Centre） をもとにした題材です。",
             "sourceRefs": [
               {
@@ -891,7 +891,7 @@ export const FINAL_MISSIONS = {
               "scoreだけを見ると他国やcontextデータを選んでしまいます。",
               "出力はデータ全体ではなく、最後に組み立てたnameまたはlabelです。"
             ],
-            "programmingExplanation": "Finalなので複数条件、並べ替え、ラベル作成を組み合わせます。",
+            "programmingExplanation": "この問題はコードの実行結果を予測する問題です。filter で条件に合う要素だけを残し、map で必要な値だけを取り出すという2段階の処理を順番に追跡します。この問題では「country が \"US\" と一致する」かつ「score が 9 以上」という2つの条件を両方満たす要素だけが選ばれる点に注目してください。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
             "countryNote": "Erie Canal route/timeline は Erie Canalway（National Park Service） をもとにした題材です。",
             "sourceRefs": [
               {
@@ -935,7 +935,7 @@ export const FINAL_MISSIONS = {
               "scoreだけを見ると他国やcontextデータを選んでしまいます。",
               "出力はデータ全体ではなく、最後に組み立てたnameまたはlabelです。"
             ],
-            "programmingExplanation": "Finalなので複数条件、並べ替え、ラベル作成を組み合わせます。",
+            "programmingExplanation": "この問題はコードの実行結果を予測する問題です。filter で条件に合う要素だけを残し、map で必要な値だけを取り出すという2段階の処理を順番に追跡します。この問題では「country が \"US\" と一致する」かつ「score が 10 以上」という2つの条件を両方満たす要素だけが選ばれる点に注目してください。1行ずつ処理を追って、最終的に何が出力されるかを確認することが、このタイプの問題で身につけたい力です。",
             "countryNote": "ARPANET first-message log context は ARPANET（DARPA） をもとにした題材です。",
             "sourceRefs": [
               {
@@ -1024,7 +1024,7 @@ export const FINAL_MISSIONS = {
               "症状だけを見てデータ削除で直そうとしないこと。",
               "中間値を作っても、最後の比較や return で使わなければ反映されません。"
             ],
-            "programmingExplanation": "DEBUG では、原因の行、修正の行、修正後の影響を分けて考えます。データを保ったまま、比較または境界処理を正しくします。",
+            "programmingExplanation": "このDEBUG問題の本質的な原因は「変換後の `local_time` ではなく、変換前の `utc_time` から日付を返している。」という点です。原因になっている値の表現または時刻境界を、処理前後で一貫させる必要があるため。修正前のコードと修正後のコードを見比べ、どの行の、どの条件が、なぜ正しい結果につながるのかを順番に確認することが、このタイプのデバッグ問題で身につけたい考え方です。",
             "countryNote": "日本標準時 UTC+9 の日付またぎを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。",
             "debugExplanation": {
               "cause": "変換後の `local_time` ではなく、変換前の `utc_time` から日付を返している。",
@@ -1093,7 +1093,7 @@ export const FINAL_MISSIONS = {
               "症状だけを見てデータ削除で直そうとしないこと。",
               "中間値を作っても、最後の比較や return で使わなければ反映されません。"
             ],
-            "programmingExplanation": "DEBUG では、原因の行、修正の行、修正後の影響を分けて考えます。データを保ったまま、比較または境界処理を正しくします。",
+            "programmingExplanation": "このDEBUG問題の本質的な原因は「変換後の `local_time` ではなく、変換前の `utc_time` から日付を返している。」という点です。原因になっている値の表現または時刻境界を、処理前後で一貫させる必要があるため。修正前のコードと修正後のコードを見比べ、どの行の、どの条件が、なぜ正しい結果につながるのかを順番に確認することが、このタイプのデバッグ問題で身につけたい考え方です。",
             "countryNote": "日本の郵便番号形式を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。",
             "debugExplanation": {
               "cause": "変換後の `local_time` ではなく、変換前の `utc_time` から日付を返している。",
@@ -1162,7 +1162,7 @@ export const FINAL_MISSIONS = {
               "症状だけを見てデータ削除で直そうとしないこと。",
               "中間値を作っても、最後の比較や return で使わなければ反映されません。"
             ],
-            "programmingExplanation": "DEBUG では、原因の行、修正の行、修正後の影響を分けて考えます。データを保ったまま、比較または境界処理を正しくします。",
+            "programmingExplanation": "このDEBUG問題の本質的な原因は「変換後の `local_time` ではなく、変換前の `utc_time` から日付を返している。」という点です。原因になっている値の表現または時刻境界を、処理前後で一貫させる必要があるため。修正前のコードと修正後のコードを見比べ、どの行の、どの条件が、なぜ正しい結果につながるのかを順番に確認することが、このタイプのデバッグ問題で身につけたい考え方です。",
             "countryNote": "JIS 都道府県コードを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。",
             "debugExplanation": {
               "cause": "変換後の `local_time` ではなく、変換前の `utc_time` から日付を返している。",
@@ -1241,7 +1241,7 @@ export const FINAL_MISSIONS = {
               "エラーを隠す修正ではなく、条件式を正しくします。",
               "日本語や日付の仕様をコードの条件に反映する必要があります。"
             ],
-            "programmingExplanation": "DEBUG は、壊れている条件式を特定し、最小修正で仕様に合わせる練習です。",
+            "programmingExplanation": "このDEBUG問題の本質的な原因は「年度が4月開始なのに、常に暦年 `getFullYear()` を返している。」という点です。仕様に合わせた比較や境界条件を入れないと、特定の入力だけ失敗するため。修正前のコードと修正後のコードを見比べ、どの行の、どの条件が、なぜ正しい結果につながるのかを順番に確認することが、このタイプのデバッグ問題で身につけたい考え方です。",
             "countryNote": "日本の電話番号整形を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。",
             "debugExplanation": {
               "cause": "年度が4月開始なのに、常に暦年 `getFullYear()` を返している。",
@@ -1310,7 +1310,7 @@ export const FINAL_MISSIONS = {
               "エラーを隠す修正ではなく、条件式を正しくします。",
               "日本語や日付の仕様をコードの条件に反映する必要があります。"
             ],
-            "programmingExplanation": "DEBUG は、壊れている条件式を特定し、最小修正で仕様に合わせる練習です。",
+            "programmingExplanation": "このDEBUG問題の本質的な原因は「年度が4月開始なのに、常に暦年 `getFullYear()` を返している。」という点です。仕様に合わせた比較や境界条件を入れないと、特定の入力だけ失敗するため。修正前のコードと修正後のコードを見比べ、どの行の、どの条件が、なぜ正しい結果につながるのかを順番に確認することが、このタイプのデバッグ問題で身につけたい考え方です。",
             "countryNote": "日本語の縦書きを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。",
             "debugExplanation": {
               "cause": "年度が4月開始なのに、常に暦年 `getFullYear()` を返している。",
@@ -1379,7 +1379,7 @@ export const FINAL_MISSIONS = {
               "エラーを隠す修正ではなく、条件式を正しくします。",
               "日本語や日付の仕様をコードの条件に反映する必要があります。"
             ],
-            "programmingExplanation": "DEBUG は、壊れている条件式を特定し、最小修正で仕様に合わせる練習です。",
+            "programmingExplanation": "このDEBUG問題の本質的な原因は「年度が4月開始なのに、常に暦年 `getFullYear()` を返している。」という点です。仕様に合わせた比較や境界条件を入れないと、特定の入力だけ失敗するため。修正前のコードと修正後のコードを見比べ、どの行の、どの条件が、なぜ正しい結果につながるのかを順番に確認することが、このタイプのデバッグ問題で身につけたい考え方です。",
             "countryNote": "日本の年度が4月に始まることを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。",
             "debugExplanation": {
               "cause": "年度が4月開始なのに、常に暦年 `getFullYear()` を返している。",
@@ -1464,7 +1464,7 @@ export const FINAL_MISSIONS = {
               "例外を握りつぶすだけでは正しいデータ参照になりません。",
               "表示名と内部キーを混同すると同じバグが再発します。"
             ],
-            "programmingExplanation": "Finalでは境界値や表記ゆれが広がっても壊れない修正を選びます。",
+            "programmingExplanation": "このDEBUG問題の本質的な原因は「federal holiday observed-date rule で入力表記を正規化せず、保存データのキー形式と一致しない」という点です。入力と保存データの形式を同じにしてから参照すれば、存在するデータを正しく引けます。修正前のコードと修正後のコードを見比べ、どの行の、どの条件が、なぜ正しい結果につながるのかを順番に確認することが、このタイプのデバッグ問題で身につけたい考え方です。",
             "countryNote": "federal holiday observed-date rule は Federal Holidays（U.S. Office of Personnel Management） をもとにした題材です。",
             "debugExplanation": {
               "cause": "federal holiday observed-date rule で入力表記を正規化せず、保存データのキー形式と一致しない",
@@ -1550,7 +1550,7 @@ export const FINAL_MISSIONS = {
               "例外を握りつぶすだけでは正しいデータ参照になりません。",
               "表示名と内部キーを混同すると同じバグが再発します。"
             ],
-            "programmingExplanation": "Finalでは境界値や表記ゆれが広がっても壊れない修正を選びます。",
+            "programmingExplanation": "このDEBUG問題の本質的な原因は「US customary mile/foot conversion で入力表記を正規化せず、保存データのキー形式と一致しない」という点です。入力と保存データの形式を同じにしてから参照すれば、存在するデータを正しく引けます。修正前のコードと修正後のコードを見比べ、どの行の、どの条件が、なぜ正しい結果につながるのかを順番に確認することが、このタイプのデバッグ問題で身につけたい考え方です。",
             "countryNote": "US customary mile/foot conversion は SI Units（NIST） をもとにした題材です。",
             "debugExplanation": {
               "cause": "US customary mile/foot conversion で入力表記を正規化せず、保存データのキー形式と一致しない",
@@ -1636,7 +1636,7 @@ export const FINAL_MISSIONS = {
               "例外を握りつぶすだけでは正しいデータ参照になりません。",
               "表示名と内部キーを混同すると同じバグが再発します。"
             ],
-            "programmingExplanation": "Finalでは境界値や表記ゆれが広がっても壊れない修正を選びます。",
+            "programmingExplanation": "このDEBUG問題の本質的な原因は「dollar/cents monetary calculation で入力表記を正規化せず、保存データのキー形式と一致しない」という点です。入力と保存データの形式を同じにしてから参照すれば、存在するデータを正しく引けます。修正前のコードと修正後のコードを見比べ、どの行の、どの条件が、なぜ正しい結果につながるのかを順番に確認することが、このタイプのデバッグ問題で身につけたい考え方です。",
             "countryNote": "dollar/cents monetary calculation は Currency and coins（U.S. Department of the Treasury） をもとにした題材です。",
             "debugExplanation": {
               "cause": "dollar/cents monetary calculation で入力表記を正規化せず、保存データのキー形式と一致しない",
@@ -1732,7 +1732,7 @@ export const FINAL_MISSIONS = {
               "例外を握りつぶすだけでは正しいデータ参照になりません。",
               "表示名と内部キーを混同すると同じバグが再発します。"
             ],
-            "programmingExplanation": "Finalでは境界値や表記ゆれが広がっても壊れない修正を選びます。",
+            "programmingExplanation": "このDEBUG問題の本質的な原因は「US federal fiscal year Oct-1 boundary で入力表記を正規化せず、保存データのキー形式と一致しない」という点です。入力と保存データの形式を同じにしてから参照すれば、存在するデータを正しく引けます。修正前のコードと修正後のコードを見比べ、どの行の、どの条件が、なぜ正しい結果につながるのかを順番に確認することが、このタイプのデバッグ問題で身につけたい考え方です。",
             "countryNote": "US federal fiscal year Oct-1 boundary は Circular A-11（Office of Management and Budget） をもとにした題材です。",
             "debugExplanation": {
               "cause": "US federal fiscal year Oct-1 boundary で入力表記を正規化せず、保存データのキー形式と一致しない",
@@ -1818,7 +1818,7 @@ export const FINAL_MISSIONS = {
               "例外を握りつぶすだけでは正しいデータ参照になりません。",
               "表示名と内部キーを混同すると同じバグが再発します。"
             ],
-            "programmingExplanation": "Finalでは境界値や表記ゆれが広がっても壊れない修正を選びます。",
+            "programmingExplanation": "このDEBUG問題の本質的な原因は「Washington state vs Washington-DC で入力表記を正規化せず、保存データのキー形式と一致しない」という点です。入力と保存データの形式を同じにしてから参照すれば、存在するデータを正しく引けます。修正前のコードと修正後のコードを見比べ、どの行の、どの条件が、なぜ正しい結果につながるのかを順番に確認することが、このタイプのデバッグ問題で身につけたい考え方です。",
             "countryNote": "Washington state vs Washington-DC は District of Columbia QuickFacts（U.S. Census Bureau） をもとにした題材です。",
             "debugExplanation": {
               "cause": "Washington state vs Washington-DC で入力表記を正規化せず、保存データのキー形式と一致しない",
@@ -1904,7 +1904,7 @@ export const FINAL_MISSIONS = {
               "例外を握りつぶすだけでは正しいデータ参照になりません。",
               "表示名と内部キーを混同すると同じバグが再発します。"
             ],
-            "programmingExplanation": "Finalでは境界値や表記ゆれが広がっても壊れない修正を選びます。",
+            "programmingExplanation": "このDEBUG問題の本質的な原因は「Hawaiʻi Unicode name normalization で入力表記を正規化せず、保存データのキー形式と一致しない」という点です。入力と保存データの形式を同じにしてから参照すれば、存在するデータを正しく引けます。修正前のコードと修正後のコードを見比べ、どの行の、どの条件が、なぜ正しい結果につながるのかを順番に確認することが、このタイプのデバッグ問題で身につけたい考え方です。",
             "countryNote": "Hawaiʻi Unicode name normalization は About Hawaii（State of Hawaii） をもとにした題材です。",
             "debugExplanation": {
               "cause": "Hawaiʻi Unicode name normalization で入力表記を正規化せず、保存データのキー形式と一致しない",

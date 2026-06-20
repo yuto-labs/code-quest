@@ -23,7 +23,7 @@ export const JS_CHALLENGES = {
         "値そのものを入れるのではなく、参照に必要なプロパティ名や添字を入れます。",
         "JavaScript のドット記法ではプロパティ名に引用符を付けません。"
       ],
-      "programmingExplanation": "JavaScript のデータ参照を読む問題です。1つの主要概念に絞って、値の取り出し方を確認します。",
+      "programmingExplanation": "この問題はオブジェクトのプロパティ（属性）アクセスを扱う問題です。record というオブジェクトが持つ「note」という名前のプロパティを取り出しています。ドット記法でアクセスする場合、プロパティ名はクォートを付けずにそのまま書く点が、文字列キーでの角かっこアクセスとの違いです。",
       "countryNote": "君が代が日本の国歌であることを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
     },
     {
@@ -49,7 +49,7 @@ export const JS_CHALLENGES = {
         "値そのものを入れるのではなく、参照に必要なプロパティ名や添字を入れます。",
         "JavaScript のドット記法ではプロパティ名に引用符を付けません。"
       ],
-      "programmingExplanation": "JavaScript のデータ参照を読む問題です。1つの主要概念に絞って、値の取り出し方を確認します。",
+      "programmingExplanation": "この問題は配列（array）の添字（インデックス）アクセスを扱う問題です。records という配列の1番目（0から数え始めるインデックス）の要素を取り出しています。配列は値の並び順をそのまま保持するため、欲しい値が何番目にあるかを正確に数える必要があります。",
       "countryNote": "青色LEDで赤崎勇・天野浩・中村修二がノーベル物理学賞を受けたことを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
     },
     {
@@ -75,7 +75,7 @@ export const JS_CHALLENGES = {
         "値そのものを入れるのではなく、参照に必要なプロパティ名や添字を入れます。",
         "JavaScript のドット記法ではプロパティ名に引用符を付けません。"
       ],
-      "programmingExplanation": "JavaScript のデータ参照を読む問題です。1つの主要概念に絞って、値の取り出し方を確認します。",
+      "programmingExplanation": "この問題は条件演算子（三項演算子）を使って値を選ぶ問題です。条件式が真のときに topic が返され、変数に代入されます。if文を1行で書けるこの構文では、条件・真の場合の値・偽の場合の値の3つを正しい順序で対応させることがポイントです。",
       "countryNote": "吉野彰とリチウムイオン電池の研究を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
     },
     {
@@ -101,7 +101,7 @@ export const JS_CHALLENGES = {
         "値そのものを入れるのではなく、参照に必要なプロパティ名や添字を入れます。",
         "JavaScript のドット記法ではプロパティ名に引用符を付けません。"
       ],
-      "programmingExplanation": "JavaScript のデータ参照を読む問題です。1つの主要概念に絞って、値の取り出し方を確認します。",
+      "programmingExplanation": "この問題はオブジェクトのプロパティ（属性）アクセスを扱う問題です。record というオブジェクトが持つ「note」という名前のプロパティを取り出しています。ドット記法でアクセスする場合、プロパティ名はクォートを付けずにそのまま書く点が、文字列キーでの角かっこアクセスとの違いです。",
       "countryNote": "山中伸弥とiPS細胞の研究を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
     },
     {
@@ -127,7 +127,7 @@ export const JS_CHALLENGES = {
         "値そのものを入れるのではなく、参照に必要なプロパティ名や添字を入れます。",
         "JavaScript のドット記法ではプロパティ名に引用符を付けません。"
       ],
-      "programmingExplanation": "JavaScript のデータ参照を読む問題です。1つの主要概念に絞って、値の取り出し方を確認します。",
+      "programmingExplanation": "この問題は条件演算子（三項演算子）を使って値を選ぶ問題です。条件式が真のときに topic が返され、変数に代入されます。if文を1行で書けるこの構文では、条件・真の場合の値・偽の場合の値の3つを正しい順序で対応させることがポイントです。",
       "countryNote": "姫路城が白鷺城の愛称で知られることを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
     },
     {
@@ -153,7 +153,7 @@ export const JS_CHALLENGES = {
         "値そのものを入れるのではなく、参照に必要なプロパティ名や添字を入れます。",
         "JavaScript のドット記法ではプロパティ名に引用符を付けません。"
       ],
-      "programmingExplanation": "JavaScript のデータ参照を読む問題です。1つの主要概念に絞って、値の取り出し方を確認します。",
+      "programmingExplanation": "この問題は条件演算子（三項演算子）を使って値を選ぶ問題です。条件式が真のときに topic が返され、変数に代入されます。if文を1行で書けるこの構文では、条件・真の場合の値・偽の場合の値の3つを正しい順序で対応させることがポイントです。",
       "countryNote": "富士山の標高が3776mとして知られることを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
     },
     {
@@ -179,7 +179,7 @@ export const JS_CHALLENGES = {
         "値そのものを入れるのではなく、参照に必要なプロパティ名や添字を入れます。",
         "JavaScript のドット記法ではプロパティ名に引用符を付けません。"
       ],
-      "programmingExplanation": "JavaScript のデータ参照を読む問題です。1つの主要概念に絞って、値の取り出し方を確認します。",
+      "programmingExplanation": "この問題は条件演算子（三項演算子）を使って値を選ぶ問題です。条件式が真のときに topic が返され、変数に代入されます。if文を1行で書けるこの構文では、条件・真の場合の値・偽の場合の値の3つを正しい順序で対応させることがポイントです。",
       "countryNote": "フランシスコ・ザビエルが1549年に日本へ来たことを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
     },
     {
@@ -205,7 +205,7 @@ export const JS_CHALLENGES = {
         "値そのものを入れるのではなく、参照に必要なプロパティ名や添字を入れます。",
         "JavaScript のドット記法ではプロパティ名に引用符を付けません。"
       ],
-      "programmingExplanation": "JavaScript のデータ参照を読む問題です。1つの主要概念に絞って、値の取り出し方を確認します。",
+      "programmingExplanation": "この問題はオブジェクトのプロパティ（属性）アクセスを扱う問題です。record というオブジェクトが持つ「note」という名前のプロパティを取り出しています。ドット記法でアクセスする場合、プロパティ名はクォートを付けずにそのまま書く点が、文字列キーでの角かっこアクセスとの違いです。",
       "countryNote": "ウィリアム・アダムスが日本に来航したことを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
     },
     {
@@ -231,7 +231,7 @@ export const JS_CHALLENGES = {
         "値そのものを入れるのではなく、参照に必要なプロパティ名や添字を入れます。",
         "JavaScript のドット記法ではプロパティ名に引用符を付けません。"
       ],
-      "programmingExplanation": "JavaScript のデータ参照を読む問題です。1つの主要概念に絞って、値の取り出し方を確認します。",
+      "programmingExplanation": "この問題は条件演算子（三項演算子）を使って値を選ぶ問題です。条件式が真のときに topic が返され、変数に代入されます。if文を1行で書けるこの構文では、条件・真の場合の値・偽の場合の値の3つを正しい順序で対応させることがポイントです。",
       "countryNote": "紫式部と源氏物語を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
     },
     {
@@ -257,7 +257,7 @@ export const JS_CHALLENGES = {
         "値そのものを入れるのではなく、参照に必要なプロパティ名や添字を入れます。",
         "JavaScript のドット記法ではプロパティ名に引用符を付けません。"
       ],
-      "programmingExplanation": "JavaScript のデータ参照を読む問題です。1つの主要概念に絞って、値の取り出し方を確認します。",
+      "programmingExplanation": "この問題は配列（array）の添字（インデックス）アクセスを扱う問題です。records という配列の1番目（0から数え始めるインデックス）の要素を取り出しています。配列は値の並び順をそのまま保持するため、欲しい値が何番目にあるかを正確に数える必要があります。",
       "countryNote": "歌舞伎が日本の伝統芸能であることを、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。"
     }
   ],
@@ -285,7 +285,7 @@ export const JS_CHALLENGES = {
         "空欄や選択肢には、事実名そのものではなくコードが必要としている seats を選びます。",
         "問題に必要な米国データはコード内に入っているので、外部知識だけで答えを推測しません。"
       ],
-      "programmingExplanation": "object-property の構文を、実データ参照に使う練習です。",
+      "programmingExplanation": "この問題はオブジェクトのプロパティ（属性）アクセスを扱う問題です。house というオブジェクトが持つ「seats」という名前のプロパティを取り出しています。ドット記法でアクセスする場合、プロパティ名はクォートを付けずにそのまま書く点が、文字列キーでの角かっこアクセスとの違いです。",
       "countryNote": "House of Representatives composition は The House Explained（U.S. House of Representatives） をもとにした題材です。必要な情報は問題文とコード内にも示しています。",
       "sourceRefs": [
         {
@@ -324,7 +324,7 @@ export const JS_CHALLENGES = {
         "空欄や選択肢には、事実名そのものではなくコードが必要としている state.level を選びます。",
         "問題に必要な米国データはコード内に入っているので、外部知識だけで答えを推測しません。"
       ],
-      "programmingExplanation": "nested-object の構文を、実データ参照に使う練習です。",
+      "programmingExplanation": "この問題はオブジェクトのプロパティ（属性）アクセスを扱う問題です。government というオブジェクトが持つ「state.level」という名前のプロパティを取り出しています。ドット記法でアクセスする場合、プロパティ名はクォートを付けずにそのまま書く点が、文字列キーでの角かっこアクセスとの違いです。",
       "countryNote": "federal/state government structure は State governments（USAGov） をもとにした題材です。必要な情報は問題文とコード内にも示しています。",
       "sourceRefs": [
         {
@@ -363,7 +363,7 @@ export const JS_CHALLENGES = {
         "空欄や選択肢には、事実名そのものではなくコードが必要としている partner === \"France\" を選びます。",
         "問題に必要な米国データはコード内に入っているので、外部知識だけで答えを推測しません。"
       ],
-      "programmingExplanation": "strict-equality の構文を、実データ参照に使う練習です。",
+      "programmingExplanation": "この問題は厳密等価演算子（===）を使って値を比較する問題です。partner === \"France\" は、変数 partner の値が文字列 \"France\" と完全に一致するかどうかを判定し、真偽値を返します。",
       "countryNote": "Statue of Liberty/France connection は Statue of Liberty history（National Park Service） をもとにした題材です。必要な情報は問題文とコード内にも示しています。",
       "sourceRefs": [
         {
@@ -402,7 +402,7 @@ export const JS_CHALLENGES = {
         "空欄や選択肢には、事実名そのものではなくコードが必要としている includes(\"Proclaim Liberty\") を選びます。",
         "問題に必要な米国データはコード内に入っているので、外部知識だけで答えを推測しません。"
       ],
-      "programmingExplanation": "string-includes の構文を、実データ参照に使う練習です。",
+      "programmingExplanation": "この問題は文字列のメソッド呼び出しを使う問題です。inscription という文字列に対して includes(\"Proclaim Liberty\") を呼び出し、その結果を出力しています。文字列メソッドは元の文字列を変更せず、新しい値（この場合は真偽値や別の文字列）を返す点を理解することが重要です。",
       "countryNote": "Liberty Bell inscription/symbolism は Liberty Bell（National Park Service） をもとにした題材です。必要な情報は問題文とコード内にも示しています。",
       "sourceRefs": [
         {
@@ -441,7 +441,7 @@ export const JS_CHALLENGES = {
         "空欄や選択肢には、事実名そのものではなくコードが必要としている 0 を選びます。",
         "問題に必要な米国データはコード内に入っているので、外部知識だけで答えを推測しません。"
       ],
-      "programmingExplanation": "array-index の構文を、実データ参照に使う練習です。",
+      "programmingExplanation": "この問題は配列（array）の添字（インデックス）アクセスを扱う問題です。sites という配列の0番目（0から数え始めるインデックス）の要素を取り出しています。配列は値の並び順をそのまま保持するため、欲しい値が何番目にあるかを正確に数える必要があります。",
       "countryNote": "Yosemite World Heritage は Yosemite National Park（UNESCO World Heritage Centre） をもとにした題材です。必要な情報は問題文とコード内にも示しています。",
       "sourceRefs": [
         {
@@ -480,7 +480,7 @@ export const JS_CHALLENGES = {
         "空欄や選択肢には、事実名そのものではなくコードが必要としている >= を選びます。",
         "問題に必要な米国データはコード内に入っているので、外部知識だけで答えを推測しません。"
       ],
-      "programmingExplanation": "numeric-comparison の構文を、実データ参照に使う練習です。",
+      "programmingExplanation": "この問題は比較演算子を使って条件を判定する問題です。>= は左の値が右の値以上であるかを判定し、真偽値を返します。比較演算子の種類によって判定の境界条件が変わるため、どの演算子が適切かを正確に選ぶ必要があります。",
       "countryNote": "Mesa Verde cliff dwellings は Mesa Verde National Park（UNESCO World Heritage Centre） をもとにした題材です。必要な情報は問題文とコード内にも示しています。",
       "sourceRefs": [
         {
@@ -519,7 +519,7 @@ export const JS_CHALLENGES = {
         "空欄や選択肢には、事実名そのものではなくコードが必要としている `${president}: ${year}` を選びます。",
         "問題に必要な米国データはコード内に入っているので、外部知識だけで答えを推測しません。"
       ],
-      "programmingExplanation": "template-literal の構文を、実データ参照に使う練習です。",
+      "programmingExplanation": "この問題はテンプレートリテラルを使った文字列の組み立てを扱う問題です。バッククォートで文字列を囲み、${...}の中に変数を書くことで、変数の値を直接文字列に埋め込むことができます。",
       "countryNote": "George Washington first presidency context は George Washington（The White House） をもとにした題材です。必要な情報は問題文とコード内にも示しています。",
       "sourceRefs": [
         {
@@ -558,7 +558,7 @@ export const JS_CHALLENGES = {
         "空欄や選択肢には、事実名そのものではなくコードが必要としている author を選びます。",
         "問題に必要な米国データはコード内に入っているので、外部知識だけで答えを推測しません。"
       ],
-      "programmingExplanation": "object-destructuring の構文を、実データ参照に使う練習です。",
+      "programmingExplanation": "この問題はオブジェクトの分割代入（destructuring）を扱う問題です。{ author } という書き方は、writer オブジェクトから author というプロパティを取り出し、同じ名前の変数に代入します。",
       "countryNote": "Ernest Hemingway Nobel Literature は Ernest Hemingway facts（Nobel Prize） をもとにした題材です。必要な情報は問題文とコード内にも示しています。",
       "sourceRefs": [
         {
@@ -597,7 +597,7 @@ export const JS_CHALLENGES = {
         "空欄や選択肢には、事実名そのものではなくコードが必要としている Math.max(...peaks) を選びます。",
         "問題に必要な米国データはコード内に入っているので、外部知識だけで答えを推測しません。"
       ],
-      "programmingExplanation": "Math.max/comparison の構文を、実データ参照に使う練習です。",
+      "programmingExplanation": "この問題はスプレッド構文と Math.max を組み合わせて配列内の最大値を求める問題です。...peaks は配列 peaks の要素を個別の引数として展開し、Math.max にまとめて渡すことで、配列の中の最大値を求めています。",
       "countryNote": "Denali geographic elevation context は Denali（National Park Service） をもとにした題材です。必要な情報は問題文とコード内にも示しています。",
       "sourceRefs": [
         {
@@ -636,7 +636,7 @@ export const JS_CHALLENGES = {
         "空欄や選択肢には、事実名そのものではなくコードが必要としている Object.values(bridge)[1] を選びます。",
         "問題に必要な米国データはコード内に入っているので、外部知識だけで答えを推測しません。"
       ],
-      "programmingExplanation": "Object.values の構文を、実データ参照に使う練習です。",
+      "programmingExplanation": "この問題は Object.values とインデックスアクセスを組み合わせる問題です。Object.values(bridge) は bridge オブジェクトの値だけを配列として取り出し、[1] でその1番目（インデックス1）の要素を取り出しています。",
       "countryNote": "Golden Gate Bridge data は Golden Gate Bridge history（National Park Service） をもとにした題材です。必要な情報は問題文とコード内にも示しています。",
       "sourceRefs": [
         {

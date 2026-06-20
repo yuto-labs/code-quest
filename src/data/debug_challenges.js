@@ -60,7 +60,7 @@ export const DEBUG_CHALLENGES = {
           "症状だけを見てデータ削除で直そうとしないこと。",
           "中間値を作っても、最後の比較や return で使わなければ反映されません。"
         ],
-        "programmingExplanation": "DEBUG では、原因の行、修正の行、修正後の影響を分けて考えます。データを保ったまま、比較または境界処理を正しくします。",
+        "programmingExplanation": "このDEBUG問題の本質的な原因は「保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。」という点です。原因になっている値の表現または時刻境界を、処理前後で一貫させる必要があるため。修正前のコードと修正後のコードを見比べ、どの行の、どの条件が、なぜ正しい結果につながるのかを順番に確認することが、このタイプのデバッグ問題で身につけたい考え方です。",
         "countryNote": "漢字・ひらがな・カタカナが混在する検索を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。",
         "debugExplanation": {
           "cause": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。",
@@ -129,7 +129,7 @@ export const DEBUG_CHALLENGES = {
           "症状だけを見てデータ削除で直そうとしないこと。",
           "中間値を作っても、最後の比較や return で使わなければ反映されません。"
         ],
-        "programmingExplanation": "DEBUG では、原因の行、修正の行、修正後の影響を分けて考えます。データを保ったまま、比較または境界処理を正しくします。",
+        "programmingExplanation": "このDEBUG問題の本質的な原因は「保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。」という点です。原因になっている値の表現または時刻境界を、処理前後で一貫させる必要があるため。修正前のコードと修正後のコードを見比べ、どの行の、どの条件が、なぜ正しい結果につながるのかを順番に確認することが、このタイプのデバッグ問題で身につけたい考え方です。",
         "countryNote": "和暦変換を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。",
         "debugExplanation": {
           "cause": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。",
@@ -198,7 +198,7 @@ export const DEBUG_CHALLENGES = {
           "症状だけを見てデータ削除で直そうとしないこと。",
           "中間値を作っても、最後の比較や return で使わなければ反映されません。"
         ],
-        "programmingExplanation": "DEBUG では、原因の行、修正の行、修正後の影響を分けて考えます。データを保ったまま、比較または境界処理を正しくします。",
+        "programmingExplanation": "このDEBUG問題の本質的な原因は「保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。」という点です。原因になっている値の表現または時刻境界を、処理前後で一貫させる必要があるため。修正前のコードと修正後のコードを見比べ、どの行の、どの条件が、なぜ正しい結果につながるのかを順番に確認することが、このタイプのデバッグ問題で身につけたい考え方です。",
         "countryNote": "日本の住所表記順を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。",
         "debugExplanation": {
           "cause": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。",
@@ -267,7 +267,7 @@ export const DEBUG_CHALLENGES = {
           "症状だけを見てデータ削除で直そうとしないこと。",
           "中間値を作っても、最後の比較や return で使わなければ反映されません。"
         ],
-        "programmingExplanation": "DEBUG では、原因の行、修正の行、修正後の影響を分けて考えます。データを保ったまま、比較または境界処理を正しくします。",
+        "programmingExplanation": "このDEBUG問題の本質的な原因は「保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。」という点です。原因になっている値の表現または時刻境界を、処理前後で一貫させる必要があるため。修正前のコードと修正後のコードを見比べ、どの行の、どの条件が、なぜ正しい結果につながるのかを順番に確認することが、このタイプのデバッグ問題で身につけたい考え方です。",
         "countryNote": "日本円の表示形式を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。",
         "debugExplanation": {
           "cause": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。",
@@ -336,7 +336,7 @@ export const DEBUG_CHALLENGES = {
           "症状だけを見てデータ削除で直そうとしないこと。",
           "中間値を作っても、最後の比較や return で使わなければ反映されません。"
         ],
-        "programmingExplanation": "DEBUG では、原因の行、修正の行、修正後の影響を分けて考えます。データを保ったまま、比較または境界処理を正しくします。",
+        "programmingExplanation": "このDEBUG問題の本質的な原因は「保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。」という点です。原因になっている値の表現または時刻境界を、処理前後で一貫させる必要があるため。修正前のコードと修正後のコードを見比べ、どの行の、どの条件が、なぜ正しい結果につながるのかを順番に確認することが、このタイプのデバッグ問題で身につけたい考え方です。",
         "countryNote": "駅名の日本語表記とローマ字表記を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。",
         "debugExplanation": {
           "cause": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。",
@@ -407,7 +407,7 @@ export const DEBUG_CHALLENGES = {
           "エラーを隠す修正ではなく、条件式を正しくします。",
           "日本語や日付の仕様をコードの条件に反映する必要があります。"
         ],
-        "programmingExplanation": "DEBUG は、壊れている条件式を特定し、最小修正で仕様に合わせる練習です。",
+        "programmingExplanation": "このDEBUG問題の本質的な原因は「保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。」という点です。仕様に合わせた比較や境界条件を入れないと、特定の入力だけ失敗するため。修正前のコードと修正後のコードを見比べ、どの行の、どの条件が、なぜ正しい結果につながるのかを順番に確認することが、このタイプのデバッグ問題で身につけたい考え方です。",
         "countryNote": "小野小町と伝統的な三美人説を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。",
         "debugExplanation": {
           "cause": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。",
@@ -476,7 +476,7 @@ export const DEBUG_CHALLENGES = {
           "エラーを隠す修正ではなく、条件式を正しくします。",
           "日本語や日付の仕様をコードの条件に反映する必要があります。"
         ],
-        "programmingExplanation": "DEBUG は、壊れている条件式を特定し、最小修正で仕様に合わせる練習です。",
+        "programmingExplanation": "このDEBUG問題の本質的な原因は「保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。」という点です。仕様に合わせた比較や境界条件を入れないと、特定の入力だけ失敗するため。修正前のコードと修正後のコードを見比べ、どの行の、どの条件が、なぜ正しい結果につながるのかを順番に確認することが、このタイプのデバッグ問題で身につけたい考え方です。",
         "countryNote": "日本語の姓名順を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。",
         "debugExplanation": {
           "cause": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。",
@@ -545,7 +545,7 @@ export const DEBUG_CHALLENGES = {
           "エラーを隠す修正ではなく、条件式を正しくします。",
           "日本語や日付の仕様をコードの条件に反映する必要があります。"
         ],
-        "programmingExplanation": "DEBUG は、壊れている条件式を特定し、最小修正で仕様に合わせる練習です。",
+        "programmingExplanation": "このDEBUG問題の本質的な原因は「保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。」という点です。仕様に合わせた比較や境界条件を入れないと、特定の入力だけ失敗するため。修正前のコードと修正後のコードを見比べ、どの行の、どの条件が、なぜ正しい結果につながるのかを順番に確認することが、このタイプのデバッグ問題で身につけたい考え方です。",
         "countryNote": "全角文字と半角文字を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。",
         "debugExplanation": {
           "cause": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。",
@@ -614,7 +614,7 @@ export const DEBUG_CHALLENGES = {
           "エラーを隠す修正ではなく、条件式を正しくします。",
           "日本語や日付の仕様をコードの条件に反映する必要があります。"
         ],
-        "programmingExplanation": "DEBUG は、壊れている条件式を特定し、最小修正で仕様に合わせる練習です。",
+        "programmingExplanation": "このDEBUG問題の本質的な原因は「保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。」という点です。仕様に合わせた比較や境界条件を入れないと、特定の入力だけ失敗するため。修正前のコードと修正後のコードを見比べ、どの行の、どの条件が、なぜ正しい結果につながるのかを順番に確認することが、このタイプのデバッグ問題で身につけたい考え方です。",
         "countryNote": "五十音順を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。",
         "debugExplanation": {
           "cause": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。",
@@ -683,7 +683,7 @@ export const DEBUG_CHALLENGES = {
           "エラーを隠す修正ではなく、条件式を正しくします。",
           "日本語や日付の仕様をコードの条件に反映する必要があります。"
         ],
-        "programmingExplanation": "DEBUG は、壊れている条件式を特定し、最小修正で仕様に合わせる練習です。",
+        "programmingExplanation": "このDEBUG問題の本質的な原因は「保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。」という点です。仕様に合わせた比較や境界条件を入れないと、特定の入力だけ失敗するため。修正前のコードと修正後のコードを見比べ、どの行の、どの条件が、なぜ正しい結果につながるのかを順番に確認することが、このタイプのデバッグ問題で身につけたい考え方です。",
         "countryNote": "都道府県の接尾辞処理を、コード内のデータとして扱います。事実そのものは問題文とデータに示し、解答では処理の読み取りを中心にします。",
         "debugExplanation": {
           "cause": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。",
@@ -760,7 +760,7 @@ export const DEBUG_CHALLENGES = {
           "例外を握りつぶすだけでは正しいデータ参照になりません。",
           "表示名と内部キーを混同すると同じバグが再発します。"
         ],
-        "programmingExplanation": "通常問題ではキー正規化の基本を確認します。",
+        "programmingExplanation": "このDEBUG問題の本質的な原因は「USPS state abbreviation lookup で入力表記を正規化せず、保存データのキー形式と一致しない」という点です。入力と保存データの形式を同じにしてから参照すれば、存在するデータを正しく引けます。修正前のコードと修正後のコードを見比べ、どの行の、どの条件が、なぜ正しい結果につながるのかを順番に確認することが、このタイプのデバッグ問題で身につけたい考え方です。",
         "countryNote": "USPS state abbreviation lookup は Publication 28 Appendix B（United States Postal Service） をもとにした題材です。",
         "debugExplanation": {
           "cause": "USPS state abbreviation lookup で入力表記を正規化せず、保存データのキー形式と一致しない",
@@ -846,7 +846,7 @@ export const DEBUG_CHALLENGES = {
           "例外を握りつぶすだけでは正しいデータ参照になりません。",
           "表示名と内部キーを混同すると同じバグが再発します。"
         ],
-        "programmingExplanation": "通常問題ではキー正規化の基本を確認します。",
+        "programmingExplanation": "このDEBUG問題の本質的な原因は「ZIP code leading-zero preservation で入力表記を正規化せず、保存データのキー形式と一致しない」という点です。入力と保存データの形式を同じにしてから参照すれば、存在するデータを正しく引けます。修正前のコードと修正後のコードを見比べ、どの行の、どの条件が、なぜ正しい結果につながるのかを順番に確認することが、このタイプのデバッグ問題で身につけたい考え方です。",
         "countryNote": "ZIP code leading-zero preservation は ZIP Code history（United States Postal Service） をもとにした題材です。",
         "debugExplanation": {
           "cause": "ZIP code leading-zero preservation で入力表記を正規化せず、保存データのキー形式と一致しない",
@@ -932,7 +932,7 @@ export const DEBUG_CHALLENGES = {
           "例外を握りつぶすだけでは正しいデータ参照になりません。",
           "表示名と内部キーを混同すると同じバグが再発します。"
         ],
-        "programmingExplanation": "通常問題ではキー正規化の基本を確認します。",
+        "programmingExplanation": "このDEBUG問題の本質的な原因は「MM/DD/YYYY parsing で入力表記を正規化せず、保存データのキー形式と一致しない」という点です。入力と保存データの形式を同じにしてから参照すれば、存在するデータを正しく引けます。修正前のコードと修正後のコードを見比べ、どの行の、どの条件が、なぜ正しい結果につながるのかを順番に確認することが、このタイプのデバッグ問題で身につけたい考え方です。",
         "countryNote": "MM/DD/YYYY parsing は Time and Date FAQs（NIST） をもとにした題材です。",
         "debugExplanation": {
           "cause": "MM/DD/YYYY parsing で入力表記を正規化せず、保存データのキー形式と一致しない",
@@ -1018,7 +1018,7 @@ export const DEBUG_CHALLENGES = {
           "例外を握りつぶすだけでは正しいデータ参照になりません。",
           "表示名と内部キーを混同すると同じバグが再発します。"
         ],
-        "programmingExplanation": "通常問題ではキー正規化の基本を確認します。",
+        "programmingExplanation": "このDEBUG問題の本質的な原因は「US time-zone mapping で入力表記を正規化せず、保存データのキー形式と一致しない」という点です。入力と保存データの形式を同じにしてから参照すれば、存在するデータを正しく引けます。修正前のコードと修正後のコードを見比べ、どの行の、どの条件が、なぜ正しい結果につながるのかを順番に確認することが、このタイプのデバッグ問題で身につけたい考え方です。",
         "countryNote": "US time-zone mapping は Time Zones（U.S. Department of Transportation） をもとにした題材です。",
         "debugExplanation": {
           "cause": "US time-zone mapping で入力表記を正規化せず、保存データのキー形式と一致しない",
@@ -1104,7 +1104,7 @@ export const DEBUG_CHALLENGES = {
           "例外を握りつぶすだけでは正しいデータ参照になりません。",
           "表示名と内部キーを混同すると同じバグが再発します。"
         ],
-        "programmingExplanation": "通常問題ではキー正規化の基本を確認します。",
+        "programmingExplanation": "このDEBUG問題の本質的な原因は「North American phone formatting で入力表記を正規化せず、保存データのキー形式と一致しない」という点です。入力と保存データの形式を同じにしてから参照すれば、存在するデータを正しく引けます。修正前のコードと修正後のコードを見比べ、どの行の、どの条件が、なぜ正しい結果につながるのかを順番に確認することが、このタイプのデバッグ問題で身につけたい考え方です。",
         "countryNote": "North American phone formatting は North American Numbering Plan（Federal Communications Commission） をもとにした題材です。",
         "debugExplanation": {
           "cause": "North American phone formatting で入力表記を正規化せず、保存データのキー形式と一致しない",
@@ -1192,7 +1192,7 @@ export const DEBUG_CHALLENGES = {
           "例外を握りつぶすだけでは正しいデータ参照になりません。",
           "表示名と内部キーを混同すると同じバグが再発します。"
         ],
-        "programmingExplanation": "通常問題ではキー正規化の基本を確認します。",
+        "programmingExplanation": "このDEBUG問題の本質的な原因は「12-hour AM/PM conversion で入力表記を正規化せず、保存データのキー形式と一致しない」という点です。入力と保存データの形式を同じにしてから参照すれば、存在するデータを正しく引けます。修正前のコードと修正後のコードを見比べ、どの行の、どの条件が、なぜ正しい結果につながるのかを順番に確認することが、このタイプのデバッグ問題で身につけたい考え方です。",
         "countryNote": "12-hour AM/PM conversion は Time and Frequency FAQs（NIST） をもとにした題材です。",
         "debugExplanation": {
           "cause": "12-hour AM/PM conversion で入力表記を正規化せず、保存データのキー形式と一致しない",
@@ -1278,7 +1278,7 @@ export const DEBUG_CHALLENGES = {
           "例外を握りつぶすだけでは正しいデータ参照になりません。",
           "表示名と内部キーを混同すると同じバグが再発します。"
         ],
-        "programmingExplanation": "通常問題ではキー正規化の基本を確認します。",
+        "programmingExplanation": "このDEBUG問題の本質的な原因は「Fahrenheit display/conversion で入力表記を正規化せず、保存データのキー形式と一致しない」という点です。入力と保存データの形式を同じにしてから参照すれば、存在するデータを正しく引けます。修正前のコードと修正後のコードを見比べ、どの行の、どの条件が、なぜ正しい結果につながるのかを順番に確認することが、このタイプのデバッグ問題で身につけたい考え方です。",
         "countryNote": "Fahrenheit display/conversion は Temperature（National Weather Service） をもとにした題材です。",
         "debugExplanation": {
           "cause": "Fahrenheit display/conversion で入力表記を正規化せず、保存データのキー形式と一致しない",
@@ -1364,7 +1364,7 @@ export const DEBUG_CHALLENGES = {
           "例外を握りつぶすだけでは正しいデータ参照になりません。",
           "表示名と内部キーを混同すると同じバグが再発します。"
         ],
-        "programmingExplanation": "通常問題ではキー正規化の基本を確認します。",
+        "programmingExplanation": "このDEBUG問題の本質的な原因は「USPS apartment/suite address parsing で入力表記を正規化せず、保存データのキー形式と一致しない」という点です。入力と保存データの形式を同じにしてから参照すれば、存在するデータを正しく引けます。修正前のコードと修正後のコードを見比べ、どの行の、どの条件が、なぜ正しい結果につながるのかを順番に確認することが、このタイプのデバッグ問題で身につけたい考え方です。",
         "countryNote": "USPS apartment/suite address parsing は Publication 28（United States Postal Service） をもとにした題材です。",
         "debugExplanation": {
           "cause": "USPS apartment/suite address parsing で入力表記を正規化せず、保存データのキー形式と一致しない",
@@ -1450,7 +1450,7 @@ export const DEBUG_CHALLENGES = {
           "例外を握りつぶすだけでは正しいデータ参照になりません。",
           "表示名と内部キーを混同すると同じバグが再発します。"
         ],
-        "programmingExplanation": "通常問題ではキー正規化の基本を確認します。",
+        "programmingExplanation": "このDEBUG問題の本質的な原因は「ZIP+4 validation で入力表記を正規化せず、保存データのキー形式と一致しない」という点です。入力と保存データの形式を同じにしてから参照すれば、存在するデータを正しく引けます。修正前のコードと修正後のコードを見比べ、どの行の、どの条件が、なぜ正しい結果につながるのかを順番に確認することが、このタイプのデバッグ問題で身につけたい考え方です。",
         "countryNote": "ZIP+4 validation は ZIP Code history（United States Postal Service） をもとにした題材です。",
         "debugExplanation": {
           "cause": "ZIP+4 validation で入力表記を正規化せず、保存データのキー形式と一致しない",
@@ -1536,7 +1536,7 @@ export const DEBUG_CHALLENGES = {
           "例外を握りつぶすだけでは正しいデータ参照になりません。",
           "表示名と内部キーを混同すると同じバグが再発します。"
         ],
-        "programmingExplanation": "通常問題ではキー正規化の基本を確認します。",
+        "programmingExplanation": "このDEBUG問題の本質的な原因は「states/territories/DC data model で入力表記を正規化せず、保存データのキー形式と一致しない」という点です。入力と保存データの形式を同じにしてから参照すれば、存在するデータを正しく引けます。修正前のコードと修正後のコードを見比べ、どの行の、どの条件が、なぜ正しい結果につながるのかを順番に確認することが、このタイプのデバッグ問題で身につけたい考え方です。",
         "countryNote": "states/territories/DC data model は Publication 28 Appendix B（United States Postal Service） をもとにした題材です。",
         "debugExplanation": {
           "cause": "states/territories/DC data model で入力表記を正規化せず、保存データのキー形式と一致しない",

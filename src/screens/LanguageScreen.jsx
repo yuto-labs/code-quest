@@ -20,6 +20,10 @@ const ISO_MAP = {
 
 const WORLD_LANGUAGES = { decode: LANGUAGES, execute: EXECUTE_LANGUAGES, debug: DEBUG_LANGUAGES };
 
+function getFinalChildCount(mission) {
+  return mission?.questions?.length || mission?.childQuestionIds?.length || mission?.targetChildCount || 0;
+}
+
 const TIER_META = {
   none:   { label: '',         color: 'transparent', glyph: '' },
   bronze: { label: 'BRONZE',   color: '#cd7f32',     glyph: '🥉' },
@@ -131,7 +135,7 @@ export default function LanguageScreen({ country, world = 'decode', progress, me
             const missionUnlocked = Boolean(mission && isCleared);
             const missionCleared = Boolean(mission && isFinalMissionCleared(meta, mission.id));
             const missionStatus = mission ? (meta.finalMissions?.[mission.id] || {}) : {};
-            const targetChildCount = mission?.targetChildCount || mission?.childQuestionIds?.length || 3;
+            const targetChildCount = getFinalChildCount(mission);
             const completedChildCount = Math.min(missionStatus.completedChildCount || 0, targetChildCount);
 
             return (

@@ -30,6 +30,10 @@ import { createShuffleRun, sanitizeWorldShuffle } from './utils/worldShuffle';
 
 const WORLD_CHALLENGES = { decode: CHALLENGES, execute: EXECUTE_CHALLENGES, debug: DEBUG_CHALLENGES };
 
+function getFinalChildCount(mission) {
+  return mission?.questions?.length || mission?.childQuestionIds?.length || mission?.targetChildCount || 0;
+}
+
 const getStorageKey = (uid, type) => {
   const prefix = uid ? `cq_${uid}` : 'cq_guest';
   return `${prefix}_${type}`;
@@ -728,7 +732,7 @@ export default function App() {
     const { meta: mt } = latestRef.current;
     const uid = latestRef.current.user?.id;
     const existing = mt.finalMissions?.[mission.id] || {};
-    const targetChildCount = mission.targetChildCount || mission.childQuestionIds?.length || 3;
+    const targetChildCount = getFinalChildCount(mission);
     const attemptId = buildAttemptId(mission.worldId, mission.countryId, mission.languageId, mission.id);
     const existingAttempt = mt.attempts?.[attemptId];
     const baseMeta = updateAttempt(
@@ -785,7 +789,7 @@ export default function App() {
     const uid = latestRef.current.user?.id;
     const { meta: mt } = latestRef.current;
     const attemptId = buildAttemptId(mission.worldId, mission.countryId, mission.languageId, mission.id);
-    const targetChildCount = mission.targetChildCount || mission.childQuestionIds?.length || 3;
+    const targetChildCount = getFinalChildCount(mission);
     const completedChildCount = Math.min(completion.completedChildCount || mission.questions?.length || 0, targetChildCount);
     const isComplete = completedChildCount >= targetChildCount;
     const existingFinal = mt.finalMissions?.[mission.id] || {};

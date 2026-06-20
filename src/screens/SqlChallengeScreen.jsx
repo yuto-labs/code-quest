@@ -1,8 +1,9 @@
-import { useMemo, useRef, useState, useEffect } from 'react';
+﻿import { useEffect, useMemo, useRef, useState } from 'react';
 import { SQL_QUESTIONS_BY_ID } from '../data/sql/questions';
 import { SQL_GLOBAL_FACTS_BY_ID } from '../data/sql/global_facts';
 import { SqlExplanation, SqlQueryView, SqlResultTable, SqlTableView } from '../components/SqlComponents';
 import { SQL_MAX_HEARTS } from '../utils/sqlProgress';
+import { buildCompletedSql, buildSqlHint, evaluateSqlResult, normalizeSqlOptionLabel } from '../utils/sqlDisplay';
 import BackButton from '../components/BackButton';
 
 export default function SqlChallengeScreen({
@@ -26,6 +27,7 @@ export default function SqlChallengeScreen({
   const [status, setStatus] = useState('idle');
   const [submittedAnswer, setSubmittedAnswer] = useState('');
   const [gameOver, setGameOver] = useState(false);
+  const [showHint, setShowHint] = useState(false);
   const resultBodyRef = useRef(null);
   const onSaveResumeRef = useRef(onSaveResume);
   const fact = useMemo(() => SQL_GLOBAL_FACTS_BY_ID[question?.globalFactIds?.[0]], [question]);
@@ -53,20 +55,19 @@ export default function SqlChallengeScreen({
     if (gameOver && resultBodyRef.current) resultBodyRef.current.scrollTop = 0;
   }, [gameOver]);
 
-  if (!question) {
-    return (
-      <div style={styles.wrap}>
-        <div style={styles.empty}>準備中</div>
-        <BackButton onClick={onBack} />
-      </div>
-    );
-  }
 
-  const isDecode = question.mode === 'decode';
-  const isDebug = question.mode === 'debug';
+  const isDecode = question?.mode === 'decode';
+  const isDebug = question?.mode === 'debug';
   const currentDebug = isDebug ? question.debugSteps?.[debugStep] : null;
-  const currentCorrect = isDebug ? currentDebug?.answer : question.answer;
-  const canSubmit = isDecode ? answer.trim().length > 0 : isDebug ? selected !== null : selected !== null;
+  const currentCorrect = isDebug ? currentDebug?.answer : question?.answer;
+  const canSubmit = Boolean(question) && (isDecode ? answer.trim().length > 0 : selected !== null);
+  const completedQuery = question ? buildCompletedSql(question.query, currentCorrect) : '';
+  const displayedQuery = question ? (isDebug && debugStep === 1 ? question.explanation?.completedQuery : question.query) : '';
+  const expectedResult = question ? (isDecode ? evaluateSqlResult(question, completedQuery) : question.expectedResult) : null;
+  const progressPercent = question ? Math.round((question.order / 10) * 100) : 0;
+  const currentHint = question ? buildSqlHint(question, currentDebug) : '';
+  const correctOption = question && !isDecode && !isDebug ? question.options?.find(option => option.id === currentCorrect) : null;
+  const displayCorrectAnswer = correctOption ? normalizeSqlOptionLabel(correctOption) : currentCorrect;
 
   const clearTemp = () => {
     setAnswer('');
@@ -83,6 +84,7 @@ export default function SqlChallengeScreen({
     setStatus('idle');
     setSubmittedAnswer('');
     setGameOver(false);
+    setShowHint(false);
     onRetry?.(question);
   };
 
@@ -96,6 +98,7 @@ export default function SqlChallengeScreen({
         setDebugAnswers(nextAnswers);
         setDebugStep(debugStep + 1);
         setSelected(null);
+        setShowHint(false);
         setStatus('idle');
         return;
       }
@@ -103,6 +106,7 @@ export default function SqlChallengeScreen({
       clearTemp();
       return;
     }
+
     const nextHearts = hearts - 1;
     setHearts(nextHearts);
     setStatus('wrong');
@@ -115,10 +119,99 @@ export default function SqlChallengeScreen({
 
   const handleNext = () => onComplete?.(question);
 
+  useEffect(() => {
+    const handler = (event) => {
+      if (event.key !== 'Enter') return;
+      if (event.isComposing) return;
+      event.preventDefault();
+      if (status === 'correct') {
+        handleNext();
+      } else if (status === 'idle' && canSubmit) {
+        handleSubmit();
+      }
+    };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  });
+
+  if (!question) {
+    return (
+      <div style={styles.wrap}>
+        <div style={styles.empty}>読み込み中</div>
+        <BackButton onClick={onBack} />
+      </div>
+    );
+  }
+
   const explanation = {
     ...question.explanation,
-    correctAnswer: isDebug ? currentCorrect : question.explanation?.correctAnswer,
+    correctAnswer: isDebug ? currentCorrect : (question.explanation?.correctAnswer || currentCorrect),
+    completedQuery: isDecode ? completedQuery : question.explanation?.completedQuery,
   };
+
+  const renderDecodeQuery = () => {
+    const [beforeBlank, afterBlank = ''] = String(question.query || '').split('___BLANK___');
+    return (
+      <section style={styles.querySection}>
+        <div style={styles.queryLabel}>QUERY</div>
+        <pre style={styles.queryFill}>
+          <span>{beforeBlank}</span>
+          <input
+            style={styles.inlineBlank}
+            value={status === 'correct' ? currentCorrect : answer}
+            onChange={event => {
+              if (status !== 'idle') return;
+              setAnswer(event.target.value);
+            }}
+            disabled={status !== 'idle'}
+            placeholder="ここに入力"
+            autoFocus
+          />
+          <span>{afterBlank}</span>
+        </pre>
+      </section>
+    );
+  };
+
+  const renderOptions = () => (
+    <div style={styles.options}>
+      {(isDebug ? currentDebug?.options : question.options)?.map(option => {
+        const value = typeof option === 'string' ? option : option.id;
+        const selectedNow = selected === value;
+        const optionResult = !isDebug && question.options?.find(item => item.id === value)?.result;
+        return (
+          <button
+            key={value}
+            style={{ ...styles.option, borderColor: selectedNow ? 'var(--accent2)' : 'var(--border2)' }}
+            onClick={() => status === 'idle' && setSelected(value)}
+            disabled={status !== 'idle'}
+          >
+            <span>{normalizeSqlOptionLabel(option)}</span>
+            {optionResult && <SqlResultTable result={optionResult} />}
+          </button>
+        );
+      })}
+    </div>
+  );
+
+  const renderActionButtons = () => (
+    <div style={styles.actionInner}>
+      {status === 'correct' ? (
+        <button className="pixel-btn" onClick={handleNext}>NEXT</button>
+      ) : (
+        <>
+          <button
+            className="pixel-btn"
+            style={{ fontSize: 9, color: 'var(--text-dim)', borderColor: 'var(--text-dim)' }}
+            onClick={() => setShowHint(value => !value)}
+          >
+            HINT
+          </button>
+          <button className="pixel-btn" disabled={!canSubmit} onClick={handleSubmit}>ANSWER</button>
+        </>
+      )}
+    </div>
+  );
 
   if (gameOver) {
     return (
@@ -132,8 +225,8 @@ export default function SqlChallengeScreen({
               <code>{submittedAnswer || 'No answer'}</code>
             </div>
             {question.tables.map(table => <SqlTableView key={table.id} table={table} />)}
-            <SqlQueryView query={question.query} />
-            <SqlResultTable result={question.expectedResult} />
+            <SqlQueryView query={isDecode ? completedQuery : question.query} />
+            <SqlResultTable title="EXPECTED RESULT" result={expectedResult} />
             <SqlExplanation explanation={explanation} fact={fact} />
           </div>
           <div style={styles.footer}>
@@ -154,50 +247,52 @@ export default function SqlChallengeScreen({
       </div>
       <main style={styles.main}>
         <header style={styles.header}>
-          <div style={styles.kicker}>{question.chapterId} / {question.mode.toUpperCase()} / HEARTS {hearts}</div>
+          <div style={styles.statusBar}>
+            <div style={styles.kicker}>{question.chapterId} / {question.mode.toUpperCase()} / Q{question.order}/10</div>
+            <div style={styles.hearts} aria-label={`hearts ${hearts} of ${SQL_MAX_HEARTS}`}>
+              {Array.from({ length: SQL_MAX_HEARTS }).map((_, index) => (
+                <span key={index} style={{ opacity: index < hearts ? 1 : 0.2 }}>
+                  {index < hearts ? '笙･' : 'ﾂｷ'}
+                </span>
+              ))}
+            </div>
+          </div>
+          <div className="xp-bar" style={styles.progressBar}>
+            <div className="xp-fill" style={{ width: `${progressPercent}%` }} />
+          </div>
           <h1 style={styles.title}>{question.title}</h1>
           <p style={styles.prompt}>{isDebug ? currentDebug?.question : question.prompt}</p>
         </header>
-        <div style={styles.tables}>{question.tables.map(table => <SqlTableView key={table.id} table={table} />)}</div>
-        <SqlQueryView query={isDebug && debugStep === 1 ? question.explanation.completedQuery : question.query} />
-        {isDecode && <SqlResultTable title="EXPECTED RESULT" result={question.expectedResult} />}
 
-        {isDecode ? (
-          <input
-            style={styles.input}
-            value={answer}
-            onChange={event => setAnswer(event.target.value)}
-            placeholder="空欄に入るSQLを入力"
-          />
-        ) : (
-          <div style={styles.options}>
-            {(isDebug ? currentDebug?.options : question.options)?.map(option => {
-              const value = typeof option === 'string' ? option : option.id;
-              const label = typeof option === 'string' ? option : (option.label || option.id);
-              return (
-                <button key={value} style={{ ...styles.option, borderColor: selected === value ? 'var(--accent2)' : 'var(--border2)' }} onClick={() => setSelected(value)}>
-                  {label}
-                  {!isDebug && question.options?.find(item => item.id === value)?.result && (
-                    <SqlResultTable result={question.options.find(item => item.id === value).result} />
-                  )}
-                </button>
-              );
-            })}
+        <div style={styles.tables}>
+          {question.tables.map(table => <SqlTableView key={table.id} table={table} />)}
+        </div>
+
+        {isDecode ? renderDecodeQuery() : <SqlQueryView query={displayedQuery} />}
+        {isDecode && <SqlResultTable title="EXPECTED RESULT" result={expectedResult} />}
+        {!isDecode && renderOptions()}
+
+        {showHint && currentHint && <div style={styles.hint}>HINT: {currentHint}</div>}
+
+        {status === 'correct' && (
+          <div style={styles.feedbackCorrect}>
+            <div style={styles.feedbackTitle}>CORRECT!</div>
+            <div style={styles.answerLine}>
+              <span>ANSWER</span>
+              <code>{displayCorrectAnswer}</code>
+            </div>
           </div>
         )}
-
-        <div style={styles.actions}>
-          {status === 'correct' ? (
-            <button className="pixel-btn" onClick={handleNext}>NEXT</button>
-          ) : (
-            <button className="pixel-btn" disabled={!canSubmit} onClick={handleSubmit}>ANSWER</button>
-          )}
-        </div>
-        {status === 'correct' && (
-          <SqlExplanation explanation={explanation} fact={fact} />
+        {status === 'correct' && <SqlExplanation explanation={explanation} fact={fact} />}
+        {status === 'wrong' && (
+          <div style={styles.wrong}>
+            Incorrect. TABLE、QUERY、EXPECTED RESULT をもう一度見比べてください。残り HEARTS: {hearts}/{SQL_MAX_HEARTS}
+          </div>
         )}
-        {status === 'wrong' && <div style={styles.wrong}>Incorrect. 残りハートを確認して、列名・条件・結果表をもう一度見てください。</div>}
       </main>
+      <div style={styles.activeFooter}>
+        {renderActionButtons()}
+      </div>
     </div>
   );
 }
@@ -208,15 +303,26 @@ const styles = {
   smallBtn: { fontSize: 8, padding: '10px 12px' },
   main: { flex: 1, minHeight: 0, overflowY: 'auto', padding: '18px 16px 28px', display: 'flex', flexDirection: 'column', gap: 16, width: '100%', maxWidth: 980, margin: '0 auto' },
   header: { display: 'flex', flexDirection: 'column', gap: 10 },
+  statusBar: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 },
   kicker: { color: 'var(--accent2)', fontSize: 9 },
+  hearts: { display: 'flex', gap: 5, color: 'var(--danger)', fontSize: 18, textShadow: '0 0 8px rgba(255,68,68,0.45)' },
+  progressBar: { height: 10, width: '100%' },
   title: { margin: 0, color: 'var(--accent)', fontSize: 'clamp(18px, 5vw, 30px)', lineHeight: 1.5 },
   sub: { color: 'var(--text-dim)', fontSize: 11 },
   prompt: { margin: 0, color: 'var(--text)', fontSize: 12, lineHeight: 2 },
   tables: { display: 'flex', flexDirection: 'column', gap: 12, minWidth: 0 },
-  input: { width: '100%', background: 'rgba(0,5,25,0.92)', border: '2px solid var(--accent)', color: 'var(--text)', fontFamily: 'var(--pixel-font)', padding: 14, minHeight: 54 },
+  querySection: { display: 'flex', flexDirection: 'column', gap: 7, minWidth: 0 },
+  queryLabel: { fontFamily: 'var(--pixel-font)', fontSize: 9, color: 'var(--accent2)', lineHeight: 1.8 },
+  queryFill: { margin: 0, padding: '16px 18px', width: '100%', minWidth: 0, overflowX: 'auto', background: 'rgba(0,5,25,0.95)', border: '1px solid rgba(0,102,255,0.45)', color: '#b6f7d2', fontSize: 13, lineHeight: 1.9, whiteSpace: 'pre', fontFamily: 'var(--mono-font, ui-monospace, SFMono-Regular, Consolas, monospace)' },
+  inlineBlank: { minWidth: 110, maxWidth: 'min(420px, 80vw)', background: 'rgba(255,221,0,0.08)', border: '2px solid var(--accent2)', color: 'var(--accent2)', fontFamily: 'inherit', fontSize: 13, padding: '4px 7px', margin: '0 4px', outline: 'none' },
   options: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: 12, minWidth: 0 },
   option: { fontFamily: 'var(--pixel-font)', background: 'rgba(0,5,25,0.8)', color: 'var(--text)', border: '2px solid', padding: 12, textAlign: 'left', display: 'flex', flexDirection: 'column', gap: 10, cursor: 'pointer', minWidth: 0 },
-  actions: { display: 'flex', justifyContent: 'flex-end', gap: 10 },
+  activeFooter: { flex: '0 0 auto', padding: '10px 14px calc(env(safe-area-inset-bottom, 0px) + 10px)', background: 'rgba(13,13,26,0.96)', borderTop: '1px solid rgba(0,255,136,0.22)' },
+  actionInner: { width: '100%', maxWidth: 980, margin: '0 auto', display: 'flex', justifyContent: 'flex-end', gap: 10 },
+  feedbackCorrect: { border: '2px solid rgba(0,255,136,0.45)', background: 'rgba(0,255,136,0.07)', color: 'var(--accent)', padding: 14, display: 'flex', flexDirection: 'column', gap: 10 },
+  feedbackTitle: { fontFamily: 'var(--pixel-font)', fontSize: 12, textShadow: '0 0 10px rgba(0,255,136,0.45)' },
+  answerLine: { display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap', fontSize: 10, color: 'var(--text)' },
+  hint: { border: '1px solid rgba(255,221,0,0.35)', background: 'rgba(255,221,0,0.06)', color: 'var(--accent2)', padding: 12, fontSize: 11, lineHeight: 1.9 },
   wrong: { color: 'var(--danger)', border: '1px solid rgba(255,68,68,0.35)', padding: 12, fontSize: 11, lineHeight: 1.8 },
   resultShell: { height: '100%', minHeight: 0, display: 'flex', flexDirection: 'column' },
   resultBody: { flex: 1, minHeight: 0, overflowY: 'auto', padding: 18, display: 'flex', flexDirection: 'column', gap: 14, maxWidth: 980, width: '100%', margin: '0 auto' },

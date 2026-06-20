@@ -336,55 +336,79 @@ export const SQL_QUESTIONS = [
         ]
       }
     ],
-    "query": "SELECT SELECT name,categoryの結果表\nFROM heritage_sites;",
+    "query": "SELECT name, category\nFROM heritage_sites;",
     "expectedResult": {
       "columns": [
-        "id",
-        "country_id"
+        "name",
+        "category"
       ],
       "rows": [
         [
-          1,
-          "JP"
+          "Yakushima",
+          "Natural"
         ],
         [
-          2,
-          "US"
+          "Grand Canyon National Park",
+          "Natural"
         ],
         [
-          3,
-          "FR"
+          "Palace of Versailles",
+          "Cultural"
         ]
       ]
     },
     "options": [
       {
         "id": "a",
-        "label": "??A",
+        "label": "結果A",
         "result": {
           "columns": [
-            "id",
-            "country_id"
+            "name",
+            "category"
           ],
           "rows": [
             [
-              3,
-              "FR"
+              "Palace of Versailles",
+              "Cultural"
             ],
             [
-              2,
-              "US"
+              "Grand Canyon National Park",
+              "Natural"
             ],
             [
-              1,
-              "JP"
+              "Yakushima",
+              "Natural"
             ]
           ]
         }
       },
       {
         "id": "b",
-        "label": "??B",
+        "label": "結果B",
+        "result": {
+          "columns": [
+            "name",
+            "category"
+          ],
+          "rows": [
+            [
+              "Yakushima",
+              "Natural"
+            ],
+            [
+              "Grand Canyon National Park",
+              "Natural"
+            ],
+            [
+              "Palace of Versailles",
+              "Cultural"
+            ]
+          ]
+        }
+      },
+      {
+        "id": "c",
+        "label": "結果C",
         "result": {
           "columns": [
             "id",
@@ -402,22 +426,6 @@ export const SQL_QUESTIONS = [
             [
               3,
               "FR"
-            ]
-          ]
-        }
-      },
-      {
-        "id": "c",
-        "label": "??C",
-        "result": {
-          "columns": [
-            "id",
-            "country_id"
-          ],
-          "rows": [
-            [
-              1,
-              "JP"
             ]
           ]
         }
@@ -426,18 +434,18 @@ export const SQL_QUESTIONS = [
     "answer": "b",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
-      "completedQuery": "SELECT SELECT name,categoryの結果表\nFROM heritage_sites;",
+      "correctAnswer": "結果B",
+      "completedQuery": "SELECT name, category\nFROM heritage_sites;",
       "executionSteps": [
-        "1. TABLE heritage_sites の列名を確認します。",
-        "2. QUERY の projection に関わる句を読みます。",
-        "3. 条件に合う行と表示する列を決め、RESULT を作ります。"
+        "1. FROM heritage_sites で世界遺産の表を読みます。",
+        "2. SELECT name, category なので、id や country_id は表示しません。",
+        "3. 行の順番は TABLE の順番のまま、name と category だけを RESULT に出します。"
       ],
       "commonMistakes": [
         {
           "wrong": "題材名だけで答える",
           "reason": "SQLでは列名・表名・条件が答えになります。",
-          "correct": "SELECT SELECT name,categoryの結果表\nFROM heritage_sites;"
+          "correct": "SELECT name, category\nFROM heritage_sites;"
         },
         {
           "wrong": "行順を思い込みで読む",
@@ -445,7 +453,7 @@ export const SQL_QUESTIONS = [
           "correct": "ORDER BY がある時だけ順序まで確認します。"
         }
       ],
-      "sqlExplanation": "projection は SELECT の基本 の練習です。SELECT name,categoryの結果表 を満たすため、QUERY のどの句が行・列・順序・集計に効くのかを分けて読みます。",
+      "sqlExplanation": "SELECT に複数の列名を書くと、その列だけを左から書いた順に表示します。この問題では name, category の2列を取り出すので、id や country_id を含む結果は選びません。",
       "themeExplanation": "世界遺産はユネスコによって登録される、人類が共有すべき価値を持つ文化財や自然環境です。",
       "sourceRefs": [
         {
@@ -530,7 +538,7 @@ export const SQL_QUESTIONS = [
     "options": [
       {
         "id": "a",
-        "label": "??A",
+        "label": "結果A",
         "result": {
           "columns": [
             "language",
@@ -554,7 +562,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "b",
-        "label": "??B",
+        "label": "結果B",
         "result": {
           "columns": [
             "language",
@@ -570,7 +578,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "c",
-        "label": "??C",
+        "label": "結果C",
         "result": {
           "columns": [
             "language",
@@ -710,7 +718,7 @@ export const SQL_QUESTIONS = [
     "options": [
       {
         "id": "a",
-        "label": "??A",
+        "label": "結果A",
         "result": {
           "columns": [
             "mission",
@@ -734,7 +742,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "b",
-        "label": "??B",
+        "label": "結果B",
         "result": {
           "columns": [
             "mission",
@@ -758,7 +766,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "c",
-        "label": "??C",
+        "label": "結果C",
         "result": {
           "columns": [
             "mission",
@@ -876,14 +884,6 @@ export const SQL_QUESTIONS = [
         [
           "health_organizations alpha",
           "history"
-        ],
-        [
-          "health_organizations beta",
-          "science"
-        ],
-        [
-          "health_organizations gamma",
-          "culture"
         ]
       ]
     },
@@ -1298,16 +1298,16 @@ export const SQL_QUESTIONS = [
       ],
       "rows": [
         [
-          "international_days alpha",
-          "history"
+          "international_days gamma",
+          "culture"
         ],
         [
           "international_days beta",
           "science"
         ],
         [
-          "international_days gamma",
-          "culture"
+          "international_days alpha",
+          "history"
         ]
       ]
     },
@@ -1530,7 +1530,7 @@ export const SQL_QUESTIONS = [
     "options": [
       {
         "id": "a",
-        "label": "??A",
+        "label": "結果A",
         "result": {
           "columns": [
             "org_code",
@@ -1558,7 +1558,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "b",
-        "label": "??B",
+        "label": "結果B",
         "result": {
           "columns": [
             "org_code",
@@ -1574,7 +1574,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "c",
-        "label": "??C",
+        "label": "結果C",
         "result": {
           "columns": [
             "org_code",
@@ -2031,7 +2031,7 @@ export const SQL_QUESTIONS = [
     "options": [
       {
         "id": "a",
-        "label": "??A",
+        "label": "結果A",
         "result": {
           "columns": [
             "name",
@@ -2055,7 +2055,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "b",
-        "label": "??B",
+        "label": "結果B",
         "result": {
           "columns": [
             "name",
@@ -2079,7 +2079,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "c",
-        "label": "??C",
+        "label": "結果C",
         "result": {
           "columns": [
             "name",
@@ -2211,7 +2211,7 @@ export const SQL_QUESTIONS = [
     "options": [
       {
         "id": "a",
-        "label": "??A",
+        "label": "結果A",
         "result": {
           "columns": [
             "name",
@@ -2235,7 +2235,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "b",
-        "label": "??B",
+        "label": "結果B",
         "result": {
           "columns": [
             "name",
@@ -2251,7 +2251,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "c",
-        "label": "??C",
+        "label": "結果C",
         "result": {
           "columns": [
             "name",
@@ -2391,7 +2391,7 @@ export const SQL_QUESTIONS = [
     "options": [
       {
         "id": "a",
-        "label": "??A",
+        "label": "結果A",
         "result": {
           "columns": [
             "name",
@@ -2415,7 +2415,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "b",
-        "label": "??B",
+        "label": "結果B",
         "result": {
           "columns": [
             "name",
@@ -2439,7 +2439,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "c",
-        "label": "??C",
+        "label": "結果C",
         "result": {
           "columns": [
             "name",
@@ -2557,14 +2557,6 @@ export const SQL_QUESTIONS = [
         [
           "currencies alpha",
           "history"
-        ],
-        [
-          "currencies beta",
-          "science"
-        ],
-        [
-          "currencies gamma",
-          "culture"
         ]
       ]
     },
@@ -2979,16 +2971,16 @@ export const SQL_QUESTIONS = [
       ],
       "rows": [
         [
-          "vaccines alpha",
-          "history"
+          "vaccines gamma",
+          "culture"
         ],
         [
           "vaccines beta",
           "science"
         ],
         [
-          "vaccines gamma",
-          "culture"
+          "vaccines alpha",
+          "history"
         ]
       ]
     },
@@ -3183,7 +3175,7 @@ export const SQL_QUESTIONS = [
         ]
       }
     ],
-    "query": "SELECT *\nFROM historical_events\nWHERE 年代+地域+分類を複合抽出;",
+    "query": "SELECT name, category\nFROM historical_events\nWHERE year >= 1950 AND region = 'Asia' AND category = 'politics';",
     "expectedResult": {
       "columns": [
         "name",
@@ -3191,27 +3183,15 @@ export const SQL_QUESTIONS = [
       ],
       "rows": [
         [
-          "historical_events alpha",
-          "history"
-        ],
-        [
-          "historical_events beta",
-          "science"
-        ],
-        [
           "historical_events gamma",
-          "culture"
-        ],
-        [
-          "historical_events delta",
-          "nature"
+          "politics"
         ]
       ]
     },
     "options": [
       {
         "id": "a",
-        "label": "??A",
+        "label": "結果A",
         "result": {
           "columns": [
             "name",
@@ -3219,27 +3199,27 @@ export const SQL_QUESTIONS = [
           ],
           "rows": [
             [
-              "historical_events delta",
-              "nature"
-            ],
-            [
-              "historical_events gamma",
-              "culture"
+              "historical_events alpha",
+              "history"
             ],
             [
               "historical_events beta",
               "science"
             ],
             [
-              "historical_events alpha",
-              "history"
+              "historical_events gamma",
+              "politics"
+            ],
+            [
+              "historical_events delta",
+              "nature"
             ]
           ]
         }
       },
       {
         "id": "b",
-        "label": "??B",
+        "label": "結果B",
         "result": {
           "columns": [
             "name",
@@ -3247,15 +3227,15 @@ export const SQL_QUESTIONS = [
           ],
           "rows": [
             [
-              "historical_events alpha",
-              "history"
+              "historical_events beta",
+              "science"
             ]
           ]
         }
       },
       {
         "id": "c",
-        "label": "??C",
+        "label": "結果C",
         "result": {
           "columns": [
             "name",
@@ -3263,20 +3243,8 @@ export const SQL_QUESTIONS = [
           ],
           "rows": [
             [
-              "historical_events alpha",
-              "history"
-            ],
-            [
-              "historical_events beta",
-              "science"
-            ],
-            [
               "historical_events gamma",
-              "culture"
-            ],
-            [
-              "historical_events delta",
-              "nature"
+              "politics"
             ]
           ]
         }
@@ -3285,18 +3253,18 @@ export const SQL_QUESTIONS = [
     "answer": "c",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
-      "completedQuery": "SELECT *\nFROM historical_events\nWHERE 年代+地域+分類を複合抽出;",
+      "correctAnswer": "結果C",
+      "completedQuery": "SELECT name, category\nFROM historical_events\nWHERE year >= 1950 AND region = 'Asia' AND category = 'politics';",
       "executionSteps": [
-        "1. TABLE historical_events の列名を確認します。",
-        "2. QUERY の compound-filter に関わる句を読みます。",
-        "3. 条件に合う行と表示する列を決め、RESULT を作ります。"
+        "1. FROM historical_events で歴史事件の表を読みます。",
+        "2. WHERE year >= 1950 AND region = 'Asia' AND category = 'politics' で3条件をすべて満たす行だけに絞ります。",
+        "3. SELECT name, category なので、条件に残った行の名前と分類だけを表示します。"
       ],
       "commonMistakes": [
         {
           "wrong": "題材名だけで答える",
           "reason": "SQLでは列名・表名・条件が答えになります。",
-          "correct": "SELECT *\nFROM historical_events\nWHERE 年代+地域+分類を複合抽出;"
+          "correct": "SELECT name, category\nFROM historical_events\nWHERE year >= 1950 AND region = 'Asia' AND category = 'politics';"
         },
         {
           "wrong": "行順を思い込みで読む",
@@ -3304,7 +3272,7 @@ export const SQL_QUESTIONS = [
           "correct": "ORDER BY がある時だけ順序まで確認します。"
         }
       ],
-      "sqlExplanation": "compound-filter は WHERE で絞り込み の練習です。年代+地域+分類を複合抽出 を満たすため、QUERY のどの句が行・列・順序・集計に効くのかを分けて読みます。",
+      "sqlExplanation": "AND でつないだ WHERE 条件は、すべて真になった行だけを残します。年代・地域・分類のどれか1つだけを見るのではなく、3つの条件を順番に確認するのが compound-filter のポイントです。",
       "themeExplanation": "20世紀後半には、冷戦の終結やベルリンの壁崩壊など、世界の政治体制を大きく変える出来事が相次ぎました。",
       "sourceRefs": [
         {
@@ -3711,7 +3679,7 @@ export const SQL_QUESTIONS = [
     "options": [
       {
         "id": "a",
-        "label": "??A",
+        "label": "結果A",
         "result": {
           "columns": [
             "name",
@@ -3735,7 +3703,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "b",
-        "label": "??B",
+        "label": "結果B",
         "result": {
           "columns": [
             "name",
@@ -3759,7 +3727,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "c",
-        "label": "??C",
+        "label": "結果C",
         "result": {
           "columns": [
             "name",
@@ -3891,7 +3859,7 @@ export const SQL_QUESTIONS = [
     "options": [
       {
         "id": "a",
-        "label": "??A",
+        "label": "結果A",
         "result": {
           "columns": [
             "name",
@@ -3915,7 +3883,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "b",
-        "label": "??B",
+        "label": "結果B",
         "result": {
           "columns": [
             "name",
@@ -3931,7 +3899,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "c",
-        "label": "??C",
+        "label": "結果C",
         "result": {
           "columns": [
             "name",
@@ -4071,7 +4039,7 @@ export const SQL_QUESTIONS = [
     "options": [
       {
         "id": "a",
-        "label": "??A",
+        "label": "結果A",
         "result": {
           "columns": [
             "name",
@@ -4095,7 +4063,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "b",
-        "label": "??B",
+        "label": "結果B",
         "result": {
           "columns": [
             "name",
@@ -4119,7 +4087,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "c",
-        "label": "??C",
+        "label": "結果C",
         "result": {
           "columns": [
             "name",
@@ -4237,14 +4205,6 @@ export const SQL_QUESTIONS = [
         [
           "co2_records alpha",
           "history"
-        ],
-        [
-          "co2_records beta",
-          "science"
-        ],
-        [
-          "co2_records gamma",
-          "culture"
         ]
       ]
     },
@@ -4659,16 +4619,16 @@ export const SQL_QUESTIONS = [
       ],
       "rows": [
         [
-          "olympic_hosts alpha",
-          "history"
+          "olympic_hosts gamma",
+          "culture"
         ],
         [
           "olympic_hosts beta",
           "science"
         ],
         [
-          "olympic_hosts gamma",
-          "culture"
+          "olympic_hosts alpha",
+          "history"
         ]
       ]
     },
@@ -4891,7 +4851,7 @@ export const SQL_QUESTIONS = [
     "options": [
       {
         "id": "a",
-        "label": "??A",
+        "label": "結果A",
         "result": {
           "columns": [
             "mission",
@@ -4919,7 +4879,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "b",
-        "label": "??B",
+        "label": "結果B",
         "result": {
           "columns": [
             "mission",
@@ -4935,7 +4895,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "c",
-        "label": "??C",
+        "label": "結果C",
         "result": {
           "columns": [
             "mission",
@@ -5391,7 +5351,7 @@ export const SQL_QUESTIONS = [
     "options": [
       {
         "id": "a",
-        "label": "??A",
+        "label": "結果A",
         "result": {
           "columns": [
             "name",
@@ -5415,7 +5375,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "b",
-        "label": "??B",
+        "label": "結果B",
         "result": {
           "columns": [
             "name",
@@ -5439,7 +5399,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "c",
-        "label": "??C",
+        "label": "結果C",
         "result": {
           "columns": [
             "name",
@@ -5571,7 +5531,7 @@ export const SQL_QUESTIONS = [
     "options": [
       {
         "id": "a",
-        "label": "??A",
+        "label": "結果A",
         "result": {
           "columns": [
             "name",
@@ -5595,7 +5555,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "b",
-        "label": "??B",
+        "label": "結果B",
         "result": {
           "columns": [
             "name",
@@ -5611,7 +5571,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "c",
-        "label": "??C",
+        "label": "結果C",
         "result": {
           "columns": [
             "name",
@@ -5751,7 +5711,7 @@ export const SQL_QUESTIONS = [
     "options": [
       {
         "id": "a",
-        "label": "??A",
+        "label": "結果A",
         "result": {
           "columns": [
             "name",
@@ -5775,7 +5735,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "b",
-        "label": "??B",
+        "label": "結果B",
         "result": {
           "columns": [
             "name",
@@ -5799,7 +5759,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "c",
-        "label": "??C",
+        "label": "結果C",
         "result": {
           "columns": [
             "name",
@@ -5917,14 +5877,6 @@ export const SQL_QUESTIONS = [
         [
           "disasters alpha",
           "history"
-        ],
-        [
-          "disasters beta",
-          "science"
-        ],
-        [
-          "disasters gamma",
-          "culture"
         ]
       ]
     },
@@ -6339,16 +6291,16 @@ export const SQL_QUESTIONS = [
       ],
       "rows": [
         [
-          "energy_mix alpha",
-          "history"
+          "energy_mix gamma",
+          "culture"
         ],
         [
           "energy_mix beta",
           "science"
         ],
         [
-          "energy_mix gamma",
-          "culture"
+          "energy_mix alpha",
+          "history"
         ]
       ]
     },
@@ -6571,7 +6523,7 @@ export const SQL_QUESTIONS = [
     "options": [
       {
         "id": "a",
-        "label": "??A",
+        "label": "結果A",
         "result": {
           "columns": [
             "name",
@@ -6599,7 +6551,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "b",
-        "label": "??B",
+        "label": "結果B",
         "result": {
           "columns": [
             "name",
@@ -6615,7 +6567,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "c",
-        "label": "??C",
+        "label": "結果C",
         "result": {
           "columns": [
             "name",
@@ -7072,7 +7024,7 @@ export const SQL_QUESTIONS = [
     "options": [
       {
         "id": "a",
-        "label": "??A",
+        "label": "結果A",
         "result": {
           "columns": [
             "name",
@@ -7096,7 +7048,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "b",
-        "label": "??B",
+        "label": "結果B",
         "result": {
           "columns": [
             "name",
@@ -7120,7 +7072,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "c",
-        "label": "??C",
+        "label": "結果C",
         "result": {
           "columns": [
             "name",
@@ -7252,7 +7204,7 @@ export const SQL_QUESTIONS = [
     "options": [
       {
         "id": "a",
-        "label": "??A",
+        "label": "結果A",
         "result": {
           "columns": [
             "name",
@@ -7276,7 +7228,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "b",
-        "label": "??B",
+        "label": "結果B",
         "result": {
           "columns": [
             "name",
@@ -7292,7 +7244,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "c",
-        "label": "??C",
+        "label": "結果C",
         "result": {
           "columns": [
             "name",
@@ -7432,7 +7384,7 @@ export const SQL_QUESTIONS = [
     "options": [
       {
         "id": "a",
-        "label": "??A",
+        "label": "結果A",
         "result": {
           "columns": [
             "name",
@@ -7456,7 +7408,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "b",
-        "label": "??B",
+        "label": "結果B",
         "result": {
           "columns": [
             "name",
@@ -7480,7 +7432,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "c",
-        "label": "??C",
+        "label": "結果C",
         "result": {
           "columns": [
             "name",
@@ -7598,14 +7550,6 @@ export const SQL_QUESTIONS = [
         [
           "population_records alpha",
           "history"
-        ],
-        [
-          "population_records beta",
-          "science"
-        ],
-        [
-          "population_records gamma",
-          "culture"
         ]
       ]
     },
@@ -8020,16 +7964,16 @@ export const SQL_QUESTIONS = [
       ],
       "rows": [
         [
-          "migration_records alpha",
-          "history"
+          "migration_records gamma",
+          "culture"
         ],
         [
           "migration_records beta",
           "science"
         ],
         [
-          "migration_records gamma",
-          "culture"
+          "migration_records alpha",
+          "history"
         ]
       ]
     },
@@ -8252,7 +8196,7 @@ export const SQL_QUESTIONS = [
     "options": [
       {
         "id": "a",
-        "label": "??A",
+        "label": "結果A",
         "result": {
           "columns": [
             "name",
@@ -8280,7 +8224,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "b",
-        "label": "??B",
+        "label": "結果B",
         "result": {
           "columns": [
             "name",
@@ -8296,7 +8240,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "c",
-        "label": "??C",
+        "label": "結果C",
         "result": {
           "columns": [
             "name",
@@ -8955,7 +8899,7 @@ export const SQL_QUESTIONS = [
     "options": [
       {
         "id": "a",
-        "label": "??A",
+        "label": "結果A",
         "result": {
           "columns": [
             "name",
@@ -8979,7 +8923,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "b",
-        "label": "??B",
+        "label": "結果B",
         "result": {
           "columns": [
             "name",
@@ -9003,7 +8947,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "c",
-        "label": "??C",
+        "label": "結果C",
         "result": {
           "columns": [
             "name",
@@ -9217,7 +9161,7 @@ export const SQL_QUESTIONS = [
     "options": [
       {
         "id": "a",
-        "label": "??A",
+        "label": "結果A",
         "result": {
           "columns": [
             "name",
@@ -9241,7 +9185,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "b",
-        "label": "??B",
+        "label": "結果B",
         "result": {
           "columns": [
             "name",
@@ -9257,7 +9201,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "c",
-        "label": "??C",
+        "label": "結果C",
         "result": {
           "columns": [
             "name",
@@ -9439,7 +9383,7 @@ export const SQL_QUESTIONS = [
     "options": [
       {
         "id": "a",
-        "label": "??A",
+        "label": "結果A",
         "result": {
           "columns": [
             "name",
@@ -9463,7 +9407,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "b",
-        "label": "??B",
+        "label": "結果B",
         "result": {
           "columns": [
             "name",
@@ -9487,7 +9431,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "c",
-        "label": "??C",
+        "label": "結果C",
         "result": {
           "columns": [
             "name",
@@ -9646,14 +9590,6 @@ export const SQL_QUESTIONS = [
         [
           "inventors alpha",
           "history"
-        ],
-        [
-          "inventors beta",
-          "science"
-        ],
-        [
-          "inventors gamma",
-          "culture"
         ]
       ]
     },
@@ -10150,16 +10086,16 @@ export const SQL_QUESTIONS = [
       ],
       "rows": [
         [
-          "countries alpha",
-          "history"
+          "countries gamma",
+          "culture"
         ],
         [
           "countries beta",
           "science"
         ],
         [
-          "countries gamma",
-          "culture"
+          "countries alpha",
+          "history"
         ]
       ]
     },
@@ -10503,7 +10439,7 @@ export const SQL_QUESTIONS = [
     "options": [
       {
         "id": "a",
-        "label": "??A",
+        "label": "結果A",
         "result": {
           "columns": [
             "name",
@@ -10531,7 +10467,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "b",
-        "label": "??B",
+        "label": "結果B",
         "result": {
           "columns": [
             "name",
@@ -10547,7 +10483,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "c",
-        "label": "??C",
+        "label": "結果C",
         "result": {
           "columns": [
             "name",
@@ -11006,7 +10942,7 @@ export const SQL_QUESTIONS = [
     "options": [
       {
         "id": "a",
-        "label": "??A",
+        "label": "結果A",
         "result": {
           "columns": [
             "name",
@@ -11030,7 +10966,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "b",
-        "label": "??B",
+        "label": "結果B",
         "result": {
           "columns": [
             "name",
@@ -11054,7 +10990,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "c",
-        "label": "??C",
+        "label": "結果C",
         "result": {
           "columns": [
             "name",
@@ -11186,7 +11122,7 @@ export const SQL_QUESTIONS = [
     "options": [
       {
         "id": "a",
-        "label": "??A",
+        "label": "結果A",
         "result": {
           "columns": [
             "name",
@@ -11210,7 +11146,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "b",
-        "label": "??B",
+        "label": "結果B",
         "result": {
           "columns": [
             "name",
@@ -11226,7 +11162,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "c",
-        "label": "??C",
+        "label": "結果C",
         "result": {
           "columns": [
             "name",
@@ -11366,7 +11302,7 @@ export const SQL_QUESTIONS = [
     "options": [
       {
         "id": "a",
-        "label": "??A",
+        "label": "結果A",
         "result": {
           "columns": [
             "name",
@@ -11390,7 +11326,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "b",
-        "label": "??B",
+        "label": "結果B",
         "result": {
           "columns": [
             "name",
@@ -11414,7 +11350,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "c",
-        "label": "??C",
+        "label": "結果C",
         "result": {
           "columns": [
             "name",
@@ -11532,14 +11468,6 @@ export const SQL_QUESTIONS = [
         [
           "treaties alpha",
           "history"
-        ],
-        [
-          "treaties beta",
-          "science"
-        ],
-        [
-          "treaties gamma",
-          "culture"
         ]
       ]
     },
@@ -11954,16 +11882,16 @@ export const SQL_QUESTIONS = [
       ],
       "rows": [
         [
-          "organization_aliases alpha",
-          "history"
+          "organization_aliases gamma",
+          "culture"
         ],
         [
           "organization_aliases beta",
           "science"
         ],
         [
-          "organization_aliases gamma",
-          "culture"
+          "organization_aliases alpha",
+          "history"
         ]
       ]
     },
@@ -12186,7 +12114,7 @@ export const SQL_QUESTIONS = [
     "options": [
       {
         "id": "a",
-        "label": "??A",
+        "label": "結果A",
         "result": {
           "columns": [
             "org_code",
@@ -12214,7 +12142,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "b",
-        "label": "??B",
+        "label": "結果B",
         "result": {
           "columns": [
             "org_code",
@@ -12230,7 +12158,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "c",
-        "label": "??C",
+        "label": "結果C",
         "result": {
           "columns": [
             "org_code",
@@ -12686,7 +12614,7 @@ export const SQL_QUESTIONS = [
     "options": [
       {
         "id": "a",
-        "label": "??A",
+        "label": "結果A",
         "result": {
           "columns": [
             "name",
@@ -12710,7 +12638,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "b",
-        "label": "??B",
+        "label": "結果B",
         "result": {
           "columns": [
             "name",
@@ -12734,7 +12662,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "c",
-        "label": "??C",
+        "label": "結果C",
         "result": {
           "columns": [
             "name",
@@ -12866,7 +12794,7 @@ export const SQL_QUESTIONS = [
     "options": [
       {
         "id": "a",
-        "label": "??A",
+        "label": "結果A",
         "result": {
           "columns": [
             "name",
@@ -12890,7 +12818,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "b",
-        "label": "??B",
+        "label": "結果B",
         "result": {
           "columns": [
             "name",
@@ -12906,7 +12834,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "c",
-        "label": "??C",
+        "label": "結果C",
         "result": {
           "columns": [
             "name",
@@ -13046,7 +12974,7 @@ export const SQL_QUESTIONS = [
     "options": [
       {
         "id": "a",
-        "label": "??A",
+        "label": "結果A",
         "result": {
           "columns": [
             "name",
@@ -13070,7 +12998,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "b",
-        "label": "??B",
+        "label": "結果B",
         "result": {
           "columns": [
             "name",
@@ -13094,7 +13022,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "c",
-        "label": "??C",
+        "label": "結果C",
         "result": {
           "columns": [
             "name",
@@ -13212,14 +13140,6 @@ export const SQL_QUESTIONS = [
         [
           "population_records alpha",
           "history"
-        ],
-        [
-          "population_records beta",
-          "science"
-        ],
-        [
-          "population_records gamma",
-          "culture"
         ]
       ]
     },
@@ -13634,16 +13554,16 @@ export const SQL_QUESTIONS = [
       ],
       "rows": [
         [
-          "Sputnik 1",
-          "Soviet space program"
+          "Voyager 1",
+          "NASA"
         ],
         [
           "Apollo 11",
           "NASA"
         ],
         [
-          "Voyager 1",
-          "NASA"
+          "Sputnik 1",
+          "Soviet space program"
         ]
       ]
     },
@@ -13866,7 +13786,7 @@ export const SQL_QUESTIONS = [
     "options": [
       {
         "id": "a",
-        "label": "??A",
+        "label": "結果A",
         "result": {
           "columns": [
             "name",
@@ -13894,7 +13814,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "b",
-        "label": "??B",
+        "label": "結果B",
         "result": {
           "columns": [
             "name",
@@ -13910,7 +13830,7 @@ export const SQL_QUESTIONS = [
       },
       {
         "id": "c",
-        "label": "??C",
+        "label": "結果C",
         "result": {
           "columns": [
             "name",

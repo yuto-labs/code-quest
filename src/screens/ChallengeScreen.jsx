@@ -29,6 +29,7 @@ export default function ChallengeScreen({
   country, language, world = 'decode', onBack, onComplete,
   initialIdx = 0, onSaveIdx, onSaveScore, onMistake, mission = null,
   initialLives = MAX_HEARTS, onLivesChange, onRestart, onWorldMap,
+  onOpenReference,
   initialDebugStepIndex = 0, initialDebugAnswers = EMPTY_DEBUG_ANSWERS, entryState = { mode: 'fresh', attempt: null },
 }) {
   const isPC = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
@@ -814,6 +815,9 @@ export default function ChallengeScreen({
       {/* Header */}
       <div style={styles.header}>
         <BackButton onClick={handleBack} />
+        <button className="pixel-btn" style={styles.referenceBtn} onClick={onOpenReference}>
+          REFERENCE
+        </button>
 
         <div style={{ display: 'flex', gap: 3, alignItems: 'center' }}>
           {Array.from({ length: MAX_HEARTS }).map((_, i) => (
@@ -1148,6 +1152,11 @@ const styles = {
     gap: 10,
     flex: 1,
     minWidth: 80,
+  },
+  referenceBtn: {
+    fontSize: 8,
+    padding: '8px 10px',
+    flexShrink: 0,
   },
   flag: { fontSize: 18 },
   langBadge: {

@@ -446,6 +446,7 @@ export default function App() {
         sql: sanitizeSqlProgress(nextSql),
       },
     };
+    latestRef.current = { ...latestRef.current, meta: nextMeta };
     setMeta(nextMeta);
     saveToLocal(getStorageKey(uid, 'meta'), nextMeta);
     syncToCloud();
@@ -739,10 +740,10 @@ export default function App() {
   return (
     <>
       <div className="scanlines" />
-      <RewardToast reward={reward} />
+      <RewardToast reward={screen === 'sqlChallenge' && ['saving', 'saved'].includes(reward?.type) ? null : reward} />
 
       {/* Saved toast */}
-      {savedToast && (
+      {savedToast && screen !== 'sqlChallenge' && (
         <div style={{
           position: 'fixed',
           bottom: 'calc(env(safe-area-inset-bottom, 0px) + 72px)',
@@ -865,6 +866,10 @@ export default function App() {
               setScreen('sqlChallenge');
               return;
             }
+            if (referenceOrigin?.type === 'challenge') {
+              setScreen(referenceOrigin.screen || 'challenge');
+              return;
+            }
             setReferenceOrigin(null);
             setScreen('home');
           }}
@@ -916,6 +921,10 @@ export default function App() {
             onSaveIdx={handleChallengeSaveIdx}
             onSaveScore={(s) => saveScore(world, country.id, language.id, s)}
             onMistake={(qId) => saveMistake(world, country.id, language.id, qId)}
+            onOpenReference={() => {
+              setReferenceOrigin({ type: 'challenge', screen: 'challenge' });
+              setScreen('reference');
+            }}
             onLivesChange={(lives, patch = {}) => {
               const { meta: mt } = latestRef.current;
               const nextMeta = updateAttemptLives(mt, attemptId, lives, world, country.id, language.id, null, patch);
@@ -959,6 +968,10 @@ export default function App() {
             entryState={entryState}
             onSaveScore={(s) => saveScore(world, country.id, language.id, s)}
             onMistake={(qId) => saveMistake(world, country.id, language.id, qId)}
+            onOpenReference={() => {
+              setReferenceOrigin({ type: 'challenge', screen: 'finalMission' });
+              setScreen('reference');
+            }}
             onLivesChange={(lives, patch = {}) => {
               const { meta: mt } = latestRef.current;
               const nextMeta = updateAttemptLives(mt, attemptId, lives, world, country.id, language.id, mission?.id, patch);

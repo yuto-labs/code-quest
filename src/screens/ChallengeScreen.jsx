@@ -879,8 +879,8 @@ export default function ChallengeScreen({
         )}
         <div style={styles.description}>{situationText}</div>
 
-        {/* Code block */}
-        {codeLines.length > 0 && (
+        {/* Code block — hidden once correct, since ExplanationPanel already shows the completed code */}
+        {codeLines.length > 0 && status !== 'correct' && (
           <>
             {isDebugStep && (
               <div style={styles.debugSectionLabel}>ORIGINAL CODE</div>
@@ -1210,6 +1210,7 @@ const styles = {
     fontSize: 'clamp(12px, 3.5vw, 15px)',
     overflowX: 'auto',
     WebkitOverflowScrolling: 'touch',
+    flexShrink: 0,
   },
   codeLine: {
     display: 'flex',

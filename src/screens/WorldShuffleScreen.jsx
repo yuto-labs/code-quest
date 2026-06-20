@@ -123,14 +123,23 @@ export default function WorldShuffleScreen({
     return selected || '';
   }
 
+  // record() persists progress (mastery/review tracking) as a side effect.
+  // It must never block the UI from advancing: if the side effect throws for
+  // any reason, the question would otherwise get stuck with no NEXT button
+  // (status would never reach 'done'). setStatus runs first and the side
+  // effect is wrapped so a failure there can't prevent moving on.
   function record(statusValue) {
     if (recordedRef.current) return;
     recordedRef.current = true;
-    onRecordOutcome?.(resolved, {
-      status: statusValue,
-      wrongCount,
-      revealed: statusValue === 'revealed',
-    });
+    try {
+      onRecordOutcome?.(resolved, {
+        status: statusValue,
+        wrongCount,
+        revealed: statusValue === 'revealed',
+      });
+    } catch (e) {
+      console.error('Failed to record shuffle outcome', e);
+    }
   }
 
   function submit() {
@@ -157,23 +166,29 @@ export default function WorldShuffleScreen({
       return;
     }
     const outcome = wrongCount > 0 ? 'retried' : 'solved';
-    record(outcome);
     setStatus('done');
+    record(outcome);
   }
 
   function showAnswer() {
     setRevealed(true);
-    record('revealed');
     setStatus('done');
+    record('revealed');
   }
 
   function next() {
-    onSaveRun?.({
-      currentIndex: run.currentIndex + 1,
-      status: run.currentIndex + 1 >= run.queue.length ? 'completed' : 'active',
-      temp: {},
-      completedAt: run.currentIndex + 1 >= run.queue.length ? new Date().toISOString() : run.completedAt,
-    });
+    const queueLength = run.queue?.length || 0;
+    const isLast = run.currentIndex + 1 >= queueLength;
+    try {
+      onSaveRun?.({
+        currentIndex: run.currentIndex + 1,
+        status: isLast ? 'completed' : 'active',
+        temp: {},
+        completedAt: isLast ? new Date().toISOString() : run.completedAt,
+      });
+    } catch (e) {
+      console.error('Failed to advance shuffle run', e);
+    }
   }
 
   return (

@@ -14,6 +14,7 @@ function detectShape(code, blank, language) {
   }
   if (/\?\s*$/.test(before.trimEnd()) || /\?\s*$/.test(before)) return 'ternary';
   if (/\[\s*$/.test(before) && /^\s*\]/.test(after)) {
+    if (/^-?\d*\s*:\s*-?\d*\s*(:\s*-?\d*\s*)?$/.test((blank || '').trim())) return 'slice';
     return /^"/.test(blank) || /^'/.test(blank) ? 'dict-key' : 'list-index';
   }
   if (/\.\s*$/.test(before)) {
@@ -43,6 +44,12 @@ function buildFillBlankExplanation(entry) {
     }
     case 'list-index': {
       return `この問題は${isPy ? 'リスト（list）' : '配列（array）'}の添字（インデックス）アクセスを扱う問題です。${container} という${isPy ? 'リスト' : '配列'}の${blank}番目（0から数え始めるインデックス）の要素を取り出しています。${isPy ? 'リスト' : '配列'}は値の並び順をそのまま保持するため、欲しい値が何番目にあるかを正確に数える必要があります。`;
+    }
+    case 'slice': {
+      const [startRaw, endRaw] = blank.split(':');
+      const start = startRaw?.trim() || '0';
+      const end = endRaw?.trim();
+      return `この問題はスライス（範囲指定）を扱う問題です。${container}[${blank}] は「${start}番目から${end ? `${end}番目の直前まで` : '末尾まで'}」の範囲を取り出すという意味です。コロンの右側の数字はその位置を含まない（直前までを取り出す）点に注意してください。`;
     }
     case 'tuple-unpack': {
       return `この問題はタプルの分解代入（unpacking）を扱う問題です。${blank} は複数の要素を持つタプルで、左辺に変数を並べることで、対応する位置の値が順番に代入されます。辞書のキーアクセスとは異なり、名前ではなく「並んでいる位置」で値が対応づけられる点がこの構文の特徴です。`;

@@ -15,7 +15,7 @@ const LANGUAGES = [
   { id: 'javascript', label: 'JAVASCRIPT' },
 ];
 
-export default function CodePathsScreen({ onBack, onOpenSql, progress, onStartShuffle }) {
+export default function CodePathsScreen({ onBack, onOpenSql, progress, worldShuffleRun, onStartShuffle, onContinueShuffle }) {
   const [languageId, setLanguageId] = useState('python');
   const [mode, setMode] = useState('all');
   const [requestedCount, setRequestedCount] = useState(5);
@@ -23,6 +23,7 @@ export default function CodePathsScreen({ onBack, onOpenSql, progress, onStartSh
     () => getShuffleEligibleQuestions(progress || {}, { languageId, mode }).length,
     [progress, languageId, mode],
   );
+  const hasActiveRun = worldShuffleRun?.status === 'active' && (worldShuffleRun.queue?.length || 0) > 0;
   return (
     <div style={styles.wrap} className="fade-in">
       <div style={styles.header}>
@@ -52,6 +53,16 @@ export default function CodePathsScreen({ onBack, onOpenSql, progress, onStartSh
       <section style={styles.shuffle}>
         <div style={styles.shuffleTitle}>WORLD SHUFFLE</div>
         <div style={styles.shuffleSub}>Unlocked WORLD QUEST questions only. No stage clear medals are awarded here.</div>
+        {hasActiveRun && (
+          <div style={styles.resumeBox}>
+            <div style={styles.resumeText}>
+              続きがあります： {(worldShuffleRun.currentIndex || 0) + 1} / {worldShuffleRun.queue.length} 問
+            </div>
+            <button className="pixel-btn" style={styles.resumeBtn} onClick={onContinueShuffle}>
+              CONTINUE
+            </button>
+          </div>
+        )}
         <div style={styles.controls}>
           <Segment label="LANGUAGE" items={LANGUAGES} value={languageId} onChange={setLanguageId} />
           <Segment label="MODE" items={SHUFFLE_MODES} value={mode} onChange={setMode} />
@@ -64,8 +75,11 @@ export default function CodePathsScreen({ onBack, onOpenSql, progress, onStartSh
           disabled={available === 0}
           onClick={() => onStartShuffle?.({ languageId, mode, requestedCount })}
         >
-          START WORLD SHUFFLE
+          START RANDOM SHUFFLE
         </button>
+        {hasActiveRun && (
+          <div style={styles.resumeHint}>※ 新しく始めると、現在進行中のシャッフルは上書きされます。</div>
+        )}
       </section>
     </div>
   );
@@ -115,4 +129,8 @@ const styles = {
   segmentBtn: { fontFamily: 'var(--pixel-font)', fontSize: 8, padding: '8px 9px', background: 'var(--bg)', border: '2px solid', cursor: 'pointer' },
   available: { color: 'var(--accent)', fontSize: 10 },
   startBtn: { alignSelf: 'flex-start', fontSize: 9 },
+  resumeBox: { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 12, padding: 12, border: '2px solid var(--accent2)', background: 'rgba(255,221,0,0.06)' },
+  resumeText: { color: 'var(--accent2)', fontSize: 10, flex: 1, minWidth: 160 },
+  resumeBtn: { fontSize: 9, borderColor: 'var(--accent2)', color: 'var(--accent2)' },
+  resumeHint: { color: 'var(--text-dim)', fontSize: 8, lineHeight: 1.7 },
 };

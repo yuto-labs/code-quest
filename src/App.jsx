@@ -403,11 +403,10 @@ export default function App() {
     }
   };
 
+  // Home's CONTINUE only resumes WORLD MAP progress (challenge/finalMission/map).
+  // CODE PATHS progress (world shuffle, SQL) has its own dedicated continue
+  // entry point inside CodePathsScreen instead.
   const resolveResume = () => {
-    const shuffleRun = sanitizeWorldShuffle(meta.worldShuffle);
-    if (shuffleRun.status === 'active' && shuffleRun.queue?.length) {
-      return { screen: 'worldShuffle', worldShuffle: shuffleRun };
-    }
     const resume = meta.resume || {};
     if (!resume.worldId || !resume.countryId || !resume.languageId) return null;
     const countryObj = COUNTRIES.find(c => c.id === resume.countryId);
@@ -436,10 +435,6 @@ export default function App() {
   const handleContinue = () => {
     const target = resolveResume();
     if (!target) return;
-    if (target.screen === 'worldShuffle') {
-      setScreen('worldShuffle');
-      return;
-    }
     setWorld(target.worldId);
     setCountry(target.countryObj);
     setLanguage({ id: target.languageId, name: target.languageId.toUpperCase(), emoji: target.languageId === 'javascript' ? '笞｡' : '錐' });
@@ -511,30 +506,35 @@ export default function App() {
     saveSqlMeta(saveSqlResume(getSqlMeta(), patch));
   };
 
-  const saveWorldShuffleRun = (patchOrRun) => {
+  const saveWorldShuffleRun = useCallback((patchOrRun) => {
     const uid = latestRef.current.user?.id;
     const current = sanitizeWorldShuffle(latestRef.current.meta.worldShuffle);
     const nextRun = patchOrRun?.queue
       ? sanitizeWorldShuffle(patchOrRun)
       : sanitizeWorldShuffle({ ...current, ...patchOrRun, updatedAt: new Date().toISOString() });
+    // World shuffle has its own dedicated CONTINUE entry point in
+    // CodePathsScreen (driven by meta.worldShuffle directly), so it must not
+    // overwrite meta.resume -- that field is reserved for WORLD MAP progress
+    // and is what Home's CONTINUE button reads.
     const nextMeta = {
       ...latestRef.current.meta,
       worldShuffle: nextRun,
-      resume: nextRun.status === 'active'
-        ? { screen: 'worldShuffle', updatedAt: new Date().toISOString() }
-        : latestRef.current.meta.resume,
     };
     setMeta(nextMeta);
     saveToLocal(getStorageKey(uid, 'meta'), nextMeta);
     syncToCloud();
-  };
+  }, []);
 
-  const startWorldShuffle = (settings) => {
+  const startWorldShuffle = useCallback((settings) => {
     const run = createShuffleRun(latestRef.current.progress, settings);
     setLastShuffleSettings(settings);
     saveWorldShuffleRun(run);
     setScreen('worldShuffle');
-  };
+  }, [saveWorldShuffleRun]);
+
+  const continueWorldShuffle = useCallback(() => {
+    setScreen('worldShuffle');
+  }, []);
 
   const updateReviewForShuffle = (mt, entry, outcomeStatus) => {
     const current = mt.review?.[entry.questionId] || {};
@@ -574,7 +574,7 @@ export default function App() {
     return mt;
   };
 
-  const recordShuffleOutcome = (entry, outcome) => {
+  const recordShuffleOutcome = useCallback((entry, outcome) => {
     const uid = latestRef.current.user?.id;
     const run = sanitizeWorldShuffle(latestRef.current.meta.worldShuffle);
     const allQuestions = (WORLD_CHALLENGES[entry.worldId] || {})[entry.countryId]?.[entry.languageId] || [];
@@ -613,7 +613,7 @@ export default function App() {
     setMeta(nextMeta);
     saveToLocal(getStorageKey(uid, 'meta'), nextMeta);
     syncToCloud();
-  };
+  }, []);
 
   const saveQuizIdx = (worldId, countryId, langId, idx, resumePatch = {}) => {
     const key = `${worldId}_${countryId}_${langId}`;
@@ -936,7 +936,9 @@ export default function App() {
           onBack={() => setScreen('home')}
           onOpenSql={() => setScreen('sqlPath')}
           progress={progress}
+          worldShuffleRun={sanitizeWorldShuffle(meta.worldShuffle)}
           onStartShuffle={startWorldShuffle}
+          onContinueShuffle={continueWorldShuffle}
         />
       )}
 

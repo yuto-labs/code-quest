@@ -22,6 +22,8 @@ import { getLanguageEmblemTier } from '../src/utils/progress.js';
 import { emptyMeta, MAX_LIVES, mergeMeta, mergeReview, packProgress, resolveStageEntry, unpackProgress } from '../src/utils/metadata.js';
 import { completeSqlQuestion, emptySqlProgress, mergeSqlProgress } from '../src/utils/sqlProgress.js';
 import { SQL_QUESTIONS } from '../src/data/sql/questions.js';
+import { awardStageClear, mergeMedals, recordQuestionMastery } from '../src/utils/medals.js';
+import { createShuffleRun } from '../src/utils/worldShuffle.js';
 
 const RED   = '\x1b[31m';
 const GREEN = '\x1b[32m';
@@ -771,6 +773,39 @@ tests.push(expectNoError(
     'sql path: progress merge is commutative and idempotent',
     JSON.stringify(ab.chapters) === JSON.stringify(ba.chapters) && aa.resume.questionId === 'sql01_d01',
     'sql-progress-merge',
+  ));
+}
+
+// 42. Medals merge keeps clear/perfect/mastery without duplication
+{
+  const clear = awardStageClear(emptyMeta(), 'decode', 'JP', 'python', { perfect: true }).medals;
+  const mastered = recordQuestionMastery(
+    { ...emptyMeta(), medals: clear },
+    'decode',
+    'JP',
+    'python',
+    'q1',
+    ['q1'],
+  ).meta.medals;
+  const merged = mergeMedals(clear, mastered);
+  const item = merged.stageMedals.decode_JP_python;
+  tests.push(expectGeneric(
+    'medals: merge preserves clear, perfect, and mastery',
+    item.clear && item.perfect && item.mastery && item.masteredQuestionIds.length === 1,
+    'medal-merge',
+  ));
+}
+
+// 43. World Shuffle creates a unique queue without mutating progress
+{
+  const progress = { decode_JP_python: true };
+  const before = JSON.stringify(progress);
+  const run = createShuffleRun(progress, { languageId: 'python', mode: 'decode', requestedCount: 5 });
+  const ids = run.queue.map(item => item.questionId);
+  tests.push(expectGeneric(
+    'world shuffle: generated queue has no duplicate questions and leaves progress untouched',
+    ids.length === new Set(ids).size && JSON.stringify(progress) === before,
+    'shuffle-queue',
   ));
 }
 

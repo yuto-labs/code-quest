@@ -12,6 +12,7 @@ import CodePathsScreen from './screens/CodePathsScreen';
 import SqlPathScreen from './screens/SqlPathScreen';
 import SqlChapterScreen from './screens/SqlChapterScreen';
 import SqlChallengeScreen from './screens/SqlChallengeScreen';
+import WorldShuffleScreen from './screens/WorldShuffleScreen';
 import RewardToast from './components/RewardToast';
 import { COUNTRIES } from './data/countries';
 import { CHALLENGES } from './data/challenges';
@@ -24,6 +25,8 @@ import { emptyMeta, sanitizeMeta, MAX_LIVES, resolveStageEntry, isFinalMissionCl
 import { completeSqlQuestion, emptySqlProgress, saveSqlResume, sanitizeSqlProgress, SQL_MAX_HEARTS } from './utils/sqlProgress';
 import { getFinalMission } from './data/final_missions';
 import { SQL_QUESTIONS_BY_ID, getSqlQuestionsForChapter } from './data/sql/questions';
+import { awardStageClear, recordQuestionMastery } from './utils/medals';
+import { createShuffleRun, sanitizeWorldShuffle } from './utils/worldShuffle';
 
 const WORLD_CHALLENGES = { decode: CHALLENGES, execute: EXECUTE_CHALLENGES, debug: DEBUG_CHALLENGES };
 
@@ -153,6 +156,7 @@ export default function App() {
   const [sqlQuestionId, setSqlQuestionId] = useState('');
   const [sqlUnlockNotice, setSqlUnlockNotice] = useState(null);
   const [referenceOrigin, setReferenceOrigin] = useState(null);
+  const [lastShuffleSettings, setLastShuffleSettings] = useState({ languageId: 'python', mode: 'all', requestedCount: 5 });
 
   const saveDebounceTimerRef = useRef(null);
   const saveRevisionRef      = useRef(0);   // monotonic revision for BUG_C
@@ -400,6 +404,10 @@ export default function App() {
   };
 
   const resolveResume = () => {
+    const shuffleRun = sanitizeWorldShuffle(meta.worldShuffle);
+    if (shuffleRun.status === 'active' && shuffleRun.queue?.length) {
+      return { screen: 'worldShuffle', worldShuffle: shuffleRun };
+    }
     const resume = meta.resume || {};
     if (!resume.worldId || !resume.countryId || !resume.languageId) return null;
     const countryObj = COUNTRIES.find(c => c.id === resume.countryId);
@@ -428,6 +436,10 @@ export default function App() {
   const handleContinue = () => {
     const target = resolveResume();
     if (!target) return;
+    if (target.screen === 'worldShuffle') {
+      setScreen('worldShuffle');
+      return;
+    }
     setWorld(target.worldId);
     setCountry(target.countryObj);
     setLanguage({ id: target.languageId, name: target.languageId.toUpperCase(), emoji: target.languageId === 'javascript' ? '笞｡' : '錐' });
@@ -499,6 +511,110 @@ export default function App() {
     saveSqlMeta(saveSqlResume(getSqlMeta(), patch));
   };
 
+  const saveWorldShuffleRun = (patchOrRun) => {
+    const uid = latestRef.current.user?.id;
+    const current = sanitizeWorldShuffle(latestRef.current.meta.worldShuffle);
+    const nextRun = patchOrRun?.queue
+      ? sanitizeWorldShuffle(patchOrRun)
+      : sanitizeWorldShuffle({ ...current, ...patchOrRun, updatedAt: new Date().toISOString() });
+    const nextMeta = {
+      ...latestRef.current.meta,
+      worldShuffle: nextRun,
+      resume: nextRun.status === 'active'
+        ? { screen: 'worldShuffle', updatedAt: new Date().toISOString() }
+        : latestRef.current.meta.resume,
+    };
+    setMeta(nextMeta);
+    saveToLocal(getStorageKey(uid, 'meta'), nextMeta);
+    syncToCloud();
+  };
+
+  const startWorldShuffle = (settings) => {
+    const run = createShuffleRun(latestRef.current.progress, settings);
+    setLastShuffleSettings(settings);
+    saveWorldShuffleRun(run);
+    setScreen('worldShuffle');
+  };
+
+  const updateReviewForShuffle = (mt, entry, outcomeStatus) => {
+    const current = mt.review?.[entry.questionId] || {};
+    const now = new Date().toISOString();
+    if (outcomeStatus === 'revealed') {
+      return {
+        ...mt,
+        review: {
+          ...(mt.review || {}),
+          [entry.questionId]: {
+            ...current,
+            wrongCount: Math.max(current.wrongCount || 0, 1),
+            hintCount: current.hintCount || 0,
+            lastWrongAt: now,
+            lastReviewedAt: current.lastReviewedAt || '',
+            reviewDue: true,
+            mistakeTags: [...new Set([...(current.mistakeTags || []), 'world-shuffle', entry.worldId])].sort(),
+            resolvedAt: current.resolvedAt || '',
+          },
+        },
+      };
+    }
+    if (current.reviewDue) {
+      return {
+        ...mt,
+        review: {
+          ...(mt.review || {}),
+          [entry.questionId]: {
+            ...current,
+            lastReviewedAt: now,
+            reviewDue: false,
+            resolvedAt: now,
+          },
+        },
+      };
+    }
+    return mt;
+  };
+
+  const recordShuffleOutcome = (entry, outcome) => {
+    const uid = latestRef.current.user?.id;
+    const run = sanitizeWorldShuffle(latestRef.current.meta.worldShuffle);
+    const allQuestions = (WORLD_CHALLENGES[entry.worldId] || {})[entry.countryId]?.[entry.languageId] || [];
+    let nextMeta = updateReviewForShuffle(latestRef.current.meta, entry, outcome.status);
+    let masteryGained = false;
+    let masteryMedals = [];
+    if (outcome.status !== 'revealed') {
+      const result = recordQuestionMastery(
+        nextMeta,
+        entry.worldId,
+        entry.countryId,
+        entry.languageId,
+        entry.questionId,
+        allQuestions.map(q => q.id),
+      );
+      nextMeta = result.meta;
+      masteryGained = result.newlyMastered;
+      if (masteryGained) masteryMedals = [buildProgressKey(entry.worldId, entry.countryId, entry.languageId)];
+    }
+    const nextRun = sanitizeWorldShuffle({
+      ...run,
+      outcomes: {
+        ...(run.outcomes || {}),
+        [entry.questionId]: {
+          status: outcome.status,
+          wrongCount: outcome.wrongCount || 0,
+          masteryGained,
+          masteryMedals,
+          reviewChanged: true,
+          updatedAt: new Date().toISOString(),
+        },
+      },
+      updatedAt: new Date().toISOString(),
+    });
+    nextMeta = { ...nextMeta, worldShuffle: nextRun };
+    setMeta(nextMeta);
+    saveToLocal(getStorageKey(uid, 'meta'), nextMeta);
+    syncToCloud();
+  };
+
   const saveQuizIdx = (worldId, countryId, langId, idx, resumePatch = {}) => {
     const key = `${worldId}_${countryId}_${langId}`;
     const uid = latestRef.current.user?.id;
@@ -562,7 +678,7 @@ export default function App() {
     }
   };
 
-  const handleComplete = (worldId, countryId, langId) => {
+  const handleComplete = (worldId, countryId, langId, completion = {}) => {
     const uid = latestRef.current.user?.id;
     const { progress: p, quizProgress: qp, meta: mt } = latestRef.current;
     const key = `${worldId}_${countryId}_${langId}`;
@@ -576,9 +692,10 @@ export default function App() {
     saveToLocal(getStorageKey(uid, 'quiz'), nextQuiz);
 
     const attemptId = buildAttemptId(worldId, countryId, langId);
+    const withMedals = awardStageClear(mt, worldId, countryId, langId, { perfect: Boolean(completion.perfect) });
     const nextMeta = completeAttempt(
       {
-        ...mt,
+        ...withMedals,
         resume: {
           worldId,
           countryId,
@@ -594,6 +711,17 @@ export default function App() {
     syncToCloud();
     showReward('stage-unlocked', 'STAGE CLEARED');
     setScreen('map');
+  };
+
+  const handleQuestionMastered = (worldId, countryId, langId, questionId) => {
+    const uid = latestRef.current.user?.id;
+    const questions = (WORLD_CHALLENGES[worldId] || {})[countryId]?.[langId] || [];
+    const result = recordQuestionMastery(latestRef.current.meta, worldId, countryId, langId, questionId, questions.map(q => q.id));
+    if (result.meta === latestRef.current.meta) return;
+    setMeta(result.meta);
+    saveToLocal(getStorageKey(uid, 'meta'), result.meta);
+    syncToCloud();
+    if (result.newlyMastered) showReward('language-emblem', 'MASTERY MEDAL');
   };
 
   const saveFinalMissionProgress = (mission, childIndex, resumePatch = {}) => {
@@ -807,6 +935,8 @@ export default function App() {
         <CodePathsScreen
           onBack={() => setScreen('home')}
           onOpenSql={() => setScreen('sqlPath')}
+          progress={progress}
+          onStartShuffle={startWorldShuffle}
         />
       )}
 
@@ -844,6 +974,18 @@ export default function App() {
           onRetry={(question) => saveSqlChallengeResume({ screen: 'sqlChallenge', chapterId: question.chapterId, questionId: question.id, hearts: SQL_MAX_HEARTS, debugStepIndex: 0, debugAnswers: [] })}
           onFail={(question) => saveSqlChallengeResume({ screen: 'sqlChallenge', chapterId: question.chapterId, questionId: question.id, hearts: 0 })}
           onComplete={completeSql}
+        />
+      )}
+
+      {screen === 'worldShuffle' && (
+        <WorldShuffleScreen
+          key={`${sanitizeWorldShuffle(meta.worldShuffle).currentIndex}_${sanitizeWorldShuffle(meta.worldShuffle).queue?.[sanitizeWorldShuffle(meta.worldShuffle).currentIndex]?.questionId || 'result'}`}
+          run={sanitizeWorldShuffle(meta.worldShuffle)}
+          onBack={() => setScreen('codePaths')}
+          onSaveRun={saveWorldShuffleRun}
+          onRecordOutcome={recordShuffleOutcome}
+          onShuffleAgain={() => startWorldShuffle(lastShuffleSettings)}
+          onChangeSettings={() => setScreen('codePaths')}
         />
       )}
 
@@ -935,6 +1077,8 @@ export default function App() {
             initialDebugAnswers={entryState.attempt?.debugAnswers}
             initialLives={entryState.mode === 'fresh' || entryState.mode === 'cleared' ? MAX_LIVES : getInitialLives(meta, attemptId)}
             entryState={entryState}
+            isStageAlreadyCleared={!!progress[progressKey]}
+            onQuestionMastered={(questionId) => handleQuestionMastered(world, country.id, language.id, questionId)}
             onSaveIdx={handleChallengeSaveIdx}
             onSaveScore={(s) => saveScore(world, country.id, language.id, s)}
             onMistake={(qId) => saveMistake(world, country.id, language.id, qId)}
@@ -958,7 +1102,7 @@ export default function App() {
             }}
             onBack={() => setScreen('language')}
             onWorldMap={() => setScreen('map')}
-            onComplete={(cId) => handleComplete(world, cId, language.id)}
+            onComplete={(cId, completion) => handleComplete(world, cId, language.id, completion)}
           />
         );
       })()}

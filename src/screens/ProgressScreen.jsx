@@ -7,6 +7,7 @@ import ExplanationPanel from '../components/ExplanationPanel';
 import BackButton from '../components/BackButton';
 import { buildProgressKey, getUnlockedIds, getClearedCountryIds, getLanguageEmblemTier, getCountrySealTier } from '../utils/progress';
 import { AVAILABLE_STAGES, WORLD_META, WORLD_IDS } from '../utils/stageData';
+import { getMedalSummary, getStageMedal } from '../utils/medals';
 
 const WORLD_CHALLENGES = { decode: CHALLENGES, execute: EXECUTE_CHALLENGES, debug: DEBUG_CHALLENGES };
 
@@ -67,7 +68,7 @@ export default function ProgressScreen({ progress, quizProgress, scores = {}, mi
   const worldCountries = COUNTRIES.filter(c => (stages[c.id] || []).length > 0);
 
   // Total best score
-  const totalBestScore = Object.values(scores).reduce((a, b) => a + b, 0);
+  const medalSummary = getMedalSummary(meta, p);
 
   return (
     <div style={styles.wrap} className="fade-in">
@@ -115,11 +116,11 @@ export default function ProgressScreen({ progress, quizProgress, scores = {}, mi
           );
         })}
 
-        {totalBestScore > 0 && (
+        {medalSummary.possible > 0 && (
           <div style={styles.scoreRow}>
-            <span style={{ fontSize: 9, color: 'var(--text-dim)' }}>TOTAL BEST SCORE</span>
+            <span style={{ fontSize: 9, color: 'var(--text-dim)' }}>MEDALS / MASTERY</span>
             <span style={{ fontSize: 'clamp(13px, 3.5vw, 18px)', color: 'var(--accent2)', textShadow: '2px 2px 0 #332200' }}>
-              🏅 {totalBestScore.toLocaleString()}
+              {medalSummary.earned}/{medalSummary.possible} / MASTERY {medalSummary.masteredStages}
             </span>
           </div>
         )}
@@ -281,6 +282,8 @@ export default function ProgressScreen({ progress, quizProgress, scores = {}, mi
                 const lIdx     = lCleared ? qs.length : (qp[key] || 0);
                 const lPct     = qs.length ? Math.round((lIdx / qs.length) * 100) : 0;
                 const lScore   = scores[key] || 0;
+                const medals   = getStageMedal(meta, activeWorld, c.id, langId, p);
+                const masteryDone = medals.masteredQuestionIds?.length || 0;
                 const lMeta    = LANG_META[langId] || { name: langId, emoji: '📄' };
                 return (
                   <div key={langId} style={styles.cardProgress}>
@@ -293,6 +296,11 @@ export default function ProgressScreen({ progress, quizProgress, scores = {}, mi
                           🏅 {lScore.toLocaleString()}
                         </div>
                       )}
+                    </div>
+                    <div style={styles.medalLine}>
+                      <span style={{ color: medals.clear ? 'var(--accent)' : '#445566' }}>CLEAR</span>
+                      <span style={{ color: medals.perfect ? 'var(--accent2)' : '#445566' }}>PERFECT</span>
+                      <span style={{ color: medals.mastery ? 'var(--accent)' : '#445566' }}>MASTERY {masteryDone}/{qs.length}</span>
                     </div>
                     <div className="xp-bar" style={{ width: '100%', height: 8 }}>
                       <div className="xp-fill" style={{
@@ -493,6 +501,7 @@ const styles = {
     gap: 6,
   },
   cardProgressLabel: { fontSize: 9, color: 'var(--text-dim)' },
+  medalLine: { display: 'flex', gap: 10, flexWrap: 'wrap', fontSize: 7, lineHeight: 1.8 },
   cardLevel: {
     position: 'absolute',
     top: 10,

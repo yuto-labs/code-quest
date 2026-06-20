@@ -6,6 +6,7 @@ import { AVAILABLE_STAGES, WORLD_META } from '../utils/stageData';
 import { buildProgressKey, getLanguageEmblemTier, getCountrySealTier } from '../utils/progress';
 import { getFinalMission } from '../data/final_missions';
 import { isFinalMissionCleared } from '../utils/metadata';
+import { getStageMedal } from '../utils/medals';
 import BackButton from '../components/BackButton';
 
 const GEO_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
@@ -125,6 +126,7 @@ export default function LanguageScreen({ country, world = 'decode', progress, me
             const emblemTier = getLanguageEmblemTier(p, lang.id, meta);
             const emblemMeta = TIER_META[emblemTier];
             const isAvailable = lang.available && hasContent;
+            const medals = getStageMedal(meta, world, country.id, lang.id, p);
             const mission = getFinalMission(world, country.id, lang.id);
             const missionUnlocked = Boolean(mission && isCleared);
             const missionCleared = Boolean(mission && isFinalMissionCleared(meta, mission.id));
@@ -149,6 +151,13 @@ export default function LanguageScreen({ country, world = 'decode', progress, me
                 {emblemTier !== 'none' && (
                   <span style={{ fontSize: 14, filter: `drop-shadow(0 0 4px ${emblemMeta.color})` }}>
                     {emblemMeta.glyph}
+                  </span>
+                )}
+                {isAvailable && (
+                  <span style={styles.medals}>
+                    <span style={{ color: medals.clear ? 'var(--accent)' : '#556677' }}>CLEAR</span>
+                    <span style={{ color: medals.perfect ? 'var(--accent2)' : '#556677' }}>PERFECT</span>
+                    <span style={{ color: medals.mastery ? 'var(--accent)' : '#556677' }}>MASTERY</span>
                   </span>
                 )}
                 {!isAvailable && (
@@ -319,6 +328,13 @@ const styles = {
     flex: 1,
     fontSize: 'clamp(11px, 3vw, 14px)',
     letterSpacing: 1,
+  },
+  medals: {
+    display: 'flex',
+    gap: 6,
+    flexWrap: 'wrap',
+    fontSize: 7,
+    lineHeight: 1.6,
   },
   soon: {
     fontSize: 8,

@@ -333,6 +333,25 @@ export default function SqlChallengeScreen({
     );
   }
 
+  if (status === 'correct') {
+    return (
+      <div style={styles.wrap} className="fade-in">
+        <div style={styles.top}>
+          <BackButton onClick={onBack} />
+          <div style={styles.kicker}>{question.chapterId} / {SQL_MODE_LABELS[question.mode] || question.mode.toUpperCase()} / Q{question.order}/10</div>
+        </div>
+        <main style={styles.resultBody}>
+          {renderChapterRoute()}
+          {renderCorrectFeedback()}
+          <SqlExplanation explanation={explanation} fact={fact} />
+        </main>
+        <div style={styles.activeFooter}>
+          {renderActionButtons()}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div style={styles.wrap} className="fade-in">
       <div style={styles.top}>
@@ -343,7 +362,13 @@ export default function SqlChallengeScreen({
         <header style={styles.header}>
           <div style={styles.statusBar}>
             <div style={styles.kicker}>{question.chapterId} / {SQL_MODE_LABELS[question.mode] || question.mode.toUpperCase()} / Q{question.order}/10</div>
-            <div style={styles.tryState}>{status === 'wrong' ? 'CHECK AGAIN' : 'SQL PATH'}</div>
+            <div style={styles.hearts} aria-label={`hearts ${hearts} of ${SQL_MAX_HEARTS}`}>
+              {Array.from({ length: SQL_MAX_HEARTS }).map((_, index) => (
+                <span key={index} style={{ opacity: index < hearts ? 1 : 0.2 }}>
+                  {index < hearts ? '♥' : '·'}
+                </span>
+              ))}
+            </div>
           </div>
           {renderChapterRoute()}
           <h1 style={styles.title}>{question.title}</h1>
@@ -360,8 +385,6 @@ export default function SqlChallengeScreen({
 
         {showHint && currentHint && <div style={styles.hint}>HINT: {currentHint}</div>}
 
-        {status === 'correct' && renderCorrectFeedback()}
-        {status === 'correct' && <SqlExplanation explanation={explanation} fact={fact} />}
         {status === 'wrong' && (
           <div style={styles.wrong}>
             Incorrect. TABLE、QUERY、EXPECTED RESULT をもう一度見比べてください。
@@ -383,7 +406,7 @@ const styles = {
   header: { display: 'flex', flexDirection: 'column', gap: 10 },
   statusBar: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 },
   kicker: { color: 'var(--accent2)', fontSize: 9 },
-  tryState: { color: 'var(--text-dim)', fontSize: 8 },
+  hearts: { display: 'flex', gap: 5, color: 'var(--danger)', fontSize: 18, textShadow: '0 0 8px rgba(255,68,68,0.45)' },
   progressBar: { height: 10, width: '100%' },
   title: { margin: 0, color: 'var(--accent)', fontSize: 'clamp(18px, 5vw, 30px)', lineHeight: 1.5 },
   sub: { color: 'var(--text-dim)', fontSize: 11 },

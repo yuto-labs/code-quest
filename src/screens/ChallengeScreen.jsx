@@ -30,6 +30,8 @@ export default function ChallengeScreen({
   initialIdx = 0, onSaveIdx, onSaveScore, onMistake, mission = null,
   initialLives = MAX_HEARTS, onLivesChange, onRestart, onWorldMap,
   onOpenReference,
+  isStageAlreadyCleared = false,
+  onQuestionMastered,
   initialDebugStepIndex = 0, initialDebugAnswers = EMPTY_DEBUG_ANSWERS, entryState = { mode: 'fresh', attempt: null },
 }) {
   const isPC = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
@@ -326,6 +328,8 @@ export default function ChallengeScreen({
       onComplete(country.id, {
         completedChildCount: questions.length,
         targetChildCount: mission?.targetChildCount || questions.length,
+        remainingLives: hearts,
+        perfect: hearts >= MAX_HEARTS,
       });
     };
     enterActionRef.current = handleReturn;
@@ -563,6 +567,9 @@ export default function ChallengeScreen({
       correctShownForIdx.current.add(idx);
       setShowCorrectOverlay(true);
       schedule(() => setShowCorrectOverlay(false), 950);
+    }
+    if (isStageAlreadyCleared && q?.id && (!isDebugStep || debugStepIdx >= stepCount - 1)) {
+      onQuestionMastered?.(q.id);
     }
   };
 

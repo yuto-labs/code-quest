@@ -56,9 +56,15 @@ export default function HomeScreen({ onNavigate, progress, resume, onContinue, u
         <button style={styles.continueBtn} onClick={onContinue}>
           <span style={styles.continueLabel}>CONTINUE</span>
           <span style={styles.continueSub}>
-            {resume.worldId?.toUpperCase()} / {resume.countryId} / {resume.languageId}
-            {resume.screen === 'challenge' ? ` / Q${(resume.questionIndex ?? 0) + 1}` : ' / MAP'}
-            {Number.isInteger(resume.debugStepIndex) ? ` / DEBUG STEP ${resume.debugStepIndex + 1}` : ''}
+            {resume.screen === 'worldShuffle'
+              ? `WORLD SHUFFLE / ${resume.worldShuffle?.languageId?.toUpperCase() || ''} / ${(resume.worldShuffle?.currentIndex || 0) + 1}/${resume.worldShuffle?.queue?.length || 0}`
+              : (
+                <>
+                  {resume.worldId?.toUpperCase()} / {resume.countryId} / {resume.languageId}
+                  {resume.screen === 'challenge' ? ` / Q${(resume.questionIndex ?? 0) + 1}` : ' / MAP'}
+                  {Number.isInteger(resume.debugStepIndex) ? ` / DEBUG STEP ${resume.debugStepIndex + 1}` : ''}
+                </>
+              )}
           </span>
         </button>
       )}

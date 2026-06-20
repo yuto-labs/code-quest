@@ -1,4 +1,6 @@
 import { mergeSqlProgress } from './sqlProgress.js';
+import { mergeMedals, sanitizeMedals } from './medals.js';
+import { mergeWorldShuffle, sanitizeWorldShuffle } from './worldShuffle.js';
 
 export const META_KEY = '__cq_meta';
 
@@ -11,6 +13,8 @@ export const DEFAULT_META = Object.freeze({
   finalMissions: {},
   attempts: {},
   codePaths: {},
+  medals: { stageMedals: {} },
+  worldShuffle: {},
 });
 
 function isObj(value) {
@@ -25,6 +29,8 @@ export function emptyMeta() {
     finalMissions: {},
     attempts: {},
     codePaths: {},
+    medals: { stageMedals: {} },
+    worldShuffle: {},
   };
 }
 
@@ -107,6 +113,8 @@ export function sanitizeMeta(meta) {
     finalMissions: sanitizeFinalMissions(input.finalMissions),
     attempts,
     codePaths:     isObj(input.codePaths)     ? input.codePaths     : {},
+    medals:        sanitizeMedals(input.medals),
+    worldShuffle:  sanitizeWorldShuffle(input.worldShuffle),
   };
 }
 
@@ -209,6 +217,8 @@ export function mergeMeta(localMeta, cloudMeta) {
     },
     attempts: mergeAttempts(local.attempts, cloud.attempts),
     codePaths: mergeCodePaths(local.codePaths, cloud.codePaths),
+    medals: mergeMedals(local.medals, cloud.medals),
+    worldShuffle: mergeWorldShuffle(local.worldShuffle, cloud.worldShuffle),
   };
 }
 

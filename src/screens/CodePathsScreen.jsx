@@ -1,7 +1,28 @@
+import { useMemo, useState } from 'react';
 import { CODE_PATHS } from '../data/sql/course';
 import BackButton from '../components/BackButton';
+import { getShuffleEligibleQuestions, SHUFFLE_COUNTS } from '../utils/worldShuffle';
 
-export default function CodePathsScreen({ onBack, onOpenSql }) {
+const SHUFFLE_MODES = [
+  { id: 'all', label: 'ALL' },
+  { id: 'decode', label: 'DECODE' },
+  { id: 'execute', label: 'EXECUTE' },
+  { id: 'debug', label: 'DEBUG' },
+];
+
+const LANGUAGES = [
+  { id: 'python', label: 'PYTHON' },
+  { id: 'javascript', label: 'JAVASCRIPT' },
+];
+
+export default function CodePathsScreen({ onBack, onOpenSql, progress, onStartShuffle }) {
+  const [languageId, setLanguageId] = useState('python');
+  const [mode, setMode] = useState('all');
+  const [requestedCount, setRequestedCount] = useState(5);
+  const available = useMemo(
+    () => getShuffleEligibleQuestions(progress || {}, { languageId, mode }).length,
+    [progress, languageId, mode],
+  );
   return (
     <div style={styles.wrap} className="fade-in">
       <div style={styles.header}>
@@ -28,6 +49,48 @@ export default function CodePathsScreen({ onBack, onOpenSql }) {
           );
         })}
       </div>
+      <section style={styles.shuffle}>
+        <div style={styles.shuffleTitle}>WORLD SHUFFLE</div>
+        <div style={styles.shuffleSub}>Unlocked WORLD QUEST questions only. No stage clear medals are awarded here.</div>
+        <div style={styles.controls}>
+          <Segment label="LANGUAGE" items={LANGUAGES} value={languageId} onChange={setLanguageId} />
+          <Segment label="MODE" items={SHUFFLE_MODES} value={mode} onChange={setMode} />
+          <Segment label="QUESTION COUNT" items={SHUFFLE_COUNTS.map(count => ({ id: count, label: String(count) }))} value={requestedCount} onChange={setRequestedCount} />
+        </div>
+        <div style={styles.available}>AVAILABLE: {available}</div>
+        <button
+          className="pixel-btn"
+          style={styles.startBtn}
+          disabled={available === 0}
+          onClick={() => onStartShuffle?.({ languageId, mode, requestedCount })}
+        >
+          START WORLD SHUFFLE
+        </button>
+      </section>
+    </div>
+  );
+}
+
+function Segment({ label, items, value, onChange }) {
+  return (
+    <div style={styles.segment}>
+      <div style={styles.segmentLabel}>{label}</div>
+      <div style={styles.segmentOptions}>
+        {items.map(item => (
+          <button
+            key={item.id}
+            type="button"
+            style={{
+              ...styles.segmentBtn,
+              borderColor: item.id === value ? 'var(--accent2)' : 'rgba(0,255,136,0.28)',
+              color: item.id === value ? 'var(--accent2)' : 'var(--text)',
+            }}
+            onClick={() => onChange(item.id)}
+          >
+            {item.label}
+          </button>
+        ))}
+      </div>
     </div>
   );
 }
@@ -42,4 +105,14 @@ const styles = {
   cardTitle: { color: 'var(--accent)', fontSize: 14 },
   cardSub: { color: 'var(--text)', fontSize: 11, lineHeight: 1.8 },
   cardStatus: { marginTop: 'auto', color: 'var(--accent2)', fontSize: 9 },
+  shuffle: { width: '100%', maxWidth: 980, margin: '10px auto 0', background: 'rgba(0,5,25,0.55)', border: '2px solid var(--border2)', padding: 16, display: 'flex', flexDirection: 'column', gap: 14 },
+  shuffleTitle: { color: 'var(--accent2)', fontSize: 15 },
+  shuffleSub: { color: 'var(--text-dim)', fontSize: 10, lineHeight: 1.8 },
+  controls: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: 12 },
+  segment: { display: 'flex', flexDirection: 'column', gap: 8 },
+  segmentLabel: { color: 'var(--text-dim)', fontSize: 8 },
+  segmentOptions: { display: 'flex', flexWrap: 'wrap', gap: 6 },
+  segmentBtn: { fontFamily: 'var(--pixel-font)', fontSize: 8, padding: '8px 9px', background: 'var(--bg)', border: '2px solid', cursor: 'pointer' },
+  available: { color: 'var(--accent)', fontSize: 10 },
+  startBtn: { alignSelf: 'flex-start', fontSize: 9 },
 };

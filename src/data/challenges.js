@@ -92,11 +92,11 @@ export const CHALLENGES = {
         "title": "日章旗・日の丸: 文字列の比較",
         "description": "日章旗・日の丸を題材に、実行結果として「True」が表示されるよう、空欄を埋めてください。",
         "hint": "aliases は別名のリストです。ある文字列がリストに含まれるかを調べるには、in を使います。",
-        "code": "official_name = \"日章旗\"\naliases = [\"日の丸\", \"Nisshoki\"]\nuses_alias = ___BLANK___ in aliases\nprint(uses_alias)",
+        "code": "official_name = \"日章旗\"\naliases = [\"日の丸\"]\nuses_alias = ___BLANK___ in aliases\nprint(uses_alias)",
         "blank": "\"日の丸\"",
         "explanation": "空欄には調べたい別名である \"日の丸\" を入れます。\"日の丸\" in aliases は、リスト aliases の中に同じ文字列があるかを調べ、True を返します。",
         "correctAnswer": "\"日の丸\"",
-        "completedCode": "official_name = \"日章旗\"\naliases = [\"日の丸\", \"Nisshoki\"]\nuses_alias = \"日の丸\" in aliases\nprint(uses_alias)",
+        "completedCode": "official_name = \"日章旗\"\naliases = [\"日の丸\"]\nuses_alias = \"日の丸\" in aliases\nprint(uses_alias)",
         "executionSteps": [
           "1行目で正式名称を official_name に入れます。",
           "2行目で別名の候補を aliases リストにまとめます。",

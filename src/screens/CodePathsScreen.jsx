@@ -110,7 +110,17 @@ function Segment({ label, items, value, onChange }) {
 }
 
 const styles = {
-  wrap: { minHeight: '100dvh', background: 'var(--bg)', padding: '24px 20px', display: 'flex', flexDirection: 'column', gap: 24, overflowY: 'auto' },
+  wrap: {
+    position: 'fixed',
+    inset: 0,
+    background: 'var(--bg)',
+    padding: '24px 20px calc(env(safe-area-inset-bottom, 0px) + 24px)',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 24,
+    overflowY: 'auto',
+    WebkitOverflowScrolling: 'touch',
+  },
   header: { display: 'flex', gap: 16, alignItems: 'center', maxWidth: 980, width: '100%', margin: '0 auto' },
   title: { color: 'var(--accent)', fontSize: 'clamp(22px, 6vw, 40px)', textShadow: '0 0 18px rgba(0,255,136,0.35)' },
   sub: { color: 'var(--text-dim)', fontSize: 12, marginTop: 8 },

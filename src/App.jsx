@@ -1064,6 +1064,19 @@ export default function App() {
         const attemptId = buildAttemptId(world, country.id, language.id);
         const progressKey = buildProgressKey(world, country.id, language.id);
         const questions = (WORLD_CHALLENGES[world] || {})[country.id]?.[language.id] || [];
+        if (questions.length === 0) {
+          return (
+            <LanguageScreen
+              country={country}
+              world={world}
+              progress={progress}
+              meta={meta}
+              onSelectLanguage={(l) => { setLanguage(l); setScreen('challenge'); }}
+              onSelectFinalMission={(mission, lang) => { setLanguage(lang); setScreen('finalMission'); }}
+              onBack={() => setScreen('map')}
+            />
+          );
+        }
         const entryState = resolveStageEntry(meta, attemptId, !!progress[progressKey]);
         const entryIdx = entryState.mode === 'active'
           ? resolveAttemptIndex(entryState.attempt, questions)
@@ -1111,6 +1124,19 @@ export default function App() {
 
       {screen === 'finalMission' && country && language && (() => {
         const mission = getFinalMission(world, country.id, language.id);
+        if (!mission) {
+          return (
+            <LanguageScreen
+              country={country}
+              world={world}
+              progress={progress}
+              meta={meta}
+              onSelectLanguage={(l) => { setLanguage(l); setScreen('challenge'); }}
+              onSelectFinalMission={(nextMission, lang) => { setLanguage(lang); setScreen(nextMission ? 'finalMission' : 'language'); }}
+              onBack={() => setScreen('map')}
+            />
+          );
+        }
         const attemptId = buildAttemptId(world, country.id, language.id, mission?.id);
         const isCleared = mission ? isFinalMissionCleared(meta, mission.id) : false;
         const entryState = resolveStageEntry(meta, attemptId, isCleared);

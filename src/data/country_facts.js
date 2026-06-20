@@ -1,3 +1,7 @@
+import { JP_JAVA_FACTS } from './jp_java_questions.js';
+import { US_JAVA_FACTS } from './us_java_questions.js';
+import { FRANCE_FACTS } from './france_questions.js';
+
 export const FACT_STATUS = Object.freeze({
   VERIFIED: 'verified',
   TRADITIONAL: 'traditional',
@@ -4861,6 +4865,10 @@ export const COUNTRY_FACTS = [
     "episodeJa": "システムでハワイの地名を扱う際にこれらの記号を省略したり、誤った文字コードで処理すると、表記が不正確になったり、検索で正しく一致しなくなったりすることがあるため、文字の正規化に注意が必要です。"
   }
 ];
+
+COUNTRY_FACTS.push(...JP_JAVA_FACTS);
+COUNTRY_FACTS.push(...US_JAVA_FACTS);
+COUNTRY_FACTS.push(...FRANCE_FACTS);
 
 function validateSourceRef(ref, index, factId, issues) {
   if (typeof ref === 'string') {

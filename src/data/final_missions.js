@@ -1,4 +1,7 @@
-import { FINAL_CHILD_COUNT, QUESTION_COUNT_TARGETS } from './question_targets.js';
+import { getQuestionCountTarget } from './question_targets.js';
+import { JP_JAVA_FINAL_MISSIONS } from './jp_java_questions.js';
+import { US_JAVA_FINAL_MISSIONS } from './us_java_questions.js';
+import { FRANCE_FINAL_MISSIONS } from './france_questions.js';
 
 export const FINAL_MISSION_TYPES = Object.freeze({
   decode: 'DECODE_FINAL',
@@ -14,12 +17,24 @@ export function buildFinalChildId(worldId, countryId, languageId, childIndex) {
   return `${buildFinalMissionId(worldId, countryId, languageId)}_${String(childIndex).padStart(2, '0')}`;
 }
 
-function finalChildIds(worldId, countryId, languageId) {
-  return Array.from({ length: FINAL_CHILD_COUNT }, (_, index) => buildFinalChildId(worldId, countryId, languageId, index + 1));
+function finalChildIds(worldId, countryId, languageId, count) {
+  return Array.from({ length: count }, (_, index) => buildFinalChildId(worldId, countryId, languageId, index + 1));
 }
 
 function withFinalArchitecture(worldId, countryId, languageId, mission) {
-  return { ...mission, id: buildFinalMissionId(worldId, countryId, languageId), worldId, countryId, languageId, targetChildCount: QUESTION_COUNT_TARGETS.final[worldId] || FINAL_CHILD_COUNT, childQuestionIds: finalChildIds(worldId, countryId, languageId) };
+  const actualCount = Array.isArray(mission?.questions) ? mission.questions.length : 0;
+  const authoringTargetChildCount = getQuestionCountTarget({ countryId, languageId, worldId, kind: 'final' }) || actualCount;
+  const childCount = actualCount || authoringTargetChildCount;
+  return {
+    ...mission,
+    id: buildFinalMissionId(worldId, countryId, languageId),
+    worldId,
+    countryId,
+    languageId,
+    authoringTargetChildCount,
+    targetChildCount: childCount,
+    childQuestionIds: finalChildIds(worldId, countryId, languageId, childCount),
+  };
 }
 
 export const FINAL_MISSIONS = {
@@ -1944,6 +1959,25 @@ export const FINAL_MISSIONS = {
     }
   }
 };
+
+FINAL_MISSIONS.decode.JP.java = JP_JAVA_FINAL_MISSIONS.decode;
+FINAL_MISSIONS.execute.JP.java = JP_JAVA_FINAL_MISSIONS.execute;
+FINAL_MISSIONS.debug.JP.java = JP_JAVA_FINAL_MISSIONS.debug;
+FINAL_MISSIONS.decode.US.java = US_JAVA_FINAL_MISSIONS.decode;
+FINAL_MISSIONS.execute.US.java = US_JAVA_FINAL_MISSIONS.execute;
+FINAL_MISSIONS.debug.US.java = US_JAVA_FINAL_MISSIONS.debug;
+FINAL_MISSIONS.decode.FR ??= {};
+FINAL_MISSIONS.execute.FR ??= {};
+FINAL_MISSIONS.debug.FR ??= {};
+FINAL_MISSIONS.decode.FR.python = FRANCE_FINAL_MISSIONS.decode.python;
+FINAL_MISSIONS.execute.FR.python = FRANCE_FINAL_MISSIONS.execute.python;
+FINAL_MISSIONS.debug.FR.python = FRANCE_FINAL_MISSIONS.debug.python;
+FINAL_MISSIONS.decode.FR.javascript = FRANCE_FINAL_MISSIONS.decode.javascript;
+FINAL_MISSIONS.execute.FR.javascript = FRANCE_FINAL_MISSIONS.execute.javascript;
+FINAL_MISSIONS.debug.FR.javascript = FRANCE_FINAL_MISSIONS.debug.javascript;
+FINAL_MISSIONS.decode.FR.java = FRANCE_FINAL_MISSIONS.decode.java;
+FINAL_MISSIONS.execute.FR.java = FRANCE_FINAL_MISSIONS.execute.java;
+FINAL_MISSIONS.debug.FR.java = FRANCE_FINAL_MISSIONS.debug.java;
 
 export function getFinalMission(worldId, countryId, languageId) {
   const mission = FINAL_MISSIONS[worldId]?.[countryId]?.[languageId];

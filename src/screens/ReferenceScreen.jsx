@@ -12,6 +12,13 @@ import { WORLD_META, WORLD_IDS } from '../utils/stageData';
 
 const WORLD_ORDER = ['decode', 'execute', 'debug'];
 const LAYERS = ['all', '0', '1', '2', '3'];
+const REFERENCE_LANGUAGE_ORDER = ['python', 'javascript', 'java', 'sql'];
+const REFERENCE_LANGUAGE_LABELS = {
+  python: 'Python',
+  javascript: 'JavaScript',
+  java: 'Java',
+  sql: 'SQL',
+};
 const CHALLENGE_SOURCES = {
   decode: CHALLENGES,
   execute: EXECUTE_CHALLENGES,
@@ -48,7 +55,6 @@ function searchableTopic(topic) {
       ...(page.minimalExample?.lineNotes || []),
       ...(page.commonMistakes || []).map(mistakeSearchText),
       ...(page.miniChecks || []).flatMap(check => [check.prompt, check.answer]),
-      ...Object.values(page.worldExamples || {}),
     ]),
   ].filter(Boolean).join(' ');
 }
@@ -175,7 +181,12 @@ export default function ReferenceScreen({
     ? ALL_REFERENCE_TOPICS.find(topic => topic.id === resolveReferenceTopicId(selectedId) || topic.id === selectedId)
     : null;
 
-  const languages = useMemo(() => ['all', ...new Set(ALL_REFERENCE_TOPICS.map(topic => topic.language))], []);
+  const languages = useMemo(() => {
+    const available = new Set(ALL_REFERENCE_TOPICS.map(topic => topic.language));
+    const ordered = REFERENCE_LANGUAGE_ORDER.filter(language => available.has(language));
+    const rest = [...available].filter(language => !REFERENCE_LANGUAGE_ORDER.includes(language)).sort();
+    return ['all', ...ordered, ...rest];
+  }, []);
 
   const filteredTopics = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -244,7 +255,7 @@ export default function ReferenceScreen({
       <div style={styles.filters}>
         <input style={styles.search} value={query} onChange={e => setQuery(e.target.value)} placeholder="Search reference" aria-label="Search reference" />
         <select style={styles.select} value={languageFilter} onChange={e => setLanguageFilter(e.target.value)} aria-label="Language filter">
-          {languages.map(lang => <option key={lang} value={lang}>{lang === 'all' ? 'All languages' : lang}</option>)}
+          {languages.map(lang => <option key={lang} value={lang}>{lang === 'all' ? 'All languages' : REFERENCE_LANGUAGE_LABELS[lang] || lang}</option>)}
         </select>
         <select style={styles.select} value={worldFilter} onChange={e => setWorldFilter(e.target.value)} aria-label="World filter">
           <option value="all">All worlds</option>
@@ -393,18 +404,6 @@ function TopicDetail({ topic, progress, scores, review, onNavigate, onBack, orig
         )}
 
         <section style={styles.panel}>
-          <div style={styles.sectionHeading}>ワールド別の読み方</div>
-          <div style={styles.worldGrid}>
-            {WORLD_ORDER.map(wid => (
-              <div key={wid} style={styles.worldExample}>
-                <strong style={{ color: WORLD_META[wid].color }}>{WORLD_META[wid].label}</strong>
-                <span>{page.worldExamples?.[wid]}</span>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section style={styles.panel}>
           <div style={styles.sectionHeading}>間違えやすいポイント</div>
           <div style={styles.noteList}>{(page.commonMistakes || []).map((item, index) => <MistakeItem key={typeof item === 'string' ? item : `${item.wrong}-${index}`} item={item} />)}</div>
         </section>
@@ -546,8 +545,6 @@ const styles = {
   mistakeCode: { display: 'flex', alignItems: 'center', gap: 8, fontSize: 10, color: 'var(--text)', minWidth: 0, overflowX: 'auto' },
   mistakeLabel: { fontFamily: 'var(--pixel-font)', fontSize: 8, color: 'var(--accent2)', flexShrink: 0 },
   mistakeReason: { fontSize: 10, color: 'var(--text-dim)', lineHeight: 1.8 },
-  worldGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 8 },
-  worldExample: { display: 'flex', flexDirection: 'column', gap: 6, border: '1px solid rgba(255,255,255,0.12)', padding: 10, fontSize: 10, lineHeight: 1.8 },
   check: { fontSize: 10, color: 'var(--text)', lineHeight: 2 },
   checkAnswer: { padding: '6px 0 0 12px', color: 'var(--accent)' },
   practiceBox: { display: 'flex', flexDirection: 'column', gap: 8 },

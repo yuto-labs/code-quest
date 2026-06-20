@@ -1,3 +1,7 @@
+import { JP_JAVA_DEBUG } from './jp_java_questions.js';
+import { US_JAVA_DEBUG } from './us_java_questions.js';
+import { FR_JAVA_DEBUG, FR_JS_DEBUG, FR_PY_DEBUG } from './france_questions.js';
+
 export const DEBUG_CHALLENGES = {
   "JP": {
     "python": [
@@ -2211,7 +2215,16 @@ export const DEBUG_CHALLENGES = {
   }
 };
 
+if (DEBUG_CHALLENGES.JP) DEBUG_CHALLENGES.JP.java = JP_JAVA_DEBUG;
+if (DEBUG_CHALLENGES.US) DEBUG_CHALLENGES.US.java = US_JAVA_DEBUG;
+if (DEBUG_CHALLENGES.FR) {
+  DEBUG_CHALLENGES.FR.python = FR_PY_DEBUG;
+  DEBUG_CHALLENGES.FR.javascript = FR_JS_DEBUG;
+  DEBUG_CHALLENGES.FR.java = FR_JAVA_DEBUG;
+}
+
 export const DEBUG_LANGUAGES = [
   { id: 'python', name: 'Python', emoji: '🐍', available: true },
   { id: 'javascript', name: 'JavaScript', emoji: 'JS', available: true },
+  { id: 'java', name: 'JAVA', emoji: 'JV', available: true },
 ];

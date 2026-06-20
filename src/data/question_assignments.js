@@ -1,3 +1,7 @@
+import { JP_JAVA_ASSIGNMENTS } from './jp_java_questions.js';
+import { US_JAVA_ASSIGNMENTS } from './us_java_questions.js';
+import { FRANCE_ASSIGNMENTS } from './france_questions.js';
+
 export const COGNITIVE_TASKS = Object.freeze([
   'recall-from-given-context',
   'complete-syntax',
@@ -2257,3 +2261,7 @@ export const QUESTION_ASSIGNMENTS = [
     "progressionGroupId": ""
   }
 ];
+
+QUESTION_ASSIGNMENTS.push(...JP_JAVA_ASSIGNMENTS);
+QUESTION_ASSIGNMENTS.push(...US_JAVA_ASSIGNMENTS);
+QUESTION_ASSIGNMENTS.push(...FRANCE_ASSIGNMENTS);

@@ -6,6 +6,7 @@ import { getUnlockedIds } from './progress.js';
 
 export const SHUFFLE_MODES = ['all', 'decode', 'execute', 'debug'];
 export const SHUFFLE_COUNTS = [5, 10, 20];
+export const SHUFFLE_LANGUAGES = ['python', 'javascript'];
 
 const WORLD_CHALLENGES = { decode: CHALLENGES, execute: EXECUTE_CHALLENGES, debug: DEBUG_CHALLENGES };
 
@@ -25,6 +26,7 @@ function isPlayableQuestion(question) {
 }
 
 export function getShuffleEligibleQuestions(progress = {}, { languageId = 'python', mode = 'all' } = {}) {
+  if (!SHUFFLE_LANGUAGES.includes(languageId)) return [];
   const modes = mode === 'all' ? ['decode', 'execute', 'debug'] : [mode];
   const items = [];
   for (const worldId of modes) {
@@ -54,7 +56,7 @@ export function resolveShuffleQuestion(entry) {
 }
 
 export function createShuffleRun(progress = {}, settings = {}) {
-  const languageId = settings.languageId || 'python';
+  const languageId = SHUFFLE_LANGUAGES.includes(settings.languageId) ? settings.languageId : 'python';
   const mode = SHUFFLE_MODES.includes(settings.mode) ? settings.mode : 'all';
   const requestedCount = SHUFFLE_COUNTS.includes(settings.requestedCount) ? settings.requestedCount : 5;
   const eligible = getShuffleEligibleQuestions(progress, { languageId, mode });

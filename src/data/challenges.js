@@ -1,4 +1,7 @@
 import { JS_CHALLENGES } from './js_challenges.js';
+import { JP_JAVA_DECODE } from './jp_java_questions.js';
+import { US_JAVA_DECODE } from './us_java_questions.js';
+import { FR_JAVA_DECODE, FR_JS_DECODE, FR_PY_DECODE } from './france_questions.js';
 
 export const CHALLENGES = {
   "JP": {
@@ -2994,9 +2997,16 @@ export const CHALLENGES = {
 Object.keys(JS_CHALLENGES).forEach(id => {
   if (CHALLENGES[id]) CHALLENGES[id].javascript = JS_CHALLENGES[id];
 });
+if (CHALLENGES.JP) CHALLENGES.JP.java = JP_JAVA_DECODE;
+if (CHALLENGES.US) CHALLENGES.US.java = US_JAVA_DECODE;
+if (CHALLENGES.FR) {
+  CHALLENGES.FR.python = FR_PY_DECODE;
+  CHALLENGES.FR.javascript = FR_JS_DECODE;
+  CHALLENGES.FR.java = FR_JAVA_DECODE;
+}
 
 export const LANGUAGES = [
   { id: 'python',     name: 'PYTHON',     emoji: '🐍', available: true },
   { id: 'javascript', name: 'JAVASCRIPT', emoji: 'JS', available: true },
-  { id: 'java',       name: 'JAVA',       emoji: '☕', available: false },
+  { id: 'java',       name: 'JAVA',       emoji: '☕', available: true },
 ];

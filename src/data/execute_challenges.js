@@ -1,3 +1,7 @@
+import { JP_JAVA_EXECUTE } from './jp_java_questions.js';
+import { US_JAVA_EXECUTE } from './us_java_questions.js';
+import { FR_JAVA_EXECUTE, FR_JS_EXECUTE, FR_PY_EXECUTE } from './france_questions.js';
+
 export const EXECUTE_CHALLENGES = {
   "JP": {
     "python": [
@@ -1396,7 +1400,16 @@ export const EXECUTE_CHALLENGES = {
   }
 };
 
+if (EXECUTE_CHALLENGES.JP) EXECUTE_CHALLENGES.JP.java = JP_JAVA_EXECUTE;
+if (EXECUTE_CHALLENGES.US) EXECUTE_CHALLENGES.US.java = US_JAVA_EXECUTE;
+if (EXECUTE_CHALLENGES.FR) {
+  EXECUTE_CHALLENGES.FR.python = FR_PY_EXECUTE;
+  EXECUTE_CHALLENGES.FR.javascript = FR_JS_EXECUTE;
+  EXECUTE_CHALLENGES.FR.java = FR_JAVA_EXECUTE;
+}
+
 export const EXECUTE_LANGUAGES = [
   { id: 'python', name: 'Python', emoji: '🐍', available: true },
   { id: 'javascript', name: 'JavaScript', emoji: 'JS', available: true },
+  { id: 'java', name: 'JAVA', emoji: 'JV', available: true },
 ];

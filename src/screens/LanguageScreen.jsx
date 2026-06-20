@@ -212,7 +212,8 @@ const styles = {
     position: 'absolute',
     top: 20,
     left: 20,
-    zIndex: 1,
+    zIndex: 20,
+    pointerEvents: 'auto',
   },
   mapBg: {
     position: 'absolute',

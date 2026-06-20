@@ -19,7 +19,7 @@ let CHALLENGES, LANGUAGES, EXECUTE_CHALLENGES, EXECUTE_LANGUAGES,
     DEBUG_CHALLENGES, DEBUG_LANGUAGES, COUNTRIES, CONCEPTS,
     COUNTRY_FACTS, COUNTRY_FACTS_BY_ID, validateCountryFacts,
     QUESTION_ASSIGNMENTS, COGNITIVE_TASKS, listFinalMissions,
-    QUESTION_COUNT_TARGETS, META_KEY, packProgress, unpackProgress,
+    QUESTION_COUNT_TARGETS, getQuestionCountTarget, META_KEY, packProgress, unpackProgress,
     REFERENCE_TOPICS, REFERENCE_TOPIC_ALIASES, REFERENCE_RESTORE_AUDIT,
     SQL_COURSE, SQL_QUESTIONS, SQL_GLOBAL_FACTS, SQL_REFERENCE_TOPICS;
 
@@ -36,7 +36,7 @@ try {
   ({ COUNTRY_FACTS, COUNTRY_FACTS_BY_ID, validateCountryFacts } = await import(dataUrl('src/data/country_facts.js')));
   ({ QUESTION_ASSIGNMENTS, COGNITIVE_TASKS } = await import(dataUrl('src/data/question_assignments.js')));
   ({ listFinalMissions } = await import(dataUrl('src/data/final_missions.js')));
-  ({ QUESTION_COUNT_TARGETS } = await import(dataUrl('src/data/question_targets.js')));
+  ({ QUESTION_COUNT_TARGETS, getQuestionCountTarget } = await import(dataUrl('src/data/question_targets.js')));
   ({ META_KEY, packProgress, unpackProgress } = await import(dataUrl('src/utils/metadata.js')));
   ({ REFERENCE_TOPICS, REFERENCE_TOPIC_ALIASES, REFERENCE_RESTORE_AUDIT } = await import(dataUrl('src/data/reference.js')));
   ({ SQL_COURSE } = await import(dataUrl('src/data/sql/course.js')));
@@ -677,9 +677,19 @@ export function validateFinalMission(mission) {
   const warnings = [];
   const loc = `[final_missions.js] ${mission?.id ?? '(missing id)'}`;
   const expectedMissionId = `final_${mission?.worldId}_${mission?.countryId}_${mission?.languageId}`;
-  const targetChildCount = QUESTION_COUNT_TARGETS.final[mission?.worldId] || 3;
+  const targetChildCount = getQuestionCountTarget({
+    countryId: mission?.countryId,
+    languageId: mission?.languageId,
+    worldId: mission?.worldId,
+    kind: 'final',
+  }) || mission?.questions?.length || 0;
+  const actualChildCount = Array.isArray(mission?.childQuestionIds)
+    ? mission.childQuestionIds.length
+    : Array.isArray(mission?.questions)
+      ? mission.questions.length
+      : targetChildCount;
   const expectedChildIds = Array.from(
-    { length: targetChildCount },
+    { length: actualChildCount },
     (_, index) => `${expectedMissionId}_${String(index + 1).padStart(2, '0')}`,
   );
   if (!mission?.id || mission.id !== expectedMissionId) {
@@ -694,8 +704,8 @@ export function validateFinalMission(mission) {
   if (!mission?.unlock || mission.unlock.requiresStageClear !== true) {
     errors.push({ loc, rule: 'invalid-final-mission-unlock-config', msg: 'Final mission must declare unlock.requiresStageClear=true' });
   }
-  if (!Array.isArray(mission?.childQuestionIds) || mission.childQuestionIds.length !== targetChildCount) {
-    errors.push({ loc, rule: 'invalid-final-mission-child-order', msg: `Final mission must expose ${targetChildCount} ordered child IDs` });
+  if (!Array.isArray(mission?.childQuestionIds) || mission.childQuestionIds.length !== actualChildCount) {
+    errors.push({ loc, rule: 'invalid-final-mission-child-order', msg: `Final mission must expose ${actualChildCount} ordered child IDs` });
   } else if (mission.childQuestionIds.some((id, index) => id !== expectedChildIds[index])) {
     errors.push({ loc, rule: 'invalid-final-mission-child-order', msg: `childQuestionIds must be ${expectedChildIds.join(', ')}` });
   }
@@ -1433,7 +1443,7 @@ export function runValidation() {
           counts[worldId][countryId][languageId][qType] =
             (counts[worldId][countryId][languageId][qType] || 0) + 1;
         }
-        const target = QUESTION_COUNT_TARGETS.regular[worldId];
+        const target = getQuestionCountTarget({ countryId, languageId, worldId, kind: 'regular' });
         if (target && questions.length < target) {
           allWarnings.push({ loc: `[${sourceFile}] ${countryId}/${languageId}`, rule: 'regular-target-count-shortage',
             msg: `Regular question count is ${questions.length}/${target}` });
@@ -1525,7 +1535,12 @@ export function runValidation() {
     finalCounts[mission.worldId][mission.countryId] ??= {};
     finalCounts[mission.worldId][mission.countryId][mission.languageId] = {
       actual: mission.questions?.length || 0,
-      target: QUESTION_COUNT_TARGETS.final[mission.worldId] || 3,
+      target: getQuestionCountTarget({
+        countryId: mission.countryId,
+        languageId: mission.languageId,
+        worldId: mission.worldId,
+        kind: 'final',
+      }),
     };
   }
 
@@ -1560,12 +1575,12 @@ function printCounts(counts) {
   const totals = {};
   for (const [worldId, countries] of Object.entries(counts)) {
     let worldTotal = 0;
-    const target = QUESTION_COUNT_TARGETS.regular[worldId] || '?';
     console.log(`  [${worldId.toUpperCase()}]`);
     for (const [countryId, langs] of Object.entries(countries)) {
       for (const [langId, types] of Object.entries(langs)) {
         const typeStr = Object.entries(types).map(([t, n]) => `${t}:${n}`).join(' ');
         const total = Object.values(types).reduce((a, b) => a + b, 0);
+        const target = getQuestionCountTarget({ countryId, languageId: langId, worldId, kind: 'regular' }) || '?';
         console.log(`    ${countryId}/${langId}  ${total}/${target}q  [${typeStr}]`);
         worldTotal += total;
       }

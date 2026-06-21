@@ -42,6 +42,7 @@ export default function WorldShuffleScreen({
   const [status, setStatus] = useState(existingOutcome ? 'done' : 'idle');
   const [revealed, setRevealed] = useState(existingOutcome?.status === 'revealed');
   const recordedRef = useRef(Boolean(existingOutcome));
+  const advancingRef = useRef(false);
   const onSaveRunRef = useRef(onSaveRun);
 
   const isDebug = type === 'debug-step';
@@ -53,6 +54,30 @@ export default function WorldShuffleScreen({
   useEffect(() => {
     onSaveRunRef.current = onSaveRun;
   }, [onSaveRun]);
+
+  useEffect(() => {
+    let cancelled = false;
+    const temp = run?.temp || {};
+    queueMicrotask(() => {
+      if (cancelled) return;
+      setAnswer(temp.answer || '');
+      setSelected(temp.selected ?? null);
+      setBlankAnswers(temp.blankAnswers || []);
+      setOrderingSelection(temp.orderingSelection || []);
+      setDebugStep(temp.debugStep || 0);
+      setDebugAnswers(temp.debugAnswers || []);
+      setWrongCount(temp.wrongCount || 0);
+      setStatus(existingOutcome ? 'done' : 'idle');
+      setRevealed(existingOutcome?.status === 'revealed');
+      recordedRef.current = Boolean(existingOutcome);
+      advancingRef.current = false;
+    });
+    return () => {
+      cancelled = true;
+    };
+    // Reset only when moving to another shuffle question; temp changes are saved draft state.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [question?.id, run?.currentIndex]);
 
   useEffect(() => {
     if (!question || status === 'done') return;
@@ -177,6 +202,8 @@ export default function WorldShuffleScreen({
   }
 
   function next() {
+    if (advancingRef.current) return;
+    advancingRef.current = true;
     const queueLength = run.queue?.length || 0;
     const isLast = run.currentIndex + 1 >= queueLength;
     try {

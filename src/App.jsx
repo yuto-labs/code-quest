@@ -524,13 +524,14 @@ export default function App() {
       ...latestRef.current.meta,
       worldShuffle: nextRun,
     };
+    latestRef.current = { ...latestRef.current, meta: nextMeta };
     setMeta(nextMeta);
     saveToLocal(getStorageKey(uid, 'meta'), nextMeta);
     syncToCloud();
   }, []);
 
   const startWorldShuffle = useCallback((settings) => {
-    const run = createShuffleRun(latestRef.current.progress, settings);
+    const run = createShuffleRun(latestRef.current.progress, { ...settings, meta: latestRef.current.meta });
     setLastShuffleSettings(settings);
     saveWorldShuffleRun(run);
     setScreen('worldShuffle');
@@ -614,6 +615,7 @@ export default function App() {
       updatedAt: new Date().toISOString(),
     });
     nextMeta = { ...nextMeta, worldShuffle: nextRun };
+    latestRef.current = { ...latestRef.current, meta: nextMeta };
     setMeta(nextMeta);
     saveToLocal(getStorageKey(uid, 'meta'), nextMeta);
     syncToCloud();
@@ -940,6 +942,7 @@ export default function App() {
           onBack={() => setScreen('home')}
           onOpenSql={() => setScreen('sqlPath')}
           progress={progress}
+          meta={meta}
           worldShuffleRun={sanitizeWorldShuffle(meta.worldShuffle)}
           onStartShuffle={startWorldShuffle}
           onContinueShuffle={continueWorldShuffle}

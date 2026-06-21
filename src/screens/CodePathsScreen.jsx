@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { CODE_PATHS } from '../data/sql/course';
 import BackButton from '../components/BackButton';
-import { getShuffleEligibleQuestions, SHUFFLE_COUNTS } from '../utils/worldShuffle';
+import { getShuffleEligibleQuestions, SHUFFLE_COUNTS, SHUFFLE_FILTERS } from '../utils/worldShuffle';
 
 const SHUFFLE_MODES = [
   { id: 'all', label: 'ALL' },
@@ -15,13 +15,14 @@ const LANGUAGES = [
   { id: 'javascript', label: 'JAVASCRIPT' },
 ];
 
-export default function CodePathsScreen({ onBack, onOpenSql, progress, worldShuffleRun, onStartShuffle, onContinueShuffle }) {
+export default function CodePathsScreen({ onBack, onOpenSql, progress, meta, worldShuffleRun, onStartShuffle, onContinueShuffle }) {
   const [languageId, setLanguageId] = useState('python');
   const [mode, setMode] = useState('all');
+  const [filter, setFilter] = useState('all');
   const [requestedCount, setRequestedCount] = useState(5);
   const available = useMemo(
-    () => getShuffleEligibleQuestions(progress || {}, { languageId, mode }).length,
-    [progress, languageId, mode],
+    () => getShuffleEligibleQuestions(progress || {}, { languageId, mode, filter, meta }).length,
+    [progress, languageId, mode, filter, meta],
   );
   const hasActiveRun = worldShuffleRun?.status === 'active' && (worldShuffleRun.queue?.length || 0) > 0;
   return (
@@ -66,6 +67,7 @@ export default function CodePathsScreen({ onBack, onOpenSql, progress, worldShuf
         <div style={styles.controls}>
           <Segment label="LANGUAGE" items={LANGUAGES} value={languageId} onChange={setLanguageId} />
           <Segment label="MODE" items={SHUFFLE_MODES} value={mode} onChange={setMode} />
+          <Segment label="QUESTION POOL" items={SHUFFLE_FILTERS} value={filter} onChange={setFilter} />
           <Segment label="QUESTION COUNT" items={SHUFFLE_COUNTS.map(count => ({ id: count, label: String(count) }))} value={requestedCount} onChange={setRequestedCount} />
         </div>
         <div style={styles.available}>AVAILABLE: {available}</div>
@@ -73,7 +75,7 @@ export default function CodePathsScreen({ onBack, onOpenSql, progress, worldShuf
           className="pixel-btn"
           style={styles.startBtn}
           disabled={available === 0}
-          onClick={() => onStartShuffle?.({ languageId, mode, requestedCount })}
+          onClick={() => onStartShuffle?.({ languageId, mode, filter, requestedCount })}
         >
           START RANDOM SHUFFLE
         </button>

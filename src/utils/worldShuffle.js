@@ -2,11 +2,17 @@ import { CHALLENGES } from '../data/challenges.js';
 import { EXECUTE_CHALLENGES } from '../data/execute_challenges.js';
 import { DEBUG_CHALLENGES } from '../data/debug_challenges.js';
 import { COUNTRIES } from '../data/countries.js';
-import { getUnlockedIds } from './progress.js';
+import { buildProgressKey, getUnlockedIds } from './progress.js';
+import { sanitizeMedals } from './medals.js';
 
 export const SHUFFLE_MODES = ['all', 'decode', 'execute', 'debug'];
 export const SHUFFLE_COUNTS = [5, 10, 20];
 export const SHUFFLE_LANGUAGES = ['python', 'javascript'];
+export const SHUFFLE_FILTERS = [
+  { id: 'all', label: 'ALL QUESTIONS' },
+  { id: 'review', label: 'WRONG / REVEALED' },
+  { id: 'mastery-unmet', label: 'MASTERY UNMET' },
+];
 
 const WORLD_CHALLENGES = { decode: CHALLENGES, execute: EXECUTE_CHALLENGES, debug: DEBUG_CHALLENGES };
 
@@ -25,9 +31,22 @@ function isPlayableQuestion(question) {
   return Array.isArray(question.options) && question.options.length > 0 && question.answer !== undefined;
 }
 
-export function getShuffleEligibleQuestions(progress = {}, { languageId = 'python', mode = 'all' } = {}) {
+function matchesShuffleFilter(question, entry, progress, meta, filter) {
+  if (filter === 'review') return Boolean(meta?.review?.[question.id]?.reviewDue);
+  if (filter === 'mastery-unmet') {
+    const medalKey = buildProgressKey(entry.worldId, entry.countryId, entry.languageId);
+    const medal = sanitizeMedals(meta?.medals).stageMedals[medalKey] || {};
+    const isCleared = Boolean(progress?.[medalKey] || medal.clear);
+    if (!isCleared) return false;
+    return !(medal.masteredQuestionIds || []).includes(question.id);
+  }
+  return true;
+}
+
+export function getShuffleEligibleQuestions(progress = {}, { languageId = 'python', mode = 'all', filter = 'all', meta = {} } = {}) {
   if (!SHUFFLE_LANGUAGES.includes(languageId)) return [];
   const modes = mode === 'all' ? ['decode', 'execute', 'debug'] : [mode];
+  const filterId = SHUFFLE_FILTERS.some(item => item.id === filter) ? filter : 'all';
   const items = [];
   for (const worldId of modes) {
     const unlocked = getUnlockedIds(progress, worldId);
@@ -37,12 +56,14 @@ export function getShuffleEligibleQuestions(progress = {}, { languageId = 'pytho
       const questions = byCountry[country.id]?.[languageId] || [];
       for (const question of questions) {
         if (!isPlayableQuestion(question)) continue;
-        items.push({
+        const entry = {
           questionId: question.id,
           worldId,
           countryId: country.id,
           languageId,
-        });
+        };
+        if (!matchesShuffleFilter(question, entry, progress, meta, filterId)) continue;
+        items.push(entry);
       }
     }
   }
@@ -56,16 +77,20 @@ export function resolveShuffleQuestion(entry) {
 }
 
 export function createShuffleRun(progress = {}, settings = {}) {
-  const languageId = SHUFFLE_LANGUAGES.includes(settings.languageId) ? settings.languageId : 'python';
+  const languageId = settings.languageId ? String(settings.languageId) : 'python';
   const mode = SHUFFLE_MODES.includes(settings.mode) ? settings.mode : 'all';
   const requestedCount = SHUFFLE_COUNTS.includes(settings.requestedCount) ? settings.requestedCount : 5;
-  const eligible = getShuffleEligibleQuestions(progress, { languageId, mode });
+  const filter = SHUFFLE_FILTERS.some(item => item.id === settings.filter) ? settings.filter : 'all';
+  const eligible = SHUFFLE_LANGUAGES.includes(languageId)
+    ? getShuffleEligibleQuestions(progress, { languageId, mode, filter, meta: settings.meta })
+    : [];
   const queue = shuffle(eligible).slice(0, requestedCount);
   return {
     version: 1,
     status: 'active',
     languageId,
     mode,
+    filter,
     requestedCount,
     queue,
     currentIndex: 0,
@@ -96,6 +121,7 @@ export function sanitizeWorldShuffle(value) {
     status: ['active', 'completed'].includes(value.status) ? value.status : 'active',
     languageId: value.languageId || 'python',
     mode: SHUFFLE_MODES.includes(value.mode) ? value.mode : 'all',
+    filter: SHUFFLE_FILTERS.some(item => item.id === value.filter) ? value.filter : 'all',
     requestedCount: SHUFFLE_COUNTS.includes(value.requestedCount) ? value.requestedCount : 5,
     queue,
     currentIndex: Number.isInteger(value.currentIndex) ? Math.max(0, Math.min(value.currentIndex, Math.max(queue.length - 1, 0))) : 0,

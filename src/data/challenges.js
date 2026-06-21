@@ -1229,8 +1229,9 @@ export const CHALLENGES = {
         "id": "au_py_5",
         "title": "関数の中で計算しよう",
         "description": "円の面積を計算する関数を完成させてください（面積 = 3.14 × r × r）。",
-        "code": "def circle_area(r):\n    return 3.14 ___BLANK___ r ___BLANK___ r\n\nprint(circle_area(5))",
-        "blank": "*",
+        "questionType": "multiple-blanks",
+        "code": "def circle_area(r):\n    return 3.14 ___BLANK_0___ r ___BLANK_1___ r\n\nprint(circle_area(5))",
+        "blanks": ["*", "*"],
         "hint": "掛け算の記号は * です",
         "explanation": "3.14 * r * r で円の面積を計算します。r=5 のとき 3.14 × 5 × 5 = 78.5 になります。"
       },
@@ -1307,8 +1308,9 @@ export const CHALLENGES = {
         "id": "eg_py_1",
         "title": "辞書を作ろう",
         "description": "エジプトの情報を持つ辞書 egypt を作ってください。",
-        "code": "egypt = ___BLANK___\"capital\": \"Cairo\", \"population\": 100000000___BLANK___\nprint(egypt)",
-        "blank": "{",
+        "questionType": "multiple-blanks",
+        "code": "egypt = ___BLANK_0___\"capital\": \"Cairo\", \"population\": 100000000___BLANK_1___\nprint(egypt)",
+        "blanks": ["{", "}"],
         "hint": "辞書は { } で作ります",
         "explanation": "辞書は { キー: 値 } の形で作ります。キーと値のペアをカンマで区切ります。"
       },
@@ -1457,8 +1459,9 @@ export const CHALLENGES = {
         "id": "in_py_5",
         "title": "オブジェクトを作ろう",
         "description": "Cat クラスのインスタンスを2つ作ってください。",
-        "code": "class Cat:\n    def __init__(self, name):\n        self.name = name\n\ncat1 = ___BLANK___(\"Whiskers\")\ncat2 = ___BLANK___(\"Luna\")\nprint(cat1.name, cat2.name)",
-        "blank": "Cat",
+        "questionType": "multiple-blanks",
+        "code": "class Cat:\n    def __init__(self, name):\n        self.name = name\n\ncat1 = ___BLANK_0___(\"Whiskers\")\ncat2 = ___BLANK_1___(\"Luna\")\nprint(cat1.name, cat2.name)",
+        "blanks": ["Cat", "Cat"],
         "hint": "クラス名() でインスタンスを作ります",
         "explanation": "Cat(\"Whiskers\") でインスタンスが作られ、__init__ が呼ばれて name が設定されます。"
       }

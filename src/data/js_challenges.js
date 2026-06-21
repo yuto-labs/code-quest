@@ -734,8 +734,9 @@ export const JS_CHALLENGES = {
       "id": "br_js_1",
       "title": "配列を作ろう",
       "description": "ブラジルの都市を配列に格納してください。",
-      "code": "const cities = ___BLANK___\"Sao Paulo\", \"Rio\", \"Brasilia\"___BLANK___;\nconsole.log(cities);",
-      "blank": "[",
+      "questionType": "multiple-blanks",
+      "code": "const cities = ___BLANK_0___\"Sao Paulo\", \"Rio\", \"Brasilia\"___BLANK_1___;\nconsole.log(cities);",
+      "blanks": ["[", "]"],
       "hint": "配列は [ ] で作ります",
       "explanation": "配列は [ ] で作ります。複数の値をまとめて管理でき、インデックス（0始まり）でアクセスします。"
     },

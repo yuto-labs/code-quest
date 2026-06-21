@@ -309,12 +309,14 @@ input, select, textarea {
 }
 
 /* ゲームエフェクト用アニメーション */
+/* polish: softened from +/-10px to a gentler +/-4px nudge so a wrong answer
+   doesn't feel harsh -- retry should feel low-stakes, not punishing. */
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
-  20%      { transform: translateX(-10px); }
-  40%      { transform: translateX(10px); }
-  60%      { transform: translateX(-7px); }
-  80%      { transform: translateX(7px); }
+  20%      { transform: translateX(-4px); }
+  40%      { transform: translateX(4px); }
+  60%      { transform: translateX(-2px); }
+  80%      { transform: translateX(2px); }
 }
 
 @keyframes floatUp {
@@ -485,6 +487,74 @@ input, select, textarea {
 
 .clear-star {
   animation: clearStar 1.4s ease forwards;
+}
+
+/* ── Animation polish (non-blocking micro feedback) ───────────── */
+
+/* World map: pulse ring around a country marker the moment it unlocks.
+   Finite iteration count -- never loops forever, and the parent also
+   removes the element after ~1.8s so it can't replay on its own. */
+@keyframes mapUnlockPulse {
+  0%   { opacity: 0.9; stroke-width: 1.5; }
+  50%  { opacity: 0.1; stroke-width: 3; }
+  100% { opacity: 0.9; stroke-width: 1.5; }
+}
+.map-unlock-pulse {
+  animation: mapUnlockPulse 1.05s ease-in-out 3;
+}
+
+/* Content-only transition for NEXT: re-keyed per question, so only the
+   question body fades/slides in -- header, hearts, BACK stay still. */
+@keyframes contentEnter {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.content-enter {
+  animation: contentEnter 0.22s ease forwards;
+}
+
+/* Progress dots (variable question count, WORLD QUEST + WORLD SHUFFLE). */
+@keyframes progressDotPop {
+  0%   { transform: scale(0.6); }
+  60%  { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+.progress-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  flex-shrink: 0;
+  transition: background 0.25s ease, box-shadow 0.25s ease;
+}
+.progress-dot-done {
+  background: var(--accent);
+  box-shadow: 0 0 5px rgba(0,255,136,0.6);
+  animation: progressDotPop 0.3s ease;
+}
+.progress-dot-current {
+  background: var(--accent2);
+  animation: pulse 0.9s ease-in-out infinite alternate;
+}
+
+/* Brief emphasis on the answer area itself, in addition to the existing
+   full-screen flash -- keeps the "what changed" focal point on the input. */
+@keyframes answerCorrectPop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+.answer-correct-pop {
+  animation: answerCorrectPop 0.3s ease;
+}
+
+/* Small, non-blocking chip for "REVIEW CLEARED" / "MASTERY +1" -- reuses
+   the existing reward-toast box/position, just a quieter accent color so it
+   reads as a lighter-weight notification than a full reward. */
+.reward-toast--chip {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 14px rgba(0,255,136,0.22);
 }
 
 @media (prefers-reduced-motion: reduce) {

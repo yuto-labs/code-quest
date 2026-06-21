@@ -23,7 +23,7 @@ import { EXECUTE_CHALLENGES } from './data/execute_challenges';
 import { DEBUG_CHALLENGES } from './data/debug_challenges';
 import { useAuth } from './hooks/useAuth';
 import { loadCloudProgress, saveCloudProgress, mergeProgressData } from './lib/sync';
-import { buildProgressKey, migrateProgressKeys } from './utils/progress';
+import { buildProgressKey, migrateProgressKeys, getUnlockedIds } from './utils/progress';
 import { emptyMeta, sanitizeMeta, MAX_LIVES, resolveStageEntry, isFinalMissionCleared } from './utils/metadata';
 import { completeSqlQuestion, emptySqlProgress, saveSqlResume, sanitizeSqlProgress, SQL_MAX_HEARTS } from './utils/sqlProgress';
 import { completeTypeScriptQuestion, emptyTypeScriptProgress, saveTypeScriptResume, sanitizeTypeScriptProgress, TYPESCRIPT_MAX_HEARTS } from './utils/typescriptProgress';
@@ -167,6 +167,7 @@ export default function App() {
   const [typescriptChapterId, setTypeScriptChapterId] = useState('01_type_basics');
   const [typescriptQuestionId, setTypeScriptQuestionId] = useState('');
   const [typescriptUnlockNotice, setTypeScriptUnlockNotice] = useState(null);
+  const [mapUnlockNotice, setMapUnlockNotice] = useState(null);
   const [referenceOrigin, setReferenceOrigin] = useState(null);
   const [lastShuffleSettings, setLastShuffleSettings] = useState({ languageId: 'python', mode: 'all', requestedCount: 5 });
 
@@ -186,6 +187,21 @@ export default function App() {
     const timer = setTimeout(() => setSqlUnlockNotice(null), 1800);
     return () => clearTimeout(timer);
   }, [sqlUnlockNotice]);
+
+  // fix: typescriptUnlockNotice had no auto-clear, so the unlock highlight /
+  // chapter-complete banner stayed visible indefinitely and would "replay"
+  // on every visit to the screen instead of showing once.
+  useEffect(() => {
+    if (!typescriptUnlockNotice) return undefined;
+    const timer = setTimeout(() => setTypeScriptUnlockNotice(null), 1800);
+    return () => clearTimeout(timer);
+  }, [typescriptUnlockNotice]);
+
+  useEffect(() => {
+    if (!mapUnlockNotice) return undefined;
+    const timer = setTimeout(() => setMapUnlockNotice(null), 1800);
+    return () => clearTimeout(timer);
+  }, [mapUnlockNotice]);
 
   // iOS keyboard: track visualViewport offset to prevent fixed screens jumping
   useEffect(() => {
@@ -611,46 +627,54 @@ export default function App() {
     const now = new Date().toISOString();
     if (outcomeStatus === 'revealed') {
       return {
-        ...mt,
-        review: {
-          ...(mt.review || {}),
-          [entry.questionId]: {
-            ...current,
-            wrongCount: Math.max(current.wrongCount || 0, 1),
-            hintCount: current.hintCount || 0,
-            lastWrongAt: now,
-            lastReviewedAt: current.lastReviewedAt || '',
-            reviewDue: true,
-            mistakeTags: [...new Set([...(current.mistakeTags || []), 'world-shuffle', entry.worldId])].sort(),
-            resolvedAt: current.resolvedAt || '',
+        meta: {
+          ...mt,
+          review: {
+            ...(mt.review || {}),
+            [entry.questionId]: {
+              ...current,
+              wrongCount: Math.max(current.wrongCount || 0, 1),
+              hintCount: current.hintCount || 0,
+              lastWrongAt: now,
+              lastReviewedAt: current.lastReviewedAt || '',
+              reviewDue: true,
+              mistakeTags: [...new Set([...(current.mistakeTags || []), 'world-shuffle', entry.worldId])].sort(),
+              resolvedAt: current.resolvedAt || '',
+            },
           },
         },
+        reviewCleared: false,
       };
     }
     if (current.reviewDue) {
       return {
-        ...mt,
-        review: {
-          ...(mt.review || {}),
-          [entry.questionId]: {
-            ...current,
-            lastReviewedAt: now,
-            reviewDue: false,
-            resolvedAt: now,
+        meta: {
+          ...mt,
+          review: {
+            ...(mt.review || {}),
+            [entry.questionId]: {
+              ...current,
+              lastReviewedAt: now,
+              reviewDue: false,
+              resolvedAt: now,
+            },
           },
         },
+        reviewCleared: true,
       };
     }
-    return mt;
+    return { meta: mt, reviewCleared: false };
   };
 
   const recordShuffleOutcome = useCallback((entry, outcome) => {
     const uid = latestRef.current.user?.id;
     const run = sanitizeWorldShuffle(latestRef.current.meta.worldShuffle);
     const allQuestions = (WORLD_CHALLENGES[entry.worldId] || {})[entry.countryId]?.[entry.languageId] || [];
-    let nextMeta = updateReviewForShuffle(latestRef.current.meta, entry, outcome.status);
+    const reviewResult = updateReviewForShuffle(latestRef.current.meta, entry, outcome.status);
+    let nextMeta = reviewResult.meta;
     let masteryGained = false;
     let masteryMedals = [];
+    let questionNewlyMastered = false;
     if (outcome.status !== 'revealed') {
       const result = recordQuestionMastery(
         nextMeta,
@@ -662,6 +686,7 @@ export default function App() {
       );
       nextMeta = result.meta;
       masteryGained = result.newlyMastered;
+      questionNewlyMastered = result.questionNewlyMastered;
       if (masteryGained) masteryMedals = [buildProgressKey(entry.worldId, entry.countryId, entry.languageId)];
     }
     const nextRun = sanitizeWorldShuffle({
@@ -684,6 +709,11 @@ export default function App() {
     setMeta(nextMeta);
     saveToLocal(getStorageKey(uid, 'meta'), nextMeta);
     syncToCloud();
+    // Priority: full medal > review cleared > per-question mastery progress,
+    // so at most one short chip shows per answer -- never stacked.
+    if (masteryGained) showReward('language-emblem', 'MASTERY MEDAL');
+    else if (reviewResult.reviewCleared) showReward('review-cleared', 'REVIEW CLEARED');
+    else if (questionNewlyMastered) showReward('mastery-progress', 'MASTERY +1');
   }, []);
 
   const saveQuizIdx = (worldId, countryId, langId, idx, resumePatch = {}) => {
@@ -753,7 +783,13 @@ export default function App() {
     const uid = latestRef.current.user?.id;
     const { progress: p, quizProgress: qp, meta: mt } = latestRef.current;
     const key = `${worldId}_${countryId}_${langId}`;
+    const prevUnlocked = getUnlockedIds(p, worldId);
     const nextProgress = { ...p, [key]: true };
+    const nextUnlocked = getUnlockedIds(nextProgress, worldId);
+    const newlyUnlockedCountryId = [...nextUnlocked].find(id => !prevUnlocked.has(id));
+    if (newlyUnlockedCountryId) {
+      setMapUnlockNotice({ worldId, countryId: newlyUnlockedCountryId });
+    }
     setProgress(nextProgress);
     saveToLocal(getStorageKey(uid, 'progress'), nextProgress);
 
@@ -792,7 +828,11 @@ export default function App() {
     setMeta(result.meta);
     saveToLocal(getStorageKey(uid, 'meta'), result.meta);
     syncToCloud();
+    // Full-stage mastery is the bigger reward; only show the lighter "+1"
+    // chip when this question's progress didn't also complete it, so the
+    // user never sees two toasts stack for the same action.
     if (result.newlyMastered) showReward('language-emblem', 'MASTERY MEDAL');
+    else if (result.questionNewlyMastered) showReward('mastery-progress', 'MASTERY +1');
   };
 
   const saveFinalMissionProgress = (mission, childIndex, resumePatch = {}) => {
@@ -1113,6 +1153,7 @@ export default function App() {
           world={world}
           progress={progress}
           quizProgress={quizProgress}
+          unlockNotice={mapUnlockNotice?.worldId === world ? mapUnlockNotice : null}
           onSelectCountry={(c) => { setCountry(c); setScreen('language'); }}
           onBack={() => setScreen('world')}
         />

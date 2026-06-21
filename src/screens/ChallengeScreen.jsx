@@ -716,7 +716,7 @@ export default function ChallengeScreen({
           position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 200,
           background: screenEffect === 'correct'
             ? 'rgba(0,255,136,0.18)'
-            : 'rgba(255,68,68,0.22)',
+            : 'rgba(255,68,68,0.12)',
           animation: 'flashFade 0.4s ease forwards',
         }} />
       )}
@@ -865,14 +865,26 @@ export default function ChallengeScreen({
 
         <div style={styles.progress}>
           <span style={styles.progressLabel}>{idx + 1} / {questions.length}</span>
-          <div className="xp-bar" style={{ width: 80 }}>
-            <div className="xp-fill" style={{ width: `${progress}%` }} />
-          </div>
+          {questions.length > 0 && questions.length <= 12 ? (
+            <div style={{ display: 'flex', gap: 4 }}>
+              {questions.map((question, i) => (
+                <span
+                  key={question.id ?? i}
+                  className={`progress-dot${i < idx ? ' progress-dot-done' : i === idx ? ' progress-dot-current' : ''}`}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="xp-bar" style={{ width: 80 }}>
+              <div className="xp-fill" style={{ width: `${progress}%` }} />
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Main content */}
-      <div style={styles.content}>
+      {/* Main content -- keyed by idx so only this subtree re-triggers the
+          enter animation on NEXT; header/hearts/BACK above are untouched. */}
+      <div style={styles.content} key={idx} className="content-enter">
         <div style={styles.questionNum}>{mission ? 'FINAL MISSION' : `QUESTION ${idx + 1}`}</div>
         <div style={styles.title}>{mission?.title || q.title}</div>
         {mission && <div style={styles.missionBadge}>{mission.type}</div>}
@@ -1060,7 +1072,7 @@ export default function ChallengeScreen({
 
         {/* Feedback */}
         {status === 'correct' && (
-          <div style={styles.feedbackCorrect} className="fade-in">
+          <div style={styles.feedbackCorrect} className="fade-in answer-correct-pop">
             CORRECT!
             {qType === 'fill-blank' && (
               <> &nbsp; 答え: <code style={styles.answerCode}>{q.blank ?? q.answer}</code></>

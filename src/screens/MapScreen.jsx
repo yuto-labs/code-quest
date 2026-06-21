@@ -35,7 +35,7 @@ const REVERSE_ISO = Object.fromEntries(
   Object.entries(ISO_MAP).map(([num, id]) => [id, parseInt(num)])
 );
 
-export default function MapScreen({ onSelectCountry, onBack, progress, quizProgress, world = 'decode' }) {
+export default function MapScreen({ onSelectCountry, onBack, progress, quizProgress, world = 'decode', unlockNotice = null }) {
   const [tooltip, setTooltip]         = useState(null);
   const [isTouch]                     = useState(() => window.matchMedia('(pointer: coarse)').matches);
   const defaultPos                    = { coordinates: [20, 15], zoom: isTouch ? 1.8 : 1 };
@@ -233,6 +233,7 @@ export default function MapScreen({ onSelectCountry, onBack, progress, quizProgr
 
             {COUNTRIES.map((c) => {
               const isUnlocked = unlockedIds.has(c.id);
+              const justUnlocked = unlockNotice?.countryId === c.id;
               const handleMarkerClick = () => {
                 if (isTouch) {
                   if (tooltip?.id === c.id && isUnlocked) {
@@ -247,6 +248,16 @@ export default function MapScreen({ onSelectCountry, onBack, progress, quizProgr
               };
               return (
                 <Marker key={c.id} coordinates={c.coordinates} onClick={handleMarkerClick}>
+                  {justUnlocked && (
+                    <circle
+                      r={10}
+                      fill="none"
+                      stroke="var(--accent)"
+                      strokeWidth={1.5}
+                      className="map-unlock-pulse"
+                      pointerEvents="none"
+                    />
+                  )}
                   <circle
                     r={10}
                     fill="transparent"

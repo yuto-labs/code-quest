@@ -215,6 +215,10 @@ export default function WorldShuffleScreen({
       });
     } catch (e) {
       console.error('Failed to advance shuffle run', e);
+      // If the save failed, this component never remounts (currentIndex
+      // didn't change), so advancingRef would otherwise stay stuck `true`
+      // forever and NEXT would silently do nothing on every future click.
+      advancingRef.current = false;
     }
   }
 
@@ -223,8 +227,20 @@ export default function WorldShuffleScreen({
       <div style={styles.top}>
         <BackButton onClick={onBack} />
         <div style={styles.kicker}>WORLD SHUFFLE / {run.languageId?.toUpperCase()} / {run.currentIndex + 1} / {run.queue.length}</div>
+        {run.queue.length > 0 && run.queue.length <= 12 && (
+          <div style={{ display: 'flex', gap: 4 }}>
+            {run.queue.map((entry, i) => (
+              <span
+                key={entry.questionId ?? i}
+                className={`progress-dot${i < run.currentIndex ? ' progress-dot-done' : i === run.currentIndex ? ' progress-dot-current' : ''}`}
+              />
+            ))}
+          </div>
+        )}
       </div>
-      <main style={styles.main}>
+      {/* keyed by question id so only this content re-triggers the enter
+          animation on NEXT -- header/kicker/BACK above stay still */}
+      <main style={styles.main} key={question.id} className="content-enter">
         <div style={styles.metaLine}>
           <span>{country.emoji} {country.name}</span>
           <span style={{ color: modeMeta.color }}>{modeMeta.label || resolved.worldId.toUpperCase()}</span>
@@ -236,14 +252,14 @@ export default function WorldShuffleScreen({
         {renderAnswerInput()}
         {(status === 'done' || revealed) && (
           <>
-            <div style={styles.correctBox}>
+            <div style={styles.correctBox} className={!revealed ? 'answer-correct-pop' : undefined}>
               <span>{revealed ? 'REVEALED ANSWER' : 'CORRECT ANSWER'}</span>
               <code>{formatCorrectAnswer(question, currentStep)}</code>
             </div>
             <ExplanationPanel data={explanation} title="EXPLANATION" />
           </>
         )}
-        {status === 'wrong' && <div style={styles.wrong}>TRY AGAIN or SHOW ANSWER.</div>}
+        {status === 'wrong' && <div style={styles.wrong} className="fade-in">TRY AGAIN or SHOW ANSWER.</div>}
       </main>
       <footer style={styles.footer}>
         {status !== 'done' && <button className="pixel-btn" onClick={showAnswer}>SHOW ANSWER</button>}
@@ -322,7 +338,7 @@ function Stat({ label, value }) {
 
 const styles = {
   wrap: { height: '100dvh', background: 'var(--bg)', display: 'flex', flexDirection: 'column', overflow: 'hidden' },
-  top: { flex: '0 0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, padding: 14, borderBottom: '1px solid rgba(0,255,136,0.18)' },
+  top: { flex: '0 0 auto', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 12, padding: 14, borderBottom: '1px solid rgba(0,255,136,0.18)' },
   kicker: { color: 'var(--accent2)', fontSize: 8, lineHeight: 1.8 },
   main: { flex: 1, minHeight: 0, overflowY: 'auto', width: '100%', maxWidth: 980, margin: '0 auto', padding: '18px 16px 28px', display: 'flex', flexDirection: 'column', gap: 14 },
   result: { flex: 1, minHeight: 0, overflowY: 'auto', width: '100%', maxWidth: 980, margin: '0 auto', padding: 18, display: 'flex', flexDirection: 'column', gap: 16 },

@@ -82,11 +82,12 @@ export function awardStageClear(meta, worldId, countryId, languageId, { perfect 
 }
 
 export function recordQuestionMastery(meta, worldId, countryId, languageId, questionId, allQuestionIds = []) {
-  if (!questionId) return { meta, newlyMastered: false };
+  if (!questionId) return { meta, newlyMastered: false, questionNewlyMastered: false };
   const medals = sanitizeMedals(meta?.medals);
   const key = stageMedalKey(worldId, countryId, languageId);
   const current = medals.stageMedals[key] || cleanStageMedal();
-  if (!current.clear) return { meta, newlyMastered: false };
+  if (!current.clear) return { meta, newlyMastered: false, questionNewlyMastered: false };
+  const alreadyHadQuestion = (current.masteredQuestionIds || []).includes(questionId);
   const masteredQuestionIds = [...new Set([...(current.masteredQuestionIds || []), questionId])].sort();
   const eligible = allQuestionIds.filter(Boolean);
   const mastery = eligible.length > 0 && eligible.every(id => masteredQuestionIds.includes(id));
@@ -97,7 +98,10 @@ export function recordQuestionMastery(meta, worldId, countryId, languageId, ques
     mastery,
     updatedAt: new Date().toISOString(),
   };
-  return { meta: { ...meta, medals }, newlyMastered };
+  // questionNewlyMastered: this specific question was just added to the
+  // mastered set on this call -- the "+1 progress" signal, distinct from
+  // newlyMastered which only fires once the whole stage is fully mastered.
+  return { meta: { ...meta, medals }, newlyMastered, questionNewlyMastered: !alreadyHadQuestion };
 }
 
 export function getStageMedal(meta, worldId, countryId, languageId, progress = {}) {

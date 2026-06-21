@@ -15,7 +15,7 @@ const LANGUAGES = [
   { id: 'javascript', label: 'JAVASCRIPT' },
 ];
 
-export default function CodePathsScreen({ onBack, onOpenSql, progress, meta, worldShuffleRun, onStartShuffle, onContinueShuffle }) {
+export default function CodePathsScreen({ onBack, onOpenSql, onOpenTypeScript, progress, meta, worldShuffleRun, onStartShuffle, onContinueShuffle }) {
   const [languageId, setLanguageId] = useState('python');
   const [mode, setMode] = useState('all');
   const [filter, setFilter] = useState('all');
@@ -41,7 +41,7 @@ export default function CodePathsScreen({ onBack, onOpenSql, progress, meta, wor
             <button
               key={path.id}
               style={{ ...styles.card, opacity: active ? 1 : 0.55, borderColor: active ? 'var(--accent)' : 'var(--text-dim)' }}
-              onClick={active ? onOpenSql : undefined}
+              onClick={active ? () => (path.id === 'typescript' ? onOpenTypeScript?.() : onOpenSql?.()) : undefined}
               disabled={!active}
             >
               <div style={styles.cardTitle}>{path.title}</div>

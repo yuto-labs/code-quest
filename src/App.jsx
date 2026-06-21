@@ -12,6 +12,9 @@ import CodePathsScreen from './screens/CodePathsScreen';
 import SqlPathScreen from './screens/SqlPathScreen';
 import SqlChapterScreen from './screens/SqlChapterScreen';
 import SqlChallengeScreen from './screens/SqlChallengeScreen';
+import TypeScriptPathScreen from './screens/TypeScriptPathScreen';
+import TypeScriptChapterScreen from './screens/TypeScriptChapterScreen';
+import TypeScriptChallengeScreen from './screens/TypeScriptChallengeScreen';
 import WorldShuffleScreen from './screens/WorldShuffleScreen';
 import RewardToast from './components/RewardToast';
 import { COUNTRIES } from './data/countries';
@@ -23,8 +26,10 @@ import { loadCloudProgress, saveCloudProgress, mergeProgressData } from './lib/s
 import { buildProgressKey, migrateProgressKeys } from './utils/progress';
 import { emptyMeta, sanitizeMeta, MAX_LIVES, resolveStageEntry, isFinalMissionCleared } from './utils/metadata';
 import { completeSqlQuestion, emptySqlProgress, saveSqlResume, sanitizeSqlProgress, SQL_MAX_HEARTS } from './utils/sqlProgress';
+import { completeTypeScriptQuestion, emptyTypeScriptProgress, saveTypeScriptResume, sanitizeTypeScriptProgress, TYPESCRIPT_MAX_HEARTS } from './utils/typescriptProgress';
 import { getFinalMission } from './data/final_missions';
 import { SQL_QUESTIONS_BY_ID, getSqlQuestionsForChapter } from './data/sql/questions';
+import { TYPESCRIPT_QUESTIONS_BY_ID, getTypeScriptQuestionsForChapter } from './data/typescript/questions';
 import { awardStageClear, recordQuestionMastery } from './utils/medals';
 import { createShuffleRun, sanitizeWorldShuffle } from './utils/worldShuffle';
 
@@ -159,6 +164,9 @@ export default function App() {
   const [sqlChapterId, setSqlChapterId] = useState('01_select');
   const [sqlQuestionId, setSqlQuestionId] = useState('');
   const [sqlUnlockNotice, setSqlUnlockNotice] = useState(null);
+  const [typescriptChapterId, setTypeScriptChapterId] = useState('01_type_basics');
+  const [typescriptQuestionId, setTypeScriptQuestionId] = useState('');
+  const [typescriptUnlockNotice, setTypeScriptUnlockNotice] = useState(null);
   const [referenceOrigin, setReferenceOrigin] = useState(null);
   const [lastShuffleSettings, setLastShuffleSettings] = useState({ languageId: 'python', mode: 'all', requestedCount: 5 });
 
@@ -508,6 +516,63 @@ export default function App() {
 
   const saveSqlChallengeResume = (patch) => {
     saveSqlMeta(saveSqlResume(getSqlMeta(), patch));
+  };
+
+  const getTypeScriptMeta = (mt = latestRef.current.meta) => sanitizeTypeScriptProgress(mt?.codePaths?.typescript || emptyTypeScriptProgress());
+
+  const saveTypeScriptMeta = (nextTypeScript) => {
+    const uid = latestRef.current.user?.id;
+    const nextMeta = {
+      ...latestRef.current.meta,
+      codePaths: {
+        ...(latestRef.current.meta.codePaths || {}),
+        typescript: sanitizeTypeScriptProgress(nextTypeScript),
+      },
+    };
+    latestRef.current = { ...latestRef.current, meta: nextMeta };
+    setMeta(nextMeta);
+    saveToLocal(getStorageKey(uid, 'meta'), nextMeta);
+    syncToCloud();
+  };
+
+  const openTypeScriptResume = () => {
+    const ts = getTypeScriptMeta();
+    const resume = ts.resume || {};
+    if (resume.questionId && TYPESCRIPT_QUESTIONS_BY_ID[resume.questionId]) {
+      setTypeScriptChapterId(resume.chapterId || TYPESCRIPT_QUESTIONS_BY_ID[resume.questionId].chapterId);
+      setTypeScriptQuestionId(resume.questionId);
+      setScreen('typescriptChallenge');
+      return;
+    }
+    setTypeScriptChapterId(ts.activeChapterId || '01_type_basics');
+    setScreen('typescriptChapter');
+  };
+
+  const completeTypeScript = (question) => {
+    const current = getTypeScriptMeta();
+    const wasComplete = Boolean(current.chapters?.[question.chapterId]?.completed);
+    const next = completeTypeScriptQuestion(current, question.id);
+    const isNowComplete = Boolean(next.chapters?.[question.chapterId]?.completed);
+    if (!wasComplete && isNowComplete) {
+      setTypeScriptUnlockNotice({
+        completedChapterId: question.chapterId,
+        unlockedChapterId: next.activeChapterId,
+      });
+    }
+    saveTypeScriptMeta(next);
+    const chapterQuestions = getTypeScriptQuestionsForChapter(question.chapterId);
+    const nextQuestion = chapterQuestions.find(q => q.order > question.order);
+    if (nextQuestion) {
+      setTypeScriptQuestionId(nextQuestion.id);
+      setScreen('typescriptChallenge');
+    } else {
+      setTypeScriptChapterId(question.chapterId);
+      setScreen('typescriptChapter');
+    }
+  };
+
+  const saveTypeScriptChallengeResume = (patch) => {
+    saveTypeScriptMeta(saveTypeScriptResume(getTypeScriptMeta(), patch));
   };
 
   const saveWorldShuffleRun = useCallback((patchOrRun) => {
@@ -941,11 +1006,49 @@ export default function App() {
         <CodePathsScreen
           onBack={() => setScreen('home')}
           onOpenSql={() => setScreen('sqlPath')}
+          onOpenTypeScript={() => setScreen('typescriptPath')}
           progress={progress}
           meta={meta}
           worldShuffleRun={sanitizeWorldShuffle(meta.worldShuffle)}
           onStartShuffle={startWorldShuffle}
           onContinueShuffle={continueWorldShuffle}
+        />
+      )}
+
+      {screen === 'typescriptPath' && (
+        <TypeScriptPathScreen
+          meta={meta}
+          unlockNotice={typescriptUnlockNotice}
+          onBack={() => setScreen('codePaths')}
+          onContinue={openTypeScriptResume}
+          onOpenChapter={(chapterId) => { setTypeScriptChapterId(chapterId); setScreen('typescriptChapter'); }}
+        />
+      )}
+
+      {screen === 'typescriptChapter' && (
+        <TypeScriptChapterScreen
+          chapterId={typescriptChapterId}
+          meta={meta}
+          unlockNotice={typescriptUnlockNotice}
+          onBack={() => setScreen('typescriptPath')}
+          onOpenQuestion={(questionId) => { setTypeScriptQuestionId(questionId); setScreen('typescriptChallenge'); }}
+        />
+      )}
+
+      {screen === 'typescriptChallenge' && (
+        <TypeScriptChallengeScreen
+          key={typescriptQuestionId}
+          questionId={typescriptQuestionId}
+          meta={meta}
+          onBack={() => setScreen('typescriptChapter')}
+          onOpenReference={() => {
+            setReferenceOrigin({ type: 'typescript', chapterId: typescriptChapterId, questionId: typescriptQuestionId });
+            setScreen('reference');
+          }}
+          onSaveResume={saveTypeScriptChallengeResume}
+          onRetry={(question) => saveTypeScriptChallengeResume({ screen: 'typescriptChallenge', chapterId: question.chapterId, questionId: question.id, hearts: TYPESCRIPT_MAX_HEARTS })}
+          onFail={(question) => saveTypeScriptChallengeResume({ screen: 'typescriptChallenge', chapterId: question.chapterId, questionId: question.id, hearts: 0 })}
+          onComplete={completeTypeScript}
         />
       )}
 
@@ -1032,6 +1135,12 @@ export default function App() {
               setSqlChapterId(referenceOrigin.chapterId || '01_select');
               setSqlQuestionId(referenceOrigin.questionId || '');
               setScreen('sqlChallenge');
+              return;
+            }
+            if (referenceOrigin?.type === 'typescript') {
+              setTypeScriptChapterId(referenceOrigin.chapterId || '01_type_basics');
+              setTypeScriptQuestionId(referenceOrigin.questionId || '');
+              setScreen('typescriptChallenge');
               return;
             }
             if (referenceOrigin?.type === 'challenge') {

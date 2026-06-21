@@ -1,6 +1,7 @@
 import { JP_JAVA_DEBUG } from './jp_java_questions.js';
 import { US_JAVA_DEBUG } from './us_java_questions.js';
 import { FR_JAVA_DEBUG, FR_JS_DEBUG, FR_PY_DEBUG } from './france_questions.js';
+import { BR_JAVA_DEBUG, BR_JS_DEBUG, BR_PY_DEBUG } from './brazil_questions.js';
 
 export const DEBUG_CHALLENGES = {
   "JP": {
@@ -2221,6 +2222,11 @@ if (DEBUG_CHALLENGES.FR) {
   DEBUG_CHALLENGES.FR.python = FR_PY_DEBUG;
   DEBUG_CHALLENGES.FR.javascript = FR_JS_DEBUG;
   DEBUG_CHALLENGES.FR.java = FR_JAVA_DEBUG;
+}
+if (DEBUG_CHALLENGES.BR) {
+  DEBUG_CHALLENGES.BR.python = BR_PY_DEBUG;
+  DEBUG_CHALLENGES.BR.javascript = BR_JS_DEBUG;
+  DEBUG_CHALLENGES.BR.java = BR_JAVA_DEBUG;
 }
 
 export const DEBUG_LANGUAGES = [

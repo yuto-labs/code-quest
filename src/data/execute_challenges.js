@@ -1,6 +1,7 @@
 import { JP_JAVA_EXECUTE } from './jp_java_questions.js';
 import { US_JAVA_EXECUTE } from './us_java_questions.js';
 import { FR_JAVA_EXECUTE, FR_JS_EXECUTE, FR_PY_EXECUTE } from './france_questions.js';
+import { BR_JAVA_EXECUTE, BR_JS_EXECUTE, BR_PY_EXECUTE } from './brazil_questions.js';
 
 export const EXECUTE_CHALLENGES = {
   "JP": {
@@ -1406,6 +1407,11 @@ if (EXECUTE_CHALLENGES.FR) {
   EXECUTE_CHALLENGES.FR.python = FR_PY_EXECUTE;
   EXECUTE_CHALLENGES.FR.javascript = FR_JS_EXECUTE;
   EXECUTE_CHALLENGES.FR.java = FR_JAVA_EXECUTE;
+}
+if (EXECUTE_CHALLENGES.BR) {
+  EXECUTE_CHALLENGES.BR.python = BR_PY_EXECUTE;
+  EXECUTE_CHALLENGES.BR.javascript = BR_JS_EXECUTE;
+  EXECUTE_CHALLENGES.BR.java = BR_JAVA_EXECUTE;
 }
 
 export const EXECUTE_LANGUAGES = [

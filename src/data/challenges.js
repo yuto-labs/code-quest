@@ -2,6 +2,7 @@ import { JS_CHALLENGES } from './js_challenges.js';
 import { JP_JAVA_DECODE } from './jp_java_questions.js';
 import { US_JAVA_DECODE } from './us_java_questions.js';
 import { FR_JAVA_DECODE, FR_JS_DECODE, FR_PY_DECODE } from './france_questions.js';
+import { BR_JAVA_DECODE, BR_JS_DECODE, BR_PY_DECODE } from './brazil_questions.js';
 
 export const CHALLENGES = {
   "JP": {
@@ -3003,6 +3004,11 @@ if (CHALLENGES.FR) {
   CHALLENGES.FR.python = FR_PY_DECODE;
   CHALLENGES.FR.javascript = FR_JS_DECODE;
   CHALLENGES.FR.java = FR_JAVA_DECODE;
+}
+if (CHALLENGES.BR) {
+  CHALLENGES.BR.python = BR_PY_DECODE;
+  CHALLENGES.BR.javascript = BR_JS_DECODE;
+  CHALLENGES.BR.java = BR_JAVA_DECODE;
 }
 
 export const LANGUAGES = [

@@ -1,6 +1,7 @@
 import { JP_JAVA_FACTS } from './jp_java_questions.js';
 import { US_JAVA_FACTS } from './us_java_questions.js';
 import { FRANCE_FACTS } from './france_questions.js';
+import { BRAZIL_FACTS } from './brazil_questions.js';
 
 export const FACT_STATUS = Object.freeze({
   VERIFIED: 'verified',
@@ -4869,6 +4870,7 @@ export const COUNTRY_FACTS = [
 COUNTRY_FACTS.push(...JP_JAVA_FACTS);
 COUNTRY_FACTS.push(...US_JAVA_FACTS);
 COUNTRY_FACTS.push(...FRANCE_FACTS);
+COUNTRY_FACTS.push(...BRAZIL_FACTS);
 
 function validateSourceRef(ref, index, factId, issues) {
   if (typeof ref === 'string') {

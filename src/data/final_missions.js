@@ -2,6 +2,7 @@ import { getQuestionCountTarget } from './question_targets.js';
 import { JP_JAVA_FINAL_MISSIONS } from './jp_java_questions.js';
 import { US_JAVA_FINAL_MISSIONS } from './us_java_questions.js';
 import { FRANCE_FINAL_MISSIONS } from './france_questions.js';
+import { BRAZIL_FINAL_MISSIONS } from './brazil_questions.js';
 
 export const FINAL_MISSION_TYPES = Object.freeze({
   decode: 'DECODE_FINAL',
@@ -1978,6 +1979,18 @@ FINAL_MISSIONS.debug.FR.javascript = FRANCE_FINAL_MISSIONS.debug.javascript;
 FINAL_MISSIONS.decode.FR.java = FRANCE_FINAL_MISSIONS.decode.java;
 FINAL_MISSIONS.execute.FR.java = FRANCE_FINAL_MISSIONS.execute.java;
 FINAL_MISSIONS.debug.FR.java = FRANCE_FINAL_MISSIONS.debug.java;
+FINAL_MISSIONS.decode.BR ??= {};
+FINAL_MISSIONS.execute.BR ??= {};
+FINAL_MISSIONS.debug.BR ??= {};
+FINAL_MISSIONS.decode.BR.python = BRAZIL_FINAL_MISSIONS.decode.python;
+FINAL_MISSIONS.execute.BR.python = BRAZIL_FINAL_MISSIONS.execute.python;
+FINAL_MISSIONS.debug.BR.python = BRAZIL_FINAL_MISSIONS.debug.python;
+FINAL_MISSIONS.decode.BR.javascript = BRAZIL_FINAL_MISSIONS.decode.javascript;
+FINAL_MISSIONS.execute.BR.javascript = BRAZIL_FINAL_MISSIONS.execute.javascript;
+FINAL_MISSIONS.debug.BR.javascript = BRAZIL_FINAL_MISSIONS.debug.javascript;
+FINAL_MISSIONS.decode.BR.java = BRAZIL_FINAL_MISSIONS.decode.java;
+FINAL_MISSIONS.execute.BR.java = BRAZIL_FINAL_MISSIONS.execute.java;
+FINAL_MISSIONS.debug.BR.java = BRAZIL_FINAL_MISSIONS.debug.java;
 
 export function getFinalMission(worldId, countryId, languageId) {
   const mission = FINAL_MISSIONS[worldId]?.[countryId]?.[languageId];

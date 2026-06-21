@@ -1,4 +1,5 @@
 import { mergeSqlProgress } from './sqlProgress.js';
+import { mergeTypeScriptProgress } from './typescriptProgress.js';
 import { mergeMedals, sanitizeMedals } from './medals.js';
 import { mergeWorldShuffle, sanitizeWorldShuffle } from './worldShuffle.js';
 
@@ -201,6 +202,7 @@ function mergeCodePaths(local = {}, cloud = {}) {
     ...cloud,
     ...local,
     sql: mergeSqlProgress(local.sql, cloud.sql),
+    typescript: mergeTypeScriptProgress(local.typescript, cloud.typescript),
   };
 }
 

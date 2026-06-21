@@ -1,6 +1,6 @@
 export const CODE_PATHS = [
   { id: 'sql', title: 'SQL PATH', subtitle: '世界のデータからSQLを学ぶ', status: 'active' },
-  { id: 'typescript', title: 'TypeScript', subtitle: 'COMING SOON', status: 'coming_soon' },
+  { id: 'typescript', title: 'TypeScript PATH', subtitle: '世界のテーマで型を学ぶ', status: 'active' },
   { id: 'java', title: 'Java', subtitle: 'COMING SOON', status: 'coming_soon' },
   { id: 'c', title: 'C', subtitle: 'COMING SOON', status: 'coming_soon' },
 ];

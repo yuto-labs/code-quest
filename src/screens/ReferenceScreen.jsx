@@ -12,11 +12,12 @@ import { WORLD_META, WORLD_IDS } from '../utils/stageData';
 
 const WORLD_ORDER = ['decode', 'execute', 'debug'];
 const LAYERS = ['all', '0', '1', '2', '3'];
-const REFERENCE_LANGUAGE_ORDER = ['python', 'javascript', 'java', 'sql'];
+const REFERENCE_LANGUAGE_ORDER = ['python', 'javascript', 'java', 'typescript', 'sql'];
 const REFERENCE_LANGUAGE_LABELS = {
   python: 'Python',
   javascript: 'JavaScript',
   java: 'Java',
+  typescript: 'TypeScript',
   sql: 'SQL',
 };
 const CHALLENGE_SOURCES = {

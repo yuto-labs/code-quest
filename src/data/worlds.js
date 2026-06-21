@@ -85,6 +85,17 @@ export const CONCEPTS = {
     { id: 'null-safety', name: 'Null Safety', nameJa: 'null', icon: 'nil' },
     { id: 'exceptions', name: 'Exceptions', nameJa: '例外', icon: 'try' },
   ],
+  typescript: [
+    { id: 'type-annotations', name: 'Type Annotations', nameJa: '型注釈', icon: ':T' },
+    { id: 'primitive-types', name: 'Primitive Types', nameJa: '基本型', icon: 'abc' },
+    { id: 'arrays', name: 'Arrays and Tuples', nameJa: '配列とタプル', icon: '[]' },
+    { id: 'objects', name: 'Objects and Interfaces', nameJa: 'オブジェクト型', icon: '{}' },
+    { id: 'unions', name: 'Unions', nameJa: 'union 型', icon: '|' },
+    { id: 'functions', name: 'Functions', nameJa: '関数', icon: 'fn' },
+    { id: 'type-narrowing', name: 'Type Narrowing', nameJa: '型の絞り込み', icon: 'if' },
+    { id: 'generics', name: 'Generics', nameJa: 'ジェネリクス', icon: '<T>' },
+    { id: 'classes', name: 'Classes', nameJa: 'class', icon: 'cls' },
+  ],
 };
 
 // country index → concept mapping (COUNTRIES order = concept order)

@@ -1,5 +1,6 @@
 import { JAVA_REFERENCE_TOPICS } from './java_reference.js';
 import { TYPESCRIPT_REFERENCE_TOPICS } from './typescript_reference.js';
+import { C_REFERENCE_TOPICS } from './c_reference.js';
 
 // Reference V2 data. Legacy Python reference content is restored from git baseline HEAD:src/data/reference.js.
 
@@ -7309,6 +7310,7 @@ export const REFERENCE_TOPICS = [
 
 REFERENCE_TOPICS.push(...JAVA_REFERENCE_TOPICS);
 REFERENCE_TOPICS.push(...TYPESCRIPT_REFERENCE_TOPICS);
+REFERENCE_TOPICS.push(...C_REFERENCE_TOPICS);
 
 export const REFERENCE_TOPIC_ALIASES = {
   "variables": "variables-types",

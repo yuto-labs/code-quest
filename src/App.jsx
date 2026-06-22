@@ -15,6 +15,9 @@ import SqlChallengeScreen from './screens/SqlChallengeScreen';
 import TypeScriptPathScreen from './screens/TypeScriptPathScreen';
 import TypeScriptChapterScreen from './screens/TypeScriptChapterScreen';
 import TypeScriptChallengeScreen from './screens/TypeScriptChallengeScreen';
+import CPathScreen from './screens/CPathScreen';
+import CChapterScreen from './screens/CChapterScreen';
+import CChallengeScreen from './screens/CChallengeScreen';
 import WorldShuffleScreen from './screens/WorldShuffleScreen';
 import RewardToast from './components/RewardToast';
 import { COUNTRIES } from './data/countries';
@@ -27,9 +30,11 @@ import { buildProgressKey, migrateProgressKeys, getUnlockedIds } from './utils/p
 import { emptyMeta, sanitizeMeta, MAX_LIVES, resolveStageEntry, isFinalMissionCleared } from './utils/metadata';
 import { completeSqlQuestion, emptySqlProgress, saveSqlResume, sanitizeSqlProgress, SQL_MAX_HEARTS } from './utils/sqlProgress';
 import { completeTypeScriptQuestion, emptyTypeScriptProgress, saveTypeScriptResume, sanitizeTypeScriptProgress, TYPESCRIPT_MAX_HEARTS } from './utils/typescriptProgress';
+import { completeCQuestion, emptyCProgress, saveCResume, sanitizeCProgress, C_MAX_HEARTS } from './utils/cProgress';
 import { getFinalMission } from './data/final_missions';
 import { SQL_QUESTIONS_BY_ID, getSqlQuestionsForChapter } from './data/sql/questions';
 import { TYPESCRIPT_QUESTIONS_BY_ID, getTypeScriptQuestionsForChapter } from './data/typescript/questions';
+import { C_QUESTIONS_BY_ID, getCQuestionsForChapter } from './data/c/questions';
 import { awardStageClear, recordQuestionMastery } from './utils/medals';
 import { createShuffleRun, sanitizeWorldShuffle } from './utils/worldShuffle';
 
@@ -62,8 +67,7 @@ function buildAttemptId(worldId, countryId, langId, missionId = null) {
 
 function getInitialLives(meta, attemptId) {
   const attempt = meta?.attempts?.[attemptId];
-  if (!attempt || attempt.status === 'completed') return MAX_LIVES;
-  if (attempt.status === 'failed') return 0;
+  if (!attempt || attempt.status === 'completed' || attempt.status === 'failed') return MAX_LIVES;
   return typeof attempt.remainingLives === 'number' ? attempt.remainingLives : MAX_LIVES;
 }
 
@@ -167,6 +171,9 @@ export default function App() {
   const [typescriptChapterId, setTypeScriptChapterId] = useState('01_type_basics');
   const [typescriptQuestionId, setTypeScriptQuestionId] = useState('');
   const [typescriptUnlockNotice, setTypeScriptUnlockNotice] = useState(null);
+  const [cChapterId, setCChapterId] = useState('01_basics_output');
+  const [cQuestionId, setCQuestionId] = useState('');
+  const [cUnlockNotice, setCUnlockNotice] = useState(null);
   const [mapUnlockNotice, setMapUnlockNotice] = useState(null);
   const [referenceOrigin, setReferenceOrigin] = useState(null);
   const [lastShuffleSettings, setLastShuffleSettings] = useState({ languageId: 'python', mode: 'all', requestedCount: 5 });
@@ -196,6 +203,12 @@ export default function App() {
     const timer = setTimeout(() => setTypeScriptUnlockNotice(null), 1800);
     return () => clearTimeout(timer);
   }, [typescriptUnlockNotice]);
+
+  useEffect(() => {
+    if (!cUnlockNotice) return undefined;
+    const timer = setTimeout(() => setCUnlockNotice(null), 1800);
+    return () => clearTimeout(timer);
+  }, [cUnlockNotice]);
 
   useEffect(() => {
     if (!mapUnlockNotice) return undefined;
@@ -589,6 +602,63 @@ export default function App() {
 
   const saveTypeScriptChallengeResume = (patch) => {
     saveTypeScriptMeta(saveTypeScriptResume(getTypeScriptMeta(), patch));
+  };
+
+  const getCMeta = (mt = latestRef.current.meta) => sanitizeCProgress(mt?.codePaths?.c || emptyCProgress());
+
+  const saveCMeta = (nextC) => {
+    const uid = latestRef.current.user?.id;
+    const nextMeta = {
+      ...latestRef.current.meta,
+      codePaths: {
+        ...(latestRef.current.meta.codePaths || {}),
+        c: sanitizeCProgress(nextC),
+      },
+    };
+    latestRef.current = { ...latestRef.current, meta: nextMeta };
+    setMeta(nextMeta);
+    saveToLocal(getStorageKey(uid, 'meta'), nextMeta);
+    syncToCloud();
+  };
+
+  const openCResume = () => {
+    const c = getCMeta();
+    const resume = c.resume || {};
+    if (resume.questionId && C_QUESTIONS_BY_ID[resume.questionId]) {
+      setCChapterId(resume.chapterId || C_QUESTIONS_BY_ID[resume.questionId].chapterId);
+      setCQuestionId(resume.questionId);
+      setScreen('cChallenge');
+      return;
+    }
+    setCChapterId(c.activeChapterId || '01_basics_output');
+    setScreen('cChapter');
+  };
+
+  const completeC = (question) => {
+    const current = getCMeta();
+    const wasComplete = Boolean(current.chapters?.[question.chapterId]?.completed);
+    const next = completeCQuestion(current, question.id);
+    const isNowComplete = Boolean(next.chapters?.[question.chapterId]?.completed);
+    if (!wasComplete && isNowComplete) {
+      setCUnlockNotice({
+        completedChapterId: question.chapterId,
+        unlockedChapterId: next.activeChapterId,
+      });
+    }
+    saveCMeta(next);
+    const chapterQuestions = getCQuestionsForChapter(question.chapterId);
+    const nextQuestion = chapterQuestions.find(q => q.order > question.order);
+    if (nextQuestion) {
+      setCQuestionId(nextQuestion.id);
+      setScreen('cChallenge');
+    } else {
+      setCChapterId(question.chapterId);
+      setScreen('cChapter');
+    }
+  };
+
+  const saveCChallengeResume = (patch) => {
+    saveCMeta(saveCResume(getCMeta(), patch));
   };
 
   const saveWorldShuffleRun = useCallback((patchOrRun) => {
@@ -1047,6 +1117,7 @@ export default function App() {
           onBack={() => setScreen('home')}
           onOpenSql={() => setScreen('sqlPath')}
           onOpenTypeScript={() => setScreen('typescriptPath')}
+          onOpenC={() => setScreen('cPath')}
           progress={progress}
           meta={meta}
           worldShuffleRun={sanitizeWorldShuffle(meta.worldShuffle)}
@@ -1089,6 +1160,43 @@ export default function App() {
           onRetry={(question) => saveTypeScriptChallengeResume({ screen: 'typescriptChallenge', chapterId: question.chapterId, questionId: question.id, hearts: TYPESCRIPT_MAX_HEARTS })}
           onFail={(question) => saveTypeScriptChallengeResume({ screen: 'typescriptChallenge', chapterId: question.chapterId, questionId: question.id, hearts: 0 })}
           onComplete={completeTypeScript}
+        />
+      )}
+
+      {screen === 'cPath' && (
+        <CPathScreen
+          meta={meta}
+          unlockNotice={cUnlockNotice}
+          onBack={() => setScreen('codePaths')}
+          onContinue={openCResume}
+          onOpenChapter={(chapterId) => { setCChapterId(chapterId); setScreen('cChapter'); }}
+        />
+      )}
+
+      {screen === 'cChapter' && (
+        <CChapterScreen
+          chapterId={cChapterId}
+          meta={meta}
+          unlockNotice={cUnlockNotice}
+          onBack={() => setScreen('cPath')}
+          onOpenQuestion={(questionId) => { setCQuestionId(questionId); setScreen('cChallenge'); }}
+        />
+      )}
+
+      {screen === 'cChallenge' && (
+        <CChallengeScreen
+          key={cQuestionId}
+          questionId={cQuestionId}
+          meta={meta}
+          onBack={() => setScreen('cChapter')}
+          onOpenReference={() => {
+            setReferenceOrigin({ type: 'c', chapterId: cChapterId, questionId: cQuestionId });
+            setScreen('reference');
+          }}
+          onSaveResume={saveCChallengeResume}
+          onRetry={(question) => saveCChallengeResume({ screen: 'cChallenge', chapterId: question.chapterId, questionId: question.id, hearts: C_MAX_HEARTS })}
+          onFail={(question) => saveCChallengeResume({ screen: 'cChallenge', chapterId: question.chapterId, questionId: question.id, hearts: 0 })}
+          onComplete={completeC}
         />
       )}
 
@@ -1182,6 +1290,12 @@ export default function App() {
               setTypeScriptChapterId(referenceOrigin.chapterId || '01_type_basics');
               setTypeScriptQuestionId(referenceOrigin.questionId || '');
               setScreen('typescriptChallenge');
+              return;
+            }
+            if (referenceOrigin?.type === 'c') {
+              setCChapterId(referenceOrigin.chapterId || '01_basics_output');
+              setCQuestionId(referenceOrigin.questionId || '');
+              setScreen('cChallenge');
               return;
             }
             if (referenceOrigin?.type === 'challenge') {

@@ -50,7 +50,7 @@ export default function CChapterScreen({ chapterId, meta, onBack, onOpenQuestion
 }
 
 const styles = {
-  wrap: { height: '100dvh', overflowY: 'auto', background: 'var(--bg)', padding: '24px 20px', display: 'flex', flexDirection: 'column', gap: 20 },
+  wrap: { height: '100dvh', overflowY: 'auto', background: 'var(--bg)', padding: 'calc(env(safe-area-inset-top, 0px) + 24px) 20px 24px', display: 'flex', flexDirection: 'column', gap: 20 },
   header: { maxWidth: 1040, width: '100%', margin: '0 auto', display: 'flex', gap: 16, alignItems: 'flex-start' },
   title: { color: '#ffa657', fontSize: 'clamp(20px, 6vw, 36px)' },
   sub: { color: 'var(--text-dim)', fontSize: 11, lineHeight: 1.8, marginTop: 8 },

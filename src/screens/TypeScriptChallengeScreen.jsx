@@ -310,8 +310,8 @@ export default function TypeScriptChallengeScreen({
         </header>
         {renderCode()}
         <div style={styles.outputBox}>
-          <span>EXPECTED OUTPUT</span>
-          <code>{question.expectedOutput}</code>
+          <span style={styles.outputLabel}>EXPECTED OUTPUT</span>
+          <code style={styles.outputValue}>{question.expectedOutput}</code>
         </div>
         {!isWrite && renderOptions()}
         {showHint && <div style={styles.hint}>HINT: {question.hint}</div>}
@@ -324,7 +324,7 @@ export default function TypeScriptChallengeScreen({
 
 const styles = {
   wrap: { height: '100dvh', background: 'var(--bg)', display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden' },
-  top: { flex: '0 0 auto', display: 'flex', gap: 10, justifyContent: 'space-between', padding: 14, borderBottom: '1px solid rgba(127,183,255,0.22)' },
+  top: { flex: '0 0 auto', display: 'flex', gap: 10, justifyContent: 'space-between', padding: 'calc(env(safe-area-inset-top, 0px) + 14px) 14px 14px', borderBottom: '1px solid rgba(127,183,255,0.22)' },
   smallBtn: { fontSize: 8, padding: '10px 12px' },
   main: { flex: 1, minHeight: 0, overflowY: 'auto', padding: '18px 16px 28px', display: 'flex', flexDirection: 'column', gap: 16, width: '100%', maxWidth: 980, margin: '0 auto' },
   header: { display: 'flex', flexDirection: 'column', gap: 10 },
@@ -336,11 +336,13 @@ const styles = {
   prompt: { margin: 0, color: 'var(--text)', fontSize: 12, lineHeight: 2 },
   codeBox: { display: 'flex', flexDirection: 'column', gap: 7, minWidth: 0 },
   queryLabel: { fontFamily: 'var(--pixel-font)', fontSize: 9, color: 'var(--accent2)', lineHeight: 1.8 },
-  queryFill: { margin: 0, padding: '16px 18px', width: '100%', minWidth: 0, overflowX: 'auto', background: 'rgba(0,5,25,0.95)', border: '1px solid rgba(127,183,255,0.45)', color: '#d8eaff', fontSize: 13, lineHeight: 1.9, whiteSpace: 'pre', fontFamily: 'var(--mono-font, ui-monospace, SFMono-Regular, Consolas, monospace)' },
-  inlineBlank: { minWidth: 110, maxWidth: 'min(420px, 80vw)', background: 'rgba(49,120,198,0.14)', border: '2px solid #7fb7ff', color: '#d8eaff', fontFamily: 'inherit', fontSize: 13, padding: '4px 7px', margin: '0 4px', outline: 'none' },
+  queryFill: { margin: 0, padding: '16px 18px', width: '100%', minWidth: 0, overflowX: 'auto', background: 'rgba(0,5,25,0.95)', border: '1px solid rgba(127,183,255,0.45)', color: '#d8eaff', fontSize: 'clamp(13px, 3.5vw, 17px)', lineHeight: 1.9, whiteSpace: 'pre', fontFamily: 'var(--mono-font, ui-monospace, SFMono-Regular, Consolas, monospace)' },
+  inlineBlank: { minWidth: 110, maxWidth: 'min(420px, 80vw)', background: 'rgba(49,120,198,0.14)', border: '2px solid #7fb7ff', color: '#d8eaff', fontFamily: 'inherit', fontSize: 'clamp(13px, 3.5vw, 15px)', padding: '4px 7px', margin: '0 4px', outline: 'none' },
   options: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: 12, minWidth: 0 },
   option: { fontFamily: 'var(--pixel-font)', background: 'rgba(0,5,25,0.8)', color: 'var(--text)', border: '2px solid', padding: 12, textAlign: 'left', cursor: 'pointer', minWidth: 0, lineHeight: 1.7 },
-  outputBox: { display: 'flex', flexDirection: 'column', gap: 8, border: '1px solid rgba(255,221,0,0.3)', padding: 12, color: 'var(--accent2)', fontSize: 10 },
+  outputBox: { display: 'flex', flexDirection: 'column', gap: 8, border: '1px solid rgba(255,221,0,0.3)', padding: 12, color: 'var(--accent2)' },
+  outputLabel: { fontFamily: 'var(--pixel-font)', fontSize: 9, letterSpacing: 1 },
+  outputValue: { fontFamily: 'monospace', fontSize: 'clamp(12px, 3.5vw, 15px)', whiteSpace: 'pre-wrap', wordBreak: 'break-word' },
   activeFooter: { flex: '0 0 auto', padding: '10px 14px calc(env(safe-area-inset-bottom, 0px) + 10px)', background: 'rgba(13,13,26,0.96)', borderTop: '1px solid rgba(127,183,255,0.22)' },
   actionInner: { width: '100%', maxWidth: 980, margin: '0 auto', display: 'flex', justifyContent: 'flex-end', gap: 10 },
   hintBtn: { fontSize: 9, color: 'var(--text-dim)', borderColor: 'var(--text-dim)' },

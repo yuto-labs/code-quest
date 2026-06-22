@@ -51,7 +51,7 @@ export default function CPathScreen({ meta, onBack, onOpenChapter, onContinue, u
 }
 
 const styles = {
-  wrap: { height: '100dvh', overflowY: 'auto', background: 'var(--bg)', padding: '24px 20px', display: 'flex', flexDirection: 'column', gap: 18 },
+  wrap: { height: '100dvh', overflowY: 'auto', background: 'var(--bg)', padding: 'calc(env(safe-area-inset-top, 0px) + 24px) 20px 24px', display: 'flex', flexDirection: 'column', gap: 18 },
   header: { width: '100%', maxWidth: 1040, margin: '0 auto', display: 'flex', gap: 16, alignItems: 'flex-start' },
   title: { color: '#ffa657', fontSize: 'clamp(24px, 7vw, 44px)' },
   sub: { color: 'var(--text-dim)', fontSize: 12, lineHeight: 1.8, marginBottom: 12 },

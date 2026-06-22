@@ -400,7 +400,7 @@ export default function SqlChallengeScreen({
 
 const styles = {
   wrap: { height: '100dvh', background: 'var(--bg)', display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden' },
-  top: { flex: '0 0 auto', display: 'flex', gap: 10, justifyContent: 'space-between', padding: 14, borderBottom: '1px solid rgba(0,255,136,0.18)' },
+  top: { flex: '0 0 auto', display: 'flex', gap: 10, justifyContent: 'space-between', padding: 'calc(env(safe-area-inset-top, 0px) + 14px) 14px 14px', borderBottom: '1px solid rgba(0,255,136,0.18)' },
   smallBtn: { fontSize: 8, padding: '10px 12px' },
   main: { flex: 1, minHeight: 0, overflowY: 'auto', padding: '18px 16px 28px', display: 'flex', flexDirection: 'column', gap: 16, width: '100%', maxWidth: 980, margin: '0 auto' },
   header: { display: 'flex', flexDirection: 'column', gap: 10 },

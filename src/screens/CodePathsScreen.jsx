@@ -117,7 +117,7 @@ const styles = {
     position: 'fixed',
     inset: 0,
     background: 'var(--bg)',
-    padding: '24px 20px calc(env(safe-area-inset-bottom, 0px) + 24px)',
+    padding: 'calc(env(safe-area-inset-top, 0px) + 24px) 20px calc(env(safe-area-inset-bottom, 0px) + 24px)',
     display: 'flex',
     flexDirection: 'column',
     gap: 24,

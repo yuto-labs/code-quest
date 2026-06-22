@@ -4,6 +4,8 @@
 // to answer a question is supplied inside its prompt/code/fact string — none rely
 // on unstated trivia. FIX answers are the minimal corrected line; the program with
 // that line applied is safe, defined C.
+import { createQuestionSet, MODE_LABELS } from '../shared/questionFactory.js';
+
 const chapters = [
   {
     id: '01_c_basics',
@@ -32,7 +34,7 @@ const chapters = [
       ['read', 'World Cup host list counter', 'while loop counter', 'sample historical host list (static, supplied): 1930 Uruguay, 1934 Italy, 1938 France', '1930\n1934\n1938\ncount=3', '#include <stdio.h>\n\nint main(void) {\n    int hostYears[3] = {1930, 1934, 1938};\n    int i = 0;\n    int count = 0;\n    while (i < 3) {\n        printf("%d\\n", hostYears[i]);\n        count++;\n        i++;\n    }\n    printf("count=%d\\n", count);\n    return 0;\n}'],
       ['read', 'climate-zone score accumulation', 'for loop with accumulation', 'sample climate-zone scores (static, illustrative): 2, 4, 6', '12', '#include <stdio.h>\n\nint main(void) {\n    int scores[3] = {2, 4, 6};\n    int total = 0;\n    for (int i = 0; i < 3; i++) {\n        total += scores[i];\n    }\n    printf("%d\\n", total);\n    return 0;\n}'],
       ['fix', 'seven-continent label list', 'a loop must stop before the last valid index, not at it', 'sample list of seven continent labels: Africa, Antarctica, Asia, Australia, Europe, North America, South America', 'for (int i = 0; i < 7; i++) {', '#include <stdio.h>\n\nint main(void) {\n    const char *continents[7] = {"Africa", "Antarctica", "Asia", "Australia", "Europe", "North America", "South America"};\n    for (int i = 0; i <= 7; i++) {\n        printf("%s\\n", continents[i]);\n    }\n    return 0;\n}'],
-      ['fix', 'transport mode label', 'a switch case needs break or it falls through to the next case', 'sample transport codes: 1 = rail, 2 = air, 3 = ship', 'break;', '#include <stdio.h>\n\nint main(void) {\n    int mode = 1;\n    switch (mode) {\n        case 1:\n            printf("rail\\n");\n        case 2:\n            printf("air\\n");\n        case 3:\n            printf("ship\\n");\n    }\n    return 0;\n}'],
+      ['fix', 'transport mode label', 'a switch case needs break or it falls through to the next case', 'sample transport codes: 1 = rail, 2 = air, 3 = ship', 'break;', '#include <stdio.h>\n\nint main(void) {\n    int mode = 1;\n    switch (mode) {\n        case 1:\n            printf("rail\\n");\n        case 2:\n            printf("air\\n");\n            break;\n        case 3:\n            printf("ship\\n");\n            break;\n    }\n    return 0;\n}'],
       ['fix', 'museum ticket batches', 'a while loop must update its counter or it never ends', 'sample data: 3 ticket batches need to be processed', 'i++;', '#include <stdio.h>\n\nint main(void) {\n    int batches = 3;\n    int i = 0;\n    while (i < batches) {\n        printf("batch %d\\n", i);\n    }\n    return 0;\n}'],
       ['mission', 'world heritage category counter', 'array of category codes, for loop, if, accumulation', 'sample records (category codes 1=cultural, 2=natural, 3=mixed): site A=1, site B=2, site C=1, site D=3', 'cultural=2', '#include <stdio.h>\n\nint main(void) {\n    int categories[4] = {1, 2, 1, 3};\n    int culturalCount = 0;\n    for (int i = 0; i < 4; i++) {\n        if (categories[i] == 1) {\n            culturalCount++;\n        }\n    }\n    printf("cultural=%d\\n", culturalCount);\n    return 0;\n}'],
     ],
@@ -47,7 +49,7 @@ const chapters = [
       ['read', 'alphabetized city labels', 'array index tracing', 'sample city labels from different continents (static, alphabetized, supplied): Cairo, Lima, Tokyo', 'Lima', '#include <stdio.h>\n\nint main(void) {\n    const char *cities[3] = {"Cairo", "Lima", "Tokyo"};\n    printf("%s\\n", cities[1]);\n    return 0;\n}'],
       ['read', 'UNESCO abbreviation length', 'strlen counts characters before the null terminator', 'the supplied string is "UNESCO"', '6', '#include <stdio.h>\n#include <string.h>\n\nint main(void) {\n    char name[] = "UNESCO";\n    printf("%zu\\n", strlen(name));\n    return 0;\n}'],
       ['read', 'route-code traversal', 'char array traversal until the null terminator', 'sample route code is "RAIL"', 'R\nA\nI\nL', '#include <stdio.h>\n\nint main(void) {\n    char route[] = "RAIL";\n    for (int i = 0; route[i] != \'\\0\'; i++) {\n        printf("%c\\n", route[i]);\n    }\n    return 0;\n}'],
-      ['fix', 'language-code lookup', 'strings must be compared with strcmp, not ==', 'sample language codes: "EN", "FR"', 'if (strcmp(code, "EN") == 0) {', '#include <stdio.h>\n\nint main(void) {\n    char code[] = "EN";\n    if (code == "EN") {\n        printf("match\\n");\n    }\n    return 0;\n}'],
+      ['fix', 'language-code lookup', 'strings must be compared with strcmp, not ==', 'sample language codes: "EN", "FR"', 'if (strcmp(code, "EN") == 0) {', '#include <stdio.h>\n#include <string.h>\n\nint main(void) {\n    char code[] = "EN";\n    if (code == "EN") {\n        printf("match\\n");\n    }\n    return 0;\n}'],
       ['fix', 'airport code char array', 'a char array used as a string needs room for the null terminator', 'sample airport code is HND', 'char code[4] = {\'H\', \'N\', \'D\', \'\\0\'};', '#include <stdio.h>\n\nint main(void) {\n    char code[3] = {\'H\', \'N\', \'D\'};\n    printf("%s\\n", code);\n    return 0;\n}'],
       ['fix', 'continent array', 'reading past the last valid index is out of bounds', 'sample list of seven continents, valid indexes 0-6', 'printf("%s\\n", continents[6]);', '#include <stdio.h>\n\nint main(void) {\n    const char *continents[7] = {"Africa", "Antarctica", "Asia", "Australia", "Europe", "North America", "South America"};\n    printf("%s\\n", continents[7]);\n    return 0;\n}'],
       ['mission', 'country-code directory', 'arrays of strings, indexes, strcmp, loop, safe fallback', 'sample country-code records: "JP"-Japan, "BR"-Brazil, "FR"-France', 'Brazil', '#include <stdio.h>\n#include <string.h>\n\nint main(void) {\n    const char *codes[3] = {"JP", "BR", "FR"};\n    const char *names[3] = {"Japan", "Brazil", "France"};\n    const char *target = "BR";\n    const char *result = "not found";\n    for (int i = 0; i < 3; i++) {\n        if (strcmp(codes[i], target) == 0) {\n            result = names[i];\n            break;\n        }\n    }\n    printf("%s\\n", result);\n    return 0;\n}'],
@@ -65,7 +67,7 @@ const chapters = [
       ['read', 'health-rate calculation', 'double return and local variable scope', 'sample cases = 25, sample population = 1000 (illustrative supplied values)', '2.5', '#include <stdio.h>\n\ndouble rate(double cases, double population) {\n    double percent = cases / population * 100.0;\n    return percent;\n}\n\nint main(void) {\n    printf("%.1f\\n", rate(25.0, 1000.0));\n    return 0;\n}'],
       ['fix', 'international organization age helper', 'a function used before its definition needs a prototype', 'sample organization founded in 1945; sample current year is 2025', 'int organizationAge(int founded, int currentYear);', '#include <stdio.h>\n\nint main(void) {\n    printf("%d\\n", organizationAge(1945, 2025));\n    return 0;\n}\n\nint organizationAge(int founded, int currentYear) {\n    return currentYear - founded;\n}'],
       ['fix', 'country label builder', 'a function must not return the address of a local array', 'sample country code "JP" should be turned into a label', 'return "JP";', '#include <stdio.h>\n\nchar *buildLabel(void) {\n    char label[3] = "JP";\n    return label;\n}\n\nint main(void) {\n    printf("%s\\n", buildLabel());\n    return 0;\n}'],
-      ['fix', 'museum visitor sample data', 'averaging with int division truncates the decimal part', 'sample museum visitor counts: 10, 11, 10 over 3 sample days (illustrative)', 'double average = (double)totalVisitors / days;', '#include <stdio.h>\n\nint main(void) {\n    int totalVisitors = 31;\n    int days = 3;\n    int average = totalVisitors / days;\n    printf("%d\\n", average);\n    return 0;\n}'],
+      ['fix', 'museum visitor sample data', 'averaging with int division truncates the decimal part', 'sample museum visitor counts: 10, 11, 10 over 3 sample days (illustrative)', 'double average = (double)totalVisitors / days; printf("%.1f\\n", average);', '#include <stdio.h>\n\nint main(void) {\n    int totalVisitors = 31;\n    int days = 3;\n    int average = totalVisitors / days;\n    printf("%d\\n", average);\n    return 0;\n}'],
       ['mission', 'city comparison helper', 'function parameters, return value, local variables, if / else', 'sample city records (illustrative, supplied): Cityville population 900 area 30; Townburg population 500 area 50', 'Cityville', '#include <stdio.h>\n\nconst char *denserCity(const char *nameA, double popA, double areaA, const char *nameB, double popB, double areaB) {\n    double densityA = popA / areaA;\n    double densityB = popB / areaB;\n    if (densityA > densityB) {\n        return nameA;\n    } else {\n        return nameB;\n    }\n}\n\nint main(void) {\n    printf("%s\\n", denserCity("Cityville", 900.0, 30.0, "Townburg", 500.0, 50.0));\n    return 0;\n}'],
     ],
   },
@@ -112,7 +114,7 @@ const chapters = [
       ['read', 'initialized vs uninitialized values', 'tracing initialized array values', 'sample station temperature readings (static, supplied): -5, -10, -15', '-15', '#include <stdio.h>\n\nint main(void) {\n    int temperatures[3] = {-5, -10, -15};\n    printf("%d\\n", temperatures[2]);\n    return 0;\n}'],
       ['read', 'safe fallback for missing string', 'NULL pointer check before printf', 'a sample endangered-language translation label may be NULL', 'unavailable', '#include <stdio.h>\n\nint main(void) {\n    const char *label = NULL;\n    if (label != NULL) {\n        printf("%s\\n", label);\n    } else {\n        printf("unavailable\\n");\n    }\n    return 0;\n}'],
       ['fix', 'three-letter airport code', 'a string buffer needs room for the null terminator', 'sample airport code is "HND"', 'char code[4];', '#include <stdio.h>\n#include <string.h>\n\nint main(void) {\n    char code[3];\n    strcpy(code, "HND");\n    printf("%s\\n", code);\n    return 0;\n}'],
-      ['fix', 'country-code list passed to function', 'an array parameter decays to a pointer, so sizeof cannot give its length inside the function', 'sample country-code list contains 3 codes: "JP", "BR", "FR"', 'void printCodes(const char *codes[], int length)', '#include <stdio.h>\n\nvoid printCodes(const char *codes[]) {\n    int length = sizeof(codes) / sizeof(codes[0]);\n    for (int i = 0; i < length; i++) {\n        printf("%s\\n", codes[i]);\n    }\n}\n\nint main(void) {\n    const char *codes[3] = {"JP", "BR", "FR"};\n    printCodes(codes);\n    return 0;\n}'],
+      ['fix', 'country-code list passed to function', 'an array parameter decays to a pointer, so sizeof cannot give its length inside the function', 'sample country-code list contains 3 codes: "JP", "BR", "FR"', 'add an int length parameter to printCodes and call it as printCodes(codes, 3);', '#include <stdio.h>\n\nvoid printCodes(const char *codes[]) {\n    for (int i = 0; i < sizeof(codes) / sizeof(codes[0]); i++) {\n        printf("%s\\n", codes[i]);\n    }\n}\n\nint main(void) {\n    const char *codes[3] = {"JP", "BR", "FR"};\n    printCodes(codes);\n    return 0;\n}'],
       ['fix', 'optional museum website label', 'check for NULL before printing a possibly-missing string', 'a sample museum record may have no website label (NULL)', 'if (website != NULL) printf("%s\\n", website);', '#include <stdio.h>\n\nint main(void) {\n    const char *website = NULL;\n    printf("%s\\n", website);\n    return 0;\n}'],
       ['mission', 'safe country-code lookup', 'array length, string comparison, null-safe fallback, bounded access', 'sample country-code/name records: "JP"-Japan, "BR"-Brazil, "FR"-France', 'not found', '#include <stdio.h>\n#include <string.h>\n\nint main(void) {\n    const char *codes[3] = {"JP", "BR", "FR"};\n    const char *names[3] = {"Japan", "Brazil", "France"};\n    int length = sizeof(codes) / sizeof(codes[0]);\n    const char *target = "DE";\n    const char *result = "not found";\n    for (int i = 0; i < length; i++) {\n        if (strcmp(codes[i], target) == 0) {\n            result = names[i];\n            break;\n        }\n    }\n    printf("%s\\n", result);\n    return 0;\n}'],
     ],
@@ -135,74 +137,24 @@ const chapters = [
   },
 ];
 
-const modeNames = { write: 'WRITE', read: 'READ', fix: 'FIX', mission: 'MISSION' };
+const { QUESTIONS, QUESTIONS_BY_ID, QUESTIONS_BY_CHAPTER, getQuestionsForChapter } = createQuestionSet({
+  chapters,
+  courseId: 'c',
+  idPrefix: 'c',
+  languageLabel: 'C',
+  wrongOptions: {
+    fix: ['keep the broken code', 'change unrelated variable', 'remove the type'],
+    other: ['different output', 'compile error', 'undefined behavior'],
+  },
+  conceptIdKey: 'cConceptIds',
+  valueMismatchLabel: '型やメモリを無視して値を選ぶ',
+  typeMismatchReason: 'C では型やポインタの扱いが合わないと未定義動作になります。',
+  readingTargets: '宣言、分岐、または戻り値',
+});
 
-function optionsFor(answer, mode) {
-  const wrong = mode === 'fix'
-    ? ['keep the broken code', 'change unrelated variable', 'remove the type']
-    : ['different output', 'compile error', 'undefined behavior'];
-  return [
-    { id: answer, label: answer },
-    ...wrong.map(label => ({ id: label, label })),
-  ];
-}
+export const C_QUESTIONS = QUESTIONS;
+export const C_QUESTIONS_BY_ID = QUESTIONS_BY_ID;
+export const C_QUESTIONS_BY_CHAPTER = QUESTIONS_BY_CHAPTER;
+export const getCQuestionsForChapter = getQuestionsForChapter;
 
-function makeQuestion(chapter, item, index) {
-  const [mode, title, concept, fact, answer, code, output] = item;
-  const order = index + 1;
-  const id = `c${chapter.id.slice(0, 2)}_${mode[0]}${String(order).padStart(2, '0')}`;
-  const isWrite = mode === 'write';
-  return {
-    id,
-    courseId: 'c',
-    chapterId: chapter.id,
-    order,
-    mode,
-    title,
-    prompt: `${title} を題材にした C 問題です。事実: ${fact}. ${isWrite ? '下のコードを実行したとき EXPECTED OUTPUT と同じ結果になるよう、___BLANK___ を埋めてください。' : 'コードを読み、正しい答えを選んでください。'}`,
-    code,
-    expectedOutput: output || answer,
-    answer,
-    options: isWrite ? undefined : optionsFor(answer, mode),
-    hint: `${concept} に注目します。事実として必要な値は問題文かコード内にすべて書かれています。`,
-    explanation: {
-      correctAnswer: answer,
-      completedCode: isWrite ? code.replace('___BLANK___', answer) : code,
-      executionSteps: [
-        `1. テーマ事実: ${fact}.`,
-        `2. C の中心概念は ${concept} です。`,
-        `3. コード上で必要な値と型を確認すると、答えは ${answer} になります。`,
-      ],
-      commonMistakes: [
-        { wrong: 'テーマ名だけで答える', reason: 'この PATH では C の構文や処理の読み取りが答えを決めます。', correct: answer },
-        { wrong: '型やメモリを無視して値を選ぶ', reason: 'C では型やポインタの扱いが合わないと未定義動作になります。', correct: '型と値をセットで確認する' },
-      ],
-      programmingExplanation: `${concept} の練習です。コード内の宣言、分岐、または戻り値を順番に読んで答えを決めます。`,
-      themeExplanation: fact,
-      sourceRefs: [],
-    },
-    cConceptIds: [chapter.concept],
-    globalFactIds: [`gf_${id}`],
-    difficulty: mode === 'mission' ? 'mission' : order <= 3 ? 'basic' : order <= 6 ? 'trace' : 'debug',
-  };
-}
-
-export const C_QUESTIONS = chapters.flatMap(chapter => chapter.items.map((item, index) => makeQuestion(chapter, item, index)));
-
-export const C_QUESTIONS_BY_ID = Object.fromEntries(C_QUESTIONS.map(question => [question.id, question]));
-
-export const C_QUESTIONS_BY_CHAPTER = C_QUESTIONS.reduce((byChapter, question) => {
-  byChapter[question.chapterId] ||= [];
-  byChapter[question.chapterId].push(question);
-  return byChapter;
-}, {});
-
-for (const questions of Object.values(C_QUESTIONS_BY_CHAPTER)) {
-  questions.sort((a, b) => a.order - b.order);
-}
-
-export function getCQuestionsForChapter(chapterId) {
-  return C_QUESTIONS_BY_CHAPTER[chapterId] || [];
-}
-
-export const C_MODE_LABELS = modeNames;
+export const C_MODE_LABELS = MODE_LABELS;

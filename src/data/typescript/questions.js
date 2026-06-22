@@ -1,3 +1,5 @@
+import { createQuestionSet, MODE_LABELS } from '../shared/questionFactory.js';
+
 const chapters = [
   {
     id: '01_type_basics',
@@ -129,74 +131,24 @@ const chapters = [
   },
 ];
 
-const modeNames = { write: 'WRITE', read: 'READ', fix: 'FIX', mission: 'MISSION' };
+const { QUESTIONS, QUESTIONS_BY_ID, QUESTIONS_BY_CHAPTER, getQuestionsForChapter } = createQuestionSet({
+  chapters,
+  courseId: 'typescript',
+  idPrefix: 'ts',
+  languageLabel: 'TypeScript',
+  wrongOptions: {
+    fix: ['keep the broken code', 'change unrelated variable', 'remove the type'],
+    other: ['different output', 'type error', 'undefined'],
+  },
+  conceptIdKey: 'tsConceptIds',
+  valueMismatchLabel: '型を無視して値を選ぶ',
+  typeMismatchReason: 'TypeScript では値の種類が合わないとエラーになります。',
+  readingTargets: '型注釈、推論、分岐、または戻り値',
+});
 
-function optionsFor(answer, mode) {
-  const wrong = mode === 'fix'
-    ? ['keep the broken code', 'change unrelated variable', 'remove the type']
-    : ['different output', 'type error', 'undefined'];
-  return [
-    { id: answer, label: answer },
-    ...wrong.map(label => ({ id: label, label })),
-  ];
-}
+export const TYPESCRIPT_QUESTIONS = QUESTIONS;
+export const TYPESCRIPT_QUESTIONS_BY_ID = QUESTIONS_BY_ID;
+export const TYPESCRIPT_QUESTIONS_BY_CHAPTER = QUESTIONS_BY_CHAPTER;
+export const getTypeScriptQuestionsForChapter = getQuestionsForChapter;
 
-function makeQuestion(chapter, item, index) {
-  const [mode, title, concept, fact, answer, code, output] = item;
-  const order = index + 1;
-  const id = `ts${chapter.id.slice(0, 2)}_${mode[0]}${String(order).padStart(2, '0')}`;
-  const isWrite = mode === 'write';
-  return {
-    id,
-    courseId: 'typescript',
-    chapterId: chapter.id,
-    order,
-    mode,
-    title,
-    prompt: `${title} を題材にした TypeScript 問題です。事実: ${fact}. ${isWrite ? '下のコードを実行したとき EXPECTED OUTPUT と同じ結果になるよう、___BLANK___ を埋めてください。' : 'コードを読み、正しい答えを選んでください。'}`,
-    code,
-    expectedOutput: output || answer,
-    answer,
-    options: isWrite ? undefined : optionsFor(answer, mode),
-    hint: `${concept} に注目します。事実として必要な値は問題文かコード内にすべて書かれています。`,
-    explanation: {
-      correctAnswer: answer,
-      completedCode: isWrite ? code.replace('___BLANK___', answer) : code,
-      executionSteps: [
-        `1. テーマ事実: ${fact}.`,
-        `2. TypeScript の中心概念は ${concept} です。`,
-        `3. コード上で必要な値と型を確認すると、答えは ${answer} になります。`,
-      ],
-      commonMistakes: [
-        { wrong: 'テーマ名だけで答える', reason: 'この PATH では TypeScript の型や処理の読み取りが答えを決めます。', correct: answer },
-        { wrong: '型を無視して値を選ぶ', reason: 'TypeScript では値の種類が合わないとエラーになります。', correct: '型と値をセットで確認する' },
-      ],
-      programmingExplanation: `${concept} の練習です。コード内の型注釈、推論、分岐、または戻り値を順番に読んで答えを決めます。`,
-      themeExplanation: fact,
-      sourceRefs: [],
-    },
-    tsConceptIds: [chapter.concept],
-    globalFactIds: [`gf_${id}`],
-    difficulty: mode === 'mission' ? 'mission' : order <= 3 ? 'basic' : order <= 6 ? 'trace' : 'debug',
-  };
-}
-
-export const TYPESCRIPT_QUESTIONS = chapters.flatMap(chapter => chapter.items.map((item, index) => makeQuestion(chapter, item, index)));
-
-export const TYPESCRIPT_QUESTIONS_BY_ID = Object.fromEntries(TYPESCRIPT_QUESTIONS.map(question => [question.id, question]));
-
-export const TYPESCRIPT_QUESTIONS_BY_CHAPTER = TYPESCRIPT_QUESTIONS.reduce((byChapter, question) => {
-  byChapter[question.chapterId] ||= [];
-  byChapter[question.chapterId].push(question);
-  return byChapter;
-}, {});
-
-for (const questions of Object.values(TYPESCRIPT_QUESTIONS_BY_CHAPTER)) {
-  questions.sort((a, b) => a.order - b.order);
-}
-
-export function getTypeScriptQuestionsForChapter(chapterId) {
-  return TYPESCRIPT_QUESTIONS_BY_CHAPTER[chapterId] || [];
-}
-
-export const TYPESCRIPT_MODE_LABELS = modeNames;
+export const TYPESCRIPT_MODE_LABELS = MODE_LABELS;

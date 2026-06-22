@@ -21,7 +21,8 @@ let CHALLENGES, LANGUAGES, EXECUTE_CHALLENGES, EXECUTE_LANGUAGES,
     QUESTION_ASSIGNMENTS, COGNITIVE_TASKS, listFinalMissions,
     QUESTION_COUNT_TARGETS, getQuestionCountTarget, META_KEY, packProgress, unpackProgress,
     REFERENCE_TOPICS, REFERENCE_TOPIC_ALIASES, REFERENCE_RESTORE_AUDIT,
-    SQL_COURSE, SQL_QUESTIONS, SQL_GLOBAL_FACTS, SQL_REFERENCE_TOPICS;
+    SQL_COURSE, SQL_QUESTIONS, SQL_GLOBAL_FACTS, SQL_REFERENCE_TOPICS,
+    C_COURSE, C_QUESTIONS;
 
 function dataUrl(rel) {
   return pathToFileURL(path.join(ROOT, rel)).href;
@@ -43,6 +44,8 @@ try {
   ({ SQL_QUESTIONS } = await import(dataUrl('src/data/sql/questions.js')));
   ({ SQL_GLOBAL_FACTS } = await import(dataUrl('src/data/sql/global_facts.js')));
   ({ SQL_REFERENCE_TOPICS } = await import(dataUrl('src/data/sql/reference.js')));
+  ({ C_COURSE } = await import(dataUrl('src/data/c/course.js')));
+  ({ C_QUESTIONS } = await import(dataUrl('src/data/c/questions.js')));
 } catch (err) {
   console.error('Failed to import data files:', err.message);
   process.exit(1);
@@ -1070,6 +1073,70 @@ export function validateSqlPath({
   return { errors, warnings };
 }
 
+const C_PATH_MODE_TARGETS = { write: 3, read: 3, fix: 3, mission: 1 };
+const C_PATH_CHAPTER_COUNT = 8;
+const C_PATH_QUESTIONS_PER_CHAPTER = 10;
+
+export function validateCPath({ course = C_COURSE, questions = C_QUESTIONS } = {}) {
+  const errors = [];
+  const warnings = [];
+  const questionIds = new Set();
+
+  if (!course?.chapters?.length) {
+    errors.push({ loc: '[c/course.js]', rule: 'invalidChapter', msg: 'C course needs chapters' });
+    return { errors, warnings };
+  }
+  if (course.chapters.length !== C_PATH_CHAPTER_COUNT) {
+    errors.push({ loc: '[c/course.js]', rule: 'invalidChapterCount', msg: `C PATH must have exactly ${C_PATH_CHAPTER_COUNT} chapters, found ${course.chapters.length}` });
+  }
+
+  for (const question of questions || []) {
+    const loc = `[c/questions.js] ${question?.id || '(missing)'}`;
+    if (!question?.id || questionIds.has(question.id)) {
+      errors.push({ loc, rule: 'duplicateQuestionId', msg: `Duplicate or missing C question id "${question?.id}"` });
+      continue;
+    }
+    questionIds.add(question.id);
+    const chapter = course.chapters.find(item => item.id === question.chapterId);
+    if (!chapter) errors.push({ loc, rule: 'invalidChapter', msg: `Unknown chapter "${question.chapterId}"` });
+    if (!['write', 'read', 'fix', 'mission'].includes(question.mode)) {
+      errors.push({ loc, rule: 'invalidMode', msg: `Unknown mode "${question.mode}"` });
+    }
+    for (const field of ['title', 'code', 'answer', 'prompt', 'hint']) {
+      if (!question[field]) errors.push({ loc, rule: 'missingRequiredField', msg: `Missing required field "${field}"` });
+    }
+    if (question.expectedOutput === undefined || question.expectedOutput === null) {
+      errors.push({ loc, rule: 'missingRequiredField', msg: 'Missing required field "expectedOutput"' });
+    }
+    if (question.mode === 'write' && !String(question.code || '').includes('___BLANK___')) {
+      errors.push({ loc, rule: 'missingBlank', msg: 'WRITE question code must contain ___BLANK___' });
+    }
+    if (question.mode !== 'write' && String(question.code || '').includes('___BLANK___')) {
+      errors.push({ loc, rule: 'unexpectedBlank', msg: `${question.mode.toUpperCase()} question code must not contain ___BLANK___` });
+    }
+    if (!Array.isArray(question.cConceptIds) || question.cConceptIds.length === 0) {
+      warnings.push({ loc, rule: 'brokenConceptId', msg: 'C question is missing cConceptIds' });
+    }
+  }
+
+  for (const chapter of course.chapters) {
+    const items = (questions || []).filter(question => question.chapterId === chapter.id);
+    if (items.length !== C_PATH_QUESTIONS_PER_CHAPTER) {
+      errors.push({ loc: `[c/course.js] ${chapter.id}`, rule: 'chapterCountShortage', msg: `Expected ${C_PATH_QUESTIONS_PER_CHAPTER} questions, found ${items.length}` });
+    }
+    for (const [mode, target] of Object.entries(C_PATH_MODE_TARGETS)) {
+      const actual = items.filter(question => question.mode === mode).length;
+      if (actual !== target) {
+        const issue = { loc: `[c/course.js] ${chapter.id}`, rule: mode === 'mission' ? 'missingMission' : 'chapterCountShortage', msg: `${mode} count is ${actual}/${target}` };
+        if (mode === 'mission' && actual === 0) errors.push(issue);
+        else warnings.push(issue);
+      }
+    }
+  }
+
+  return { errors, warnings };
+}
+
 export function validateAssignmentRecord(record, ctx = {}) {
   const errors = [];
   const warnings = [];
@@ -1528,6 +1595,9 @@ export function runValidation() {
   const sqlIssues = validateSqlPath();
   allErrors.push(...sqlIssues.errors);
   allWarnings.push(...sqlIssues.warnings);
+  const cIssues = validateCPath();
+  allErrors.push(...cIssues.errors);
+  allWarnings.push(...cIssues.warnings);
 
   const finalCounts = {};
   for (const mission of finalMissions) {

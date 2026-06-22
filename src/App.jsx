@@ -35,6 +35,7 @@ import { getFinalMission } from './data/final_missions';
 import { SQL_QUESTIONS_BY_ID, getSqlQuestionsForChapter } from './data/sql/questions';
 import { TYPESCRIPT_QUESTIONS_BY_ID, getTypeScriptQuestionsForChapter } from './data/typescript/questions';
 import { C_QUESTIONS_BY_ID, getCQuestionsForChapter } from './data/c/questions';
+import { C_CHAPTER_IDS } from './data/c/course';
 import { awardStageClear, recordQuestionMastery } from './utils/medals';
 import { createShuffleRun, sanitizeWorldShuffle } from './utils/worldShuffle';
 
@@ -171,7 +172,7 @@ export default function App() {
   const [typescriptChapterId, setTypeScriptChapterId] = useState('01_type_basics');
   const [typescriptQuestionId, setTypeScriptQuestionId] = useState('');
   const [typescriptUnlockNotice, setTypeScriptUnlockNotice] = useState(null);
-  const [cChapterId, setCChapterId] = useState('01_basics_output');
+  const [cChapterId, setCChapterId] = useState(C_CHAPTER_IDS[0]);
   const [cQuestionId, setCQuestionId] = useState('');
   const [cUnlockNotice, setCUnlockNotice] = useState(null);
   const [mapUnlockNotice, setMapUnlockNotice] = useState(null);
@@ -630,7 +631,7 @@ export default function App() {
       setScreen('cChallenge');
       return;
     }
-    setCChapterId(c.activeChapterId || '01_basics_output');
+    setCChapterId(c.activeChapterId || C_CHAPTER_IDS[0]);
     setScreen('cChapter');
   };
 
@@ -1293,7 +1294,7 @@ export default function App() {
               return;
             }
             if (referenceOrigin?.type === 'c') {
-              setCChapterId(referenceOrigin.chapterId || '01_basics_output');
+              setCChapterId(referenceOrigin.chapterId || C_CHAPTER_IDS[0]);
               setCQuestionId(referenceOrigin.questionId || '');
               setScreen('cChallenge');
               return;

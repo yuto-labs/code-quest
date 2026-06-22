@@ -3,6 +3,30 @@ import { getCQuestionsForChapter, C_QUESTIONS_BY_ID } from '../data/c/questions.
 
 export const C_MAX_HEARTS = 3;
 
+// Legacy chapter ids from before the spec-driven content rewrite (2026-06-22).
+// No question content ever shipped under these ids, but remap them defensively
+// so any progress object saved under an old id isn't silently discarded.
+const LEGACY_CHAPTER_ID_MAP = {
+  '01_basics_output': '01_c_basics',
+  '02_variables_types': '01_c_basics',
+  '03_operators_conditions': '02_conditions_loops',
+  '04_loops': '02_conditions_loops',
+  '05_arrays_strings': '03_arrays_strings',
+  '06_functions': '04_functions_scope',
+  '07_pointers': '05_pointers',
+  '08_structs_scope': '06_structs_enums',
+};
+
+function remapLegacyChapters(rawChapters) {
+  if (!isObject(rawChapters)) return {};
+  const remapped = {};
+  for (const [key, value] of Object.entries(rawChapters)) {
+    const newKey = LEGACY_CHAPTER_ID_MAP[key] || key;
+    if (!remapped[newKey]) remapped[newKey] = value;
+  }
+  return remapped;
+}
+
 export function emptyCProgress() {
   return {
     version: 1,
@@ -18,9 +42,10 @@ function isObject(value) {
 
 export function sanitizeCProgress(value) {
   const input = isObject(value) ? value : {};
+  const rawChapters = remapLegacyChapters(input.chapters);
   const chapters = {};
   for (const chapter of C_COURSE.chapters) {
-    const raw = isObject(input.chapters?.[chapter.id]) ? input.chapters[chapter.id] : {};
+    const raw = isObject(rawChapters[chapter.id]) ? rawChapters[chapter.id] : {};
     chapters[chapter.id] = {
       completedQuestionIds: Array.isArray(raw.completedQuestionIds) ? [...new Set(raw.completedQuestionIds)] : [],
       missionCompleted: Boolean(raw.missionCompleted),
@@ -29,7 +54,8 @@ export function sanitizeCProgress(value) {
       hearts: Number.isInteger(raw.hearts) ? Math.max(0, Math.min(raw.hearts, C_MAX_HEARTS)) : C_MAX_HEARTS,
     };
   }
-  const activeChapterId = C_CHAPTER_IDS.includes(input.activeChapterId) ? input.activeChapterId : C_CHAPTER_IDS[0];
+  const remappedActiveChapterId = LEGACY_CHAPTER_ID_MAP[input.activeChapterId] || input.activeChapterId;
+  const activeChapterId = C_CHAPTER_IDS.includes(remappedActiveChapterId) ? remappedActiveChapterId : C_CHAPTER_IDS[0];
   return {
     version: Number.isInteger(input.version) ? input.version : 1,
     activeChapterId,

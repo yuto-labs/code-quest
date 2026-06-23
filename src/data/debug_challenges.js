@@ -2,6 +2,13 @@ import { JP_JAVA_DEBUG } from './jp_java_questions.js';
 import { US_JAVA_DEBUG } from './us_java_questions.js';
 import { FR_JAVA_DEBUG, FR_JS_DEBUG, FR_PY_DEBUG } from './france_questions.js';
 import { BR_JAVA_DEBUG, BR_JS_DEBUG, BR_PY_DEBUG } from './brazil_questions.js';
+import { AU_JAVA_DEBUG, AU_JS_DEBUG, AU_PY_DEBUG } from './australia_questions.js';
+import { EG_JAVA_DEBUG, EG_JS_DEBUG, EG_PY_DEBUG } from './egypt_questions.js';
+import { IN_JAVA_DEBUG, IN_JS_DEBUG, IN_PY_DEBUG } from './india_questions.js';
+import { RU_JAVA_DEBUG, RU_JS_DEBUG, RU_PY_DEBUG } from './russia_questions.js';
+import { CN_JAVA_DEBUG, CN_JS_DEBUG, CN_PY_DEBUG } from './china_questions.js';
+import { DE_JAVA_DEBUG, DE_JS_DEBUG, DE_PY_DEBUG } from './germany_questions.js';
+import { GB_JAVA_DEBUG, GB_JS_DEBUG, GB_PY_DEBUG } from './united_kingdom_questions.js';
 
 export const DEBUG_CHALLENGES = {
   "JP": {
@@ -1674,222 +1681,6 @@ export const DEBUG_CHALLENGES = {
       }
     ]
   },
-  "DE": {
-    "python": [
-      {
-        "id": "dbg_de_py_2",
-        "worldId": "debug",
-        "conceptId": "files",
-        "questionType": "debug-step",
-        "title": "ミュータブルなデフォルト引数のバグ",
-        "steps": [
-          {
-            "stepNum": 1,
-            "stepTitle": "🔍 バグの特定",
-            "prompt": "ドイツの都市を収集する関数が 2 回目以降おかしな動作をします",
-            "code": "def add_city(city, cities=[]):\n    cities.append(city)\n    return cities\n\nprint(add_city(\"Berlin\"))\nprint(add_city(\"Munich\"))",
-            "question": "2 回目の呼び出し add_city(\"Munich\") の出力は？",
-            "options": [
-              "['Munich']",
-              "['Berlin', 'Munich']",
-              "['Berlin']",
-              "Error"
-            ],
-            "answer": "['Berlin', 'Munich']",
-            "hint": "デフォルト引数のリストは関数定義時に一度だけ作られます"
-          },
-          {
-            "stepNum": 2,
-            "stepTitle": "🔧 修正方法",
-            "prompt": "毎回新しい空リストから始める正しい書き方は？",
-            "question": "正しい修正を選べ",
-            "options": [
-              "def add_city(city, cities=[]): のまま使う",
-              "def add_city(city, cities=None):\n    if cities is None:\n        cities = []",
-              "def add_city(city, cities=list()): に変更する",
-              "cities.clear() を先頭に追加する"
-            ],
-            "answer": "def add_city(city, cities=None):\n    if cities is None:\n        cities = []",
-            "explanation": "cities=None をデフォルトにして、関数内で None の場合のみ新しい [] を作ります。これで毎回独立したリストが使われます。"
-          },
-          {
-            "stepNum": 3,
-            "stepTitle": "💡 理由・影響",
-            "prompt": "ミュータブルなデフォルト引数が危険な理由を選べ",
-            "question": "def func(lst=[]) が問題になる理由は？",
-            "options": [
-              "リストは引数に使えないから",
-              "デフォルト引数はdef文の実行時に一度だけ評価・作成されるため、呼び出しのたびに同じオブジェクトが使い回されるから",
-              "Python のバグだから",
-              "append() がデフォルト引数を変更できないから"
-            ],
-            "answer": "デフォルト引数はdef文の実行時に一度だけ評価・作成されるため、呼び出しのたびに同じオブジェクトが使い回されるから",
-            "explanation": "デフォルト引数はモジュールロード時に 1 回だけ評価されます。ミュータブルなオブジェクト（list/dict/set）は状態が累積します。None パターンはこれを防ぐ Python の定番イディオムです。"
-          }
-        ]
-      },
-      {
-        "id": "dbg_de_py_1",
-        "worldId": "debug",
-        "conceptId": "files",
-        "questionType": "debug-step",
-        "title": "比較演算子の混同バグ",
-        "steps": [
-          {
-            "stepNum": 1,
-            "stepTitle": "🔍 バグの特定",
-            "prompt": "ベルリンの人口が最大かチェックするコードにバグがあります",
-            "code": "berlin_pop = 3769495\nhamburg_pop = 1847253\nif berlin_pop = hamburg_pop:\n    print(\"Same population\")\nelse:\n    print(\"Different populations\")",
-            "question": "このコードの問題は？",
-            "options": [
-              "= は代入、比較には == を使う必要がある",
-              "if 文の中で変数は使えない",
-              "print() の引数が間違っている",
-              "else ブロックが不要"
-            ],
-            "answer": "= は代入、比較には == を使う必要がある",
-            "hint": "Python で等しいかどうかを比較する演算子は？"
-          },
-          {
-            "stepNum": 2,
-            "stepTitle": "🔧 修正方法",
-            "prompt": "= と == の違いを正しく説明しているのは？",
-            "question": "正しい説明を選べ",
-            "options": [
-              "= も == もどちらも比較に使える",
-              "= は代入（左辺に値を入れる）、== は等値比較（両辺が等しいか確認）",
-              "== は整数のみで使え、文字列では = を使う",
-              "if 文の中では = が比較になる"
-            ],
-            "answer": "= は代入（左辺に値を入れる）、== は等値比較（両辺が等しいか確認）",
-            "explanation": "if berlin_pop == hamburg_pop: が正しい。= は変数に値を代入する演算子、== は 2 つの値が等しいか比較する演算子です。"
-          },
-          {
-            "stepNum": 3,
-            "stepTitle": "💡 理由・影響",
-            "prompt": "if 文で = が SyntaxError になる理由を選べ",
-            "question": "Python が if 文内の = を許可しない理由は？",
-            "options": [
-              "if 文は代入をサポートしていない（Python の構文規則）",
-              "berlin_pop と hamburg_pop が整数だから",
-              "比較は int 型に使えないから",
-              "変数が未定義だから"
-            ],
-            "answer": "if 文は代入をサポートしていない（Python の構文規則）",
-            "explanation": "Python では if/while の条件式に通常の代入 = は書けません（SyntaxError）。これは意図しない代入バグを防ぐ設計です。Python 3.8 以降の := (walrus operator) は別途使用可能です。"
-          }
-        ]
-      }
-    ]
-  },
-  "GB": {
-    "python": [
-      {
-        "id": "dbg_gb_py_2",
-        "worldId": "debug",
-        "conceptId": "regex",
-        "questionType": "debug-step",
-        "title": "re.match と re.search の使い間違い",
-        "steps": [
-          {
-            "stepNum": 1,
-            "stepTitle": "🔍 バグの特定",
-            "prompt": "ロンドンのイベント情報から年を取り出そうとしていますが None が返ります",
-            "code": "import re\ntext = \"Visit London in 2024\"\nresult = re.match(r\"\\d+\", text)\nprint(result)",
-            "question": "None が返る理由は？",
-            "options": [
-              "\\d+ が間違っている",
-              "re.match は文字列の先頭からしかマッチしないため、先頭に数字がない場合 None になる",
-              "2024 は整数なので re では使えない",
-              "import re が必要ない"
-            ],
-            "answer": "re.match は文字列の先頭からしかマッチしないため、先頭に数字がない場合 None になる",
-            "hint": "re.match と re.search の違いは「どこから」マッチするか"
-          },
-          {
-            "stepNum": 2,
-            "stepTitle": "🔧 修正方法",
-            "prompt": "\"Visit London in 2024\" から \"2024\" を取り出すには？",
-            "question": "正しい修正を選べ",
-            "options": [
-              "re.match(r\"\\d+\", text) のまま",
-              "re.search(r\"\\d+\", text) に変更する",
-              "re.fullmatch(r\"\\d+\", text) に変更する",
-              "text.find(\"2024\") を使う"
-            ],
-            "answer": "re.search(r\"\\d+\", text) に変更する",
-            "explanation": "re.search() は文字列全体からパターンを探します。result.group() で \"2024\" が取得できます。"
-          },
-          {
-            "stepNum": 3,
-            "stepTitle": "💡 理由・影響",
-            "prompt": "re の主要メソッドを整理しましょう",
-            "question": "re.match / re.search / re.fullmatch の違いは？",
-            "options": [
-              "すべて同じ動作をする",
-              "match=先頭のみ、search=文字列全体の最初のマッチ、fullmatch=文字列全体がパターンに一致",
-              "match=全マッチ、search=最初のみ、fullmatch=最後のみ",
-              "match と search は同じで fullmatch だけ異なる"
-            ],
-            "answer": "match=先頭のみ、search=文字列全体の最初のマッチ、fullmatch=文字列全体がパターンに一致",
-            "explanation": "re.match は先頭から、re.search は文字列内の任意位置から最初のマッチを返します。re.fullmatch は文字列全体がパターンと完全一致するか確認します。入力検証には fullmatch、部分検索には search を使いましょう。"
-          }
-        ]
-      },
-      {
-        "id": "dbg_gb_py_1",
-        "worldId": "debug",
-        "conceptId": "regex",
-        "questionType": "debug-step",
-        "title": "文字列インデックスの範囲外バグ",
-        "steps": [
-          {
-            "stepNum": 1,
-            "stepTitle": "🔍 バグの特定",
-            "prompt": "ロンドンの郵便番号からエリアコードを取得しようとしています",
-            "code": "postcode = \"SW1A 1AA\"\narea = postcode[0:10]\nprint(f\"Area: {area}\")",
-            "question": "このコードの動作は？",
-            "options": [
-              "IndexError が発生する",
-              "\"SW1A 1AA\" がそのまま表示される（文字列スライスは範囲外でも動く）",
-              "\"SW1A \" が表示される",
-              "\"SW1A 1\" が表示される"
-            ],
-            "answer": "\"SW1A 1AA\" がそのまま表示される（文字列スライスは範囲外でも動く）",
-            "hint": "Python の文字列スライスは範囲外でもエラーにならず、存在する部分を返します"
-          },
-          {
-            "stepNum": 2,
-            "stepTitle": "🔧 最適な修正",
-            "prompt": "エリアコード（スペース前の部分）を取得する最良の方法は？",
-            "question": "最も堅牢な方法を選べ",
-            "options": [
-              "postcode[0:4]（固定長）",
-              "postcode.split(\" \")[0]",
-              "postcode[:postcode.index(\" \")]",
-              "どれも正しい"
-            ],
-            "answer": "postcode.split(\" \")[0]",
-            "explanation": "split(\" \")[0] はスペースで分割して最初の部分を取得。郵便番号の長さが変わっても対応できます。"
-          },
-          {
-            "stepNum": 3,
-            "stepTitle": "💡 理由・影響",
-            "prompt": "split() が固定スライスより堅牢な理由を選べ",
-            "question": "postcode.split(\" \")[0] が postcode[0:4] より優れているのは？",
-            "options": [
-              "実行が速いから",
-              "郵便番号の長さが変わっても正しく動き、意図が明確で可読性が高いから",
-              "スライスは Python では非推奨だから",
-              "分割後の要素数を確認できるから"
-            ],
-            "answer": "郵便番号の長さが変わっても正しく動き、意図が明確で可読性が高いから",
-            "explanation": "postcode[0:4] は \"SW1A\" のような固定長にしか対応できません。\"SW1\" など長さが変わると壊れます。split(\" \")[0] はスペースを区切りとする意図が明確で、長さに依存しません。"
-          }
-        ]
-      }
-    ]
-  },
   "ZA": {
     "python": [
       {
@@ -2105,114 +1896,6 @@ export const DEBUG_CHALLENGES = {
         ]
       }
     ]
-  },
-  "AU": {
-    "python": [
-      {
-        "id": "dbg_au_py_1",
-        "worldId": "debug",
-        "conceptId": "functions",
-        "questionType": "debug-step",
-        "title": "スコープのバグ: UnboundLocalError",
-        "steps": [
-          {
-            "stepNum": 1,
-            "stepTitle": "🔍 バグの特定",
-            "prompt": "シドニーからウロンゴンまでの距離を 2 倍にする関数がエラーになります",
-            "code": "distance = 100\n\ndef double_distance():\n    distance = distance * 2\n    return distance\n\nprint(double_distance())",
-            "question": "このエラーの原因は？",
-            "options": [
-              "distance = 100 がグローバル変数として使えないから",
-              "関数内で distance に代入しているためローカル変数として扱われ、代入前に参照して UnboundLocalError になる",
-              "distance * 2 の計算が間違っている",
-              "関数に引数がないから"
-            ],
-            "answer": "関数内で distance に代入しているためローカル変数として扱われ、代入前に参照して UnboundLocalError になる",
-            "hint": "関数内で変数に代入すると、その変数はローカルスコープとして扱われます"
-          },
-          {
-            "stepNum": 2,
-            "stepTitle": "🔧 修正方法",
-            "prompt": "このバグを修正する最も安全な方法は？",
-            "question": "正しい修正を選べ",
-            "options": [
-              "global distance を関数の先頭に追加する",
-              "引数として渡す: def double_distance(d): return d * 2",
-              "distance を関数の中で定義し直す",
-              "distance = distance * 2 を distance *= 2 に変更する"
-            ],
-            "answer": "引数として渡す: def double_distance(d): return d * 2",
-            "explanation": "引数として渡す方法が最も安全です。global 宣言は動きますが、関数がグローバル状態に依存するため再利用性が下がります。"
-          },
-          {
-            "stepNum": 3,
-            "stepTitle": "💡 理由・影響",
-            "prompt": "Python のスコープルール LEGB を理解しましょう",
-            "question": "Python が関数内の変数をローカルと判断する条件は？",
-            "options": [
-              "変数名が大文字で始まる場合",
-              "関数内のどこかで代入（= による束縛）が行われている場合、その変数全体がローカルとして扱われる",
-              "グローバルに同名変数が存在する場合",
-              "return 文の後に使われる場合"
-            ],
-            "answer": "関数内のどこかで代入（= による束縛）が行われている場合、その変数全体がローカルとして扱われる",
-            "explanation": "Python は関数をコンパイルするとき、代入がある変数をローカルとマークします。そのため代入前に参照するとまだ値がない UnboundLocalError になります。グローバルを参照のみするなら問題ありませんが、変更するには global 宣言か引数渡しが必要です。"
-          }
-        ]
-      },
-      {
-        "id": "dbg_au_py_2",
-        "worldId": "debug",
-        "conceptId": "functions",
-        "questionType": "debug-step",
-        "title": "*args の要素数不一致バグ",
-        "steps": [
-          {
-            "stepNum": 1,
-            "stepTitle": "🔍 バグの特定",
-            "prompt": "オーストラリアの都市情報を表示する関数が TypeError になります",
-            "code": "def describe(city, state, country):\n    return f\"{city}, {state}, {country}\"\n\ninfo = [\"Sydney\", \"NSW\"]\nprint(describe(*info))",
-            "question": "このエラーの原因は？",
-            "options": [
-              "describe 関数の引数の書き方が間違っている",
-              "*info でリストを展開すると 2 つの引数になるが、describe は 3 つ必要なので TypeError",
-              "f-string の書き方が間違っている",
-              "*info は辞書に対してのみ使える"
-            ],
-            "answer": "*info でリストを展開すると 2 つの引数になるが、describe は 3 つ必要なので TypeError",
-            "hint": "*info はリストを展開して引数として渡します。info の要素数は？"
-          },
-          {
-            "stepNum": 2,
-            "stepTitle": "🔧 修正方法",
-            "prompt": "正しく動かすための修正方法を選べ",
-            "question": "最も適切な修正はどれ？",
-            "options": [
-              "info = [\"Sydney\", \"NSW\"] のまま",
-              "info = [\"Sydney\", \"NSW\", \"Australia\"] に修正する",
-              "describe(*info) を describe(info) に変更する",
-              "describe の引数を 2 つに減らす"
-            ],
-            "answer": "info = [\"Sydney\", \"NSW\", \"Australia\"] に修正する",
-            "explanation": "describe は 3 引数なので、*info で展開するリストも 3 要素必要です。info に \"Australia\" を追加することで一致します。"
-          },
-          {
-            "stepNum": 3,
-            "stepTitle": "💡 理由・影響",
-            "prompt": "*args によるアンパック展開を理解しましょう",
-            "question": "func(*lst) の動作として正しいのはどれ？",
-            "options": [
-              "lst をリストとして 1 つの引数にまとめて渡す",
-              "lst の各要素を個別の位置引数として展開して渡す",
-              "lst を辞書に変換して渡す",
-              "lst の最初の要素のみを渡す"
-            ],
-            "answer": "lst の各要素を個別の位置引数として展開して渡す",
-            "explanation": "func(*[a, b, c]) は func(a, b, c) と同じです。リストの要素数が関数の必須引数数と一致している必要があります。辞書のアンパックは **kwargs で行います。"
-          }
-        ]
-      }
-    ]
   }
 };
 
@@ -2228,6 +1911,41 @@ if (DEBUG_CHALLENGES.BR) {
   DEBUG_CHALLENGES.BR.javascript = BR_JS_DEBUG;
   DEBUG_CHALLENGES.BR.java = BR_JAVA_DEBUG;
 }
+DEBUG_CHALLENGES.AU = {
+  python: AU_PY_DEBUG,
+  javascript: AU_JS_DEBUG,
+  java: AU_JAVA_DEBUG,
+};
+DEBUG_CHALLENGES.EG = {
+  python: EG_PY_DEBUG,
+  javascript: EG_JS_DEBUG,
+  java: EG_JAVA_DEBUG,
+};
+DEBUG_CHALLENGES.IN = {
+  python: IN_PY_DEBUG,
+  javascript: IN_JS_DEBUG,
+  java: IN_JAVA_DEBUG,
+};
+DEBUG_CHALLENGES.RU = {
+  python: RU_PY_DEBUG,
+  javascript: RU_JS_DEBUG,
+  java: RU_JAVA_DEBUG,
+};
+DEBUG_CHALLENGES.CN = {
+  python: CN_PY_DEBUG,
+  javascript: CN_JS_DEBUG,
+  java: CN_JAVA_DEBUG,
+};
+DEBUG_CHALLENGES.DE = {
+  python: DE_PY_DEBUG,
+  javascript: DE_JS_DEBUG,
+  java: DE_JAVA_DEBUG,
+};
+DEBUG_CHALLENGES.GB = {
+  python: GB_PY_DEBUG,
+  javascript: GB_JS_DEBUG,
+  java: GB_JAVA_DEBUG,
+};
 
 export const DEBUG_LANGUAGES = [
   { id: 'python', name: 'Python', emoji: '🐍', available: true },

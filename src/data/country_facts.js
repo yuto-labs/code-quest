@@ -2,6 +2,13 @@ import { JP_JAVA_FACTS } from './jp_java_questions.js';
 import { US_JAVA_FACTS } from './us_java_questions.js';
 import { FRANCE_FACTS } from './france_questions.js';
 import { BRAZIL_FACTS } from './brazil_questions.js';
+import { AUSTRALIA_FACTS } from './australia_questions.js';
+import { EGYPT_FACTS } from './egypt_questions.js';
+import { INDIA_FACTS } from './india_questions.js';
+import { RUSSIA_FACTS } from './russia_questions.js';
+import { CHINA_FACTS } from './china_questions.js';
+import { GERMANY_FACTS } from './germany_questions.js';
+import { UNITED_KINGDOM_FACTS } from './united_kingdom_questions.js';
 
 export const FACT_STATUS = Object.freeze({
   VERIFIED: 'verified',
@@ -4871,6 +4878,13 @@ COUNTRY_FACTS.push(...JP_JAVA_FACTS);
 COUNTRY_FACTS.push(...US_JAVA_FACTS);
 COUNTRY_FACTS.push(...FRANCE_FACTS);
 COUNTRY_FACTS.push(...BRAZIL_FACTS);
+COUNTRY_FACTS.push(...AUSTRALIA_FACTS);
+COUNTRY_FACTS.push(...EGYPT_FACTS);
+COUNTRY_FACTS.push(...INDIA_FACTS);
+COUNTRY_FACTS.push(...RUSSIA_FACTS);
+COUNTRY_FACTS.push(...CHINA_FACTS);
+COUNTRY_FACTS.push(...GERMANY_FACTS);
+COUNTRY_FACTS.push(...UNITED_KINGDOM_FACTS);
 
 function validateSourceRef(ref, index, factId, issues) {
   if (typeof ref === 'string') {

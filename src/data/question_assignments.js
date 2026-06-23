@@ -2,6 +2,13 @@ import { JP_JAVA_ASSIGNMENTS } from './jp_java_questions.js';
 import { US_JAVA_ASSIGNMENTS } from './us_java_questions.js';
 import { FRANCE_ASSIGNMENTS } from './france_questions.js';
 import { BRAZIL_ASSIGNMENTS } from './brazil_questions.js';
+import { AUSTRALIA_ASSIGNMENTS } from './australia_questions.js';
+import { EGYPT_ASSIGNMENTS } from './egypt_questions.js';
+import { INDIA_ASSIGNMENTS } from './india_questions.js';
+import { RUSSIA_ASSIGNMENTS } from './russia_questions.js';
+import { CHINA_ASSIGNMENTS } from './china_questions.js';
+import { GERMANY_ASSIGNMENTS } from './germany_questions.js';
+import { UNITED_KINGDOM_ASSIGNMENTS } from './united_kingdom_questions.js';
 
 export const COGNITIVE_TASKS = Object.freeze([
   'recall-from-given-context',
@@ -2267,3 +2274,10 @@ QUESTION_ASSIGNMENTS.push(...JP_JAVA_ASSIGNMENTS);
 QUESTION_ASSIGNMENTS.push(...US_JAVA_ASSIGNMENTS);
 QUESTION_ASSIGNMENTS.push(...FRANCE_ASSIGNMENTS);
 QUESTION_ASSIGNMENTS.push(...BRAZIL_ASSIGNMENTS);
+QUESTION_ASSIGNMENTS.push(...AUSTRALIA_ASSIGNMENTS);
+QUESTION_ASSIGNMENTS.push(...EGYPT_ASSIGNMENTS);
+QUESTION_ASSIGNMENTS.push(...INDIA_ASSIGNMENTS);
+QUESTION_ASSIGNMENTS.push(...RUSSIA_ASSIGNMENTS);
+QUESTION_ASSIGNMENTS.push(...CHINA_ASSIGNMENTS);
+QUESTION_ASSIGNMENTS.push(...GERMANY_ASSIGNMENTS);
+QUESTION_ASSIGNMENTS.push(...UNITED_KINGDOM_ASSIGNMENTS);

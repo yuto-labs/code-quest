@@ -2,6 +2,13 @@ import { JP_JAVA_EXECUTE } from './jp_java_questions.js';
 import { US_JAVA_EXECUTE } from './us_java_questions.js';
 import { FR_JAVA_EXECUTE, FR_JS_EXECUTE, FR_PY_EXECUTE } from './france_questions.js';
 import { BR_JAVA_EXECUTE, BR_JS_EXECUTE, BR_PY_EXECUTE } from './brazil_questions.js';
+import { AU_JAVA_EXECUTE, AU_JS_EXECUTE, AU_PY_EXECUTE } from './australia_questions.js';
+import { EG_JAVA_EXECUTE, EG_JS_EXECUTE, EG_PY_EXECUTE } from './egypt_questions.js';
+import { IN_JAVA_EXECUTE, IN_JS_EXECUTE, IN_PY_EXECUTE } from './india_questions.js';
+import { RU_JAVA_EXECUTE, RU_JS_EXECUTE, RU_PY_EXECUTE } from './russia_questions.js';
+import { CN_JAVA_EXECUTE, CN_JS_EXECUTE, CN_PY_EXECUTE } from './china_questions.js';
+import { DE_JAVA_EXECUTE, DE_JS_EXECUTE, DE_PY_EXECUTE } from './germany_questions.js';
+import { GB_JAVA_EXECUTE, GB_JS_EXECUTE, GB_PY_EXECUTE } from './united_kingdom_questions.js';
 
 export const EXECUTE_CHALLENGES = {
   "JP": {
@@ -1121,116 +1128,6 @@ export const EXECUTE_CHALLENGES = {
       }
     ]
   },
-  "DE": {
-    "python": [
-      {
-        "id": "ex_de_py_1",
-        "worldId": "execute",
-        "conceptId": "files",
-        "questionType": "multiple-choice",
-        "title": "辞書のソートを理解しよう",
-        "prompt": "このコードの出力は？",
-        "code": "cities = {\"Berlin\": 3769, \"Hamburg\": 1847, \"Munich\": 1488}\nsorted_cities = sorted(cities.items(), key=lambda x: x[1], reverse=True)\nprint(sorted_cities[0][0])",
-        "options": [
-          "Berlin",
-          "Hamburg",
-          "Munich",
-          "Error"
-        ],
-        "answer": "Berlin",
-        "hint": "reverse=True で値の大きい順にソート。最初の要素は？",
-        "explanation": "items() でキー・値ペアを取得。lambda x: x[1] で値でソート。reverse=True で降順。Berlin(3769) が最大。"
-      },
-      {
-        "id": "ex_de_py_2",
-        "worldId": "execute",
-        "conceptId": "files",
-        "questionType": "output-predict",
-        "title": "辞書内包表記の結果を予測しよう",
-        "prompt": "このコードの出力は？",
-        "code": "cities = {\"Berlin\": 3769, \"Hamburg\": 1847, \"Munich\": 1488}\nbig = {k: v for k, v in cities.items() if v > 2000}\nprint(len(big))",
-        "options": [
-          "0",
-          "1",
-          "2",
-          "3"
-        ],
-        "answer": "1",
-        "hint": "2000 より大きい都市の人口(千人)はどれ？",
-        "explanation": "Berlin=3769 > 2000 のみ該当。Hamburg=1847, Munich=1488 は 2000 以下。len(big) = 1。"
-      },
-      {
-        "id": "ex_de_py_3",
-        "worldId": "execute",
-        "conceptId": "files",
-        "questionType": "implementation-selection",
-        "title": "最も Pythonic な辞書フィルタを選ぼう",
-        "prompt": "ドイツの都市から人口(千人)が 2000 以上の都市のみ取得する。最も Pythonic な実装はどれ？",
-        "options": [
-          "cities = {\"Berlin\": 3769, \"Hamburg\": 1847, \"Munich\": 1488}\nbig = {}\nfor k, v in cities.items():\n    if v >= 2000:\n        big[k] = v\nprint(big)",
-          "cities = {\"Berlin\": 3769, \"Hamburg\": 1847, \"Munich\": 1488}\nbig = {k: v for k, v in cities.items() if v >= 2000}\nprint(big)",
-          "cities = {\"Berlin\": 3769, \"Hamburg\": 1847, \"Munich\": 1488}\nkeys = list(filter(lambda k: cities[k] >= 2000, cities))\nbig = dict(zip(keys, [cities[k] for k in keys]))\nprint(big)"
-        ],
-        "answer": "cities = {\"Berlin\": 3769, \"Hamburg\": 1847, \"Munich\": 1488}\nbig = {k: v for k, v in cities.items() if v >= 2000}\nprint(big)",
-        "hint": "辞書内包表記は dict の if フィルタを 1 行で書けます",
-        "explanation": "辞書内包表記 {k: v for k, v in d.items() if cond} が最も簡潔で読みやすい Pythonic な書き方です。for ループも動きますが冗長。filter+zip はさらに複雑になります。"
-      }
-    ]
-  },
-  "GB": {
-    "python": [
-      {
-        "id": "ex_gb_py_1",
-        "worldId": "execute",
-        "conceptId": "regex",
-        "questionType": "multiple-choice",
-        "title": "文字列メソッドの出力を予測しよう",
-        "prompt": "このコードの出力は？",
-        "code": "text = \"  Hello, London!  \"\ncleaned = text.strip().lower()\nprint(cleaned)",
-        "options": [
-          "'hello, london!'",
-          "\"hello, london!\"",
-          "hello, london!",
-          "Hello, London!"
-        ],
-        "answer": "hello, london!",
-        "hint": "strip() は両端の空白を除去、lower() は小文字化",
-        "explanation": "strip() → \"Hello, London!\"、lower() → \"hello, london!\"。print() は引用符なしで表示します。"
-      },
-      {
-        "id": "ex_gb_py_2",
-        "worldId": "execute",
-        "conceptId": "regex",
-        "questionType": "output-predict",
-        "title": "split の出力を予測しよう",
-        "prompt": "このコードの出力は？",
-        "code": "text = \"Big Ben, Tower Bridge, Stonehenge\"\nparts = text.split(\", \")\nprint(len(parts), parts[-1])",
-        "options": [
-          "2 Stonehenge",
-          "3 Stonehenge",
-          "3 Big Ben",
-          "2 Big Ben"
-        ],
-        "answer": "3 Stonehenge",
-        "hint": "\", \" で分割すると何個に分かれますか？最後の要素は？",
-        "explanation": "split(\", \") → [\"Big Ben\", \"Tower Bridge\", \"Stonehenge\"]。len=3、parts[-1] は末尾要素の \"Stonehenge\"。"
-      },
-      {
-        "id": "ex_gb_py_3",
-        "worldId": "execute",
-        "conceptId": "regex",
-        "questionType": "multiple-blanks",
-        "title": "文字列から数字のみ抽出するコードを完成させよう",
-        "prompt": "ロンドンの郵便番号から数字部分のみ抽出するコードの空欄を埋めてください",
-        "code": "import re\npostcode = \"SW1A 2AA\"\ndigits = re.___BLANK_0___(r\"\\d+\", postcode)\nprint(digits)",
-        "blanks": [
-          "findall"
-        ],
-        "hint": "re モジュールで全マッチを探すメソッドは？",
-        "explanation": "re.findall(pattern, string) はすべてのマッチをリストで返します。\\d+ は1文字以上の数字列。\"SW1A 2AA\" から [\"1\", \"2\"] が取得できます。"
-      }
-    ]
-  },
   "ZA": {
     "python": [
       {
@@ -1342,62 +1239,6 @@ export const EXECUTE_CHALLENGES = {
         "explanation": "sort(reverse=True) で降順に並べ替え。[:3] で先頭 3 件を取得。結果は [1232, 674, 309]。"
       }
     ]
-  },
-  "AU": {
-    "python": [
-      {
-        "id": "ex_au_py_1",
-        "worldId": "execute",
-        "conceptId": "functions",
-        "questionType": "implementation-selection",
-        "title": "最も適切な実装を選ぼう",
-        "prompt": "オーストラリアの都市リストから先頭 3 件を取得して表示する。最も Python らしい（Pythonic な）実装はどれ？",
-        "options": [
-          "cities = [\"Sydney\", \"Melbourne\", \"Brisbane\", \"Perth\"]\nresult = []\nfor i in range(3):\n    result.append(cities[i])\nprint(result)",
-          "cities = [\"Sydney\", \"Melbourne\", \"Brisbane\", \"Perth\"]\nprint(cities[:3])",
-          "cities = [\"Sydney\", \"Melbourne\", \"Brisbane\", \"Perth\"]\nprint(cities[0], cities[1], cities[2])"
-        ],
-        "answer": "cities = [\"Sydney\", \"Melbourne\", \"Brisbane\", \"Perth\"]\nprint(cities[:3])",
-        "hint": "Pythonic なコードは短く明瞭。スライス記法を思い出して。",
-        "explanation": "cities[:3] が最も簡潔で慣用的なスライス記法です。ループによる個別 append や固定インデックスより可読性・保守性が高く、リスト長が変わっても安全です。"
-      },
-      {
-        "id": "ex_au_py_2",
-        "worldId": "execute",
-        "conceptId": "functions",
-        "questionType": "output-predict",
-        "title": "デフォルト引数付き関数の出力を予測しよう",
-        "prompt": "このコードの出力は？",
-        "code": "def describe_city(name, country=\"Australia\"):\n    return f\"{name}, {country}\"\n\nprint(describe_city(\"Sydney\"))\nprint(describe_city(\"Paris\", \"France\"))",
-        "options": [
-          "Sydney, Australia\nParis, France",
-          "Sydney, None\nParis, France",
-          "Sydney\nParis",
-          "Error"
-        ],
-        "answer": "Sydney, Australia\nParis, France",
-        "hint": "デフォルト引数は省略したときだけ使われます",
-        "explanation": "describe_city(\"Sydney\") → country はデフォルト \"Australia\"。describe_city(\"Paris\", \"France\") → country は \"France\" に上書き。"
-      },
-      {
-        "id": "ex_au_py_3",
-        "worldId": "execute",
-        "conceptId": "functions",
-        "questionType": "multiple-choice",
-        "title": "lambda を使ったソートの出力を予測しよう",
-        "prompt": "このコードの出力は？",
-        "code": "cities = [(\"Sydney\", 5312), (\"Melbourne\", 5078), (\"Brisbane\", 2561)]\ncities_sorted = sorted(cities, key=lambda x: x[1])\nprint(cities_sorted[0][0])",
-        "options": [
-          "Sydney",
-          "Melbourne",
-          "Brisbane",
-          "Error"
-        ],
-        "answer": "Brisbane",
-        "hint": "sorted() はデフォルトで昇順。key=lambda x: x[1] は何でソート？",
-        "explanation": "lambda x: x[1] でタプルの 2 番目要素（人口）でソート。昇順なので最小の Brisbane(2561) が先頭になります。"
-      }
-    ]
   }
 };
 
@@ -1413,6 +1254,41 @@ if (EXECUTE_CHALLENGES.BR) {
   EXECUTE_CHALLENGES.BR.javascript = BR_JS_EXECUTE;
   EXECUTE_CHALLENGES.BR.java = BR_JAVA_EXECUTE;
 }
+EXECUTE_CHALLENGES.AU = {
+  python: AU_PY_EXECUTE,
+  javascript: AU_JS_EXECUTE,
+  java: AU_JAVA_EXECUTE,
+};
+EXECUTE_CHALLENGES.EG = {
+  python: EG_PY_EXECUTE,
+  javascript: EG_JS_EXECUTE,
+  java: EG_JAVA_EXECUTE,
+};
+EXECUTE_CHALLENGES.IN = {
+  python: IN_PY_EXECUTE,
+  javascript: IN_JS_EXECUTE,
+  java: IN_JAVA_EXECUTE,
+};
+EXECUTE_CHALLENGES.RU = {
+  python: RU_PY_EXECUTE,
+  javascript: RU_JS_EXECUTE,
+  java: RU_JAVA_EXECUTE,
+};
+EXECUTE_CHALLENGES.CN = {
+  python: CN_PY_EXECUTE,
+  javascript: CN_JS_EXECUTE,
+  java: CN_JAVA_EXECUTE,
+};
+EXECUTE_CHALLENGES.DE = {
+  python: DE_PY_EXECUTE,
+  javascript: DE_JS_EXECUTE,
+  java: DE_JAVA_EXECUTE,
+};
+EXECUTE_CHALLENGES.GB = {
+  python: GB_PY_EXECUTE,
+  javascript: GB_JS_EXECUTE,
+  java: GB_JAVA_EXECUTE,
+};
 
 export const EXECUTE_LANGUAGES = [
   { id: 'python', name: 'Python', emoji: '🐍', available: true },

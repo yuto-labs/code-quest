@@ -207,6 +207,44 @@ export default function ChallengeScreen({
     onSaveIdx?.(0, { questionId: questions[0]?.id, debugStepIndex: 0, debugAnswers: [] });
   };
 
+  const retryCurrentQuestion = () => {
+    clearTimers();
+    const retryIdx = clampInitialQuestionIndex(
+      failSummary?.questionIndex ?? entryState.attempt?.questionIndex ?? idx,
+      questions.length,
+    );
+    const retryQuestion = questions[retryIdx];
+    setEntryMode('active');
+    setFailSummary(null);
+    setGameOver(false);
+    setHearts(MAX_HEARTS);
+    setCombo(0);
+    setComboDisplay(0);
+    setStatus('idle');
+    setShowExplanation(false);
+    setShowHint(false);
+    setScreenEffect(null);
+    setShowCorrectOverlay(false);
+    setShakingHeartIdx(-1);
+    setIdx(retryIdx);
+    clearTemporaryAnswerState();
+    onLivesChange?.(MAX_HEARTS, {
+      questionIndex: retryIdx,
+      questionId: retryQuestion?.id || '',
+      debugStepIndex: 0,
+      debugAnswers: [],
+      failedQuestion: null,
+      status: 'active',
+    });
+    onSaveIdx?.(retryIdx, {
+      questionId: retryQuestion?.id,
+      debugStepIndex: 0,
+      debugAnswers: [],
+      screen: mission ? 'finalMission' : 'challenge',
+      missionId: mission?.id,
+    });
+  };
+
   const handleBack = () => {
     clearTimers();
     onBack();
@@ -262,8 +300,8 @@ export default function ChallengeScreen({
             >
               RETRY FROM START
             </button>
-            <button className="pixel-btn" style={{ fontSize: 8 }} onClick={handleBack}>
-              REVIEW LATER
+            <button className="pixel-btn" style={{ fontSize: 8 }} onClick={retryCurrentQuestion}>
+              RETRY THIS QUESTION
             </button>
             <button className="pixel-btn" style={{ fontSize: 8 }} onClick={handleWorldMap}>
               WORLD MAP
@@ -530,6 +568,7 @@ export default function ChallengeScreen({
 
   const buildFailureSummary = () => ({
     questionId: q.id,
+    questionIndex: idx,
     title: q.title,
     userAnswer: formatUserAnswer(),
     correctAnswer: formatCorrectAnswer(),

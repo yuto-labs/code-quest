@@ -324,8 +324,7 @@ export default function SqlChallengeScreen({
             <SqlExplanation explanation={explanation} fact={fact} />
           </div>
           <div style={styles.footer}>
-            <button className="pixel-btn" onClick={handleRetry}>RETRY FROM START</button>
-            <button className="pixel-btn" onClick={onBack}>REVIEW LATER</button>
+            <button className="pixel-btn" onClick={handleRetry}>RETRY THIS QUESTION</button>
             <BackButton onClick={onBack} />
           </div>
         </div>

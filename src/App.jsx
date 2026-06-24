@@ -7,6 +7,7 @@ import MapScreen from './screens/MapScreen';
 import LanguageScreen from './screens/LanguageScreen';
 import ChallengeScreen from './screens/ChallengeScreen';
 import ReferenceScreen from './screens/ReferenceScreen';
+import KnowledgeVaultScreen from './screens/KnowledgeVaultScreen';
 import ProgressScreen from './screens/ProgressScreen';
 import CodePathsScreen from './screens/CodePathsScreen';
 import SqlPathScreen from './screens/SqlPathScreen';
@@ -177,6 +178,8 @@ export default function App() {
   const [cUnlockNotice, setCUnlockNotice] = useState(null);
   const [mapUnlockNotice, setMapUnlockNotice] = useState(null);
   const [referenceOrigin, setReferenceOrigin] = useState(null);
+  const [knowledgeVaultOrigin, setKnowledgeVaultOrigin] = useState('map');
+  const [knowledgeVaultInitialTab, setKnowledgeVaultInitialTab] = useState('country');
   const [lastShuffleSettings, setLastShuffleSettings] = useState({ languageId: 'python', mode: 'all', requestedCount: 5 });
 
   const saveDebounceTimerRef = useRef(null);
@@ -1119,6 +1122,11 @@ export default function App() {
           onOpenSql={() => setScreen('sqlPath')}
           onOpenTypeScript={() => setScreen('typescriptPath')}
           onOpenC={() => setScreen('cPath')}
+          onOpenKnowledgeVault={() => {
+            setKnowledgeVaultOrigin('codePaths');
+            setKnowledgeVaultInitialTab('world');
+            setScreen('knowledgeVault');
+          }}
           progress={progress}
           meta={meta}
           worldShuffleRun={sanitizeWorldShuffle(meta.worldShuffle)}
@@ -1264,7 +1272,21 @@ export default function App() {
           quizProgress={quizProgress}
           unlockNotice={mapUnlockNotice?.worldId === world ? mapUnlockNotice : null}
           onSelectCountry={(c) => { setCountry(c); setScreen('language'); }}
+          onOpenKnowledgeVault={() => {
+            setKnowledgeVaultOrigin('map');
+            setKnowledgeVaultInitialTab('country');
+            setScreen('knowledgeVault');
+          }}
           onBack={() => setScreen('world')}
+        />
+      )}
+
+      {screen === 'knowledgeVault' && (
+        <KnowledgeVaultScreen
+          initialTab={knowledgeVaultInitialTab}
+          progress={progress}
+          meta={meta}
+          onBack={() => setScreen(knowledgeVaultOrigin === 'codePaths' ? 'codePaths' : 'map')}
         />
       )}
 

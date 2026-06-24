@@ -15,7 +15,7 @@ const LANGUAGES = [
   { id: 'javascript', label: 'JAVASCRIPT' },
 ];
 
-export default function CodePathsScreen({ onBack, onOpenSql, onOpenTypeScript, onOpenC, progress, meta, worldShuffleRun, onStartShuffle, onContinueShuffle }) {
+export default function CodePathsScreen({ onBack, onOpenSql, onOpenTypeScript, onOpenC, onOpenKnowledgeVault, progress, meta, worldShuffleRun, onStartShuffle, onContinueShuffle }) {
   const [languageId, setLanguageId] = useState('python');
   const [mode, setMode] = useState('all');
   const [filter, setFilter] = useState('all');
@@ -51,6 +51,15 @@ export default function CodePathsScreen({ onBack, onOpenSql, onOpenTypeScript, o
             </button>
           );
         })}
+        <button
+          type="button"
+          style={{ ...styles.card, borderColor: 'var(--accent2)' }}
+          onClick={onOpenKnowledgeVault}
+        >
+          <div style={{ ...styles.cardTitle, color: 'var(--accent2)' }}>WORLD DATA ARCHIVE</div>
+          <div style={styles.cardSub}>SQL / TypeScript / C の世界データをまとめて読む</div>
+          <div style={styles.cardStatus}>READABLE</div>
+        </button>
       </div>
       <section style={styles.shuffle}>
         <div style={styles.shuffleTitle}>WORLD SHUFFLE</div>

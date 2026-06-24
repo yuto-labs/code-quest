@@ -35,7 +35,7 @@ const REVERSE_ISO = Object.fromEntries(
   Object.entries(ISO_MAP).map(([num, id]) => [id, parseInt(num)])
 );
 
-export default function MapScreen({ onSelectCountry, onBack, progress, quizProgress, world = 'decode', unlockNotice = null }) {
+export default function MapScreen({ onSelectCountry, onBack, onOpenKnowledgeVault, progress, quizProgress, world = 'decode', unlockNotice = null }) {
   const [tooltip, setTooltip]         = useState(null);
   const [isTouch]                     = useState(() => window.matchMedia('(pointer: coarse)').matches);
   const defaultPos                    = { coordinates: [20, 15], zoom: isTouch ? 1.8 : 1 };
@@ -153,6 +153,16 @@ export default function MapScreen({ onSelectCountry, onBack, progress, quizProgr
         position.coordinates[0] !== defaultPos.coordinates[0]) && !zooming && (
         <button style={{ ...styles.resetBtn, top: `calc(${safeTop} + 14px)` }} onClick={() => setPosition(defaultPos)}>
           {'> reset.exe'}
+        </button>
+      )}
+
+      {onOpenKnowledgeVault && (
+        <button
+          type="button"
+          style={{ ...styles.vaultBtn, top: `calc(${safeTop} + 56px)` }}
+          onClick={onOpenKnowledgeVault}
+        >
+          KNOWLEDGE VAULT
         </button>
       )}
 
@@ -536,6 +546,21 @@ const styles = {
     zIndex: 30,
     letterSpacing: 1,
     textShadow: '0 0 6px #ffee00, 0 0 16px #ffcc0066, 0 0 30px #ffaa0033',
+  },
+  vaultBtn: {
+    position: 'fixed',
+    right: 14,
+    fontFamily: 'var(--pixel-font)',
+    fontSize: 8,
+    background: 'rgba(4,5,14,0.78)',
+    color: '#00ffcc',
+    border: '1px solid rgba(0,255,204,0.38)',
+    padding: '8px 10px',
+    cursor: 'pointer',
+    zIndex: 30,
+    letterSpacing: 1,
+    boxShadow: '0 0 16px rgba(0,255,204,0.10)',
+    textShadow: '0 0 6px #00ffcc',
   },
   zoomContent: {
     display: 'flex',

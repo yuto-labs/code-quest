@@ -20,8 +20,8 @@ const CONTINENT_RGB = {
   oc: [255, 119, 34],
 };
 
-const FALLBACK_COLOR = '#3355aa';
-const FALLBACK_RGB   = [51, 85, 170];
+const FALLBACK_COLOR = '#8aa0bd';
+const FALLBACK_RGB   = [138, 160, 189];
 
 // World Atlas numeric ID → continent code
 // Source: world-atlas countries-110m.json feature properties

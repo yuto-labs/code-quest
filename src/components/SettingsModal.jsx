@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import BackButton from './BackButton';
+import { getFeedbackSettings, saveFeedbackSettings, triggerFeedback } from '../utils/feedback';
 
 export default function SettingsModal({ user, syncing, onSendOtp, onVerifyOtp, onRefreshSync, onClose, syncError, cloudStats, localStats }) {
   const [step, setStep] = useState('email');
@@ -7,6 +8,12 @@ export default function SettingsModal({ user, syncing, onSendOtp, onVerifyOtp, o
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [feedbackSettings, setFeedbackSettings] = useState(() => getFeedbackSettings());
+
+  const updateFeedback = (patch) => {
+    const next = saveFeedbackSettings(patch);
+    setFeedbackSettings(next);
+  };
 
   const handleSend = async () => {
     if (!email.includes('@')) { setError('メアドを入力してください'); return; }
@@ -35,6 +42,47 @@ export default function SettingsModal({ user, syncing, onSendOtp, onVerifyOtp, o
         <div style={styles.header}>
           <span style={styles.title}>⚙ SETTINGS</span>
           <button style={styles.closeBtn} onClick={onClose}>✕</button>
+        </div>
+
+        <div style={styles.section}>
+          <div style={styles.sectionLabel}>FEEDBACK</div>
+          <label style={styles.toggleRow}>
+            <span>Sound effects</span>
+            <input
+              type="checkbox"
+              checked={feedbackSettings.soundEnabled}
+              onChange={(e) => updateFeedback({ soundEnabled: e.target.checked })}
+            />
+          </label>
+          <label style={styles.toggleRow}>
+            <span>Haptic feedback</span>
+            <input
+              type="checkbox"
+              checked={feedbackSettings.hapticsEnabled}
+              onChange={(e) => updateFeedback({ hapticsEnabled: e.target.checked })}
+            />
+          </label>
+          <label style={styles.volumeRow}>
+            <span>Volume</span>
+            <input
+              style={styles.range}
+              type="range"
+              min="0"
+              max="1"
+              step="0.05"
+              value={feedbackSettings.soundVolume}
+              onChange={(e) => updateFeedback({ soundVolume: Number(e.target.value) })}
+            />
+            <span style={styles.volumeValue}>{Math.round(feedbackSettings.soundVolume * 100)}%</span>
+          </label>
+          <button
+            type="button"
+            style={styles.testBtn}
+            data-feedback="none"
+            onClick={() => triggerFeedback('correct')}
+          >
+            TEST FEEDBACK
+          </button>
         </div>
 
         <div style={styles.section}>
@@ -126,6 +174,8 @@ const styles = {
     border: '3px solid var(--border)',
     display: 'flex',
     flexDirection: 'column',
+    maxHeight: 'min(92dvh, 720px)',
+    overflowY: 'auto',
   },
   header: {
     display: 'flex',
@@ -153,6 +203,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: 14,
+    borderBottom: '1px solid rgba(0,255,136,0.14)',
   },
   sectionLabel: {
     fontSize: 8,
@@ -238,6 +289,40 @@ const styles = {
     background: 'transparent',
     color: 'var(--accent)',
     border: '2px solid var(--accent)',
+    padding: '10px',
+    cursor: 'pointer',
+  },
+  toggleRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 12,
+    fontSize: 9,
+    color: 'var(--text)',
+  },
+  volumeRow: {
+    display: 'grid',
+    gridTemplateColumns: 'auto minmax(120px, 1fr) auto',
+    alignItems: 'center',
+    gap: 10,
+    fontSize: 9,
+    color: 'var(--text)',
+  },
+  range: {
+    width: '100%',
+    accentColor: 'var(--accent)',
+  },
+  volumeValue: {
+    color: 'var(--accent2)',
+    minWidth: 38,
+    textAlign: 'right',
+  },
+  testBtn: {
+    fontFamily: 'var(--pixel-font)',
+    fontSize: 8,
+    background: 'rgba(255,221,0,0.10)',
+    color: 'var(--accent2)',
+    border: '2px solid var(--accent2)',
     padding: '10px',
     cursor: 'pointer',
   },

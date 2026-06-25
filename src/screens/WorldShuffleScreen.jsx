@@ -4,6 +4,7 @@ import ExplanationPanel from '../components/ExplanationPanel';
 import { resolveShuffleQuestion, summarizeShuffleRun } from '../utils/worldShuffle';
 import { normalizeExplanation } from '../utils/explanations';
 import { WORLD_META } from '../utils/stageData';
+import { triggerFeedback } from '../utils/feedback';
 
 function getType(question) {
   return question?.questionType || 'fill-blank';
@@ -176,12 +177,14 @@ export default function WorldShuffleScreen({
     else correct = selected === correctAnswer;
 
     if (!correct) {
+      triggerFeedback('wrong');
       setWrongCount(value => value + 1);
       setStatus('wrong');
       return;
     }
 
     if (isDebug && debugStep < 2) {
+      triggerFeedback('correct');
       const nextAnswers = debugAnswers.slice(0, debugStep);
       nextAnswers[debugStep] = selected;
       setDebugAnswers(nextAnswers);
@@ -191,11 +194,13 @@ export default function WorldShuffleScreen({
       return;
     }
     const outcome = wrongCount > 0 ? 'retried' : 'solved';
+    triggerFeedback('correct');
     setStatus('done');
     record(outcome);
   }
 
   function showAnswer() {
+    triggerFeedback('tap');
     setRevealed(true);
     setStatus('done');
     record('revealed');
@@ -264,7 +269,7 @@ export default function WorldShuffleScreen({
       <footer style={styles.footer}>
         {status !== 'done' && <button className="pixel-btn" onClick={showAnswer}>SHOW ANSWER</button>}
         {status !== 'done' ? (
-          <button className="pixel-btn" disabled={!canSubmit} onClick={submit}>ANSWER</button>
+          <button className="pixel-btn" data-feedback="none" disabled={!canSubmit} onClick={submit}>ANSWER</button>
         ) : (
           <button className="pixel-btn" onClick={next}>NEXT</button>
         )}

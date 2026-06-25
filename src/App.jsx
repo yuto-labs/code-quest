@@ -39,6 +39,7 @@ import { C_QUESTIONS_BY_ID, getCQuestionsForChapter } from './data/c/questions';
 import { C_CHAPTER_IDS } from './data/c/course';
 import { awardStageClear, recordQuestionMastery } from './utils/medals';
 import { createShuffleRun, sanitizeWorldShuffle } from './utils/worldShuffle';
+import { installGlobalFeedback, playFeedback, triggerFeedback } from './utils/feedback';
 
 const WORLD_CHALLENGES = { decode: CHALLENGES, execute: EXECUTE_CHALLENGES, debug: DEBUG_CHALLENGES };
 
@@ -189,9 +190,16 @@ export default function App() {
 
   const showReward = (type, message) => {
     clearTimeout(rewardTimerRef.current);
+    if (type === 'stage-unlocked') triggerFeedback('clear');
+    if (type === 'final-mission-progress') triggerFeedback('correct');
+    if (type === 'language-emblem') triggerFeedback('seal');
+    if (type === 'review-cleared' || type === 'mastery-progress') triggerFeedback('correct');
+    if (type === 'error') triggerFeedback('wrong');
     setReward({ type, message });
     rewardTimerRef.current = setTimeout(() => setReward(null), 1200);
   };
+
+  useEffect(() => installGlobalFeedback(), []);
 
   useEffect(() => {
     if (!sqlUnlockNotice) return undefined;
@@ -530,6 +538,7 @@ export default function App() {
     const next = completeSqlQuestion(current, question.id);
     const isNowComplete = Boolean(next.chapters?.[question.chapterId]?.completed);
     if (!wasComplete && isNowComplete) {
+      triggerFeedback('clear');
       setSqlUnlockNotice({
         completedChapterId: question.chapterId,
         unlockedChapterId: next.activeChapterId,
@@ -587,6 +596,7 @@ export default function App() {
     const next = completeTypeScriptQuestion(current, question.id);
     const isNowComplete = Boolean(next.chapters?.[question.chapterId]?.completed);
     if (!wasComplete && isNowComplete) {
+      triggerFeedback('clear');
       setTypeScriptUnlockNotice({
         completedChapterId: question.chapterId,
         unlockedChapterId: next.activeChapterId,
@@ -644,6 +654,7 @@ export default function App() {
     const next = completeCQuestion(current, question.id);
     const isNowComplete = Boolean(next.chapters?.[question.chapterId]?.completed);
     if (!wasComplete && isNowComplete) {
+      triggerFeedback('clear');
       setCUnlockNotice({
         completedChapterId: question.chapterId,
         unlockedChapterId: next.activeChapterId,
@@ -1123,6 +1134,7 @@ export default function App() {
           onOpenTypeScript={() => setScreen('typescriptPath')}
           onOpenC={() => setScreen('cPath')}
           onOpenKnowledgeVault={() => {
+            playFeedback('vault');
             setKnowledgeVaultOrigin('codePaths');
             setKnowledgeVaultInitialTab('world');
             setScreen('knowledgeVault');
@@ -1273,6 +1285,7 @@ export default function App() {
           unlockNotice={mapUnlockNotice?.worldId === world ? mapUnlockNotice : null}
           onSelectCountry={(c) => { setCountry(c); setScreen('language'); }}
           onOpenKnowledgeVault={() => {
+            playFeedback('vault');
             setKnowledgeVaultOrigin('map');
             setKnowledgeVaultInitialTab('country');
             setScreen('knowledgeVault');

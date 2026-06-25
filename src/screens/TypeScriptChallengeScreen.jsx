@@ -3,6 +3,7 @@ import { TYPESCRIPT_QUESTIONS_BY_ID, TYPESCRIPT_MODE_LABELS } from '../data/type
 import { TYPESCRIPT_MAX_HEARTS } from '../utils/typescriptProgress';
 import { CodeBlock } from '../components/ExplanationPanel';
 import BackButton from '../components/BackButton';
+import { triggerFeedback } from '../utils/feedback';
 
 function buildCompletedCode(question, answer) {
   return String(question?.code || '').replace('___BLANK___', answer ?? '');
@@ -96,11 +97,13 @@ export default function TypeScriptChallengeScreen({
     const correct = value === question.answer;
     setSubmittedAnswer(value);
     if (correct) {
+      triggerFeedback('correct');
       setStatus('correct');
       clearTemp();
       return;
     }
     const nextHearts = hearts - 1;
+    triggerFeedback('wrong');
     setHearts(nextHearts);
     setStatus('wrong');
     clearTemp();
@@ -242,7 +245,7 @@ export default function TypeScriptChallengeScreen({
       ) : (
         <>
           <button className="pixel-btn" style={styles.hintBtn} onClick={() => setShowHint(value => !value)}>HINT</button>
-          <button className="pixel-btn" disabled={!canSubmit} onClick={handleSubmit}>ANSWER</button>
+          <button className="pixel-btn" data-feedback="none" disabled={!canSubmit} onClick={handleSubmit}>ANSWER</button>
         </>
       )}
     </div>

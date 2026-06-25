@@ -107,27 +107,27 @@ export default function MapScreen({ onSelectCountry, onBack, onOpenKnowledgeVaul
     const neon = getGeoNeonColor(numericId);
 
     if (status === 'cleared') {
-      const fill    = getGeoFillRgba(numericId, 0.16);
-      const fillHov = getGeoFillRgba(numericId, 0.54);
-      const base = { fill, stroke: neon, strokeWidth: 1.2, outline: 'none', cursor: 'pointer', filter: `drop-shadow(0 0 3px ${neon}55)` };
-      const hov  = { fill: fillHov, stroke: neon, strokeWidth: 2.4, outline: 'none', cursor: 'pointer', filter: `drop-shadow(0 0 7px ${neon}99)` };
+      const fill    = getGeoFillRgba(numericId, 0.28);
+      const fillHov = getGeoFillRgba(numericId, 0.66);
+      const base = { fill, stroke: neon, strokeWidth: 1.35, outline: 'none', cursor: 'pointer', filter: `drop-shadow(0 0 5px ${neon}66)` };
+      const hov  = { fill: fillHov, stroke: neon, strokeWidth: 2.5, outline: 'none', cursor: 'pointer', filter: `drop-shadow(0 0 9px ${neon}aa)` };
       const active = isHovered ? hov : base;
       return { default: active, hover: active, pressed: { fill: fillHov, outline: 'none' } };
     }
     if (status === 'unlocked') {
-      const base = { fill: 'rgba(0,80,200,0.10)', stroke: neon, strokeWidth: 1.0, outline: 'none', cursor: 'pointer' };
-      const hov  = { fill: 'rgba(80,160,255,0.45)', stroke: '#ffffff', strokeWidth: 2.4, outline: 'none', cursor: 'pointer' };
+      const base = { fill: getGeoFillRgba(numericId, 0.18), stroke: neon, strokeWidth: 1.15, outline: 'none', cursor: 'pointer', filter: `drop-shadow(0 0 3px ${neon}33)` };
+      const hov  = { fill: getGeoFillRgba(numericId, 0.52), stroke: '#ffffff', strokeWidth: 2.4, outline: 'none', cursor: 'pointer', filter: `drop-shadow(0 0 8px ${neon}88)` };
       const active = isHovered ? hov : base;
-      return { default: active, hover: active, pressed: { fill: 'rgba(0,80,200,0.60)', outline: 'none' } };
+      return { default: active, hover: active, pressed: { fill: getGeoFillRgba(numericId, 0.62), outline: 'none' } };
     }
     if (status === 'locked') {
-      const base = { fill: 'rgba(0,0,0,0.05)', stroke: neon, strokeWidth: 0.65, outline: 'none', opacity: 0.50, cursor: 'default' };
-      const hov  = { fill: getGeoFillRgba(numericId, 0.30), stroke: neon, strokeWidth: 2.2, outline: 'none', opacity: 1, cursor: 'default' };
+      const base = { fill: getGeoFillRgba(numericId, 0.10), stroke: neon, strokeWidth: 0.72, outline: 'none', opacity: 0.72, cursor: 'default' };
+      const hov  = { fill: getGeoFillRgba(numericId, 0.34), stroke: neon, strokeWidth: 2.2, outline: 'none', opacity: 1, cursor: 'default' };
       const active = isHovered ? hov : base;
       return { default: active, hover: active, pressed: { outline: 'none' } };
     }
-    const base = { fill: 'rgba(0,0,0,0.04)', stroke: neon, strokeWidth: 0.50, outline: 'none', opacity: 0.55 };
-    const hov  = { fill: getGeoFillRgba(numericId, 0.28), stroke: neon, strokeWidth: 1.8, outline: 'none', opacity: 1 };
+    const base = { fill: getGeoFillRgba(numericId, 0.08), stroke: neon, strokeWidth: 0.55, outline: 'none', opacity: 0.68 };
+    const hov  = { fill: getGeoFillRgba(numericId, 0.30), stroke: neon, strokeWidth: 1.8, outline: 'none', opacity: 1 };
     const active = isHovered ? hov : base;
     return { default: active, hover: active, pressed: { outline: 'none' } };
   };
@@ -159,6 +159,7 @@ export default function MapScreen({ onSelectCountry, onBack, onOpenKnowledgeVaul
       {onOpenKnowledgeVault && (
         <button
           type="button"
+          data-feedback="none"
           style={{ ...styles.vaultBtn, top: `calc(${safeTop} + 56px)` }}
           onClick={onOpenKnowledgeVault}
         >
@@ -383,7 +384,7 @@ const styles = {
     left: 0,
     right: 0,
     bottom: 0,
-    background: '#04050e',
+    background: 'radial-gradient(circle at 50% 42%, rgba(33,78,140,0.22), transparent 44%), #0a1022',
     overflow: 'hidden',
     zIndex: 1,
   },
@@ -394,8 +395,8 @@ const styles = {
       0deg,
       transparent,
       transparent 2px,
-      rgba(0,0,0,0.15) 2px,
-      rgba(0,0,0,0.15) 4px
+      rgba(0,0,0,0.08) 2px,
+      rgba(0,0,0,0.08) 4px
     )`,
     pointerEvents: 'none',
     zIndex: 20,
@@ -403,7 +404,7 @@ const styles = {
   crtVignette: {
     position: 'fixed',
     inset: 0,
-    background: 'radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.72) 100%)',
+    background: 'radial-gradient(ellipse at center, transparent 56%, rgba(0,0,0,0.44) 100%)',
     pointerEvents: 'none',
     zIndex: 21,
   },

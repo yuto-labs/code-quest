@@ -8,6 +8,7 @@ import ExplanationPanel from '../components/ExplanationPanel';
 import BackButton from '../components/BackButton';
 import { getColorForCountry } from '../utils/mapColors';
 import { normalizeExplanation } from '../utils/explanations';
+import { triggerFeedback } from '../utils/feedback';
 
 const WORLD_CHALLENGES = {
   decode:  CHALLENGES,
@@ -583,6 +584,7 @@ export default function ChallengeScreen({
   });
 
   const fireCorrect = () => {
+    triggerFeedback('correct');
     const newCombo = combo + 1;
     const mult     = Math.min(newCombo, 5);
     const earned   = BASE_SCORE * mult;
@@ -613,6 +615,7 @@ export default function ChallengeScreen({
   };
 
   const fireWrong = () => {
+    triggerFeedback('wrong');
     const newHearts = hearts - 1;
     const currentDebugAnswers = isDebugStep
       ? (() => {
@@ -1149,6 +1152,7 @@ export default function ChallengeScreen({
               </button>
               <button
                 className="pixel-btn"
+                data-feedback="none"
                 onClick={handleSubmit}
                 disabled={!canSubmit}
                 style={!canSubmit ? { opacity: 0.4 } : undefined}

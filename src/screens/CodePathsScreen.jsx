@@ -53,6 +53,7 @@ export default function CodePathsScreen({ onBack, onOpenSql, onOpenTypeScript, o
         })}
         <button
           type="button"
+          data-feedback="none"
           style={{ ...styles.card, borderColor: 'var(--accent2)' }}
           onClick={onOpenKnowledgeVault}
         >

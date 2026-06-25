@@ -55,7 +55,7 @@ const s = {
     left: 0,
     right: 0,
     bottom: 0,
-    background: '#04050e',
+    background: 'radial-gradient(circle at top, rgba(47,140,255,0.12), transparent 38%), var(--bg)',
     display: 'flex',
     flexDirection: 'column',
     overflow: 'hidden',
@@ -64,7 +64,7 @@ const s = {
   crtScanlines: {
     position: 'absolute',
     inset: 0,
-    backgroundImage: `repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.12) 2px,rgba(0,0,0,0.12) 4px)`,
+    backgroundImage: `repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.07) 2px,rgba(0,0,0,0.07) 4px)`,
     pointerEvents: 'none',
     zIndex: 20,
   },
@@ -102,7 +102,7 @@ const s = {
   sub: {
     fontFamily: 'var(--pixel-font)',
     fontSize: 'clamp(9px, 2.5vw, 11px)',
-    color: '#445566',
+    color: 'var(--text-dim)',
     margin: 0,
   },
   cards: {
@@ -112,7 +112,7 @@ const s = {
   },
   card: {
     fontFamily: 'var(--pixel-font)',
-    background: 'rgba(4,8,20,0.90)',
+    background: 'rgba(20,32,58,0.92)',
     border: '1px solid',
     padding: '20px 22px',
     cursor: 'pointer',

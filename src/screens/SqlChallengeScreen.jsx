@@ -5,6 +5,7 @@ import { SqlExplanation, SqlQueryView, SqlResultTable, SqlTableView } from '../c
 import { SQL_MAX_HEARTS } from '../utils/sqlProgress';
 import { buildCompletedSql, buildSqlHint, evaluateSqlResult, normalizeSqlOptionLabel, SQL_MODE_LABELS } from '../utils/sqlDisplay';
 import BackButton from '../components/BackButton';
+import { triggerFeedback } from '../utils/feedback';
 
 export default function SqlChallengeScreen({
   questionId,
@@ -99,6 +100,7 @@ export default function SqlChallengeScreen({
     const correct = value === currentCorrect;
     setSubmittedAnswer(value);
     if (correct) {
+      triggerFeedback('correct');
       if (isDebug && debugStep < 2) {
         const nextAnswers = [...debugAnswers.slice(0, debugStep), value];
         setDebugAnswers(nextAnswers);
@@ -114,6 +116,7 @@ export default function SqlChallengeScreen({
     }
 
     const nextHearts = hearts - 1;
+    triggerFeedback('wrong');
     setHearts(nextHearts);
     setStatus('wrong');
     clearTemp();
@@ -301,7 +304,7 @@ export default function SqlChallengeScreen({
           >
             HINT
           </button>
-          <button className="pixel-btn" disabled={!canSubmit} onClick={handleSubmit}>ANSWER</button>
+          <button className="pixel-btn" data-feedback="none" disabled={!canSubmit} onClick={handleSubmit}>ANSWER</button>
         </>
       )}
     </div>

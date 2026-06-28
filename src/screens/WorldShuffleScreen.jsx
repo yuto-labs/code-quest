@@ -140,6 +140,7 @@ export default function WorldShuffleScreen({
     currentStep,
     userAnswer: formatUserAnswer(),
     fallbackExplanation: currentStep?.explanation || question.explanation,
+    options: isDebug ? currentStep?.options : question.options,
   });
 
   function formatUserAnswer() {

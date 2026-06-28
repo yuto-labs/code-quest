@@ -1,5 +1,87 @@
 export const SQL_REFERENCE_TOPICS = [
   {
+    "id": "sql-syntax-basics",
+    "language": "sql",
+    "title": "SQL の基本構文ルール",
+    "level": "basic",
+    "parentId": null,
+    "prerequisites": [],
+    "aliases": ["semicolon", "comments", "case insensitive", "セミコロン"],
+    "summary": "SQLは文の終わりにセミコロン;を付け、キーワードは大文字小文字を区別しません。",
+    "relatedConceptIds": ["syntax-basics"],
+    "pages": [
+      {
+        "id": "sql-syntax-basics-semicolon",
+        "title": "セミコロンで文を区切る",
+        "summary": "SQLでは1つの文の終わりにセミコロン(;)を付けます。複数の文を続けて書くときは、文ごとに;で区切ります。インデント（字下げ）や改行の位置は自由で、実行結果には影響しません。",
+        "details": "SELECT〜FROM〜WHEREのように複数行にわたって書くことが多いですが、改行や空白の位置は自由です。文の終わりを示すのはセミコロンだけなので、複数の文を1つにまとめて実行するときは、文ごとに必ずセミコロンを付けます。",
+        "minimalExample": {
+          "code": "SELECT name\nFROM countries\nWHERE population_million > 100;",
+          "output": "name\n-----------\nJapan\nBrazil",
+          "lineNotes": [
+            "L1-L3: 改行していても1つの文として扱われる。",
+            "L3: 文末のセミコロンで文の終わりを示す。"
+          ],
+          "stateTrace": [
+            "countries テーブルから population_million が100より大きい行を絞り込む",
+            "絞り込んだ行の name 列を表示する"
+          ]
+        },
+        "worldExamples": {
+          "decode": "DECODE: 改行をまたいだ1つの文の範囲を読み取る。",
+          "execute": "EXECUTE: セミコロンの位置から文の区切りを確認して結果を追跡する。",
+          "debug": "DEBUG: セミコロンが抜けている、または余分にあるコードを見つけて直す。"
+        },
+        "commonMistakes": [
+          {
+            "wrong": "SELECT name FROM countries\nSELECT region FROM countries;",
+            "reason": "1文目の終わりにセミコロンがないため、2つの文の境界が正しく認識されない場合があります。",
+            "correct": "SELECT name FROM countries;\nSELECT region FROM countries;"
+          }
+        ],
+        "miniChecks": [
+          { "id": "sql-syntax-basics-semicolon-check1", "prompt": "SQL文の終わりに付ける記号は何ですか。", "answer": "セミコロン(;)。" },
+          { "id": "sql-syntax-basics-semicolon-check2", "prompt": "SELECT文を複数行に分けて書いても良いですか。", "answer": "良い。改行や空白の位置は自由。" }
+        ]
+      },
+      {
+        "id": "sql-syntax-basics-case-comments",
+        "title": "キーワードの大文字小文字とコメント",
+        "summary": "SELECTやFROMなどのキーワードは大文字小文字を区別しません（selectでも動く）。一般的には大文字で書く慣習があります。コメントは--（行末まで）か/* */（複数行）です。",
+        "details": "SQLのキーワード（SELECT、FROM、WHEREなど）は大文字小文字どちらで書いても同じ意味になりますが、テーブル名や列名、文字列データの値の大文字小文字の扱いはデータベースの種類や設定によって異なる場合があります。読みやすさのため、キーワードは大文字で書く慣習があります。",
+        "minimalExample": {
+          "code": "-- 人口が多い国を調べる\nselect name\nfrom countries\nwhere population_million > 100;\n/* この書き方でも\n   SELECTと同じ意味になる */",
+          "output": "name\n-----------\nJapan\nBrazil",
+          "lineNotes": [
+            "L1: -- から行末まではコメント。",
+            "L2-L4: 小文字で書いてもSELECT文として実行される。",
+            "L5-L6: /* と */ で囲んだ複数行コメント。"
+          ],
+          "stateTrace": [
+            "select は SELECT と同じ意味として解釈される",
+            "countries テーブルから条件に合う行を取得する"
+          ]
+        },
+        "worldExamples": {
+          "decode": "DECODE: 大文字小文字が違うキーワードも同じ意味だと読み取る。",
+          "execute": "EXECUTE: コメント部分を実行対象から除いて処理を追跡する。",
+          "debug": "DEBUG: コメントの閉じ忘れなど、構文上の不具合を見つけて直す。"
+        },
+        "commonMistakes": [
+          {
+            "wrong": "SELECT Name FROM Countries;",
+            "reason": "キーワードの大文字小文字は無視されますが、テーブル名・列名は環境によって大文字小文字を区別する場合があり、実際の名前と一致しないと動かないことがあります。",
+            "correct": "SELECT name FROM countries;"
+          }
+        ],
+        "miniChecks": [
+          { "id": "sql-syntax-basics-case-comments-check1", "prompt": "SELECTをselectと書いても動きますか。", "answer": "動く。キーワードは大文字小文字を区別しない。" },
+          { "id": "sql-syntax-basics-case-comments-check2", "prompt": "1行コメントを始める記号は何ですか。", "answer": "-- （ハイフン2つ）。" }
+        ]
+      }
+    ]
+  },
+  {
     "id": "sql-database-table-row-column",
     "language": "sql",
     "title": "テーブル・行・列の基本",

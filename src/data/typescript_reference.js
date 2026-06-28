@@ -46,6 +46,50 @@ function topic(id, title, conceptId, summary, pages, aliases = [], prerequisites
 }
 
 export const TYPESCRIPT_REFERENCE_TOPICS = [
+  topic('syntax-basics', 'TypeScript の基本構文ルール', 'type-annotations', 'TypeScript は JavaScript と同じく { } でブロックの範囲を示し、文の終わりには ; を付けます。インデント（字下げ）は見やすくするためのスタイルで、実行結果には影響しません。', [
+    page(
+      'typescript-syntax-basics-braces-semicolons',
+      '波かっこ { } とセミコロン',
+      'if や for、関数などの範囲は { から } で囲みます。1つの文の終わりには ; を付けます（省略できる場合もありますが書くのが基本です）。',
+      'const score: number = 80;\nif (score >= 70) {\n  console.log("pass");\n}',
+      'pass',
+      [
+        'L2: if の範囲を { で開始する。',
+        'L3: 文の終わりに ; を付ける。',
+        'L4: if の範囲を } で閉じる。',
+      ],
+      [
+        { wrong: 'console.log("pass")', reason: '文の終わりに ; がないと、次の行と意図せず1つの文として解釈される場合があります。', correct: 'console.log("pass");' },
+        { wrong: 'if (score >= 70)\n  console.log("pass");\n}', reason: '{ で開けた範囲は同じ数の } で閉じる必要があります。', correct: 'if (score >= 70) {\n  console.log("pass");\n}' },
+      ],
+      [
+        { prompt: '文の終わりに付ける記号は？', answer: ';' },
+        { prompt: '範囲を示す記号のペアは？', answer: '{ と }' },
+      ],
+      'インデント（字下げ）はコードを読みやすくするためのものです。波かっこの数が合っていれば、インデントの深さ自体は実行結果に影響しません。',
+    ),
+    page(
+      'typescript-syntax-basics-case-comments',
+      '大文字小文字とコメント',
+      'TypeScript は大文字小文字を区別します。コメントは // か /* */ を使います。',
+      '// 1行コメント\nconst cityName: string = "Kyoto";\n/* 複数行\n   コメント */\nconsole.log(cityName);',
+      'Kyoto',
+      [
+        'L1: // から行末まではコメント（実行されない）。',
+        'L2: cityName を定義する。',
+        'L3-L4: /* と */ で囲んだ複数行コメント。',
+        'L5: cityName の値を出力する。',
+      ],
+      [
+        { wrong: 'const CityName: string = "Kyoto";\nconsole.log(cityName);', reason: 'CityName と cityName は大文字小文字が違うため、別の変数として扱われエラーになります。', correct: '変数名の大文字小文字を統一する' },
+      ],
+      [
+        { prompt: 'CityName と cityName は同じ変数？', answer: '別の変数（大文字小文字を区別する）' },
+        { prompt: '複数行コメントを開始する記号は？', answer: '/*' },
+      ],
+    ),
+  ], ['braces', 'semicolon', 'case sensitive', 'comments']),
+
   topic('type-basics', '型注釈と型推論', 'type-annotations', 'TypeScript は JavaScript に型の情報を足し、値の使い方の間違いを早めに見つける言語です。', [
     page(
       'typescript-type-annotations',

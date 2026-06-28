@@ -537,6 +537,7 @@ export default function ChallengeScreen({
     correctAnswer,
     currentStep,
     fallbackExplanation: currentExplanation,
+    options: currentOptions,
   });
 
   // fix: (idx+1)/length so Q1 shows > 0%
@@ -580,6 +581,7 @@ export default function ChallengeScreen({
       currentStep,
       userAnswer: formatUserAnswer(),
       fallbackExplanation: currentExplanation,
+      options: currentOptions,
     }),
   });
 

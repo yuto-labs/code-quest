@@ -7,6 +7,105 @@ import { PYTHON_JS_REFERENCE_EXPANSION } from './reference_expansion.js';
 
 export const REFERENCE_TOPICS = [
   {
+    "id": "python-syntax-basics",
+    "language": "python",
+    "title": "Python の基本構文ルール",
+    "level": "basic",
+    "parentId": null,
+    "prerequisites": [],
+    "aliases": ["indentation", "indent", "comments", "case sensitive", "インデント"],
+    "summary": "Pythonはインデント（字下げ）でブロックを表し、波かっこやセミコロンは使いません。",
+    "relatedConceptIds": ["variables"],
+    "pages": [
+      {
+        "id": "python-syntax-basics-indent",
+        "title": "インデントでブロックを表す",
+        "summary": "Pythonはifやforなどコロン(:)の後のブロックを、波かっこではなくインデント（字下げ）で表します。インデントは必須で、同じブロックは同じ深さに揃えます。",
+        "details": "他の言語（Java・JavaScript・Cなど）は { } でブロックの範囲を示しますが、Pythonはインデントの深さそのものがブロックの範囲を意味します。同じブロック内の行は同じ数のスペース（一般的に4つ）で揃える必要があり、深さが揃っていないとエラーになります。",
+        "minimalExample": {
+          "code": "temperature = 35\n\nif temperature > 30:\n    print(\"暑い\")\n    print(\"水を飲もう\")\n\nprint(\"ここは常に表示\")",
+          "output": "暑い\n水を飲もう\nここは常に表示",
+          "lineNotes": [
+            "L3: if の行はコロン(:)で終わる。",
+            "L4-L5: 4スペース下げた行がifのブロック。",
+            "L7: インデントなしなので if の外。常に実行される。"
+          ],
+          "stateTrace": [
+            "L3: temperature > 30 はTrue。",
+            "L4-L5: ブロック内の2行が実行される。",
+            "L7: ifの外なので条件と無関係に実行される。"
+          ]
+        },
+        "worldExamples": {
+          "decode": "DECODE: インデントの深さからブロックの範囲を読み取る。",
+          "execute": "EXECUTE: インデントの深さをもとに、どの行が一緒に実行されるかを追跡する。",
+          "debug": "DEBUG: インデントの深さがずれているコードを見つけて直す。"
+        },
+        "commonMistakes": [
+          {
+            "wrong": "if temperature > 30:\nprint(\"暑い\")",
+            "reason": "コロンの後の行にインデントがないため、IndentationErrorになります。",
+            "correct": "if temperature > 30:\n    print(\"暑い\")"
+          },
+          {
+            "wrong": "if temperature > 30:\n    print(\"暑い\")\n   print(\"水を飲もう\")",
+            "reason": "同じブロックの行のインデント幅が揃っていないとエラーになります。",
+            "correct": "if temperature > 30:\n    print(\"暑い\")\n    print(\"水を飲もう\")"
+          }
+        ],
+        "correctedExample": "",
+        "miniChecks": [
+          { "id": "python-syntax-basics-indent-check1", "prompt": "Pythonでブロックの範囲を示すものは何ですか。", "answer": "インデント（字下げ）。" },
+          { "id": "python-syntax-basics-indent-check2", "prompt": "同じブロック内の行のインデント幅はどうする必要がありますか。", "answer": "すべて同じ幅に揃える必要がある。" }
+        ]
+      },
+      {
+        "id": "python-syntax-basics-case-comments",
+        "title": "大文字小文字とコメント",
+        "summary": "Pythonは大文字小文字を区別します（printとPrintは別物）。コメントは#から行末まで。文の終わりにセミコロンは不要です。",
+        "details": "変数名・関数名は大文字小文字を区別するため、scoreとScoreは別の変数として扱われます。コメントは#記号から行末までで、実行には影響しません。Pythonは文の終わりにセミコロン(;)を書く必要がなく、改行が文の区切りになります。",
+        "minimalExample": {
+          "code": "# 合計を計算する\nscore = 10\nScore = 20  # 別の変数\nprint(score)\nprint(Score)",
+          "output": "10\n20",
+          "lineNotes": [
+            "L1: # から行末まではコメント。",
+            "L2: score を10にする。",
+            "L3: Score（大文字S）はscoreとは別の変数。",
+            "L4-L5: それぞれの値を出力する。"
+          ],
+          "stateTrace": [
+            "score = 10",
+            "Score = 20（scoreとは別の変数）",
+            "print(score) → 10",
+            "print(Score) → 20"
+          ]
+        },
+        "worldExamples": {
+          "decode": "DECODE: 大文字小文字の違いとコメントの範囲を読み取る。",
+          "execute": "EXECUTE: 似た名前の変数を大文字小文字で区別して値を追跡する。",
+          "debug": "DEBUG: 大文字小文字の取り違えで起きるエラーを見つけて直す。"
+        },
+        "commonMistakes": [
+          {
+            "wrong": "score = 10\nprint(Score)",
+            "reason": "Scoreという名前の変数は定義されていないため、NameErrorになります（scoreとScoreは別物）。",
+            "correct": "score = 10\nprint(score)"
+          },
+          {
+            "wrong": "print(\"done\");",
+            "reason": "セミコロンは不要です（書いても動きますが、Pythonの一般的な書き方ではありません）。",
+            "correct": "print(\"done\")"
+          }
+        ],
+        "correctedExample": "",
+        "miniChecks": [
+          { "id": "python-syntax-basics-case-comments-check1", "prompt": "scoreとScoreは同じ変数として扱われますか。", "answer": "扱われない。大文字小文字を区別するため別の変数。" },
+          { "id": "python-syntax-basics-case-comments-check2", "prompt": "1行コメントを始める記号は何ですか。", "answer": "# 記号。" }
+        ]
+      }
+    ]
+  },
+  {
     "id": "variables-types",
     "language": "python",
     "title": "変数と型",
@@ -5531,6 +5630,99 @@ export const REFERENCE_TOPICS = [
     ],
     "relatedConceptIds": [
       "generators"
+    ]
+  },
+  {
+    "id": "js-syntax-basics",
+    "language": "javascript",
+    "title": "JavaScript の基本構文ルール",
+    "level": "basic",
+    "parentId": null,
+    "prerequisites": [],
+    "aliases": ["braces", "semicolon", "comments", "case sensitive", "波かっこ"],
+    "summary": "JavaScriptは波かっこ{}でブロックを表し、文の終わりにセミコロン;を付けます。",
+    "relatedConceptIds": ["variables"],
+    "pages": [
+      {
+        "id": "js-syntax-basics-braces-semicolons",
+        "title": "波かっこ { } とセミコロン",
+        "summary": "JavaScriptはifやforなどの範囲を{から}で囲みます。1つの文の終わりにはセミコロン(;)を付けます。インデント（字下げ）は見やすくするためのスタイルで、実行結果には影響しません。",
+        "details": "Pythonと違い、JavaScriptはインデントの深さ自体には意味がなく、{ }の対応だけがブロックの範囲を決めます。セミコロンは「自動セミコロン挿入(ASI)」という仕組みで省略できる場合がありますが、意図しない不具合を避けるため毎回書くのが基本です。",
+        "minimalExample": {
+          "code": "const score = 80;\nif (score >= 70) {\n  console.log(\"pass\");\n}",
+          "output": "pass",
+          "lineNotes": [
+            "L2: if の範囲を { で開始する。",
+            "L3: 文の終わりに ; を付ける。",
+            "L4: if の範囲を } で閉じる。"
+          ],
+          "stateTrace": [
+            "score >= 70 はtrue。",
+            "{ から } の中の console.log が実行される。"
+          ]
+        },
+        "worldExamples": {
+          "decode": "DECODE: { } の対応関係を読み取り、ブロックの範囲を確認する。",
+          "execute": "EXECUTE: { } の範囲をもとに、どの行が一緒に実行されるかを追跡する。",
+          "debug": "DEBUG: { } が閉じ忘れている、またはセミコロンが抜けているコードを見つけて直す。"
+        },
+        "commonMistakes": [
+          {
+            "wrong": "console.log(\"pass\")",
+            "reason": "セミコロンを省略すると、次の行と意図せず1つの文として解釈される場合があります。",
+            "correct": "console.log(\"pass\");"
+          },
+          {
+            "wrong": "if (score >= 70) {\n  console.log(\"pass\");",
+            "reason": "{ で開けた範囲は同じ数の } で閉じる必要があります。",
+            "correct": "if (score >= 70) {\n  console.log(\"pass\");\n}"
+          }
+        ],
+        "correctedExample": "",
+        "miniChecks": [
+          { "id": "js-syntax-basics-braces-semicolons-check1", "prompt": "文の終わりに付ける記号は何ですか。", "answer": "セミコロン(;)。" },
+          { "id": "js-syntax-basics-braces-semicolons-check2", "prompt": "範囲を示す記号のペアは何ですか。", "answer": "{ と }。" }
+        ]
+      },
+      {
+        "id": "js-syntax-basics-case-comments",
+        "title": "大文字小文字とコメント",
+        "summary": "JavaScriptは大文字小文字を区別します（scoreとScoreは別物）。コメントは//か/* */を使います。",
+        "details": "変数名・関数名は大文字小文字を区別するため、scoreとScoreは別の変数として扱われます。1行コメントは//から行末まで、複数行コメントは/*と*/で囲みます。",
+        "minimalExample": {
+          "code": "// 合計を計算する\nconst score = 10;\nconst Score = 20; // 別の変数\nconsole.log(score);\nconsole.log(Score);",
+          "output": "10\n20",
+          "lineNotes": [
+            "L1: // から行末まではコメント。",
+            "L2: score を10にする。",
+            "L3: Score（大文字S）はscoreとは別の変数。",
+            "L4-L5: それぞれの値を出力する。"
+          ],
+          "stateTrace": [
+            "score = 10",
+            "Score = 20（scoreとは別の変数）",
+            "console.log(score) → 10",
+            "console.log(Score) → 20"
+          ]
+        },
+        "worldExamples": {
+          "decode": "DECODE: 大文字小文字の違いとコメントの範囲を読み取る。",
+          "execute": "EXECUTE: 似た名前の変数を大文字小文字で区別して値を追跡する。",
+          "debug": "DEBUG: 大文字小文字の取り違えで起きるエラーを見つけて直す。"
+        },
+        "commonMistakes": [
+          {
+            "wrong": "const score = 10;\nconsole.log(Score);",
+            "reason": "Scoreという名前の変数は定義されていないため、ReferenceErrorになります（scoreとScoreは別物）。",
+            "correct": "const score = 10;\nconsole.log(score);"
+          }
+        ],
+        "correctedExample": "",
+        "miniChecks": [
+          { "id": "js-syntax-basics-case-comments-check1", "prompt": "scoreとScoreは同じ変数として扱われますか。", "answer": "扱われない。大文字小文字を区別するため別の変数。" },
+          { "id": "js-syntax-basics-case-comments-check2", "prompt": "複数行コメントを囲む記号は何ですか。", "answer": "/* と */。" }
+        ]
+      }
     ]
   },
   {

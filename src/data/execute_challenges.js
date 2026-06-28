@@ -31,6 +31,12 @@ export const EXECUTE_CHALLENGES = {
         "answer": "Yakushima World Heritage criteria/context",
         "hint": "country が JP で、score が 3 以上の要素だけを残します。",
         "explanation": "条件を満たす主題データだけが残るため、出力は Yakushima World Heritage criteria/context です。",
+        "optionExplanations": {
+          "Yakushima World Heritage criteria/context": "正解。country が \"JP\" かつ score が3以上を両方満たす唯一の要素なので selected に追加されます。",
+          "context": "country は \"JP\" ですが score が2で「3以上」の条件を満たさないため selected には入りません。",
+          "other": "country が \"JP\" ではないため、最初の条件（country == \"JP\"）で除外されます。",
+          "Error": "条件に合う要素が1件存在し join も正しく動くため、例外は発生しません。"
+        },
         "correctAnswer": "Yakushima World Heritage criteria/context",
         "executionSteps": [
           "items を1件ずつ調べる。",

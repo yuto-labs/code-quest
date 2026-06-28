@@ -119,6 +119,16 @@ function debugDetails(q, currentStep) {
   };
 }
 
+function optionBreakdownFor({ q, currentStep, isDebug, options, correctAnswer }) {
+  if (!Array.isArray(options) || options.length === 0) return [];
+  const explanationMap = (isDebug ? currentStep?.optionExplanations : q?.optionExplanations) || {};
+  return options.map(option => ({
+    option: asText(option),
+    isCorrect: asText(option) === asText(correctAnswer),
+    reason: asText(explanationMap[option]),
+  }));
+}
+
 function countryNoteText(q, facts) {
   const labels = facts
     .filter(fact => fact.factStatus === 'traditional' || fact.factStatus === 'disputed')
@@ -167,6 +177,7 @@ export function normalizeExplanation({
   currentStep = null,
   userAnswer = '',
   fallbackExplanation = '',
+  options = [],
 } = {}) {
   const facts = factsForQuestion(q);
   const isDebug = qType === 'debug-step';
@@ -179,6 +190,7 @@ export function normalizeExplanation({
     fallbackExplanation,
   );
   const debugExplanation = isDebug ? debugDetails(q, currentStep) : null;
+  const optionBreakdown = optionBreakdownFor({ q, currentStep, isDebug, options, correctAnswer: finalAnswer });
   const countryNote = countryNoteText(q, facts);
   const countryKnowledge = countryKnowledgeNotes(facts);
   const sources = uniqueSources([
@@ -197,6 +209,7 @@ export function normalizeExplanation({
     countryNote,
     countryKnowledge,
     debugExplanation,
+    optionBreakdown,
     sourceRefs: sources,
   };
 }

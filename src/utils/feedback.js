@@ -61,13 +61,26 @@ function getAudioContext() {
   }
 }
 
-function tone(ctx, { start, duration, frequency, type = 'square', gain = 0.12 }) {
+function tone(ctx, {
+  start,
+  duration,
+  frequency,
+  frequencyEnd = null,
+  type = 'square',
+  gain = 0.12,
+  attack = 0.012,
+  release = 0.035,
+}) {
   const osc = ctx.createOscillator();
   const amp = ctx.createGain();
   osc.type = type;
   osc.frequency.setValueAtTime(frequency, start);
+  if (frequencyEnd) {
+    osc.frequency.exponentialRampToValueAtTime(Math.max(1, frequencyEnd), start + duration);
+  }
   amp.gain.setValueAtTime(0.0001, start);
-  amp.gain.exponentialRampToValueAtTime(Math.max(0.0001, gain), start + 0.012);
+  amp.gain.exponentialRampToValueAtTime(Math.max(0.0001, gain), start + attack);
+  amp.gain.setValueAtTime(Math.max(0.0001, gain), Math.max(start + attack, start + duration - release));
   amp.gain.exponentialRampToValueAtTime(0.0001, start + duration);
   osc.connect(amp);
   amp.connect(ctx.destination);
@@ -75,37 +88,84 @@ function tone(ctx, { start, duration, frequency, type = 'square', gain = 0.12 })
   osc.stop(start + duration + 0.02);
 }
 
+function noise(ctx, {
+  start,
+  duration,
+  frequency = 1600,
+  filterType = 'bandpass',
+  gain = 0.035,
+  attack = 0.004,
+}) {
+  const frames = Math.max(1, Math.floor(ctx.sampleRate * duration));
+  const buffer = ctx.createBuffer(1, frames, ctx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < frames; i += 1) {
+    data[i] = (Math.random() * 2 - 1) * (1 - i / frames);
+  }
+  const source = ctx.createBufferSource();
+  const filter = ctx.createBiquadFilter();
+  const amp = ctx.createGain();
+  source.buffer = buffer;
+  filter.type = filterType;
+  filter.frequency.setValueAtTime(frequency, start);
+  filter.Q.setValueAtTime(8, start);
+  amp.gain.setValueAtTime(0.0001, start);
+  amp.gain.exponentialRampToValueAtTime(Math.max(0.0001, gain), start + attack);
+  amp.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+  source.connect(filter);
+  filter.connect(amp);
+  amp.connect(ctx.destination);
+  source.start(start);
+  source.stop(start + duration + 0.02);
+}
+
 const SOUND_PATTERNS = {
   tap: [
-    { offset: 0, duration: 0.045, frequency: 620, type: 'triangle', gain: 0.055 },
+    { offset: 0, duration: 0.055, frequency: 900, frequencyEnd: 1260, type: 'triangle', gain: 0.045, release: 0.018 },
+    { kind: 'noise', offset: 0.004, duration: 0.035, frequency: 2400, gain: 0.018 },
   ],
   back: [
-    { offset: 0, duration: 0.055, frequency: 260, type: 'triangle', gain: 0.06 },
+    { offset: 0, duration: 0.11, frequency: 420, frequencyEnd: 260, type: 'triangle', gain: 0.052 },
+    { offset: 0.08, duration: 0.13, frequency: 260, frequencyEnd: 170, type: 'sine', gain: 0.04 },
+    { kind: 'noise', offset: 0.01, duration: 0.045, frequency: 900, gain: 0.014 },
   ],
   correct: [
-    { offset: 0, duration: 0.07, frequency: 660, type: 'triangle', gain: 0.08 },
-    { offset: 0.06, duration: 0.12, frequency: 990, type: 'triangle', gain: 0.07 },
+    { offset: 0, duration: 0.17, frequency: 523.25, type: 'triangle', gain: 0.075 },
+    { offset: 0.09, duration: 0.19, frequency: 659.25, type: 'triangle', gain: 0.07 },
+    { offset: 0.19, duration: 0.24, frequency: 783.99, type: 'triangle', gain: 0.066 },
+    { offset: 0.31, duration: 0.28, frequency: 1046.5, frequencyEnd: 1174.66, type: 'sine', gain: 0.042, release: 0.08 },
+    { kind: 'noise', offset: 0.23, duration: 0.08, frequency: 3400, gain: 0.018 },
   ],
   wrong: [
-    { offset: 0, duration: 0.10, frequency: 180, type: 'sine', gain: 0.06 },
-    { offset: 0.07, duration: 0.10, frequency: 145, type: 'sine', gain: 0.045 },
+    { offset: 0, duration: 0.19, frequency: 240, frequencyEnd: 170, type: 'sawtooth', gain: 0.042 },
+    { offset: 0.12, duration: 0.23, frequency: 170, frequencyEnd: 110, type: 'triangle', gain: 0.048 },
+    { kind: 'noise', offset: 0.02, duration: 0.12, frequency: 420, filterType: 'lowpass', gain: 0.024 },
   ],
   clear: [
-    { offset: 0, duration: 0.11, frequency: 523, type: 'triangle', gain: 0.075 },
-    { offset: 0.10, duration: 0.12, frequency: 784, type: 'triangle', gain: 0.075 },
-    { offset: 0.22, duration: 0.20, frequency: 1046, type: 'triangle', gain: 0.065 },
+    { offset: 0, duration: 0.16, frequency: 392, type: 'triangle', gain: 0.064 },
+    { offset: 0.10, duration: 0.18, frequency: 523.25, type: 'triangle', gain: 0.066 },
+    { offset: 0.20, duration: 0.20, frequency: 659.25, type: 'triangle', gain: 0.064 },
+    { offset: 0.32, duration: 0.28, frequency: 783.99, type: 'triangle', gain: 0.06 },
+    { offset: 0.48, duration: 0.34, frequency: 1046.5, frequencyEnd: 1318.51, type: 'sine', gain: 0.045, release: 0.11 },
+    { kind: 'noise', offset: 0.36, duration: 0.18, frequency: 4200, gain: 0.02 },
   ],
   unlock: [
-    { offset: 0, duration: 0.08, frequency: 440, type: 'square', gain: 0.055 },
-    { offset: 0.07, duration: 0.10, frequency: 880, type: 'triangle', gain: 0.07 },
+    { offset: 0, duration: 0.10, frequency: 330, frequencyEnd: 440, type: 'square', gain: 0.046 },
+    { offset: 0.08, duration: 0.12, frequency: 440, frequencyEnd: 660, type: 'triangle', gain: 0.054 },
+    { offset: 0.20, duration: 0.22, frequency: 880, type: 'triangle', gain: 0.048 },
+    { kind: 'noise', offset: 0.16, duration: 0.07, frequency: 2600, gain: 0.016 },
   ],
   vault: [
-    { offset: 0, duration: 0.09, frequency: 330, type: 'triangle', gain: 0.045 },
-    { offset: 0.08, duration: 0.13, frequency: 494, type: 'sine', gain: 0.055 },
+    { offset: 0, duration: 0.25, frequency: 196, type: 'sine', gain: 0.034 },
+    { offset: 0.06, duration: 0.28, frequency: 293.66, type: 'triangle', gain: 0.038 },
+    { offset: 0.16, duration: 0.34, frequency: 392, frequencyEnd: 587.33, type: 'sine', gain: 0.035, release: 0.10 },
+    { kind: 'noise', offset: 0.28, duration: 0.08, frequency: 3000, gain: 0.012 },
   ],
   seal: [
-    { offset: 0, duration: 0.075, frequency: 120, type: 'square', gain: 0.075 },
-    { offset: 0.055, duration: 0.07, frequency: 260, type: 'triangle', gain: 0.045 },
+    { offset: 0, duration: 0.11, frequency: 115, frequencyEnd: 92, type: 'square', gain: 0.065 },
+    { kind: 'noise', offset: 0.005, duration: 0.07, frequency: 700, filterType: 'lowpass', gain: 0.03 },
+    { offset: 0.12, duration: 0.18, frequency: 523.25, type: 'triangle', gain: 0.046 },
+    { offset: 0.24, duration: 0.25, frequency: 783.99, type: 'triangle', gain: 0.044 },
   ],
 };
 
@@ -118,11 +178,15 @@ export function playFeedback(kind = 'tap') {
   const baseGain = Math.max(0.0001, settings.soundVolume);
   const start = ctx.currentTime + 0.004;
   try {
-    pattern.forEach(item => tone(ctx, {
-      ...item,
-      start: start + item.offset,
-      gain: item.gain * baseGain,
-    }));
+    pattern.forEach(item => {
+      const part = {
+        ...item,
+        start: start + item.offset,
+        gain: item.gain * baseGain,
+      };
+      if (item.kind === 'noise') noise(ctx, part);
+      else tone(ctx, part);
+    });
   } catch {
     // Audio feedback must never interrupt the app.
   }

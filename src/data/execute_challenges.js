@@ -68,6 +68,12 @@ export const EXECUTE_CHALLENGES = {
         "answer": "Shirakami-Sanchi beech forest",
         "hint": "country が JP で、score が 4 以上の要素だけを残します。",
         "explanation": "条件を満たす主題データだけが残るため、出力は Shirakami-Sanchi beech forest です。",
+        "optionExplanations": {
+          "Shirakami-Sanchi beech forest": "正解。country が \"JP\" かつ score が4以上（score=5）を両方満たす唯一の要素です。",
+          "context": "country は \"JP\" ですが score が3で「4以上」を満たさないため selected には入りません。",
+          "other": "country が \"JP\" ではないため、最初の条件で除外されます。",
+          "Error": "条件に合う要素が1件あり join も正常に動くため、例外は発生しません。"
+        },
         "correctAnswer": "Shirakami-Sanchi beech forest",
         "executionSteps": [
           "items を1件ずつ調べる。",
@@ -99,6 +105,12 @@ export const EXECUTE_CHALLENGES = {
         "answer": "National Diet Building",
         "hint": "country が JP で、score が 2 以上の要素だけを残します。",
         "explanation": "条件を満たす主題データだけが残るため、出力は National Diet Building です。",
+        "optionExplanations": {
+          "National Diet Building": "正解。country が \"JP\" かつ score が2以上（score=3）を両方満たす唯一の要素です。",
+          "context": "country は \"JP\" ですが score が1で「2以上」を満たさないため selected には入りません。",
+          "other": "country が \"JP\" ではないため、最初の条件で除外されます。",
+          "Error": "条件に合う要素が1件あり join も正常に動くため、例外は発生しません。"
+        },
         "correctAnswer": "National Diet Building",
         "executionSteps": [
           "items を1件ずつ調べる。",
@@ -130,6 +142,12 @@ export const EXECUTE_CHALLENGES = {
         "answer": "Hayabusa and Itokawa",
         "hint": "country が JP で、score が 3 以上の要素だけを残します。",
         "explanation": "条件を満たす主題データだけが残るため、出力は Hayabusa and Itokawa です。",
+        "optionExplanations": {
+          "Hayabusa and Itokawa": "正解。country が \"JP\" かつ score が3以上（score=4）を両方満たす唯一の要素です。",
+          "context": "country は \"JP\" ですが score が2で「3以上」を満たさないため selected には入りません。",
+          "other": "country が \"JP\" ではないため、最初の条件で除外されます。",
+          "Error": "条件に合う要素が1件あり join も正常に動くため、例外は発生しません。"
+        },
         "correctAnswer": "Hayabusa and Itokawa",
         "executionSteps": [
           "items を1件ずつ調べる。",
@@ -161,6 +179,12 @@ export const EXECUTE_CHALLENGES = {
         "answer": "Hayabusa2 and Ryugu",
         "hint": "country が JP で、score が 4 以上の要素だけを残します。",
         "explanation": "条件を満たす主題データだけが残るため、出力は Hayabusa2 and Ryugu です。",
+        "optionExplanations": {
+          "Hayabusa2 and Ryugu": "正解。samples の正の値 2+1=3 で total_samples は3になり、confirmed が True かつ total_samples==3 なので status は mission[\"name\"] になります。",
+          "review": "status が \"review\" になるのは confirmed が False か total_samples が3以外のときです。今回は両方の条件を満たすため review にはなりません。",
+          "3": "3 は total_samples（中間変数）の値で、最終的に print されるのは status（mission名）です。",
+          "Error": "samples の各要素は数値で amount > 0 の判定もエラーなく動くため、例外は発生しません。"
+        },
         "correctAnswer": "Hayabusa2 and Ryugu",
         "executionSteps": [
           "samples の正の値だけを合計する。",
@@ -192,6 +216,12 @@ export const EXECUTE_CHALLENGES = {
         "answer": "Noh role structure",
         "hint": "country が JP で、score が 2 以上の要素だけを残します。",
         "explanation": "条件を満たす主題データだけが残るため、出力は Noh role structure です。",
+        "optionExplanations": {
+          "Noh role structure": "正解。country が \"JP\" かつ score が2以上（score=3）を両方満たす唯一の要素です。",
+          "context": "country は \"JP\" ですが score が1で「2以上」を満たさないため selected には入りません。",
+          "other": "country が \"JP\" ではないため、最初の条件で除外されます。",
+          "Error": "条件に合う要素が1件あり join も正常に動くため、例外は発生しません。"
+        },
         "correctAnswer": "Noh role structure",
         "executionSteps": [
           "items を1件ずつ調べる。",
@@ -223,6 +253,12 @@ export const EXECUTE_CHALLENGES = {
         "answer": "Matsuo Basho and Oku no Hosomichi",
         "hint": "country が JP で、score が 3 以上の要素だけを残します。",
         "explanation": "条件を満たす主題データだけが残るため、出力は Matsuo Basho and Oku no Hosomichi です。",
+        "optionExplanations": {
+          "Matsuo Basho and Oku no Hosomichi": "正解。country が \"JP\" かつ score が3以上（score=4）を両方満たす唯一の要素です。",
+          "context": "country は \"JP\" ですが score が2で「3以上」を満たさないため selected には入りません。",
+          "other": "country が \"JP\" ではないため、最初の条件で除外されます。",
+          "Error": "条件に合う要素が1件あり join も正常に動くため、例外は発生しません。"
+        },
         "correctAnswer": "Matsuo Basho and Oku no Hosomichi",
         "executionSteps": [
           "items を1件ずつ調べる。",
@@ -256,6 +292,12 @@ export const EXECUTE_CHALLENGES = {
         "answer": "firearms arrival at Tanegashima",
         "hint": "JP かつ score が 3 以上の要素を残します。",
         "explanation": "条件を満たす主題データだけが残るため、出力は firearms arrival at Tanegashima です。",
+        "optionExplanations": {
+          "firearms arrival at Tanegashima": "正解。country が \"JP\" かつ score が3以上（score=4）を両方満たす唯一の要素なので filter を通過します。",
+          "context": "country は \"JP\" ですが score が2で「3以上」を満たさないため filter で除外されます。",
+          "other": "country が \"JP\" ではないため filter の条件で除外されます。",
+          "Error": "filter の結果は1件存在し map・join も正常に動くため、例外は発生しません。"
+        },
         "correctAnswer": "firearms arrival at Tanegashima",
         "executionSteps": [
           "filter で条件を満たす要素を残す。",
@@ -287,6 +329,12 @@ export const EXECUTE_CHALLENGES = {
         "answer": "Perry expedition and opening sequence",
         "hint": "JP かつ score が 4 以上の要素を残します。",
         "explanation": "条件を満たす主題データだけが残るため、出力は Perry expedition and opening sequence です。",
+        "optionExplanations": {
+          "Perry expedition and opening sequence": "正解。country が \"JP\" かつ score が4以上（score=5）を両方満たす唯一の要素なので filter を通過します。",
+          "context": "country は \"JP\" ですが score が3で「4以上」を満たさないため filter で除外されます。",
+          "other": "country が \"JP\" ではないため filter の条件で除外されます。",
+          "Error": "filter の結果は1件存在し map・join も正常に動くため、例外は発生しません。"
+        },
         "correctAnswer": "Perry expedition and opening sequence",
         "executionSteps": [
           "filter で条件を満たす要素を残す。",
@@ -318,6 +366,12 @@ export const EXECUTE_CHALLENGES = {
         "answer": "Japanese washi traditions",
         "hint": "JP かつ score が 2 以上の要素を残します。",
         "explanation": "条件を満たす主題データだけが残るため、出力は Japanese washi traditions です。",
+        "optionExplanations": {
+          "Japanese washi traditions": "正解。country が \"JP\" かつ score が2以上（score=3）を両方満たす唯一の要素なので filter を通過します。",
+          "context": "country は \"JP\" ですが score が1で「2以上」を満たさないため filter で除外されます。",
+          "other": "country が \"JP\" ではないため filter の条件で除外されます。",
+          "Error": "filter の結果は1件存在し map・join も正常に動くため、例外は発生しません。"
+        },
         "correctAnswer": "Japanese washi traditions",
         "executionSteps": [
           "filter で条件を満たす要素を残す。",
@@ -349,6 +403,12 @@ export const EXECUTE_CHALLENGES = {
         "answer": "Ise Jingu Shikinen Sengu",
         "hint": "JP かつ score が 3 以上の要素を残します。",
         "explanation": "条件を満たす主題データだけが残るため、出力は Ise Jingu Shikinen Sengu です。",
+        "optionExplanations": {
+          "Ise Jingu Shikinen Sengu": "正解。country が \"JP\" かつ score が3以上（score=4）を両方満たす唯一の要素なので filter を通過します。",
+          "context": "country は \"JP\" ですが score が2で「3以上」を満たさないため filter で除外されます。",
+          "other": "country が \"JP\" ではないため filter の条件で除外されます。",
+          "Error": "filter の結果は1件存在し map・join も正常に動くため、例外は発生しません。"
+        },
         "correctAnswer": "Ise Jingu Shikinen Sengu",
         "executionSteps": [
           "filter で条件を満たす要素を残す。",
@@ -380,6 +440,12 @@ export const EXECUTE_CHALLENGES = {
         "answer": "Tokyo Skytree",
         "hint": "JP かつ score が 4 以上の要素を残します。",
         "explanation": "条件を満たす主題データだけが残るため、出力は Tokyo Skytree です。",
+        "optionExplanations": {
+          "Tokyo Skytree": "正解。country が \"JP\" かつ score が4以上（score=5）を両方満たす唯一の要素なので filter を通過します。",
+          "context": "country は \"JP\" ですが score が3で「4以上」を満たさないため filter で除外されます。",
+          "other": "country が \"JP\" ではないため filter の条件で除外されます。",
+          "Error": "filter の結果は1件存在し map・join も正常に動くため、例外は発生しません。"
+        },
         "correctAnswer": "Tokyo Skytree",
         "executionSteps": [
           "filter で条件を満たす要素を残す。",
@@ -411,6 +477,12 @@ export const EXECUTE_CHALLENGES = {
         "answer": "Yagi-Uda antenna",
         "hint": "JP かつ score が 2 以上の要素を残します。",
         "explanation": "条件を満たす主題データだけが残るため、出力は Yagi-Uda antenna です。",
+        "optionExplanations": {
+          "Yagi-Uda antenna": "正解。country が \"JP\" かつ score が2以上（score=3）を両方満たす唯一の要素なので filter を通過します。",
+          "context": "country は \"JP\" ですが score が1で「2以上」を満たさないため filter で除外されます。",
+          "other": "country が \"JP\" ではないため filter の条件で除外されます。",
+          "Error": "filter の結果は1件存在し map・join も正常に動くため、例外は発生しません。"
+        },
         "correctAnswer": "Yagi-Uda antenna",
         "executionSteps": [
           "filter で条件を満たす要素を残す。",
@@ -442,6 +514,12 @@ export const EXECUTE_CHALLENGES = {
         "answer": "Seikan Tunnel",
         "hint": "JP かつ score が 3 以上の要素を残します。",
         "explanation": "条件を満たす主題データだけが残るため、出力は Seikan Tunnel です。",
+        "optionExplanations": {
+          "Seikan Tunnel": "正解。open が true の区間は23kmと31kmで、openKm = 23+31 = 54。54 >= 50 なので三項演算子は tunnel.name を返します。",
+          "check": "openKm（54）が50以上なので \"check\" 側ではなく tunnel.name 側が選ばれます。",
+          "54": "54 は openKm（中間変数）の値で、print されるのは三項演算子の結果である tunnel.name です。",
+          "Error": "segments の各要素は決まった形のオブジェクトで、open や km へのアクセスはエラーになりません。"
+        },
         "correctAnswer": "Seikan Tunnel",
         "executionSteps": [
           "open が true の segment だけを合計する。",
@@ -477,6 +555,12 @@ export const EXECUTE_CHALLENGES = {
         "answer": "Grand Canyon geologic/site data",
         "hint": "country、kind/tag、score の条件を上から順に確認します。",
         "explanation": "条件をすべて満たす対象だけが残るため、出力は Grand Canyon geologic/site data です。",
+        "optionExplanations": {
+          "Grand Canyon geologic/site data": "正解。country=\"US\"、kind=\"target\"、score=5(>=5)の3条件すべてを満たす唯一の要素です。",
+          "context sample": "country は \"US\" ですが kind が \"context\" なので「kind が target」の条件で除外されます。",
+          "outside sample": "score=8は基準を満たしますが country が \"other\" なので最初の条件で除外されます。",
+          "Error": "条件に合う要素が1件残るため selected[0] のアクセスは問題なく動きます。"
+        },
         "correctAnswer": "Grand Canyon geologic/site data",
         "executionSteps": [
           "配列/リストの各要素を確認する。",
@@ -521,6 +605,12 @@ export const EXECUTE_CHALLENGES = {
         "answer": "Great Lakes basin data",
         "hint": "country、kind/tag、score の条件を上から順に確認します。",
         "explanation": "条件をすべて満たす対象だけが残るため、出力は Great Lakes basin data です。",
+        "optionExplanations": {
+          "Great Lakes basin data": "正解。country=\"US\"、kind=\"target\"、score=6(>=6)の3条件すべてを満たす唯一の要素です。",
+          "context sample": "country は \"US\" ですが kind が \"context\" なので「kind が target」の条件で除外されます。",
+          "outside sample": "score=9は基準を満たしますが country が \"other\" なので最初の条件で除外されます。",
+          "Error": "条件に合う要素が1件残るため selected[0] のアクセスは問題なく動きます。"
+        },
         "correctAnswer": "Great Lakes basin data",
         "executionSteps": [
           "配列/リストの各要素を確認する。",
@@ -565,6 +655,12 @@ export const EXECUTE_CHALLENGES = {
         "answer": "Louisiana Purchase timeline",
         "hint": "country、kind/tag、score の条件を上から順に確認します。",
         "explanation": "条件をすべて満たす対象だけが残るため、出力は Louisiana Purchase timeline です。",
+        "optionExplanations": {
+          "Louisiana Purchase timeline": "正解。country=\"US\"、kind=\"target\"、score=7(>=7)の3条件すべてを満たす唯一の要素です。",
+          "context sample": "country は \"US\" ですが kind が \"context\" なので「kind が target」の条件で除外されます。",
+          "outside sample": "score=10は基準を満たしますが country が \"other\" なので最初の条件で除外されます。",
+          "Error": "条件に合う要素が1件残るため selected[0] のアクセスは問題なく動きます。"
+        },
         "correctAnswer": "Louisiana Purchase timeline",
         "executionSteps": [
           "配列/リストの各要素を確認する。",
@@ -609,6 +705,12 @@ export const EXECUTE_CHALLENGES = {
         "answer": "transcontinental railroad/Promontory Summit",
         "hint": "country、kind/tag、score の条件を上から順に確認します。",
         "explanation": "条件をすべて満たす対象だけが残るため、出力は transcontinental railroad/Promontory Summit です。",
+        "optionExplanations": {
+          "transcontinental railroad/Promontory Summit": "正解。country=\"US\"、kind=\"target\"、score=8(>=8)の3条件すべてを満たす唯一の要素です。",
+          "context sample": "country は \"US\" ですが kind が \"context\" なので「kind が target」の条件で除外されます。",
+          "outside sample": "score=11は基準を満たしますが country が \"other\" なので最初の条件で除外されます。",
+          "Error": "条件に合う要素が1件残るため selected[0] のアクセスは問題なく動きます。"
+        },
         "correctAnswer": "transcontinental railroad/Promontory Summit",
         "executionSteps": [
           "配列/リストの各要素を確認する。",
@@ -653,6 +755,12 @@ export const EXECUTE_CHALLENGES = {
         "answer": "jazz origins/New Orleans",
         "hint": "country、kind/tag、score の条件を上から順に確認します。",
         "explanation": "条件をすべて満たす対象だけが残るため、出力は jazz origins/New Orleans です。",
+        "optionExplanations": {
+          "jazz origins/New Orleans": "正解。country=\"US\"、kind=\"target\"、score=9(>=9)の3条件すべてを満たす唯一の要素です。",
+          "context sample": "country は \"US\" ですが kind が \"context\" なので「kind が target」の条件で除外されます。",
+          "outside sample": "score=12は基準を満たしますが country が \"other\" なので最初の条件で除外されます。",
+          "Error": "条件に合う要素が1件残るため selected[0] のアクセスは問題なく動きます。"
+        },
         "correctAnswer": "jazz origins/New Orleans",
         "executionSteps": [
           "配列/リストの各要素を確認する。",
@@ -697,6 +805,12 @@ export const EXECUTE_CHALLENGES = {
         "answer": "Wright Flyer 1903 flight data",
         "hint": "country、kind/tag、score の条件を上から順に確認します。",
         "explanation": "条件をすべて満たす対象だけが残るため、出力は Wright Flyer 1903 flight data です。",
+        "optionExplanations": {
+          "Wright Flyer 1903 flight data": "正解。country=\"US\"、kind=\"target\"、score=10(>=10)の3条件すべてを満たす唯一の要素です。",
+          "context sample": "country は \"US\" ですが kind が \"context\" なので「kind が target」の条件で除外されます。",
+          "outside sample": "score=13は基準を満たしますが country が \"other\" なので最初の条件で除外されます。",
+          "Error": "条件に合う要素が1件残るため selected[0] のアクセスは問題なく動きます。"
+        },
         "correctAnswer": "Wright Flyer 1903 flight data",
         "executionSteps": [
           "配列/リストの各要素を確認する。",
@@ -741,6 +855,12 @@ export const EXECUTE_CHALLENGES = {
         "answer": "Hoover Dam engineering data",
         "hint": "country、kind/tag、score の条件を上から順に確認します。",
         "explanation": "条件をすべて満たす対象だけが残るため、出力は Hoover Dam engineering data です。",
+        "optionExplanations": {
+          "Hoover Dam engineering data": "正解。country=\"US\"、kind=\"target\"、score=11(>=11)の3条件すべてを満たす唯一の要素です。",
+          "context sample": "country は \"US\" ですが kind が \"context\" なので「kind が target」の条件で除外されます。",
+          "outside sample": "score=14は基準を満たしますが country が \"other\" なので最初の条件で除外されます。",
+          "Error": "条件に合う要素が1件残るため selected[0] のアクセスは問題なく動きます。"
+        },
         "correctAnswer": "Hoover Dam engineering data",
         "executionSteps": [
           "配列/リストの各要素を確認する。",
@@ -787,6 +907,12 @@ export const EXECUTE_CHALLENGES = {
         "answer": "Alaska Purchase timeline",
         "hint": "country、kind/tag、score の条件を上から順に確認します。",
         "explanation": "条件をすべて満たす対象だけが残るため、出力は Alaska Purchase timeline です。",
+        "optionExplanations": {
+          "Alaska Purchase timeline": "正解。country=\"US\"、kind=\"target\"、score=5(>=5)の3条件すべてを満たす唯一の要素なので filter を通過します。",
+          "context sample": "country は \"US\" ですが kind が \"context\" なので「kind が target」の条件で除外されます。",
+          "outside sample": "score=8は基準を満たしますが country が \"other\" なので最初の条件で除外されます。",
+          "Error": "filter の結果は1件残るため selected[0] のアクセスは問題なく動きます。"
+        },
         "correctAnswer": "Alaska Purchase timeline",
         "executionSteps": [
           "配列/リストの各要素を確認する。",
@@ -831,6 +957,12 @@ export const EXECUTE_CHALLENGES = {
         "answer": "Lewis and Clark expedition route",
         "hint": "country、kind/tag、score の条件を上から順に確認します。",
         "explanation": "条件をすべて満たす対象だけが残るため、出力は Lewis and Clark expedition route です。",
+        "optionExplanations": {
+          "Lewis and Clark expedition route": "正解。country=\"US\"、kind=\"target\"、score=6(>=6)の3条件すべてを満たす唯一の要素なので filter を通過します。",
+          "context sample": "country は \"US\" ですが kind が \"context\" なので「kind が target」の条件で除外されます。",
+          "outside sample": "score=9は基準を満たしますが country が \"other\" なので最初の条件で除外されます。",
+          "Error": "filter の結果は1件残るため selected[0] のアクセスは問題なく動きます。"
+        },
         "correctAnswer": "Lewis and Clark expedition route",
         "executionSteps": [
           "配列/リストの各要素を確認する。",
@@ -875,6 +1007,12 @@ export const EXECUTE_CHALLENGES = {
         "answer": "San Antonio Missions",
         "hint": "country、kind/tag、score の条件を上から順に確認します。",
         "explanation": "条件をすべて満たす対象だけが残るため、出力は San Antonio Missions です。",
+        "optionExplanations": {
+          "San Antonio Missions": "正解。country=\"US\"、kind=\"target\"、score=7(>=7)の3条件すべてを満たす唯一の要素なので filter を通過します。",
+          "context sample": "country は \"US\" ですが kind が \"context\" なので「kind が target」の条件で除外されます。",
+          "outside sample": "score=10は基準を満たしますが country が \"other\" なので最初の条件で除外されます。",
+          "Error": "filter の結果は1件残るため selected[0] のアクセスは問題なく動きます。"
+        },
         "correctAnswer": "San Antonio Missions",
         "executionSteps": [
           "配列/リストの各要素を確認する。",
@@ -919,6 +1057,12 @@ export const EXECUTE_CHALLENGES = {
         "answer": "blues music/Beale Street context",
         "hint": "country、kind/tag、score の条件を上から順に確認します。",
         "explanation": "条件をすべて満たす対象だけが残るため、出力は blues music/Beale Street context です。",
+        "optionExplanations": {
+          "blues music/Beale Street context": "正解。country=\"US\"、kind=\"target\"、score=8(>=8)の3条件すべてを満たす唯一の要素なので filter を通過します。",
+          "context sample": "country は \"US\" ですが kind が \"context\" なので「kind が target」の条件で除外されます。",
+          "outside sample": "score=11は基準を満たしますが country が \"other\" なので最初の条件で除外されます。",
+          "Error": "filter の結果は1件残るため selected[0] のアクセスは問題なく動きます。"
+        },
         "correctAnswer": "blues music/Beale Street context",
         "executionSteps": [
           "配列/リストの各要素を確認する。",
@@ -963,6 +1107,12 @@ export const EXECUTE_CHALLENGES = {
         "answer": "Voyager 1 Pale Blue Dot",
         "hint": "country、kind/tag、score の条件を上から順に確認します。",
         "explanation": "条件をすべて満たす対象だけが残るため、出力は Voyager 1 Pale Blue Dot です。",
+        "optionExplanations": {
+          "Voyager 1 Pale Blue Dot": "正解。country=\"US\"、kind=\"target\"、score=9(>=9)の3条件すべてを満たす唯一の要素なので filter を通過します。",
+          "context sample": "country は \"US\" ですが kind が \"context\" なので「kind が target」の条件で除外されます。",
+          "outside sample": "score=12は基準を満たしますが country が \"other\" なので最初の条件で除外されます。",
+          "Error": "filter の結果は1件残るため selected[0] のアクセスは問題なく動きます。"
+        },
         "correctAnswer": "Voyager 1 Pale Blue Dot",
         "executionSteps": [
           "配列/リストの各要素を確認する。",
@@ -1007,6 +1157,12 @@ export const EXECUTE_CHALLENGES = {
         "answer": "GPS system segments",
         "hint": "country、kind/tag、score の条件を上から順に確認します。",
         "explanation": "条件をすべて満たす対象だけが残るため、出力は GPS system segments です。",
+        "optionExplanations": {
+          "GPS system segments": "正解。country=\"US\"、kind=\"target\"、score=10(>=10)の3条件すべてを満たす唯一の要素なので filter を通過します。",
+          "context sample": "country は \"US\" ですが kind が \"context\" なので「kind が target」の条件で除外されます。",
+          "outside sample": "score=13は基準を満たしますが country が \"other\" なので最初の条件で除外されます。",
+          "Error": "filter の結果は1件残るため selected[0] のアクセスは問題なく動きます。"
+        },
         "correctAnswer": "GPS system segments",
         "executionSteps": [
           "配列/リストの各要素を確認する。",
@@ -1051,6 +1207,12 @@ export const EXECUTE_CHALLENGES = {
         "answer": "Brooklyn Bridge opening/structure data",
         "hint": "country、kind/tag、score の条件を上から順に確認します。",
         "explanation": "条件をすべて満たす対象だけが残るため、出力は Brooklyn Bridge opening/structure data です。",
+        "optionExplanations": {
+          "Brooklyn Bridge opening/structure data": "正解。country=\"US\"、kind=\"target\"、score=11(>=11)の3条件すべてを満たす唯一の要素なので filter を通過します。",
+          "context sample": "country は \"US\" ですが kind が \"context\" なので「kind が target」の条件で除外されます。",
+          "outside sample": "score=14は基準を満たしますが country が \"other\" なので最初の条件で除外されます。",
+          "Error": "filter の結果は1件残るため selected[0] のアクセスは問題なく動きます。"
+        },
         "correctAnswer": "Brooklyn Bridge opening/structure data",
         "executionSteps": [
           "配列/リストの各要素を確認する。",

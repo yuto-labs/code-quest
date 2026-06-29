@@ -35,7 +35,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。",
             "hint": "値を作っている行ではなく、比較または return で使っている変数を見ます。",
-            "explanation": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。"
+            "explanation": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。",
+            "optionExplanations": {
+              "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。": "正解。query は全て大文字ですが key は元の表記のままで、casefold などの正規化なしに == で比較しているため一致しません。",
+              "配列の長さが常に0になっている": "records には2件のデータが入っており、配列自体は空ではありません。",
+              "print 文がコメントアウトされている": "print 文はコメント化されておらず、if の条件が False のため実行に到達しないだけです。"
+            }
           },
           {
             "stepNum": 2,
@@ -49,7 +54,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる",
             "hint": "データを消さず、処理の対象になる値を正しくそろえる修正を選びます。",
-            "explanation": "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる"
+            "explanation": "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる",
+            "optionExplanations": {
+              "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる": "正解。両方の文字列を同じ大文字小文字に揃えてから比較するので、表記の違いに関わらず正しく一致判定できます。",
+              "データを空にしてエラーを避ける": "データを消すと表示すべき record まで失われ、検索自体が機能しなくなります。",
+              "常に最初の record を表示する": "query の内容を無視して固定のrecordを返すことになり、別のqueryで検索しても正しく動きません。"
+            }
           },
           {
             "stepNum": 3,
@@ -63,7 +73,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "入力表記の大小差による検索漏れを減らせる。",
             "hint": "修正で改善される境界ケースまたは表記ゆれに注目します。",
-            "explanation": "入力表記の大小差による検索漏れを減らせる。"
+            "explanation": "入力表記の大小差による検索漏れを減らせる。",
+            "optionExplanations": {
+              "入力表記の大小差による検索漏れを減らせる。": "正解。表記の大文字小文字差だけで一致しなかった検索漏れを防げるようになります。",
+              "国別データが不要になる": "country フィールドは比較ロジックと無関係で、修正によって不要になるわけではありません。",
+              "すべての入力が同じ結果になる": "casefold は大文字小文字を揃えるだけで、異なるキーの値同士が同じ結果になるわけではありません。"
+            }
           }
         ],
         "correctAnswer": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。 / 比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる / 入力表記の大小差による検索漏れを減らせる。",
@@ -104,7 +119,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。",
             "hint": "値を作っている行ではなく、比較または return で使っている変数を見ます。",
-            "explanation": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。"
+            "explanation": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。",
+            "optionExplanations": {
+              "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。": "正解。query は全て大文字ですが key は元の表記のままで、casefold などの正規化なしに == で比較しているため一致しません。",
+              "配列の長さが常に0になっている": "records には2件のデータが入っており、配列自体は空ではありません。",
+              "print 文がコメントアウトされている": "print 文はコメント化されておらず、if の条件が False のため実行に到達しないだけです。"
+            }
           },
           {
             "stepNum": 2,
@@ -118,7 +138,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる",
             "hint": "データを消さず、処理の対象になる値を正しくそろえる修正を選びます。",
-            "explanation": "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる"
+            "explanation": "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる",
+            "optionExplanations": {
+              "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる": "正解。両方の文字列を同じ大文字小文字に揃えてから比較するので、表記の違いに関わらず正しく一致判定できます。",
+              "データを空にしてエラーを避ける": "データを消すと表示すべき record まで失われ、検索自体が機能しなくなります。",
+              "常に最初の record を表示する": "query の内容を無視して固定のrecordを返すことになり、別のqueryで検索しても正しく動きません。"
+            }
           },
           {
             "stepNum": 3,
@@ -132,7 +157,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "入力表記の大小差による検索漏れを減らせる。",
             "hint": "修正で改善される境界ケースまたは表記ゆれに注目します。",
-            "explanation": "入力表記の大小差による検索漏れを減らせる。"
+            "explanation": "入力表記の大小差による検索漏れを減らせる。",
+            "optionExplanations": {
+              "入力表記の大小差による検索漏れを減らせる。": "正解。表記の大文字小文字差だけで一致しなかった検索漏れを防げるようになります。",
+              "国別データが不要になる": "country フィールドは比較ロジックと無関係で、修正によって不要になるわけではありません。",
+              "すべての入力が同じ結果になる": "casefold は大文字小文字を揃えるだけで、異なるキーの値同士が同じ結果になるわけではありません。"
+            }
           }
         ],
         "correctAnswer": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。 / 比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる / 入力表記の大小差による検索漏れを減らせる。",
@@ -173,7 +203,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。",
             "hint": "値を作っている行ではなく、比較または return で使っている変数を見ます。",
-            "explanation": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。"
+            "explanation": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。",
+            "optionExplanations": {
+              "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。": "正解。query は全て大文字ですが key は元の表記のままで、casefold などの正規化なしに == で比較しているため一致しません。",
+              "配列の長さが常に0になっている": "records には2件のデータが入っており、配列自体は空ではありません。",
+              "print 文がコメントアウトされている": "print 文はコメント化されておらず、if の条件が False のため実行に到達しないだけです。"
+            }
           },
           {
             "stepNum": 2,
@@ -187,7 +222,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる",
             "hint": "データを消さず、処理の対象になる値を正しくそろえる修正を選びます。",
-            "explanation": "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる"
+            "explanation": "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる",
+            "optionExplanations": {
+              "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる": "正解。両方の文字列を同じ大文字小文字に揃えてから比較するので、表記の違いに関わらず正しく一致判定できます。",
+              "データを空にしてエラーを避ける": "データを消すと表示すべき record まで失われ、検索自体が機能しなくなります。",
+              "常に最初の record を表示する": "query の内容を無視して固定のrecordを返すことになり、別のqueryで検索しても正しく動きません。"
+            }
           },
           {
             "stepNum": 3,
@@ -201,7 +241,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "入力表記の大小差による検索漏れを減らせる。",
             "hint": "修正で改善される境界ケースまたは表記ゆれに注目します。",
-            "explanation": "入力表記の大小差による検索漏れを減らせる。"
+            "explanation": "入力表記の大小差による検索漏れを減らせる。",
+            "optionExplanations": {
+              "入力表記の大小差による検索漏れを減らせる。": "正解。表記の大文字小文字差だけで一致しなかった検索漏れを防げるようになります。",
+              "国別データが不要になる": "country フィールドは比較ロジックと無関係で、修正によって不要になるわけではありません。",
+              "すべての入力が同じ結果になる": "casefold は大文字小文字を揃えるだけで、異なるキーの値同士が同じ結果になるわけではありません。"
+            }
           }
         ],
         "correctAnswer": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。 / 比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる / 入力表記の大小差による検索漏れを減らせる。",
@@ -242,7 +287,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。",
             "hint": "値を作っている行ではなく、比較または return で使っている変数を見ます。",
-            "explanation": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。"
+            "explanation": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。",
+            "optionExplanations": {
+              "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。": "正解。query は全て大文字ですが key は元の表記のままで、casefold などの正規化なしに == で比較しているため一致しません。",
+              "配列の長さが常に0になっている": "records には2件のデータが入っており、配列自体は空ではありません。",
+              "print 文がコメントアウトされている": "print 文はコメント化されておらず、if の条件が False のため実行に到達しないだけです。"
+            }
           },
           {
             "stepNum": 2,
@@ -256,7 +306,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる",
             "hint": "データを消さず、処理の対象になる値を正しくそろえる修正を選びます。",
-            "explanation": "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる"
+            "explanation": "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる",
+            "optionExplanations": {
+              "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる": "正解。両方の文字列を同じ大文字小文字に揃えてから比較するので、表記の違いに関わらず正しく一致判定できます。",
+              "データを空にしてエラーを避ける": "データを消すと表示すべき record まで失われ、検索自体が機能しなくなります。",
+              "常に最初の record を表示する": "query の内容を無視して固定のrecordを返すことになり、別のqueryで検索しても正しく動きません。"
+            }
           },
           {
             "stepNum": 3,
@@ -270,7 +325,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "入力表記の大小差による検索漏れを減らせる。",
             "hint": "修正で改善される境界ケースまたは表記ゆれに注目します。",
-            "explanation": "入力表記の大小差による検索漏れを減らせる。"
+            "explanation": "入力表記の大小差による検索漏れを減らせる。",
+            "optionExplanations": {
+              "入力表記の大小差による検索漏れを減らせる。": "正解。表記の大文字小文字差だけで一致しなかった検索漏れを防げるようになります。",
+              "国別データが不要になる": "country フィールドは比較ロジックと無関係で、修正によって不要になるわけではありません。",
+              "すべての入力が同じ結果になる": "casefold は大文字小文字を揃えるだけで、異なるキーの値同士が同じ結果になるわけではありません。"
+            }
           }
         ],
         "correctAnswer": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。 / 比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる / 入力表記の大小差による検索漏れを減らせる。",
@@ -311,7 +371,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。",
             "hint": "値を作っている行ではなく、比較または return で使っている変数を見ます。",
-            "explanation": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。"
+            "explanation": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。",
+            "optionExplanations": {
+              "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。": "正解。query は全て大文字ですが key は元の表記のままで、casefold などの正規化なしに == で比較しているため一致しません。",
+              "配列の長さが常に0になっている": "records には2件のデータが入っており、配列自体は空ではありません。",
+              "print 文がコメントアウトされている": "print 文はコメント化されておらず、if の条件が False のため実行に到達しないだけです。"
+            }
           },
           {
             "stepNum": 2,
@@ -325,7 +390,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる",
             "hint": "データを消さず、処理の対象になる値を正しくそろえる修正を選びます。",
-            "explanation": "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる"
+            "explanation": "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる",
+            "optionExplanations": {
+              "比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる": "正解。両方の文字列を同じ大文字小文字に揃えてから比較するので、表記の違いに関わらず正しく一致判定できます。",
+              "データを空にしてエラーを避ける": "データを消すと表示すべき record まで失われ、検索自体が機能しなくなります。",
+              "常に最初の record を表示する": "query の内容を無視して固定のrecordを返すことになり、別のqueryで検索しても正しく動きません。"
+            }
           },
           {
             "stepNum": 3,
@@ -339,7 +409,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "入力表記の大小差による検索漏れを減らせる。",
             "hint": "修正で改善される境界ケースまたは表記ゆれに注目します。",
-            "explanation": "入力表記の大小差による検索漏れを減らせる。"
+            "explanation": "入力表記の大小差による検索漏れを減らせる。",
+            "optionExplanations": {
+              "入力表記の大小差による検索漏れを減らせる。": "正解。表記の大文字小文字差だけで一致しなかった検索漏れを防げるようになります。",
+              "国別データが不要になる": "country フィールドは比較ロジックと無関係で、修正によって不要になるわけではありません。",
+              "すべての入力が同じ結果になる": "casefold は大文字小文字を揃えるだけで、異なるキーの値同士が同じ結果になるわけではありません。"
+            }
           }
         ],
         "correctAnswer": "保存データの key と検索 query の大文字小文字が違うのに、正規化せず直接比較している。 / 比較前に `record[\"key\"].casefold()` と `query.casefold()` を使って表記をそろえる / 入力表記の大小差による検索漏れを減らせる。",
@@ -382,7 +457,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。",
             "hint": "比較式または年度計算の条件を確認します。",
-            "explanation": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。"
+            "explanation": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。",
+            "optionExplanations": {
+              "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。": "正解。query は全て大文字ですが key は元の表記のままで、toLowerCase などの正規化なしに === で比較しているため一致しません。",
+              "配列の末尾だけが処理される": "for...of はすべての要素を順番に処理するので、末尾だけが処理されるわけではありません。",
+              "console.log が非同期で遅れている": "console.log は同期的に実行されるため、非同期の遅延が原因ではありません。"
+            }
           },
           {
             "stepNum": 2,
@@ -396,7 +476,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "`record.key.toLowerCase() === query.toLowerCase()` で比較する",
             "hint": "データを消さず、条件式の扱いを正しくします。",
-            "explanation": "`record.key.toLowerCase() === query.toLowerCase()` で比較する"
+            "explanation": "`record.key.toLowerCase() === query.toLowerCase()` で比較する",
+            "optionExplanations": {
+              "`record.key.toLowerCase() === query.toLowerCase()` で比較する": "正解。両方を小文字に揃えてから比較するので、表記の大文字小文字に関わらず正しく一致判定できます。",
+              "records を空配列にする": "配列を空にすると表示すべきrecordまで失われ、検索自体が機能しなくなります。",
+              "常に true を返す": "条件を無視して常にtrueにすると、関係ない record まで一致したことになってしまいます。"
+            }
           },
           {
             "stepNum": 3,
@@ -410,7 +495,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "入力の大文字小文字差による検索漏れを減らせる。",
             "hint": "表記ゆれまたは日付境界を正しく扱えるかを見ます。",
-            "explanation": "入力の大文字小文字差による検索漏れを減らせる。"
+            "explanation": "入力の大文字小文字差による検索漏れを減らせる。",
+            "optionExplanations": {
+              "入力の大文字小文字差による検索漏れを減らせる。": "正解。表記の大文字小文字差だけで一致しなかった検索漏れを防げるようになります。",
+              "国別データが不要になる": "country フィールドは比較ロジックと無関係で、修正によって不要になるわけではありません。",
+              "どの入力でも同じ record を返す": "toLowerCase は大文字小文字を揃えるだけで、異なるキーの値同士が同じ結果になるわけではありません。"
+            }
           }
         ],
         "correctAnswer": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。 / `record.key.toLowerCase() === query.toLowerCase()` で比較する / 入力の大文字小文字差による検索漏れを減らせる。",
@@ -451,7 +541,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。",
             "hint": "比較式または年度計算の条件を確認します。",
-            "explanation": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。"
+            "explanation": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。",
+            "optionExplanations": {
+              "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。": "正解。query は全て大文字ですが key は元の表記のままで、toLowerCase などの正規化なしに === で比較しているため一致しません。",
+              "配列の末尾だけが処理される": "for...of はすべての要素を順番に処理するので、末尾だけが処理されるわけではありません。",
+              "console.log が非同期で遅れている": "console.log は同期的に実行されるため、非同期の遅延が原因ではありません。"
+            }
           },
           {
             "stepNum": 2,
@@ -465,7 +560,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "`record.key.toLowerCase() === query.toLowerCase()` で比較する",
             "hint": "データを消さず、条件式の扱いを正しくします。",
-            "explanation": "`record.key.toLowerCase() === query.toLowerCase()` で比較する"
+            "explanation": "`record.key.toLowerCase() === query.toLowerCase()` で比較する",
+            "optionExplanations": {
+              "`record.key.toLowerCase() === query.toLowerCase()` で比較する": "正解。両方を小文字に揃えてから比較するので、表記の大文字小文字に関わらず正しく一致判定できます。",
+              "records を空配列にする": "配列を空にすると表示すべきrecordまで失われ、検索自体が機能しなくなります。",
+              "常に true を返す": "条件を無視して常にtrueにすると、関係ない record まで一致したことになってしまいます。"
+            }
           },
           {
             "stepNum": 3,
@@ -479,7 +579,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "入力の大文字小文字差による検索漏れを減らせる。",
             "hint": "表記ゆれまたは日付境界を正しく扱えるかを見ます。",
-            "explanation": "入力の大文字小文字差による検索漏れを減らせる。"
+            "explanation": "入力の大文字小文字差による検索漏れを減らせる。",
+            "optionExplanations": {
+              "入力の大文字小文字差による検索漏れを減らせる。": "正解。表記の大文字小文字差だけで一致しなかった検索漏れを防げるようになります。",
+              "国別データが不要になる": "country フィールドは比較ロジックと無関係で、修正によって不要になるわけではありません。",
+              "どの入力でも同じ record を返す": "toLowerCase は大文字小文字を揃えるだけで、異なるキーの値同士が同じ結果になるわけではありません。"
+            }
           }
         ],
         "correctAnswer": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。 / `record.key.toLowerCase() === query.toLowerCase()` で比較する / 入力の大文字小文字差による検索漏れを減らせる。",
@@ -520,7 +625,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。",
             "hint": "比較式または年度計算の条件を確認します。",
-            "explanation": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。"
+            "explanation": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。",
+            "optionExplanations": {
+              "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。": "正解。query は全て大文字ですが key は元の表記のままで、toLowerCase などの正規化なしに === で比較しているため一致しません。",
+              "配列の末尾だけが処理される": "for...of はすべての要素を順番に処理するので、末尾だけが処理されるわけではありません。",
+              "console.log が非同期で遅れている": "console.log は同期的に実行されるため、非同期の遅延が原因ではありません。"
+            }
           },
           {
             "stepNum": 2,
@@ -534,7 +644,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "`record.key.toLowerCase() === query.toLowerCase()` で比較する",
             "hint": "データを消さず、条件式の扱いを正しくします。",
-            "explanation": "`record.key.toLowerCase() === query.toLowerCase()` で比較する"
+            "explanation": "`record.key.toLowerCase() === query.toLowerCase()` で比較する",
+            "optionExplanations": {
+              "`record.key.toLowerCase() === query.toLowerCase()` で比較する": "正解。両方を小文字に揃えてから比較するので、表記の大文字小文字に関わらず正しく一致判定できます。",
+              "records を空配列にする": "配列を空にすると表示すべきrecordまで失われ、検索自体が機能しなくなります。",
+              "常に true を返す": "条件を無視して常にtrueにすると、関係ない record まで一致したことになってしまいます。"
+            }
           },
           {
             "stepNum": 3,
@@ -548,7 +663,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "入力の大文字小文字差による検索漏れを減らせる。",
             "hint": "表記ゆれまたは日付境界を正しく扱えるかを見ます。",
-            "explanation": "入力の大文字小文字差による検索漏れを減らせる。"
+            "explanation": "入力の大文字小文字差による検索漏れを減らせる。",
+            "optionExplanations": {
+              "入力の大文字小文字差による検索漏れを減らせる。": "正解。表記の大文字小文字差だけで一致しなかった検索漏れを防げるようになります。",
+              "国別データが不要になる": "country フィールドは比較ロジックと無関係で、修正によって不要になるわけではありません。",
+              "どの入力でも同じ record を返す": "toLowerCase は大文字小文字を揃えるだけで、異なるキーの値同士が同じ結果になるわけではありません。"
+            }
           }
         ],
         "correctAnswer": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。 / `record.key.toLowerCase() === query.toLowerCase()` で比較する / 入力の大文字小文字差による検索漏れを減らせる。",
@@ -589,7 +709,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。",
             "hint": "比較式または年度計算の条件を確認します。",
-            "explanation": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。"
+            "explanation": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。",
+            "optionExplanations": {
+              "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。": "正解。query は全て大文字ですが key は元の表記のままで、toLowerCase などの正規化なしに === で比較しているため一致しません。",
+              "配列の末尾だけが処理される": "for...of はすべての要素を順番に処理するので、末尾だけが処理されるわけではありません。",
+              "console.log が非同期で遅れている": "console.log は同期的に実行されるため、非同期の遅延が原因ではありません。"
+            }
           },
           {
             "stepNum": 2,
@@ -603,7 +728,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "`record.key.toLowerCase() === query.toLowerCase()` で比較する",
             "hint": "データを消さず、条件式の扱いを正しくします。",
-            "explanation": "`record.key.toLowerCase() === query.toLowerCase()` で比較する"
+            "explanation": "`record.key.toLowerCase() === query.toLowerCase()` で比較する",
+            "optionExplanations": {
+              "`record.key.toLowerCase() === query.toLowerCase()` で比較する": "正解。両方を小文字に揃えてから比較するので、表記の大文字小文字に関わらず正しく一致判定できます。",
+              "records を空配列にする": "配列を空にすると表示すべきrecordまで失われ、検索自体が機能しなくなります。",
+              "常に true を返す": "条件を無視して常にtrueにすると、関係ない record まで一致したことになってしまいます。"
+            }
           },
           {
             "stepNum": 3,
@@ -617,7 +747,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "入力の大文字小文字差による検索漏れを減らせる。",
             "hint": "表記ゆれまたは日付境界を正しく扱えるかを見ます。",
-            "explanation": "入力の大文字小文字差による検索漏れを減らせる。"
+            "explanation": "入力の大文字小文字差による検索漏れを減らせる。",
+            "optionExplanations": {
+              "入力の大文字小文字差による検索漏れを減らせる。": "正解。表記の大文字小文字差だけで一致しなかった検索漏れを防げるようになります。",
+              "国別データが不要になる": "country フィールドは比較ロジックと無関係で、修正によって不要になるわけではありません。",
+              "どの入力でも同じ record を返す": "toLowerCase は大文字小文字を揃えるだけで、異なるキーの値同士が同じ結果になるわけではありません。"
+            }
           }
         ],
         "correctAnswer": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。 / `record.key.toLowerCase() === query.toLowerCase()` で比較する / 入力の大文字小文字差による検索漏れを減らせる。",
@@ -658,7 +793,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。",
             "hint": "比較式または年度計算の条件を確認します。",
-            "explanation": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。"
+            "explanation": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。",
+            "optionExplanations": {
+              "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。": "正解。query は全て大文字ですが key は元の表記のままで、toLowerCase などの正規化なしに === で比較しているため一致しません。",
+              "配列の末尾だけが処理される": "for...of はすべての要素を順番に処理するので、末尾だけが処理されるわけではありません。",
+              "console.log が非同期で遅れている": "console.log は同期的に実行されるため、非同期の遅延が原因ではありません。"
+            }
           },
           {
             "stepNum": 2,
@@ -672,7 +812,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "`record.key.toLowerCase() === query.toLowerCase()` で比較する",
             "hint": "データを消さず、条件式の扱いを正しくします。",
-            "explanation": "`record.key.toLowerCase() === query.toLowerCase()` で比較する"
+            "explanation": "`record.key.toLowerCase() === query.toLowerCase()` で比較する",
+            "optionExplanations": {
+              "`record.key.toLowerCase() === query.toLowerCase()` で比較する": "正解。両方を小文字に揃えてから比較するので、表記の大文字小文字に関わらず正しく一致判定できます。",
+              "records を空配列にする": "配列を空にすると表示すべきrecordまで失われ、検索自体が機能しなくなります。",
+              "常に true を返す": "条件を無視して常にtrueにすると、関係ない record まで一致したことになってしまいます。"
+            }
           },
           {
             "stepNum": 3,
@@ -686,7 +831,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "入力の大文字小文字差による検索漏れを減らせる。",
             "hint": "表記ゆれまたは日付境界を正しく扱えるかを見ます。",
-            "explanation": "入力の大文字小文字差による検索漏れを減らせる。"
+            "explanation": "入力の大文字小文字差による検索漏れを減らせる。",
+            "optionExplanations": {
+              "入力の大文字小文字差による検索漏れを減らせる。": "正解。表記の大文字小文字差だけで一致しなかった検索漏れを防げるようになります。",
+              "国別データが不要になる": "country フィールドは比較ロジックと無関係で、修正によって不要になるわけではありません。",
+              "どの入力でも同じ record を返す": "toLowerCase は大文字小文字を揃えるだけで、異なるキーの値同士が同じ結果になるわけではありません。"
+            }
           }
         ],
         "correctAnswer": "保存キーと検索語の大文字小文字が違うのに、正規化せず厳密比較している。 / `record.key.toLowerCase() === query.toLowerCase()` で比較する / 入力の大文字小文字差による検索漏れを減らせる。",
@@ -730,7 +880,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "USPS state abbreviation lookup で入力表記を正規化せず、保存データのキー形式と一致しない",
             "hint": "入力値とキーの表記を比べます。",
-            "explanation": "USPS state abbreviation lookup で入力表記を正規化せず、保存データのキー形式と一致しない"
+            "explanation": "USPS state abbreviation lookup で入力表記を正規化せず、保存データのキー形式と一致しない",
+            "optionExplanations": {
+              "USPS state abbreviation lookup で入力表記を正規化せず、保存データのキー形式と一致しない": "正解。lookup のキーは小文字（\"ny\"）ですが input_code は大文字（\"NY\"）のままで、表記を揃えずに参照しているため KeyError になります。",
+              "出力関数の名前が違う": "print は正しく使われており、関数名の誤りはありません。",
+              "データが空になっている": "lookup には \"ny\" と \"ca\" の2件のデータがあり、空ではありません。"
+            }
           },
           {
             "stepNum": 2,
@@ -744,7 +899,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "参照前に lower() でキー形式をそろえる",
             "hint": "データを消さず、入力を同じ形式にそろえます。",
-            "explanation": "参照前に lower() でキー形式をそろえる"
+            "explanation": "参照前に lower() でキー形式をそろえる",
+            "optionExplanations": {
+              "参照前に lower() でキー形式をそろえる": "正解。入力を保存データと同じ小文字キーに揃えてから参照するので、表記が違っても正しく一致します。",
+              "常に最初の値を返す": "入力の内容を無視して固定の値を返すことになり、別のキーで参照しても正しい結果になりません。",
+              "キーを削除してから参照する": "辞書からキーを削除すると、その後の参照でそもそも値が存在しなくなり問題が解決しません。"
+            }
           },
           {
             "stepNum": 3,
@@ -758,7 +918,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
             "hint": "表記ゆれを吸収できるかを考えます。",
-            "explanation": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる"
+            "explanation": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
+            "optionExplanations": {
+              "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる": "正解。入力を保存データと同じ表記に揃えてから参照するので、大文字小文字の違いがあっても同じデータを正しく引けるようになります。",
+              "出典データが不要になる": "出典データ（lookupの内容）は修正後も必要で、表記を揃える処理が不要にするわけではありません。",
+              "どの入力でも同じ固定値を返す": "lower()/toLowerCase() は表記を揃えるだけで、入力ごとに対応する別の値を正しく返します。固定値にはなりません。"
+            }
           }
         ],
         "correctAnswer": "USPS state abbreviation lookup で入力表記を正規化せず、保存データのキー形式と一致しない / 参照前に lower() でキー形式をそろえる / 大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
@@ -816,7 +981,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "ZIP code leading-zero preservation で入力表記を正規化せず、保存データのキー形式と一致しない",
             "hint": "入力値とキーの表記を比べます。",
-            "explanation": "ZIP code leading-zero preservation で入力表記を正規化せず、保存データのキー形式と一致しない"
+            "explanation": "ZIP code leading-zero preservation で入力表記を正規化せず、保存データのキー形式と一致しない",
+            "optionExplanations": {
+              "ZIP code leading-zero preservation で入力表記を正規化せず、保存データのキー形式と一致しない": "正解。lookup のキーは小文字（\"ny\"）ですが input_code は大文字（\"NY\"）のままで、表記を揃えずに参照しているため KeyError になります。",
+              "出力関数の名前が違う": "print は正しく使われており、関数名の誤りはありません。",
+              "データが空になっている": "lookup には \"ny\" と \"ca\" の2件のデータがあり、空ではありません。"
+            }
           },
           {
             "stepNum": 2,
@@ -830,7 +1000,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "参照前に lower() でキー形式をそろえる",
             "hint": "データを消さず、入力を同じ形式にそろえます。",
-            "explanation": "参照前に lower() でキー形式をそろえる"
+            "explanation": "参照前に lower() でキー形式をそろえる",
+            "optionExplanations": {
+              "参照前に lower() でキー形式をそろえる": "正解。入力を保存データと同じ小文字キーに揃えてから参照するので、表記が違っても正しく一致します。",
+              "常に最初の値を返す": "入力の内容を無視して固定の値を返すことになり、別のキーで参照しても正しい結果になりません。",
+              "キーを削除してから参照する": "辞書からキーを削除すると、その後の参照でそもそも値が存在しなくなり問題が解決しません。"
+            }
           },
           {
             "stepNum": 3,
@@ -844,7 +1019,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
             "hint": "表記ゆれを吸収できるかを考えます。",
-            "explanation": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる"
+            "explanation": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
+            "optionExplanations": {
+              "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる": "正解。入力を保存データと同じ表記に揃えてから参照するので、大文字小文字の違いがあっても同じデータを正しく引けるようになります。",
+              "出典データが不要になる": "出典データ（lookupの内容）は修正後も必要で、表記を揃える処理が不要にするわけではありません。",
+              "どの入力でも同じ固定値を返す": "lower()/toLowerCase() は表記を揃えるだけで、入力ごとに対応する別の値を正しく返します。固定値にはなりません。"
+            }
           }
         ],
         "correctAnswer": "ZIP code leading-zero preservation で入力表記を正規化せず、保存データのキー形式と一致しない / 参照前に lower() でキー形式をそろえる / 大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
@@ -902,7 +1082,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "MM/DD/YYYY parsing で入力表記を正規化せず、保存データのキー形式と一致しない",
             "hint": "入力値とキーの表記を比べます。",
-            "explanation": "MM/DD/YYYY parsing で入力表記を正規化せず、保存データのキー形式と一致しない"
+            "explanation": "MM/DD/YYYY parsing で入力表記を正規化せず、保存データのキー形式と一致しない",
+            "optionExplanations": {
+              "MM/DD/YYYY parsing で入力表記を正規化せず、保存データのキー形式と一致しない": "正解。lookup のキーは小文字（\"ny\"）ですが input_code は大文字（\"NY\"）のままで、表記を揃えずに参照しているため KeyError になります。",
+              "出力関数の名前が違う": "print は正しく使われており、関数名の誤りはありません。",
+              "データが空になっている": "lookup には \"ny\" と \"ca\" の2件のデータがあり、空ではありません。"
+            }
           },
           {
             "stepNum": 2,
@@ -916,7 +1101,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "参照前に lower() でキー形式をそろえる",
             "hint": "データを消さず、入力を同じ形式にそろえます。",
-            "explanation": "参照前に lower() でキー形式をそろえる"
+            "explanation": "参照前に lower() でキー形式をそろえる",
+            "optionExplanations": {
+              "参照前に lower() でキー形式をそろえる": "正解。入力を保存データと同じ小文字キーに揃えてから参照するので、表記が違っても正しく一致します。",
+              "常に最初の値を返す": "入力の内容を無視して固定の値を返すことになり、別のキーで参照しても正しい結果になりません。",
+              "キーを削除してから参照する": "辞書からキーを削除すると、その後の参照でそもそも値が存在しなくなり問題が解決しません。"
+            }
           },
           {
             "stepNum": 3,
@@ -930,7 +1120,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
             "hint": "表記ゆれを吸収できるかを考えます。",
-            "explanation": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる"
+            "explanation": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
+            "optionExplanations": {
+              "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる": "正解。入力を保存データと同じ表記に揃えてから参照するので、大文字小文字の違いがあっても同じデータを正しく引けるようになります。",
+              "出典データが不要になる": "出典データ（lookupの内容）は修正後も必要で、表記を揃える処理が不要にするわけではありません。",
+              "どの入力でも同じ固定値を返す": "lower()/toLowerCase() は表記を揃えるだけで、入力ごとに対応する別の値を正しく返します。固定値にはなりません。"
+            }
           }
         ],
         "correctAnswer": "MM/DD/YYYY parsing で入力表記を正規化せず、保存データのキー形式と一致しない / 参照前に lower() でキー形式をそろえる / 大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
@@ -988,7 +1183,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "US time-zone mapping で入力表記を正規化せず、保存データのキー形式と一致しない",
             "hint": "入力値とキーの表記を比べます。",
-            "explanation": "US time-zone mapping で入力表記を正規化せず、保存データのキー形式と一致しない"
+            "explanation": "US time-zone mapping で入力表記を正規化せず、保存データのキー形式と一致しない",
+            "optionExplanations": {
+              "US time-zone mapping で入力表記を正規化せず、保存データのキー形式と一致しない": "正解。lookup のキーは小文字（\"ny\"）ですが input_code は大文字（\"NY\"）のままで、表記を揃えずに参照しているため KeyError になります。",
+              "出力関数の名前が違う": "print は正しく使われており、関数名の誤りはありません。",
+              "データが空になっている": "lookup には \"ny\" と \"ca\" の2件のデータがあり、空ではありません。"
+            }
           },
           {
             "stepNum": 2,
@@ -1002,7 +1202,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "参照前に lower() でキー形式をそろえる",
             "hint": "データを消さず、入力を同じ形式にそろえます。",
-            "explanation": "参照前に lower() でキー形式をそろえる"
+            "explanation": "参照前に lower() でキー形式をそろえる",
+            "optionExplanations": {
+              "参照前に lower() でキー形式をそろえる": "正解。入力を保存データと同じ小文字キーに揃えてから参照するので、表記が違っても正しく一致します。",
+              "常に最初の値を返す": "入力の内容を無視して固定の値を返すことになり、別のキーで参照しても正しい結果になりません。",
+              "キーを削除してから参照する": "辞書からキーを削除すると、その後の参照でそもそも値が存在しなくなり問題が解決しません。"
+            }
           },
           {
             "stepNum": 3,
@@ -1016,7 +1221,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
             "hint": "表記ゆれを吸収できるかを考えます。",
-            "explanation": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる"
+            "explanation": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
+            "optionExplanations": {
+              "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる": "正解。入力を保存データと同じ表記に揃えてから参照するので、大文字小文字の違いがあっても同じデータを正しく引けるようになります。",
+              "出典データが不要になる": "出典データ（lookupの内容）は修正後も必要で、表記を揃える処理が不要にするわけではありません。",
+              "どの入力でも同じ固定値を返す": "lower()/toLowerCase() は表記を揃えるだけで、入力ごとに対応する別の値を正しく返します。固定値にはなりません。"
+            }
           }
         ],
         "correctAnswer": "US time-zone mapping で入力表記を正規化せず、保存データのキー形式と一致しない / 参照前に lower() でキー形式をそろえる / 大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
@@ -1074,7 +1284,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "North American phone formatting で入力表記を正規化せず、保存データのキー形式と一致しない",
             "hint": "入力値とキーの表記を比べます。",
-            "explanation": "North American phone formatting で入力表記を正規化せず、保存データのキー形式と一致しない"
+            "explanation": "North American phone formatting で入力表記を正規化せず、保存データのキー形式と一致しない",
+            "optionExplanations": {
+              "North American phone formatting で入力表記を正規化せず、保存データのキー形式と一致しない": "正解。lookup のキーは小文字（\"ny\"）ですが input_code は大文字（\"NY\"）のままで、表記を揃えずに参照しているため KeyError になります。",
+              "出力関数の名前が違う": "print は正しく使われており、関数名の誤りはありません。",
+              "データが空になっている": "lookup には \"ny\" と \"ca\" の2件のデータがあり、空ではありません。"
+            }
           },
           {
             "stepNum": 2,
@@ -1088,7 +1303,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "参照前に lower() でキー形式をそろえる",
             "hint": "データを消さず、入力を同じ形式にそろえます。",
-            "explanation": "参照前に lower() でキー形式をそろえる"
+            "explanation": "参照前に lower() でキー形式をそろえる",
+            "optionExplanations": {
+              "参照前に lower() でキー形式をそろえる": "正解。入力を保存データと同じ小文字キーに揃えてから参照するので、表記が違っても正しく一致します。",
+              "常に最初の値を返す": "入力の内容を無視して固定の値を返すことになり、別のキーで参照しても正しい結果になりません。",
+              "キーを削除してから参照する": "辞書からキーを削除すると、その後の参照でそもそも値が存在しなくなり問題が解決しません。"
+            }
           },
           {
             "stepNum": 3,
@@ -1102,7 +1322,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
             "hint": "表記ゆれを吸収できるかを考えます。",
-            "explanation": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる"
+            "explanation": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
+            "optionExplanations": {
+              "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる": "正解。入力を保存データと同じ表記に揃えてから参照するので、大文字小文字の違いがあっても同じデータを正しく引けるようになります。",
+              "出典データが不要になる": "出典データ（lookupの内容）は修正後も必要で、表記を揃える処理が不要にするわけではありません。",
+              "どの入力でも同じ固定値を返す": "lower()/toLowerCase() は表記を揃えるだけで、入力ごとに対応する別の値を正しく返します。固定値にはなりません。"
+            }
           }
         ],
         "correctAnswer": "North American phone formatting で入力表記を正規化せず、保存データのキー形式と一致しない / 参照前に lower() でキー形式をそろえる / 大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
@@ -1162,7 +1387,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "12-hour AM/PM conversion で入力表記を正規化せず、保存データのキー形式と一致しない",
             "hint": "入力値とキーの表記を比べます。",
-            "explanation": "12-hour AM/PM conversion で入力表記を正規化せず、保存データのキー形式と一致しない"
+            "explanation": "12-hour AM/PM conversion で入力表記を正規化せず、保存データのキー形式と一致しない",
+            "optionExplanations": {
+              "12-hour AM/PM conversion で入力表記を正規化せず、保存データのキー形式と一致しない": "正解。lookup のキーは小文字（ny）ですが inputCode は大文字（\"NY\"）のままで、表記を揃えずに参照しているため undefined になります。",
+              "出力関数の名前が違う": "console.log は正しく使われており、関数名の誤りはありません。",
+              "データが空になっている": "lookup には ny と ca の2件のデータがあり、空ではありません。"
+            }
           },
           {
             "stepNum": 2,
@@ -1176,7 +1406,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "参照前に toLowerCase() でキー形式をそろえる",
             "hint": "データを消さず、入力を同じ形式にそろえます。",
-            "explanation": "参照前に toLowerCase() でキー形式をそろえる"
+            "explanation": "参照前に toLowerCase() でキー形式をそろえる",
+            "optionExplanations": {
+              "参照前に toLowerCase() でキー形式をそろえる": "正解。入力を保存データと同じ小文字キーに揃えてから参照するので、表記が違っても正しく一致します。",
+              "常に最初の値を返す": "入力の内容を無視して固定の値を返すことになり、別のキーで参照しても正しい結果になりません。",
+              "キーを削除してから参照する": "オブジェクトからキーを削除すると、その後の参照でそもそも値が存在しなくなり問題が解決しません。"
+            }
           },
           {
             "stepNum": 3,
@@ -1190,7 +1425,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
             "hint": "表記ゆれを吸収できるかを考えます。",
-            "explanation": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる"
+            "explanation": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
+            "optionExplanations": {
+              "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる": "正解。入力を保存データと同じ表記に揃えてから参照するので、大文字小文字の違いがあっても同じデータを正しく引けるようになります。",
+              "出典データが不要になる": "出典データ（lookupの内容）は修正後も必要で、表記を揃える処理が不要にするわけではありません。",
+              "どの入力でも同じ固定値を返す": "lower()/toLowerCase() は表記を揃えるだけで、入力ごとに対応する別の値を正しく返します。固定値にはなりません。"
+            }
           }
         ],
         "correctAnswer": "12-hour AM/PM conversion で入力表記を正規化せず、保存データのキー形式と一致しない / 参照前に toLowerCase() でキー形式をそろえる / 大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
@@ -1248,7 +1488,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "Fahrenheit display/conversion で入力表記を正規化せず、保存データのキー形式と一致しない",
             "hint": "入力値とキーの表記を比べます。",
-            "explanation": "Fahrenheit display/conversion で入力表記を正規化せず、保存データのキー形式と一致しない"
+            "explanation": "Fahrenheit display/conversion で入力表記を正規化せず、保存データのキー形式と一致しない",
+            "optionExplanations": {
+              "Fahrenheit display/conversion で入力表記を正規化せず、保存データのキー形式と一致しない": "正解。lookup のキーは小文字（ny）ですが inputCode は大文字（\"NY\"）のままで、表記を揃えずに参照しているため undefined になります。",
+              "出力関数の名前が違う": "console.log は正しく使われており、関数名の誤りはありません。",
+              "データが空になっている": "lookup には ny と ca の2件のデータがあり、空ではありません。"
+            }
           },
           {
             "stepNum": 2,
@@ -1262,7 +1507,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "参照前に toLowerCase() でキー形式をそろえる",
             "hint": "データを消さず、入力を同じ形式にそろえます。",
-            "explanation": "参照前に toLowerCase() でキー形式をそろえる"
+            "explanation": "参照前に toLowerCase() でキー形式をそろえる",
+            "optionExplanations": {
+              "参照前に toLowerCase() でキー形式をそろえる": "正解。入力を保存データと同じ小文字キーに揃えてから参照するので、表記が違っても正しく一致します。",
+              "常に最初の値を返す": "入力の内容を無視して固定の値を返すことになり、別のキーで参照しても正しい結果になりません。",
+              "キーを削除してから参照する": "オブジェクトからキーを削除すると、その後の参照でそもそも値が存在しなくなり問題が解決しません。"
+            }
           },
           {
             "stepNum": 3,
@@ -1276,7 +1526,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
             "hint": "表記ゆれを吸収できるかを考えます。",
-            "explanation": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる"
+            "explanation": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
+            "optionExplanations": {
+              "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる": "正解。入力を保存データと同じ表記に揃えてから参照するので、大文字小文字の違いがあっても同じデータを正しく引けるようになります。",
+              "出典データが不要になる": "出典データ（lookupの内容）は修正後も必要で、表記を揃える処理が不要にするわけではありません。",
+              "どの入力でも同じ固定値を返す": "lower()/toLowerCase() は表記を揃えるだけで、入力ごとに対応する別の値を正しく返します。固定値にはなりません。"
+            }
           }
         ],
         "correctAnswer": "Fahrenheit display/conversion で入力表記を正規化せず、保存データのキー形式と一致しない / 参照前に toLowerCase() でキー形式をそろえる / 大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
@@ -1334,7 +1589,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "USPS apartment/suite address parsing で入力表記を正規化せず、保存データのキー形式と一致しない",
             "hint": "入力値とキーの表記を比べます。",
-            "explanation": "USPS apartment/suite address parsing で入力表記を正規化せず、保存データのキー形式と一致しない"
+            "explanation": "USPS apartment/suite address parsing で入力表記を正規化せず、保存データのキー形式と一致しない",
+            "optionExplanations": {
+              "USPS apartment/suite address parsing で入力表記を正規化せず、保存データのキー形式と一致しない": "正解。lookup のキーは小文字（ny）ですが inputCode は大文字（\"NY\"）のままで、表記を揃えずに参照しているため undefined になります。",
+              "出力関数の名前が違う": "console.log は正しく使われており、関数名の誤りはありません。",
+              "データが空になっている": "lookup には ny と ca の2件のデータがあり、空ではありません。"
+            }
           },
           {
             "stepNum": 2,
@@ -1348,7 +1608,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "参照前に toLowerCase() でキー形式をそろえる",
             "hint": "データを消さず、入力を同じ形式にそろえます。",
-            "explanation": "参照前に toLowerCase() でキー形式をそろえる"
+            "explanation": "参照前に toLowerCase() でキー形式をそろえる",
+            "optionExplanations": {
+              "参照前に toLowerCase() でキー形式をそろえる": "正解。入力を保存データと同じ小文字キーに揃えてから参照するので、表記が違っても正しく一致します。",
+              "常に最初の値を返す": "入力の内容を無視して固定の値を返すことになり、別のキーで参照しても正しい結果になりません。",
+              "キーを削除してから参照する": "オブジェクトからキーを削除すると、その後の参照でそもそも値が存在しなくなり問題が解決しません。"
+            }
           },
           {
             "stepNum": 3,
@@ -1362,7 +1627,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
             "hint": "表記ゆれを吸収できるかを考えます。",
-            "explanation": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる"
+            "explanation": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
+            "optionExplanations": {
+              "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる": "正解。入力を保存データと同じ表記に揃えてから参照するので、大文字小文字の違いがあっても同じデータを正しく引けるようになります。",
+              "出典データが不要になる": "出典データ（lookupの内容）は修正後も必要で、表記を揃える処理が不要にするわけではありません。",
+              "どの入力でも同じ固定値を返す": "lower()/toLowerCase() は表記を揃えるだけで、入力ごとに対応する別の値を正しく返します。固定値にはなりません。"
+            }
           }
         ],
         "correctAnswer": "USPS apartment/suite address parsing で入力表記を正規化せず、保存データのキー形式と一致しない / 参照前に toLowerCase() でキー形式をそろえる / 大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
@@ -1420,7 +1690,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "ZIP+4 validation で入力表記を正規化せず、保存データのキー形式と一致しない",
             "hint": "入力値とキーの表記を比べます。",
-            "explanation": "ZIP+4 validation で入力表記を正規化せず、保存データのキー形式と一致しない"
+            "explanation": "ZIP+4 validation で入力表記を正規化せず、保存データのキー形式と一致しない",
+            "optionExplanations": {
+              "ZIP+4 validation で入力表記を正規化せず、保存データのキー形式と一致しない": "正解。lookup のキーは小文字（ny）ですが inputCode は大文字（\"NY\"）のままで、表記を揃えずに参照しているため undefined になります。",
+              "出力関数の名前が違う": "console.log は正しく使われており、関数名の誤りはありません。",
+              "データが空になっている": "lookup には ny と ca の2件のデータがあり、空ではありません。"
+            }
           },
           {
             "stepNum": 2,
@@ -1434,7 +1709,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "参照前に toLowerCase() でキー形式をそろえる",
             "hint": "データを消さず、入力を同じ形式にそろえます。",
-            "explanation": "参照前に toLowerCase() でキー形式をそろえる"
+            "explanation": "参照前に toLowerCase() でキー形式をそろえる",
+            "optionExplanations": {
+              "参照前に toLowerCase() でキー形式をそろえる": "正解。入力を保存データと同じ小文字キーに揃えてから参照するので、表記が違っても正しく一致します。",
+              "常に最初の値を返す": "入力の内容を無視して固定の値を返すことになり、別のキーで参照しても正しい結果になりません。",
+              "キーを削除してから参照する": "オブジェクトからキーを削除すると、その後の参照でそもそも値が存在しなくなり問題が解決しません。"
+            }
           },
           {
             "stepNum": 3,
@@ -1448,7 +1728,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
             "hint": "表記ゆれを吸収できるかを考えます。",
-            "explanation": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる"
+            "explanation": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
+            "optionExplanations": {
+              "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる": "正解。入力を保存データと同じ表記に揃えてから参照するので、大文字小文字の違いがあっても同じデータを正しく引けるようになります。",
+              "出典データが不要になる": "出典データ（lookupの内容）は修正後も必要で、表記を揃える処理が不要にするわけではありません。",
+              "どの入力でも同じ固定値を返す": "lower()/toLowerCase() は表記を揃えるだけで、入力ごとに対応する別の値を正しく返します。固定値にはなりません。"
+            }
           }
         ],
         "correctAnswer": "ZIP+4 validation で入力表記を正規化せず、保存データのキー形式と一致しない / 参照前に toLowerCase() でキー形式をそろえる / 大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
@@ -1506,7 +1791,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "states/territories/DC data model で入力表記を正規化せず、保存データのキー形式と一致しない",
             "hint": "入力値とキーの表記を比べます。",
-            "explanation": "states/territories/DC data model で入力表記を正規化せず、保存データのキー形式と一致しない"
+            "explanation": "states/territories/DC data model で入力表記を正規化せず、保存データのキー形式と一致しない",
+            "optionExplanations": {
+              "states/territories/DC data model で入力表記を正規化せず、保存データのキー形式と一致しない": "正解。lookup のキーは小文字（ny）ですが inputCode は大文字（\"NY\"）のままで、表記を揃えずに参照しているため undefined になります。",
+              "出力関数の名前が違う": "console.log は正しく使われており、関数名の誤りはありません。",
+              "データが空になっている": "lookup には ny と ca の2件のデータがあり、空ではありません。"
+            }
           },
           {
             "stepNum": 2,
@@ -1520,7 +1810,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "参照前に toLowerCase() でキー形式をそろえる",
             "hint": "データを消さず、入力を同じ形式にそろえます。",
-            "explanation": "参照前に toLowerCase() でキー形式をそろえる"
+            "explanation": "参照前に toLowerCase() でキー形式をそろえる",
+            "optionExplanations": {
+              "参照前に toLowerCase() でキー形式をそろえる": "正解。入力を保存データと同じ小文字キーに揃えてから参照するので、表記が違っても正しく一致します。",
+              "常に最初の値を返す": "入力の内容を無視して固定の値を返すことになり、別のキーで参照しても正しい結果になりません。",
+              "キーを削除してから参照する": "オブジェクトからキーを削除すると、その後の参照でそもそも値が存在しなくなり問題が解決しません。"
+            }
           },
           {
             "stepNum": 3,
@@ -1534,7 +1829,12 @@ export const DEBUG_CHALLENGES = {
             ],
             "answer": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
             "hint": "表記ゆれを吸収できるかを考えます。",
-            "explanation": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる"
+            "explanation": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
+            "optionExplanations": {
+              "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる": "正解。入力を保存データと同じ表記に揃えてから参照するので、大文字小文字の違いがあっても同じデータを正しく引けるようになります。",
+              "出典データが不要になる": "出典データ（lookupの内容）は修正後も必要で、表記を揃える処理が不要にするわけではありません。",
+              "どの入力でも同じ固定値を返す": "lower()/toLowerCase() は表記を揃えるだけで、入力ごとに対応する別の値を正しく返します。固定値にはなりません。"
+            }
           }
         ],
         "correctAnswer": "states/territories/DC data model で入力表記を正規化せず、保存データのキー形式と一致しない / 参照前に toLowerCase() でキー形式をそろえる / 大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",

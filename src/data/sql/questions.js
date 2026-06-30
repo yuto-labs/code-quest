@@ -431,6 +431,11 @@ export const SQL_QUESTIONS = [
         }
       }
     ],
+    "optionExplanations": {
+      "a": "TABLEの行順を逆にしてしまっています。ORDER BYがないクエリの行順はTABLEのまま（Yakushima→Grand Canyon National Park→Palace of Versailles）保たれるため、この並びは誤りです。",
+      "b": "正解。SELECT name, categoryはTABLEの上から順にname列とcategory列だけを取り出すため、Yakushima→Grand Canyon National Park→Palace of Versaillesの順でその2列が表示されます。",
+      "c": "SELECTで指定していないid, country_id列が表示されています。name, categoryの2列を取り出すクエリの結果としては列自体が誤っています。"
+    },
     "answer": "b",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
@@ -514,7 +519,7 @@ export const SQL_QUESTIONS = [
         ]
       }
     ],
-    "query": "SELECT native_name,language順を追跡\nFROM un_official_languages;",
+    "query": "SELECT language, native_name\nFROM un_official_languages;",
     "expectedResult": {
       "columns": [
         "language",
@@ -601,11 +606,16 @@ export const SQL_QUESTIONS = [
         }
       }
     ],
+    "optionExplanations": {
+      "a": "行の順序が逆になっています（English→Chinese→Arabic）。ORDER BYがない場合、行順はTABLEのまま（Arabic→Chinese→English）保たれるはずです。",
+      "b": "Arabicの1行しか含まれておらず、TABLEに存在するChineseやEnglishの行が欠落しています。",
+      "c": "正解。language, native_nameの2列をTABLEの上から順（Arabic→Chinese→English）に取り出した結果と一致します。"
+    },
     "answer": "c",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
-      "completedQuery": "SELECT native_name,language順を追跡\nFROM un_official_languages;",
+      "correctAnswer": "結果C",
+      "completedQuery": "SELECT language, native_name\nFROM un_official_languages;",
       "executionSteps": [
         "1. TABLE un_official_languages の列名を確認します。",
         "2. QUERY の column-order に関わる句を読みます。",
@@ -615,7 +625,7 @@ export const SQL_QUESTIONS = [
         {
           "wrong": "題材名だけで答える",
           "reason": "SQLでは列名・表名・条件が答えになります。",
-          "correct": "SELECT native_name,language順を追跡\nFROM un_official_languages;"
+          "correct": "SELECT language, native_name\nFROM un_official_languages;"
         },
         {
           "wrong": "行順を思い込みで読む",
@@ -694,7 +704,7 @@ export const SQL_QUESTIONS = [
         ]
       }
     ],
-    "query": "SELECT mission AS mission_name\nFROM space_missions;",
+    "query": "SELECT mission, agency\nFROM space_missions;",
     "expectedResult": {
       "columns": [
         "mission",
@@ -781,11 +791,16 @@ export const SQL_QUESTIONS = [
         }
       }
     ],
+    "optionExplanations": {
+      "a": "正解。mission, agencyの2列をTABLEの上から順（Sputnik 1→Apollo 11→Voyager 1）に取り出した結果と一致します。",
+      "b": "行の順序が逆になっています（Voyager 1→Apollo 11→Sputnik 1）。ORDER BYがない場合、行順はTABLEのまま保たれます。",
+      "c": "Sputnik 1の1行しか含まれておらず、Apollo 11やVoyager 1の行が欠落しています。"
+    },
     "answer": "a",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
       "correctAnswer": "結果A",
-      "completedQuery": "SELECT mission AS mission_name\nFROM space_missions;",
+      "completedQuery": "SELECT mission, agency\nFROM space_missions;",
       "executionSteps": [
         "1. TABLE space_missions の列名を確認します。",
         "2. QUERY の column-alias に関わる句を読みます。",
@@ -795,7 +810,7 @@ export const SQL_QUESTIONS = [
         {
           "wrong": "題材名だけで答える",
           "reason": "SQLでは列名・表名・条件が答えになります。",
-          "correct": "SELECT mission AS mission_name\nFROM space_missions;"
+          "correct": "SELECT mission, agency\nFROM space_missions;"
         },
         {
           "wrong": "行順を思い込みで読む",
@@ -956,7 +971,7 @@ export const SQL_QUESTIONS = [
     "answer": "c",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
+      "correctAnswer": "結果C",
       "completedQuery": "SELECT name, founded_year\nFROM health_organizations;",
       "executionSteps": [
         "1. TABLE health_organizations の列名を確認します。",
@@ -1004,7 +1019,12 @@ export const SQL_QUESTIONS = [
           "表の行数が多すぎる",
           "SQLは常に行順を保証する"
         ],
-        "answer": "列名・条件・句の使い方が目的とずれている"
+        "answer": "列名・条件・句の使い方が目的とずれている",
+        "optionExplanations": {
+          "列名・条件・句の使い方が目的とずれている": "正解。SELECT name, foundedはhealth_organizationsに存在しない列名foundedを参照しているため、目的の列を正しく取得できません。",
+          "表の行数が多すぎる": "health_organizationsの行数は4件で、行数の多さはエラーの原因ではありません。",
+          "SQLは常に行順を保証する": "ORDER BYがなければ行順は保証されないのが正しい前提であり、これは原因の説明にもなっていません。"
+        }
       },
       {
         "type": "fix",
@@ -1014,7 +1034,12 @@ export const SQL_QUESTIONS = [
           "SELECT name, founded\nFROM health_organizations;",
           "SELECT *;"
         ],
-        "answer": "SELECT name, founded_year\nFROM health_organizations;"
+        "answer": "SELECT name, founded_year\nFROM health_organizations;",
+        "optionExplanations": {
+          "SELECT name, founded_year\nFROM health_organizations;": "正解。存在する列名founded_yearに修正することで、name列とfounded_year列を正しく取得できます。",
+          "SELECT name, founded\nFROM health_organizations;": "founded列のままで、原因だった存在しない列名を修正できていません。",
+          "SELECT *;": "全列を取得するだけで、name, founded_yearだけを絞り込む目的を果たしていません。"
+        }
       },
       {
         "type": "reason-impact",
@@ -1024,7 +1049,12 @@ export const SQL_QUESTIONS = [
           "全データを削除できる",
           "NULLが0に変わる"
         ],
-        "answer": "目的の列・行だけを安定して取得できる"
+        "answer": "目的の列・行だけを安定して取得できる",
+        "optionExplanations": {
+          "目的の列・行だけを安定して取得できる": "正解。正しい列名を参照することで、name, founded_yearの目的の列を毎回安定して取得できます。",
+          "全データを削除できる": "このクエリはSELECTで読み取るだけで、データの削除（DELETE）は行っていません。",
+          "NULLが0に変わる": "列名を修正してもNULL値が自動的に0に変換されるわけではありません。"
+        }
       }
     ]
   },
@@ -1216,7 +1246,12 @@ export const SQL_QUESTIONS = [
           "表の行数が多すぎる",
           "SQLは常に行順を保証する"
         ],
-        "answer": "列名・条件・句の使い方が目的とずれている"
+        "answer": "列名・条件・句の使い方が目的とずれている",
+        "optionExplanations": {
+          "列名・条件・句の使い方が目的とずれている": "正解。SELECT name, year;にはFROM句が欠落しており、どのTABLEから読み取るかが指定されていません。",
+          "表の行数が多すぎる": "technology_milestonesの行数は4件で、行数の多さはエラーの原因ではありません。",
+          "SQLは常に行順を保証する": "ORDER BYがなければ行順は保証されないのが正しい前提であり、これは原因の説明にもなっていません。"
+        }
       },
       {
         "type": "fix",
@@ -1226,7 +1261,12 @@ export const SQL_QUESTIONS = [
           "SELECT name, year;",
           "SELECT *;"
         ],
-        "answer": "SELECT name, year\nFROM technology_milestones;"
+        "answer": "SELECT name, year\nFROM technology_milestones;",
+        "optionExplanations": {
+          "SELECT name, year\nFROM technology_milestones;": "正解。FROM technology_milestonesを補うことで、name, year列をtechnology_milestonesから正しく取得できます。",
+          "SELECT name, year;": "FROM句が欠落したままで、原因だった構文エラーを修正できていません。",
+          "SELECT *;": "FROM句がなく、列の絞り込みもできていないため、どちらの問題も解決していません。"
+        }
       },
       {
         "type": "reason-impact",
@@ -1236,7 +1276,12 @@ export const SQL_QUESTIONS = [
           "全データを削除できる",
           "NULLが0に変わる"
         ],
-        "answer": "目的の列・行だけを安定して取得できる"
+        "answer": "目的の列・行だけを安定して取得できる",
+        "optionExplanations": {
+          "目的の列・行だけを安定して取得できる": "正解。FROM句を補うことで、name, yearの目的の列を毎回安定して取得できます。",
+          "全データを削除できる": "このクエリはSELECTで読み取るだけで、データの削除は行っていません。",
+          "NULLが0に変わる": "FROM句を補ってもNULL値が自動的に0に変換されるわけではありません。"
+        }
       }
     ]
   },
@@ -1380,7 +1425,7 @@ export const SQL_QUESTIONS = [
     "answer": "b",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
+      "correctAnswer": "結果B",
       "completedQuery": "SELECT name\nFROM international_days;",
       "executionSteps": [
         "1. TABLE international_days の列名を確認します。",
@@ -1428,7 +1473,12 @@ export const SQL_QUESTIONS = [
           "表の行数が多すぎる",
           "SQLは常に行順を保証する"
         ],
-        "answer": "列名・条件・句の使い方が目的とずれている"
+        "answer": "列名・条件・句の使い方が目的とずれている",
+        "optionExplanations": {
+          "列名・条件・句の使い方が目的とずれている": "正解。SELECT 'name'はシングルクォートで囲まれた文字列リテラル'name'を返すだけで、name列の値を参照していません。",
+          "表の行数が多すぎる": "international_daysの行数は4件で、行数の多さはエラーの原因ではありません。",
+          "SQLは常に行順を保証する": "ORDER BYがなければ行順は保証されないのが正しい前提であり、これは原因の説明にもなっていません。"
+        }
       },
       {
         "type": "fix",
@@ -1438,7 +1488,12 @@ export const SQL_QUESTIONS = [
           "SELECT 'name'\nFROM international_days;",
           "SELECT *;"
         ],
-        "answer": "SELECT name\nFROM international_days;"
+        "answer": "SELECT name\nFROM international_days;",
+        "optionExplanations": {
+          "SELECT name\nFROM international_days;": "正解。クォートを外しSELECT nameとすることで、文字列リテラルではなくname列の値を正しく取得できます。",
+          "SELECT 'name'\nFROM international_days;": "クォートが残ったままで、原因だった文字列リテラル参照を修正できていません。",
+          "SELECT *;": "全列を取得するだけで、name列だけを絞り込む目的を果たしていません。"
+        }
       },
       {
         "type": "reason-impact",
@@ -1448,7 +1503,12 @@ export const SQL_QUESTIONS = [
           "全データを削除できる",
           "NULLが0に変わる"
         ],
-        "answer": "目的の列・行だけを安定して取得できる"
+        "answer": "目的の列・行だけを安定して取得できる",
+        "optionExplanations": {
+          "目的の列・行だけを安定して取得できる": "正解。name列を正しく参照することで、目的の列を毎回安定して取得できます。",
+          "全データを削除できる": "このクエリはSELECTで読み取るだけで、データの削除は行っていません。",
+          "NULLが0に変わる": "クォートを外してもNULL値が自動的に0に変換されるわけではありません。"
+        }
       }
     ]
   },
@@ -1502,7 +1562,7 @@ export const SQL_QUESTIONS = [
         ]
       }
     ],
-    "query": "SELECT org_code,name AS organization_name,headquarters\nFROM international_organizations;",
+    "query": "SELECT org_code, name\nFROM international_organizations;",
     "expectedResult": {
       "columns": [
         "org_code",
@@ -1601,11 +1661,16 @@ export const SQL_QUESTIONS = [
         }
       }
     ],
+    "optionExplanations": {
+      "a": "行の順序が逆になっています（UNICEF→FAO→WHO→UNESCO）。ORDER BYがない場合、行順はTABLEのまま（UNESCO→WHO→FAO→UNICEF）保たれるはずです。",
+      "b": "UNESCOの1行しか含まれておらず、TABLEに存在するWHO、FAO、UNICEFの行が欠落しています。",
+      "c": "正解。org_code, nameの2列をTABLEの上から順（UNESCO→WHO→FAO→UNICEF）に取り出した結果と一致します。"
+    },
     "answer": "c",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
-      "completedQuery": "SELECT org_code,name AS organization_name,headquarters\nFROM international_organizations;",
+      "correctAnswer": "結果C",
+      "completedQuery": "SELECT org_code, name\nFROM international_organizations;",
       "executionSteps": [
         "1. TABLE international_organizations の列名を確認します。",
         "2. QUERY の select-multi-alias に関わる句を読みます。",
@@ -1615,7 +1680,7 @@ export const SQL_QUESTIONS = [
         {
           "wrong": "題材名だけで答える",
           "reason": "SQLでは列名・表名・条件が答えになります。",
-          "correct": "SELECT org_code,name AS organization_name,headquarters\nFROM international_organizations;"
+          "correct": "SELECT org_code, name\nFROM international_organizations;"
         },
         {
           "wrong": "行順を思い込みで読む",
@@ -2094,10 +2159,15 @@ export const SQL_QUESTIONS = [
         }
       }
     ],
+    "optionExplanations": {
+      "a": "行の順序が逆になっています（gamma→beta→alpha）。ORDER BYがない場合、行順はTABLEのまま（alpha→beta→gamma）保たれるはずです。",
+      "b": "正解。year BETWEEN 1900 AND 2000を満たすのはalpha(1901)・beta(1945)・gamma(1972)の3行で、delta(2001)は範囲外のため除外されます。TABLEの順番のままalpha→beta→gammaが表示されます。",
+      "c": "alphaの1行しか含まれておらず、同じくBETWEEN条件を満たすbeta、gammaの行が欠落しています。"
+    },
     "answer": "b",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
+      "correctAnswer": "結果B",
       "completedQuery": "SELECT *\nFROM pandemics\nWHERE year BETWEEN 1900 AND 2000;",
       "executionSteps": [
         "1. TABLE pandemics の列名を確認します。",
@@ -2187,7 +2257,7 @@ export const SQL_QUESTIONS = [
         ]
       }
     ],
-    "query": "SELECT *\nFROM religions\nWHERE region+periodの複合条件;",
+    "query": "SELECT name, category\nFROM religions\nWHERE region != 'Africa' AND year < 2000;",
     "expectedResult": {
       "columns": [
         "name",
@@ -2274,11 +2344,16 @@ export const SQL_QUESTIONS = [
         }
       }
     ],
+    "optionExplanations": {
+      "a": "行の順序が逆になっています（gamma→beta→alpha）。ORDER BYがない場合、行順はTABLEのまま（alpha→beta→gamma）保たれるはずです。",
+      "b": "alphaの1行しか含まれておらず、同じ条件を満たすbeta、gammaの行が欠落しています。",
+      "c": "正解。region != 'Africa' AND year < 2000を満たすのはalpha(Europe,1901)・beta(Americas,1945)・gamma(Asia,1972)の3行です。delta(Africa,2001)はregion・yearの両方の条件で外れるため除外されます。"
+    },
     "answer": "c",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
-      "completedQuery": "SELECT *\nFROM religions\nWHERE region+periodの複合条件;",
+      "correctAnswer": "結果C",
+      "completedQuery": "SELECT name, category\nFROM religions\nWHERE region != 'Africa' AND year < 2000;",
       "executionSteps": [
         "1. TABLE religions の列名を確認します。",
         "2. QUERY の and-condition に関わる句を読みます。",
@@ -2288,7 +2363,7 @@ export const SQL_QUESTIONS = [
         {
           "wrong": "題材名だけで答える",
           "reason": "SQLでは列名・表名・条件が答えになります。",
-          "correct": "SELECT *\nFROM religions\nWHERE region+periodの複合条件;"
+          "correct": "SELECT name, category\nFROM religions\nWHERE region != 'Africa' AND year < 2000;"
         },
         {
           "wrong": "行順を思い込みで読む",
@@ -2367,7 +2442,7 @@ export const SQL_QUESTIONS = [
         ]
       }
     ],
-    "query": "SELECT *\nFROM environmental_treaties\nWHERE climate OR biodiversity;",
+    "query": "SELECT *\nFROM environmental_treaties\nWHERE region = 'Europe' OR region = 'Americas' OR region = 'Asia';",
     "expectedResult": {
       "columns": [
         "name",
@@ -2454,11 +2529,16 @@ export const SQL_QUESTIONS = [
         }
       }
     ],
+    "optionExplanations": {
+      "a": "正解。条件を満たすのはalpha・beta・gammaの3行で、delta（year=2001, region=Africa）だけが対象外になります。ORDER BYがないため、TABLEの順番のままalpha→beta→gammaの順で表示されます。",
+      "b": "alpha・beta・gammaの3行という組み合わせ自体は正しいですが、行の順序が逆になっています（gamma→beta→alpha）。ORDER BYがない場合、行順はTABLEのまま保たれるはずです。",
+      "c": "alphaの1行しか含まれておらず、同じ条件を満たすbeta、gammaの行が欠落しています。"
+    },
     "answer": "a",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
       "correctAnswer": "結果A",
-      "completedQuery": "SELECT *\nFROM environmental_treaties\nWHERE climate OR biodiversity;",
+      "completedQuery": "SELECT *\nFROM environmental_treaties\nWHERE region = 'Europe' OR region = 'Americas' OR region = 'Asia';",
       "executionSteps": [
         "1. TABLE environmental_treaties の列名を確認します。",
         "2. QUERY の or-condition に関わる句を読みます。",
@@ -2468,7 +2548,7 @@ export const SQL_QUESTIONS = [
         {
           "wrong": "題材名だけで答える",
           "reason": "SQLでは列名・表名・条件が答えになります。",
-          "correct": "SELECT *\nFROM environmental_treaties\nWHERE climate OR biodiversity;"
+          "correct": "SELECT *\nFROM environmental_treaties\nWHERE region = 'Europe' OR region = 'Americas' OR region = 'Asia';"
         },
         {
           "wrong": "行順を思い込みで読む",
@@ -2476,7 +2556,7 @@ export const SQL_QUESTIONS = [
           "correct": "ORDER BY がある時だけ順序まで確認します。"
         }
       ],
-      "sqlExplanation": "or-condition は WHERE で絞り込み の練習です。climate OR biodiversity を満たすため、QUERY のどの句が行・列・順序・集計に効くのかを分けて読みます。",
+      "sqlExplanation": "or-condition は WHERE で絞り込み の練習です。region = 'Europe' OR region = 'Americas' OR region = 'Asia' を満たすため、QUERY のどの句が行・列・順序・集計に効くのかを分けて読みます。",
       "themeExplanation": "気候変動や生物多様性の保護など、国際的な環境問題に対応するための条約が複数結ばれています。",
       "sourceRefs": [
         {
@@ -2629,7 +2709,7 @@ export const SQL_QUESTIONS = [
     "answer": "c",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
+      "correctAnswer": "結果C",
       "completedQuery": "SELECT *\nFROM currencies\nWHERE code = 'JPY';",
       "executionSteps": [
         "1. TABLE currencies の列名を確認します。",
@@ -2677,7 +2757,12 @@ export const SQL_QUESTIONS = [
           "表の行数が多すぎる",
           "SQLは常に行順を保証する"
         ],
-        "answer": "列名・条件・句の使い方が目的とずれている"
+        "answer": "列名・条件・句の使い方が目的とずれている",
+        "optionExplanations": {
+          "列名・条件・句の使い方が目的とずれている": "正解。code = JPYはJPYをクォートなしの識別子（列名のようなもの）として解釈しようとするため、文字列として正しく比較できません。",
+          "表の行数が多すぎる": "currenciesの行数は4件で、行数の多さはエラーの原因ではありません。",
+          "SQLは常に行順を保証する": "ORDER BYがなければ行順は保証されないのが正しい前提であり、これは原因の説明にもなっていません。"
+        }
       },
       {
         "type": "fix",
@@ -2687,7 +2772,12 @@ export const SQL_QUESTIONS = [
           "SELECT *\nFROM currencies\nWHERE code = JPY;",
           "SELECT *;"
         ],
-        "answer": "SELECT *\nFROM currencies\nWHERE code = 'JPY';"
+        "answer": "SELECT *\nFROM currencies\nWHERE code = 'JPY';",
+        "optionExplanations": {
+          "SELECT *\nFROM currencies\nWHERE code = 'JPY';": "正解。'JPY'とシングルクォートで囲むことで、文字列リテラルとして正しく比較できます。",
+          "SELECT *\nFROM currencies\nWHERE code = JPY;": "クォートがないままで、原因だった識別子としての誤った解釈を修正できていません。",
+          "SELECT *;": "WHERE条件自体がなくなり、目的の絞り込みができていません。"
+        }
       },
       {
         "type": "reason-impact",
@@ -2697,7 +2787,12 @@ export const SQL_QUESTIONS = [
           "全データを削除できる",
           "NULLが0に変わる"
         ],
-        "answer": "目的の列・行だけを安定して取得できる"
+        "answer": "目的の列・行だけを安定して取得できる",
+        "optionExplanations": {
+          "目的の列・行だけを安定して取得できる": "正解。文字列を正しくクォートすることで、code='JPY'に一致する行だけを毎回安定して取得できます。",
+          "全データを削除できる": "このクエリはSELECTで読み取るだけで、データの削除は行っていません。",
+          "NULLが0に変わる": "クォートを補ってもNULL値が自動的に0に変換されるわけではありません。"
+        }
       }
     ]
   },
@@ -2889,7 +2984,12 @@ export const SQL_QUESTIONS = [
           "表の行数が多すぎる",
           "SQLは常に行順を保証する"
         ],
-        "answer": "列名・条件・句の使い方が目的とずれている"
+        "answer": "列名・条件・句の使い方が目的とずれている",
+        "optionExplanations": {
+          "列名・条件・句の使い方が目的とずれている": "正解。region = 'Europe' OR region = 'Asia' AND year >= 2000は括弧がないため、ANDがORより先に評価され、意図したOR全体への条件適用ができていません。",
+          "表の行数が多すぎる": "migration_routesの行数は4件で、行数の多さはエラーの原因ではありません。",
+          "SQLは常に行順を保証する": "ORDER BYがなければ行順は保証されないのが正しい前提であり、これは原因の説明にもなっていません。"
+        }
       },
       {
         "type": "fix",
@@ -2899,7 +2999,12 @@ export const SQL_QUESTIONS = [
           "SELECT *\nFROM migration_routes\nWHERE region = 'Europe' OR region = 'Asia' AND year >= 2000;",
           "SELECT *;"
         ],
-        "answer": "SELECT *\nFROM migration_routes\nWHERE (region = 'Europe' OR region = 'Asia') AND year >= 2000;"
+        "answer": "SELECT *\nFROM migration_routes\nWHERE (region = 'Europe' OR region = 'Asia') AND year >= 2000;",
+        "optionExplanations": {
+          "SELECT *\nFROM migration_routes\nWHERE (region = 'Europe' OR region = 'Asia') AND year >= 2000;": "正解。(region = 'Europe' OR region = 'Asia')を括弧でまとめることで、OR条件全体に対してAND year >= 2000を正しく適用できます。",
+          "SELECT *\nFROM migration_routes\nWHERE region = 'Europe' OR region = 'Asia' AND year >= 2000;": "括弧がないままで、原因だったAND/ORの評価順序の問題を修正できていません。",
+          "SELECT *;": "WHERE条件自体がなくなり、目的の絞り込みができていません。"
+        }
       },
       {
         "type": "reason-impact",
@@ -2909,7 +3014,12 @@ export const SQL_QUESTIONS = [
           "全データを削除できる",
           "NULLが0に変わる"
         ],
-        "answer": "目的の列・行だけを安定して取得できる"
+        "answer": "目的の列・行だけを安定して取得できる",
+        "optionExplanations": {
+          "目的の列・行だけを安定して取得できる": "正解。括弧で優先順位を明示することで、意図した条件の組み合わせ（ヨーロッパまたはアジアかつ2000年以降）を毎回安定して取得できます。",
+          "全データを削除できる": "このクエリはSELECTで読み取るだけで、データの削除は行っていません。",
+          "NULLが0に変わる": "括弧を補ってもNULL値が自動的に0に変換されるわけではありません。"
+        }
       }
     ]
   },
@@ -3053,7 +3163,7 @@ export const SQL_QUESTIONS = [
     "answer": "b",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
+      "correctAnswer": "結果B",
       "completedQuery": "SELECT *\nFROM vaccines\nWHERE disease IN ('smallpox', 'polio');",
       "executionSteps": [
         "1. TABLE vaccines の列名を確認します。",
@@ -3101,7 +3211,12 @@ export const SQL_QUESTIONS = [
           "表の行数が多すぎる",
           "SQLは常に行順を保証する"
         ],
-        "answer": "列名・条件・句の使い方が目的とずれている"
+        "answer": "列名・条件・句の使い方が目的とずれている",
+        "optionExplanations": {
+          "列名・条件・句の使い方が目的とずれている": "正解。disease = 'smallpox' OR 'polio'は'polio'という文字列リテラル単体をOR条件として評価してしまい、disease列との比較になっていません。",
+          "表の行数が多すぎる": "vaccinesの行数は4件で、行数の多さはエラーの原因ではありません。",
+          "SQLは常に行順を保証する": "ORDER BYがなければ行順は保証されないのが正しい前提であり、これは原因の説明にもなっていません。"
+        }
       },
       {
         "type": "fix",
@@ -3111,7 +3226,12 @@ export const SQL_QUESTIONS = [
           "SELECT *\nFROM vaccines\nWHERE disease = 'smallpox' OR 'polio';",
           "SELECT *;"
         ],
-        "answer": "SELECT *\nFROM vaccines\nWHERE disease IN ('smallpox', 'polio');"
+        "answer": "SELECT *\nFROM vaccines\nWHERE disease IN ('smallpox', 'polio');",
+        "optionExplanations": {
+          "SELECT *\nFROM vaccines\nWHERE disease IN ('smallpox', 'polio');": "正解。disease IN ('smallpox', 'polio')とすることで、disease列がどちらかの値と一致する行を正しく比較できます。",
+          "SELECT *\nFROM vaccines\nWHERE disease = 'smallpox' OR 'polio';": "'polio'がdisease列との比較になっていないままで、原因だった構文の誤りを修正できていません。",
+          "SELECT *;": "WHERE条件自体がなくなり、目的の絞り込みができていません。"
+        }
       },
       {
         "type": "reason-impact",
@@ -3121,7 +3241,12 @@ export const SQL_QUESTIONS = [
           "全データを削除できる",
           "NULLが0に変わる"
         ],
-        "answer": "目的の列・行だけを安定して取得できる"
+        "answer": "目的の列・行だけを安定して取得できる",
+        "optionExplanations": {
+          "目的の列・行だけを安定して取得できる": "正解。IN句で複数の値を正しく比較することで、目的の対象だけを毎回安定して取得できます。",
+          "全データを削除できる": "このクエリはSELECTで読み取るだけで、データの削除は行っていません。",
+          "NULLが0に変わる": "IN句に修正してもNULL値が自動的に0に変換されるわけではありません。"
+        }
       }
     ]
   },
@@ -3250,6 +3375,11 @@ export const SQL_QUESTIONS = [
         }
       }
     ],
+    "optionExplanations": {
+      "a": "全4行がそのまま含まれており、WHERE year >= 1950 AND region = 'Asia' AND category = 'politics'による絞り込みが行われていません。",
+      "b": "betaの行が表示されていますが、betaのregionはAmericasでAsiaではないため、3条件をすべて満たしていません。",
+      "c": "正解。year >= 1950、region = 'Asia'、category = 'politics'の3条件をすべて満たすのはgammaの1行だけです。"
+    },
     "answer": "c",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
@@ -3742,10 +3872,15 @@ export const SQL_QUESTIONS = [
         }
       }
     ],
+    "optionExplanations": {
+      "a": "行の順序が逆になっています（gamma→beta→alpha）。ORDER BY year ASCはyearが小さい順に並べるため、alpha(1901)→beta(1945)→gamma(1972)の順になるはずです。",
+      "b": "正解。ORDER BY year ASCでyearが小さい順に並べ、LIMIT 3で上位3件に絞ると、alpha(1901)→beta(1945)→gamma(1972)の順になります。",
+      "c": "alphaの1行しか含まれておらず、同じくLIMIT 3の対象になるbeta、gammaの行が欠落しています。"
+    },
     "answer": "b",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
+      "correctAnswer": "結果B",
       "completedQuery": "SELECT *\nFROM rivers\nWHERE year >= 1950\nORDER BY year ASC, name ASC\nLIMIT 3;",
       "executionSteps": [
         "1. TABLE rivers の列名を確認します。",
@@ -3922,10 +4057,15 @@ export const SQL_QUESTIONS = [
         }
       }
     ],
+    "optionExplanations": {
+      "a": "行の順序が逆になっています（gamma→beta→alpha）。ORDER BY year ASCはyearが小さい順に並べるため、alpha(1901)→beta(1945)→gamma(1972)の順になるはずです。",
+      "b": "alphaの1行しか含まれておらず、同じくLIMIT 3の対象になるbeta、gammaの行が欠落しています。",
+      "c": "正解。ORDER BY year ASCでyearが小さい順に並べ、LIMIT 3で上位3件に絞ると、alpha(1901)→beta(1945)→gamma(1972)の順になります。"
+    },
     "answer": "c",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
+      "correctAnswer": "結果C",
       "completedQuery": "SELECT *\nFROM nobel_awards\nWHERE year >= 1950\nORDER BY year ASC, name ASC\nLIMIT 3;",
       "executionSteps": [
         "1. TABLE nobel_awards の列名を確認します。",
@@ -4102,6 +4242,11 @@ export const SQL_QUESTIONS = [
         }
       }
     ],
+    "optionExplanations": {
+      "a": "正解。ORDER BY year ASCでyearが小さい順に並べ、LIMIT 3で上位3件に絞ると、alpha(1901)→beta(1945)→gamma(1972)の順になります。",
+      "b": "行の順序が逆になっています（gamma→beta→alpha）。ORDER BY year ASCはyearが小さい順に並べるため、alpha→beta→gammaの順になるはずです。",
+      "c": "alphaの1行しか含まれておらず、同じくLIMIT 3の対象になるbeta、gammaの行が欠落しています。"
+    },
     "answer": "a",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
@@ -4277,7 +4422,7 @@ export const SQL_QUESTIONS = [
     "answer": "c",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
+      "correctAnswer": "結果C",
       "completedQuery": "SELECT *\nFROM co2_records\nORDER BY value DESC\nLIMIT 3;",
       "executionSteps": [
         "1. TABLE co2_records の列名を確認します。",
@@ -4325,7 +4470,12 @@ export const SQL_QUESTIONS = [
           "表の行数が多すぎる",
           "SQLは常に行順を保証する"
         ],
-        "answer": "列名・条件・句の使い方が目的とずれている"
+        "answer": "列名・条件・句の使い方が目的とずれている",
+        "optionExplanations": {
+          "列名・条件・句の使い方が目的とずれている": "正解。ORDER BY value ASCは値の小さい順に並べるため、上位の対象を取得したい目的とは逆方向の並びになっています。",
+          "表の行数が多すぎる": "co2_recordsの行数は4件で、行数の多さはエラーの原因ではありません。",
+          "SQLは常に行順を保証する": "ORDER BYがなければ行順は保証されないのが正しい前提であり、これは原因の説明にもなっていません。"
+        }
       },
       {
         "type": "fix",
@@ -4335,7 +4485,12 @@ export const SQL_QUESTIONS = [
           "SELECT *\nFROM co2_records\nORDER BY value ASC\nLIMIT 3;",
           "SELECT *;"
         ],
-        "answer": "SELECT *\nFROM co2_records\nORDER BY value DESC\nLIMIT 3;"
+        "answer": "SELECT *\nFROM co2_records\nORDER BY value DESC\nLIMIT 3;",
+        "optionExplanations": {
+          "SELECT *\nFROM co2_records\nORDER BY value DESC\nLIMIT 3;": "正解。ASCをDESCに変更することで、valueが大きい順に並べ替えて上位3件を取得できます。",
+          "SELECT *\nFROM co2_records\nORDER BY value ASC\nLIMIT 3;": "ASCのままで、原因だった並べ替え方向の誤りを修正できていません。",
+          "SELECT *;": "ORDER BYとLIMITの両方がなくなり、並べ替えも件数の絞り込みもできていません。"
+        }
       },
       {
         "type": "reason-impact",
@@ -4345,7 +4500,12 @@ export const SQL_QUESTIONS = [
           "全データを削除できる",
           "NULLが0に変わる"
         ],
-        "answer": "目的の列・行だけを安定して取得できる"
+        "answer": "目的の列・行だけを安定して取得できる",
+        "optionExplanations": {
+          "目的の列・行だけを安定して取得できる": "正解。DESCに修正することで、valueが大きい上位3件を毎回安定して取得できます。",
+          "全データを削除できる": "このクエリはSELECTで読み取るだけで、データの削除は行っていません。",
+          "NULLが0に変わる": "並べ替え方向を変えてもNULL値が自動的に0に変換されるわけではありません。"
+        }
       }
     ]
   },
@@ -4537,7 +4697,12 @@ export const SQL_QUESTIONS = [
           "表の行数が多すぎる",
           "SQLは常に行順を保証する"
         ],
-        "answer": "列名・条件・句の使い方が目的とずれている"
+        "answer": "列名・条件・句の使い方が目的とずれている",
+        "optionExplanations": {
+          "列名・条件・句の使い方が目的とずれている": "正解。ORDER BY year ASCの後にLIMIT句がなく、件数を絞り込めていません。",
+          "表の行数が多すぎる": "international_organizationsの行数は4件で、行数の多さはエラーの原因ではありません。",
+          "SQLは常に行順を保証する": "ORDER BYがなければ行順は保証されないのが正しい前提であり、これは原因の説明にもなっていません。"
+        }
       },
       {
         "type": "fix",
@@ -4547,7 +4712,12 @@ export const SQL_QUESTIONS = [
           "SELECT *\nFROM international_organizations\nORDER BY year ASC\n;",
           "SELECT *;"
         ],
-        "answer": "SELECT *\nFROM international_organizations\nORDER BY year ASC, name ASC\nLIMIT 3;"
+        "answer": "SELECT *\nFROM international_organizations\nORDER BY year ASC, name ASC\nLIMIT 3;",
+        "optionExplanations": {
+          "SELECT *\nFROM international_organizations\nORDER BY year ASC, name ASC\nLIMIT 3;": "正解。LIMIT 3を追加し、同じyearの場合に備えてname ASCも第2キーとして加えることで、件数と並び順を安定させられます。",
+          "SELECT *\nFROM international_organizations\nORDER BY year ASC\n;": "LIMIT句が補われていないままで、原因だった件数の絞り込み不足を修正できていません。",
+          "SELECT *;": "ORDER BYとLIMITの両方がなくなり、並べ替えも件数の絞り込みもできていません。"
+        }
       },
       {
         "type": "reason-impact",
@@ -4557,7 +4727,12 @@ export const SQL_QUESTIONS = [
           "全データを削除できる",
           "NULLが0に変わる"
         ],
-        "answer": "目的の列・行だけを安定して取得できる"
+        "answer": "目的の列・行だけを安定して取得できる",
+        "optionExplanations": {
+          "目的の列・行だけを安定して取得できる": "正解。LIMITと第2キーを補うことで、年代順に上位3件を毎回安定して取得できます。",
+          "全データを削除できる": "このクエリはSELECTで読み取るだけで、データの削除は行っていません。",
+          "NULLが0に変わる": "LIMITを補ってもNULL値が自動的に0に変換されるわけではありません。"
+        }
       }
     ]
   },
@@ -4701,7 +4876,7 @@ export const SQL_QUESTIONS = [
     "answer": "b",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
+      "correctAnswer": "結果B",
       "completedQuery": "SELECT *\nFROM olympic_hosts\nORDER BY year ASC, name ASC\nLIMIT 3;",
       "executionSteps": [
         "1. TABLE olympic_hosts の列名を確認します。",
@@ -4749,7 +4924,12 @@ export const SQL_QUESTIONS = [
           "表の行数が多すぎる",
           "SQLは常に行順を保証する"
         ],
-        "answer": "列名・条件・句の使い方が目的とずれている"
+        "answer": "列名・条件・句の使い方が目的とずれている",
+        "optionExplanations": {
+          "列名・条件・句の使い方が目的とずれている": "正解。ORDER BY year ASCだけでは、同じyearの行が複数ある場合に並び順が安定する保証がなく、第2のソートキーが指定されていません。",
+          "表の行数が多すぎる": "olympic_hostsの行数は4件で、行数の多さはエラーの原因ではありません。",
+          "SQLは常に行順を保証する": "ORDER BYがなければ行順は保証されないのが正しい前提であり、これは原因の説明にもなっていません。"
+        }
       },
       {
         "type": "fix",
@@ -4759,7 +4939,12 @@ export const SQL_QUESTIONS = [
           "SELECT *\nFROM olympic_hosts\nORDER BY year ASC\nLIMIT 3;",
           "SELECT *;"
         ],
-        "answer": "SELECT *\nFROM olympic_hosts\nORDER BY year ASC, name ASC\nLIMIT 3;"
+        "answer": "SELECT *\nFROM olympic_hosts\nORDER BY year ASC, name ASC\nLIMIT 3;",
+        "optionExplanations": {
+          "SELECT *\nFROM olympic_hosts\nORDER BY year ASC, name ASC\nLIMIT 3;": "正解。name ASCを第2キーとして追加することで、yearが同じ行が現れた場合でも並び順を安定させられます。",
+          "SELECT *\nFROM olympic_hosts\nORDER BY year ASC\nLIMIT 3;": "第2キーのname ASCが補われていないままで、原因だった並び順の不安定さを修正できていません。",
+          "SELECT *;": "ORDER BYとLIMITの両方がなくなり、並べ替えも件数の絞り込みもできていません。"
+        }
       },
       {
         "type": "reason-impact",
@@ -4769,7 +4954,12 @@ export const SQL_QUESTIONS = [
           "全データを削除できる",
           "NULLが0に変わる"
         ],
-        "answer": "目的の列・行だけを安定して取得できる"
+        "answer": "目的の列・行だけを安定して取得できる",
+        "optionExplanations": {
+          "目的の列・行だけを安定して取得できる": "正解。第2キーを追加することで、同じyearの行があっても毎回同じ順序で安定して取得できます。",
+          "全データを削除できる": "このクエリはSELECTで読み取るだけで、データの削除は行っていません。",
+          "NULLが0に変わる": "第2キーを補ってもNULL値が自動的に0に変換されるわけではありません。"
+        }
       }
     ]
   },
@@ -4922,10 +5112,15 @@ export const SQL_QUESTIONS = [
         }
       }
     ],
+    "optionExplanations": {
+      "a": "行の順序が逆になっています（Hayabusa2→Voyager 1→Apollo 11→Sputnik 1）。ORDER BY year ASCの場合、launch_yearが小さい順（Sputnik 1→Apollo 11→Voyager 1→Hayabusa2）に並ぶはずです。",
+      "b": "Sputnik 1の1行しか含まれておらず、同じ条件を満たすApollo 11、Voyager 1、Hayabusa2の行が欠落しています。",
+      "c": "正解。4件すべてがWHERE year >= 1950の条件を満たし、ORDER BY year ASCによりlaunch_yearが小さい順（Sputnik 1→Apollo 11→Voyager 1→Hayabusa2）に並びます。"
+    },
     "answer": "c",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
+      "correctAnswer": "結果C",
       "completedQuery": "SELECT *\nFROM space_missions\nWHERE year >= 1950\nORDER BY year ASC, name ASC\nLIMIT 3;",
       "executionSteps": [
         "1. TABLE space_missions の列名を確認します。",
@@ -5327,7 +5522,7 @@ export const SQL_QUESTIONS = [
         ]
       }
     ],
-    "query": "SELECT member_count合計\nFROM treaty_records;",
+    "query": "SELECT name, category\nFROM treaty_records\nWHERE year < 2000;",
     "expectedResult": {
       "columns": [
         "name",
@@ -5414,11 +5609,16 @@ export const SQL_QUESTIONS = [
         }
       }
     ],
+    "optionExplanations": {
+      "a": "行の順序が逆になっています（gamma→beta→alpha）。ORDER BYがない場合、行順はTABLEのまま（alpha→beta→gamma）保たれるはずです。",
+      "b": "正解。year < 2000を満たすのはalpha(1901)・beta(1945)・gamma(1972)の3行で、delta(2001)は範囲外のため除外されます。TABLEの順番のままalpha→beta→gammaが表示されます。",
+      "c": "alphaの1行しか含まれておらず、同じくyear < 2000を満たすbeta、gammaの行が欠落しています。"
+    },
     "answer": "b",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
-      "completedQuery": "SELECT member_count合計\nFROM treaty_records;",
+      "correctAnswer": "結果B",
+      "completedQuery": "SELECT name, category\nFROM treaty_records\nWHERE year < 2000;",
       "executionSteps": [
         "1. TABLE treaty_records の列名を確認します。",
         "2. QUERY の sum に関わる句を読みます。",
@@ -5428,7 +5628,7 @@ export const SQL_QUESTIONS = [
         {
           "wrong": "題材名だけで答える",
           "reason": "SQLでは列名・表名・条件が答えになります。",
-          "correct": "SELECT member_count合計\nFROM treaty_records;"
+          "correct": "SELECT name, category\nFROM treaty_records\nWHERE year < 2000;"
         },
         {
           "wrong": "行順を思い込みで読む",
@@ -5507,7 +5707,7 @@ export const SQL_QUESTIONS = [
         ]
       }
     ],
-    "query": "SELECT 最古年と最新年\nFROM pandemics;",
+    "query": "SELECT name, category\nFROM pandemics\nWHERE year < 2000;",
     "expectedResult": {
       "columns": [
         "name",
@@ -5594,11 +5794,16 @@ export const SQL_QUESTIONS = [
         }
       }
     ],
+    "optionExplanations": {
+      "a": "行の順序が逆になっています（gamma→beta→alpha）。ORDER BYがない場合、行順はTABLEのまま（alpha→beta→gamma）保たれるはずです。",
+      "b": "alphaの1行しか含まれておらず、同じくyear < 2000を満たすbeta、gammaの行が欠落しています。",
+      "c": "正解。year < 2000を満たすのはalpha(1901)・beta(1945)・gamma(1972)の3行で、delta(2001)は範囲外のため除外されます。TABLEの順番のままalpha→beta→gammaが表示されます。"
+    },
     "answer": "c",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
-      "completedQuery": "SELECT 最古年と最新年\nFROM pandemics;",
+      "correctAnswer": "結果C",
+      "completedQuery": "SELECT name, category\nFROM pandemics\nWHERE year < 2000;",
       "executionSteps": [
         "1. TABLE pandemics の列名を確認します。",
         "2. QUERY の min-max に関わる句を読みます。",
@@ -5608,7 +5813,7 @@ export const SQL_QUESTIONS = [
         {
           "wrong": "題材名だけで答える",
           "reason": "SQLでは列名・表名・条件が答えになります。",
-          "correct": "SELECT 最古年と最新年\nFROM pandemics;"
+          "correct": "SELECT name, category\nFROM pandemics\nWHERE year < 2000;"
         },
         {
           "wrong": "行順を思い込みで読む",
@@ -5687,7 +5892,7 @@ export const SQL_QUESTIONS = [
         ]
       }
     ],
-    "query": "SELECT COUNT,AVG,MAXを追跡\nFROM rivers;",
+    "query": "SELECT name, category\nFROM rivers\nWHERE year < 2000;",
     "expectedResult": {
       "columns": [
         "name",
@@ -5774,11 +5979,16 @@ export const SQL_QUESTIONS = [
         }
       }
     ],
+    "optionExplanations": {
+      "a": "正解。year < 2000を満たすのはalpha(1901)・beta(1945)・gamma(1972)の3行で、delta(2001)は範囲外のため除外されます。TABLEの順番のままalpha→beta→gammaが表示されます。",
+      "b": "行の順序が逆になっています（gamma→beta→alpha）。ORDER BYがない場合、行順はTABLEのまま（alpha→beta→gamma）保たれるはずです。",
+      "c": "alphaの1行しか含まれておらず、同じくyear < 2000を満たすbeta、gammaの行が欠落しています。"
+    },
     "answer": "a",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
       "correctAnswer": "結果A",
-      "completedQuery": "SELECT COUNT,AVG,MAXを追跡\nFROM rivers;",
+      "completedQuery": "SELECT name, category\nFROM rivers\nWHERE year < 2000;",
       "executionSteps": [
         "1. TABLE rivers の列名を確認します。",
         "2. QUERY の multi-aggregate に関わる句を読みます。",
@@ -5788,7 +5998,7 @@ export const SQL_QUESTIONS = [
         {
           "wrong": "題材名だけで答える",
           "reason": "SQLでは列名・表名・条件が答えになります。",
-          "correct": "SELECT COUNT,AVG,MAXを追跡\nFROM rivers;"
+          "correct": "SELECT name, category\nFROM rivers\nWHERE year < 2000;"
         },
         {
           "wrong": "行順を思い込みで読む",
@@ -5949,7 +6159,7 @@ export const SQL_QUESTIONS = [
     "answer": "c",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
+      "correctAnswer": "結果C",
       "completedQuery": "SELECT COUNT(*) AS total_rows, COUNT(death_toll) AS known_deaths\nFROM disasters;",
       "executionSteps": [
         "1. TABLE disasters の列名を確認します。",
@@ -5997,7 +6207,12 @@ export const SQL_QUESTIONS = [
           "表の行数が多すぎる",
           "SQLは常に行順を保証する"
         ],
-        "answer": "列名・条件・句の使い方が目的とずれている"
+        "answer": "列名・条件・句の使い方が目的とずれている",
+        "optionExplanations": {
+          "列名・条件・句の使い方が目的とずれている": "正解。SELECT COUNT(death_toll)だけではNULLを除いた件数しか分からず、全体の行数（COUNT(*)）との比較ができていません。",
+          "表の行数が多すぎる": "disastersの行数は4件で、行数の多さはエラーの原因ではありません。",
+          "SQLは常に行順を保証する": "ORDER BYがなければ行順は保証されないのが正しい前提であり、これは原因の説明にもなっていません。"
+        }
       },
       {
         "type": "fix",
@@ -6007,7 +6222,12 @@ export const SQL_QUESTIONS = [
           "SELECT COUNT(death_toll) AS summary\nFROM disasters;",
           "SELECT *;"
         ],
-        "answer": "SELECT COUNT(*) AS total_rows, COUNT(death_toll) AS known_deaths\nFROM disasters;"
+        "answer": "SELECT COUNT(*) AS total_rows, COUNT(death_toll) AS known_deaths\nFROM disasters;",
+        "optionExplanations": {
+          "SELECT COUNT(*) AS total_rows, COUNT(death_toll) AS known_deaths\nFROM disasters;": "正解。COUNT(*)で全行数、COUNT(death_toll)でNULLを除いた件数を両方取得することで、欠損の有無を比較できます。",
+          "SELECT COUNT(death_toll) AS summary\nFROM disasters;": "COUNT(death_toll)だけのままで、原因だった全体件数との比較ができない状態を修正できていません。",
+          "SELECT *;": "集計を行わず全列を返すだけで、件数の比較という目的を果たしていません。"
+        }
       },
       {
         "type": "reason-impact",
@@ -6017,7 +6237,12 @@ export const SQL_QUESTIONS = [
           "全データを削除できる",
           "NULLが0に変わる"
         ],
-        "answer": "目的の列・行だけを安定して取得できる"
+        "answer": "目的の列・行だけを安定して取得できる",
+        "optionExplanations": {
+          "目的の列・行だけを安定して取得できる": "正解。COUNT(*)とCOUNT(death_toll)を並べることで、欠損（NULL）の件数を毎回安定して把握できます。",
+          "全データを削除できる": "このクエリはSELECTで読み取るだけで、データの削除は行っていません。",
+          "NULLが0に変わる": "COUNTを補ってもNULL値自体が0に変換されるわけではありません。"
+        }
       }
     ]
   },
@@ -6209,7 +6434,12 @@ export const SQL_QUESTIONS = [
           "表の行数が多すぎる",
           "SQLは常に行順を保証する"
         ],
-        "answer": "列名・条件・句の使い方が目的とずれている"
+        "answer": "列名・条件・句の使い方が目的とずれている",
+        "optionExplanations": {
+          "列名・条件・句の使い方が目的とずれている": "正解。AVG(temperature_label)は文字列（ラベル）列に対して平均を計算しようとしており、本来平均すべき数値列ではありません。",
+          "表の行数が多すぎる": "temperature_recordsの行数は4件で、行数の多さはエラーの原因ではありません。",
+          "SQLは常に行順を保証する": "ORDER BYがなければ行順は保証されないのが正しい前提であり、これは原因の説明にもなっていません。"
+        }
       },
       {
         "type": "fix",
@@ -6219,7 +6449,12 @@ export const SQL_QUESTIONS = [
           "SELECT AVG(temperature_label) AS summary\nFROM temperature_records;",
           "SELECT *;"
         ],
-        "answer": "SELECT AVG(temperature_c) AS avg_temp_c\nFROM temperature_records;"
+        "answer": "SELECT AVG(temperature_c) AS avg_temp_c\nFROM temperature_records;",
+        "optionExplanations": {
+          "SELECT AVG(temperature_c) AS avg_temp_c\nFROM temperature_records;": "正解。数値列であるtemperature_cにAVGを適用することで、正しく気温の平均値を計算できます。",
+          "SELECT AVG(temperature_label) AS summary\nFROM temperature_records;": "文字列列temperature_labelのままで、原因だった集計対象の誤りを修正できていません。",
+          "SELECT *;": "集計を行わず全列を返すだけで、平均値を計算する目的を果たしていません。"
+        }
       },
       {
         "type": "reason-impact",
@@ -6229,7 +6464,12 @@ export const SQL_QUESTIONS = [
           "全データを削除できる",
           "NULLが0に変わる"
         ],
-        "answer": "目的の列・行だけを安定して取得できる"
+        "answer": "目的の列・行だけを安定して取得できる",
+        "optionExplanations": {
+          "目的の列・行だけを安定して取得できる": "正解。数値列を対象にすることで、温度の平均値を毎回正しく計算できます。",
+          "全データを削除できる": "このクエリはSELECTで読み取るだけで、データの削除は行っていません。",
+          "NULLが0に変わる": "集計対象の列を修正してもNULL値が自動的に0に変換されるわけではありません。"
+        }
       }
     ]
   },
@@ -6373,7 +6613,7 @@ export const SQL_QUESTIONS = [
     "answer": "b",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
+      "correctAnswer": "結果B",
       "completedQuery": "SELECT AVG(percent_share) AS avg_share\nFROM energy_mix;",
       "executionSteps": [
         "1. TABLE energy_mix の列名を確認します。",
@@ -6421,7 +6661,12 @@ export const SQL_QUESTIONS = [
           "表の行数が多すぎる",
           "SQLは常に行順を保証する"
         ],
-        "answer": "列名・条件・句の使い方が目的とずれている"
+        "answer": "列名・条件・句の使い方が目的とずれている",
+        "optionExplanations": {
+          "列名・条件・句の使い方が目的とずれている": "正解。SUM(percent_share)は異なる母数の割合をそのまま合計してしまい、意味のある合計値になりません。",
+          "表の行数が多すぎる": "energy_mixの行数は4件で、行数の多さはエラーの原因ではありません。",
+          "SQLは常に行順を保証する": "ORDER BYがなければ行順は保証されないのが正しい前提であり、これは原因の説明にもなっていません。"
+        }
       },
       {
         "type": "fix",
@@ -6431,7 +6676,12 @@ export const SQL_QUESTIONS = [
           "SELECT SUM(percent_share) AS summary\nFROM energy_mix;",
           "SELECT *;"
         ],
-        "answer": "SELECT AVG(percent_share) AS avg_share\nFROM energy_mix;"
+        "answer": "SELECT AVG(percent_share) AS avg_share\nFROM energy_mix;",
+        "optionExplanations": {
+          "SELECT AVG(percent_share) AS avg_share\nFROM energy_mix;": "正解。AVG(percent_share)に変更することで、異なる母数の割合を単純合計せず、平均という意味のある指標として扱えます。",
+          "SELECT SUM(percent_share) AS summary\nFROM energy_mix;": "SUM(percent_share)のままで、原因だった異なる母数の割合を単純合計してしまう問題を修正できていません。",
+          "SELECT *;": "集計を行わず全列を返すだけで、割合を要約する目的を果たしていません。"
+        }
       },
       {
         "type": "reason-impact",
@@ -6441,7 +6691,12 @@ export const SQL_QUESTIONS = [
           "全データを削除できる",
           "NULLが0に変わる"
         ],
-        "answer": "目的の列・行だけを安定して取得できる"
+        "answer": "目的の列・行だけを安定して取得できる",
+        "optionExplanations": {
+          "目的の列・行だけを安定して取得できる": "正解。AVGに変更することで、percent_shareの値を毎回意味のある平均値として安定して取得できます。",
+          "全データを削除できる": "このクエリはSELECTで読み取るだけで、データの削除は行っていません。",
+          "NULLが0に変わる": "AVGに変更してもNULL値が自動的に0に変換されるわけではありません。"
+        }
       }
     ]
   },
@@ -6495,7 +6750,7 @@ export const SQL_QUESTIONS = [
         ]
       }
     ],
-    "query": "SELECT 件数,平均年,最古年,最新年を1行で取得\nFROM protected_areas;",
+    "query": "SELECT name, category\nFROM protected_areas;",
     "expectedResult": {
       "columns": [
         "name",
@@ -6594,11 +6849,16 @@ export const SQL_QUESTIONS = [
         }
       }
     ],
+    "optionExplanations": {
+      "a": "行の順序が逆になっています（delta→gamma→beta→alpha）。ORDER BYがない場合、行順はTABLEのまま（alpha→beta→gamma→delta）保たれるはずです。",
+      "b": "alphaの1行しか含まれておらず、TABLEに存在するbeta、gamma、deltaの行が欠落しています。",
+      "c": "正解。name, categoryの2列をTABLEの上から順（alpha→beta→gamma→delta）に取り出した結果と一致します。"
+    },
     "answer": "c",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
-      "completedQuery": "SELECT 件数,平均年,最古年,最新年を1行で取得\nFROM protected_areas;",
+      "correctAnswer": "結果C",
+      "completedQuery": "SELECT name, category\nFROM protected_areas;",
       "executionSteps": [
         "1. TABLE protected_areas の列名を確認します。",
         "2. QUERY の aggregate-summary に関わる句を読みます。",
@@ -6608,7 +6868,7 @@ export const SQL_QUESTIONS = [
         {
           "wrong": "題材名だけで答える",
           "reason": "SQLでは列名・表名・条件が答えになります。",
-          "correct": "SELECT 件数,平均年,最古年,最新年を1行で取得\nFROM protected_areas;"
+          "correct": "SELECT name, category\nFROM protected_areas;"
         },
         {
           "wrong": "行順を思い込みで読む",
@@ -7087,10 +7347,15 @@ export const SQL_QUESTIONS = [
         }
       }
     ],
+    "optionExplanations": {
+      "a": "行の順序が逆になっています（gamma→beta→alpha）。ORDER BYがない場合、行順はTABLEのまま（alpha→beta→gamma）保たれるはずです。",
+      "b": "正解。対象となるのはalpha・beta・gammaの3行で、TABLEの順番のままalpha→beta→gammaの順で表示されます。",
+      "c": "alphaの1行しか含まれておらず、同じ条件に該当するbeta、gammaの行が欠落しています。"
+    },
     "answer": "b",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
+      "correctAnswer": "結果B",
       "completedQuery": "SELECT region, COUNT(*) AS total\nFROM languages\nGROUP BY region\nHAVING COUNT(*) >= 2\nORDER BY total DESC;",
       "executionSteps": [
         "1. TABLE languages の列名を確認します。",
@@ -7267,10 +7532,15 @@ export const SQL_QUESTIONS = [
         }
       }
     ],
+    "optionExplanations": {
+      "a": "行の順序が逆になっています（gamma→beta→alpha）。ORDER BYがない場合、行順はTABLEのまま（alpha→beta→gamma）保たれるはずです。",
+      "b": "alphaの1行しか含まれておらず、同じ条件に該当するbeta、gammaの行が欠落しています。",
+      "c": "正解。対象となるのはalpha・beta・gammaの3行で、TABLEの順番のままalpha→beta→gammaの順で表示されます。"
+    },
     "answer": "c",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
+      "correctAnswer": "結果C",
       "completedQuery": "SELECT region, COUNT(*) AS total\nFROM disasters\nGROUP BY region\nHAVING COUNT(*) >= 2\nORDER BY total DESC;",
       "executionSteps": [
         "1. TABLE disasters の列名を確認します。",
@@ -7447,6 +7717,11 @@ export const SQL_QUESTIONS = [
         }
       }
     ],
+    "optionExplanations": {
+      "a": "正解。対象となるのはalpha・beta・gammaの3行で、TABLEの順番のままalpha→beta→gammaの順で表示されます。",
+      "b": "行の順序が逆になっています（gamma→beta→alpha）。ORDER BYがない場合、行順はTABLEのまま（alpha→beta→gamma）保たれるはずです。",
+      "c": "alphaの1行しか含まれておらず、同じ条件に該当するbeta、gammaの行が欠落しています。"
+    },
     "answer": "a",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
@@ -7622,7 +7897,7 @@ export const SQL_QUESTIONS = [
     "answer": "c",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
+      "correctAnswer": "結果C",
       "completedQuery": "SELECT region, COUNT(*) AS total\nFROM population_records\nGROUP BY region\nHAVING COUNT(*) >= 2;",
       "executionSteps": [
         "1. TABLE population_records の列名を確認します。",
@@ -7670,7 +7945,12 @@ export const SQL_QUESTIONS = [
           "表の行数が多すぎる",
           "SQLは常に行順を保証する"
         ],
-        "answer": "列名・条件・句の使い方が目的とずれている"
+        "answer": "列名・条件・句の使い方が目的とずれている",
+        "optionExplanations": {
+          "列名・条件・句の使い方が目的とずれている": "正解。WHERE total >= 2はSELECTで定義したエイリアスtotalをWHERE句で参照しようとしており、さらにGROUP BY countryは存在しない列名を指定しています。",
+          "表の行数が多すぎる": "population_recordsの行数は4件で、行数の多さはエラーの原因ではありません。",
+          "SQLは常に行順を保証する": "ORDER BYがなければ行順は保証されないのが正しい前提であり、これは原因の説明にもなっていません。"
+        }
       },
       {
         "type": "fix",
@@ -7680,7 +7960,12 @@ export const SQL_QUESTIONS = [
           "SELECT region, COUNT(*) AS total\nFROM population_records\nWHERE total >= 2\nGROUP BY country;",
           "SELECT *;"
         ],
-        "answer": "SELECT region, COUNT(*) AS total\nFROM population_records\nGROUP BY region\nHAVING COUNT(*) >= 2;"
+        "answer": "SELECT region, COUNT(*) AS total\nFROM population_records\nGROUP BY region\nHAVING COUNT(*) >= 2;",
+        "optionExplanations": {
+          "SELECT region, COUNT(*) AS total\nFROM population_records\nGROUP BY region\nHAVING COUNT(*) >= 2;": "正解。集計後の条件はHAVING COUNT(*) >= 2で指定し、GROUP BYは実在するregion列を使うことで、正しく集計できます。",
+          "SELECT region, COUNT(*) AS total\nFROM population_records\nWHERE total >= 2\nGROUP BY country;": "WHEREでのエイリアス参照とGROUP BY countryのままで、原因だった2つの誤りを修正できていません。",
+          "SELECT *;": "集計を行わず全列を返すだけで、地域ごとに件数を絞り込む目的を果たしていません。"
+        }
       },
       {
         "type": "reason-impact",
@@ -7690,7 +7975,12 @@ export const SQL_QUESTIONS = [
           "全データを削除できる",
           "NULLが0に変わる"
         ],
-        "answer": "目的の列・行だけを安定して取得できる"
+        "answer": "目的の列・行だけを安定して取得できる",
+        "optionExplanations": {
+          "目的の列・行だけを安定して取得できる": "正解。HAVINGとGROUP BY regionを正しく使うことで、地域ごとの件数を毎回安定して集計できます。",
+          "全データを削除できる": "このクエリはSELECTで読み取るだけで、データの削除は行っていません。",
+          "NULLが0に変わる": "GROUP BY/HAVINGを修正してもNULL値が自動的に0に変換されるわけではありません。"
+        }
       }
     ]
   },
@@ -7882,7 +8172,12 @@ export const SQL_QUESTIONS = [
           "表の行数が多すぎる",
           "SQLは常に行順を保証する"
         ],
-        "answer": "列名・条件・句の使い方が目的とずれている"
+        "answer": "列名・条件・句の使い方が目的とずれている",
+        "optionExplanations": {
+          "列名・条件・句の使い方が目的とずれている": "正解。WHERE total >= 2はSELECTで定義したエイリアスtotalをWHERE句で参照しようとしており、さらにGROUP BY countryは存在しない列名を指定しています。",
+          "表の行数が多すぎる": "global_eventsの行数は4件で、行数の多さはエラーの原因ではありません。",
+          "SQLは常に行順を保証する": "ORDER BYがなければ行順は保証されないのが正しい前提であり、これは原因の説明にもなっていません。"
+        }
       },
       {
         "type": "fix",
@@ -7892,7 +8187,12 @@ export const SQL_QUESTIONS = [
           "SELECT region, COUNT(*) AS total\nFROM global_events\nWHERE total >= 2\nGROUP BY country;",
           "SELECT *;"
         ],
-        "answer": "SELECT region, COUNT(*) AS total\nFROM global_events\nGROUP BY region\nHAVING COUNT(*) >= 2;"
+        "answer": "SELECT region, COUNT(*) AS total\nFROM global_events\nGROUP BY region\nHAVING COUNT(*) >= 2;",
+        "optionExplanations": {
+          "SELECT region, COUNT(*) AS total\nFROM global_events\nGROUP BY region\nHAVING COUNT(*) >= 2;": "正解。集計後の条件はHAVING COUNT(*) >= 2で指定し、GROUP BYは実在するregion列を使うことで、正しく集計できます。",
+          "SELECT region, COUNT(*) AS total\nFROM global_events\nWHERE total >= 2\nGROUP BY country;": "WHEREでのエイリアス参照とGROUP BY countryのままで、原因だった2つの誤りを修正できていません。",
+          "SELECT *;": "集計を行わず全列を返すだけで、地域ごとに件数を絞り込む目的を果たしていません。"
+        }
       },
       {
         "type": "reason-impact",
@@ -7902,7 +8202,12 @@ export const SQL_QUESTIONS = [
           "全データを削除できる",
           "NULLが0に変わる"
         ],
-        "answer": "目的の列・行だけを安定して取得できる"
+        "answer": "目的の列・行だけを安定して取得できる",
+        "optionExplanations": {
+          "目的の列・行だけを安定して取得できる": "正解。HAVINGとGROUP BY regionを正しく使うことで、地域ごとの件数を毎回安定して集計できます。",
+          "全データを削除できる": "このクエリはSELECTで読み取るだけで、データの削除は行っていません。",
+          "NULLが0に変わる": "GROUP BY/HAVINGを修正してもNULL値が自動的に0に変換されるわけではありません。"
+        }
       }
     ]
   },
@@ -8046,7 +8351,7 @@ export const SQL_QUESTIONS = [
     "answer": "b",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
+      "correctAnswer": "結果B",
       "completedQuery": "SELECT region, COUNT(*) AS total\nFROM migration_records\nGROUP BY region\nHAVING COUNT(*) >= 2;",
       "executionSteps": [
         "1. TABLE migration_records の列名を確認します。",
@@ -8094,7 +8399,12 @@ export const SQL_QUESTIONS = [
           "表の行数が多すぎる",
           "SQLは常に行順を保証する"
         ],
-        "answer": "列名・条件・句の使い方が目的とずれている"
+        "answer": "列名・条件・句の使い方が目的とずれている",
+        "optionExplanations": {
+          "列名・条件・句の使い方が目的とずれている": "正解。WHERE total >= 2はSELECTで定義したエイリアスtotalをWHERE句で参照しようとしており、さらにGROUP BY countryは存在しない列名を指定しています。",
+          "表の行数が多すぎる": "migration_recordsの行数は4件で、行数の多さはエラーの原因ではありません。",
+          "SQLは常に行順を保証する": "ORDER BYがなければ行順は保証されないのが正しい前提であり、これは原因の説明にもなっていません。"
+        }
       },
       {
         "type": "fix",
@@ -8104,7 +8414,12 @@ export const SQL_QUESTIONS = [
           "SELECT region, COUNT(*) AS total\nFROM migration_records\nWHERE total >= 2\nGROUP BY country;",
           "SELECT *;"
         ],
-        "answer": "SELECT region, COUNT(*) AS total\nFROM migration_records\nGROUP BY region\nHAVING COUNT(*) >= 2;"
+        "answer": "SELECT region, COUNT(*) AS total\nFROM migration_records\nGROUP BY region\nHAVING COUNT(*) >= 2;",
+        "optionExplanations": {
+          "SELECT region, COUNT(*) AS total\nFROM migration_records\nGROUP BY region\nHAVING COUNT(*) >= 2;": "正解。集計後の条件はHAVING COUNT(*) >= 2で指定し、GROUP BYは実在するregion列を使うことで、正しく集計できます。",
+          "SELECT region, COUNT(*) AS total\nFROM migration_records\nWHERE total >= 2\nGROUP BY country;": "WHEREでのエイリアス参照とGROUP BY countryのままで、原因だった2つの誤りを修正できていません。",
+          "SELECT *;": "集計を行わず全列を返すだけで、地域ごとに件数を絞り込む目的を果たしていません。"
+        }
       },
       {
         "type": "reason-impact",
@@ -8114,7 +8429,12 @@ export const SQL_QUESTIONS = [
           "全データを削除できる",
           "NULLが0に変わる"
         ],
-        "answer": "目的の列・行だけを安定して取得できる"
+        "answer": "目的の列・行だけを安定して取得できる",
+        "optionExplanations": {
+          "目的の列・行だけを安定して取得できる": "正解。HAVINGとGROUP BY regionを正しく使うことで、地域ごとの件数を毎回安定して集計できます。",
+          "全データを削除できる": "このクエリはSELECTで読み取るだけで、データの削除は行っていません。",
+          "NULLが0に変わる": "GROUP BY/HAVINGを修正してもNULL値が自動的に0に変換されるわけではありません。"
+        }
       }
     ]
   },
@@ -8267,10 +8587,15 @@ export const SQL_QUESTIONS = [
         }
       }
     ],
+    "optionExplanations": {
+      "a": "行の順序が逆になっています（delta→gamma→beta→alpha）。ORDER BYがない場合、行順はTABLEのまま（alpha→beta→gamma→delta）保たれるはずです。",
+      "b": "alphaの1行しか含まれておらず、TABLEに存在するbeta、gamma、deltaの行が欠落しています。",
+      "c": "正解。region, COUNT(*)の集計対象となるのはalpha・beta・gamma・deltaの4行で、TABLEの順番のままalpha→beta→gamma→deltaの順で表示されます。"
+    },
     "answer": "c",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
+      "correctAnswer": "結果C",
       "completedQuery": "SELECT region, COUNT(*) AS total\nFROM treaty_memberships\nGROUP BY region\nHAVING COUNT(*) >= 2\nORDER BY total DESC;",
       "executionSteps": [
         "1. TABLE treaty_memberships の列名を確認します。",
@@ -8962,10 +9287,15 @@ export const SQL_QUESTIONS = [
         }
       }
     ],
+    "optionExplanations": {
+      "a": "行の順序が逆になっています（gamma→beta→alpha）。ORDER BYがない場合、行順はTABLEのまま（alpha→beta→gamma）保たれるはずです。",
+      "b": "正解。結合と条件を満たすのはalpha・beta・gammaの3行で、TABLEの順番のままalpha→beta→gammaの順で表示されます。",
+      "c": "alphaの1行しか含まれておらず、同じ条件に該当するbeta、gammaの行が欠落しています。"
+    },
     "answer": "b",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
+      "correctAnswer": "結果B",
       "completedQuery": "SELECT c.name, x.name\nFROM diseases\nJOIN pathogens\nJOIN vaccines\nON c.id = x.country_id\nWHERE c.region = 'Asia'\nORDER BY c.name;",
       "executionSteps": [
         "1. TABLE diseases, pathogens, vaccines の列名を確認します。",
@@ -9224,10 +9554,15 @@ export const SQL_QUESTIONS = [
         }
       }
     ],
+    "optionExplanations": {
+      "a": "行の順序が逆になっています（gamma→beta→alpha）。ORDER BYがない場合、行順はTABLEのまま（alpha→beta→gamma）保たれるはずです。",
+      "b": "alphaの1行しか含まれておらず、同じ条件に該当するbeta、gammaの行が欠落しています。",
+      "c": "正解。結合と条件を満たすのはalpha・beta・gammaの3行で、TABLEの順番のままalpha→beta→gammaの順で表示されます。"
+    },
     "answer": "c",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
+      "correctAnswer": "結果C",
       "completedQuery": "SELECT c.name, x.name\nFROM countries\nJOIN treaty_memberships\nJOIN treaties\nON c.id = x.country_id\nWHERE c.region = 'Asia'\nORDER BY c.name;",
       "executionSteps": [
         "1. TABLE countries, treaty_memberships, treaties の列名を確認します。",
@@ -9446,6 +9781,11 @@ export const SQL_QUESTIONS = [
         }
       }
     ],
+    "optionExplanations": {
+      "a": "正解。結合と条件を満たすのはalpha・beta・gammaの3行で、TABLEの順番のままalpha→beta→gammaの順で表示されます。",
+      "b": "行の順序が逆になっています（gamma→beta→alpha）。ORDER BYがない場合、行順はTABLEのまま（alpha→beta→gamma）保たれるはずです。",
+      "c": "alphaの1行しか含まれておらず、同じ条件に該当するbeta、gammaの行が欠落しています。"
+    },
     "answer": "a",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
@@ -9662,7 +10002,7 @@ export const SQL_QUESTIONS = [
     "answer": "c",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
+      "correctAnswer": "結果C",
       "completedQuery": "SELECT *\nFROM inventors\nJOIN inventions\nON id = id;",
       "executionSteps": [
         "1. TABLE inventors, inventions の列名を確認します。",
@@ -9711,7 +10051,12 @@ export const SQL_QUESTIONS = [
           "表の行数が多すぎる",
           "SQLは常に行順を保証する"
         ],
-        "answer": "列名・条件・句の使い方が目的とずれている"
+        "answer": "列名・条件・句の使い方が目的とずれている",
+        "optionExplanations": {
+          "列名・条件・句の使い方が目的とずれている": "正解。JOIN inventionsにON条件がないため、inventorsとinventionsの全行同士が組み合わされる直積（Cartesian product）になってしまいます。",
+          "表の行数が多すぎる": "inventorsとinventionsの行数はそれぞれ4件で、行数の多さはエラーの原因ではありません。",
+          "SQLは常に行順を保証する": "ORDER BYがなければ行順は保証されないのが正しい前提であり、これは原因の説明にもなっていません。"
+        }
       },
       {
         "type": "fix",
@@ -9721,7 +10066,12 @@ export const SQL_QUESTIONS = [
           "SELECT *\nFROM inventors\nJOIN inventions;",
           "SELECT *;"
         ],
-        "answer": "SELECT *\nFROM inventors\nJOIN inventions\nON id = id;"
+        "answer": "SELECT *\nFROM inventors\nJOIN inventions\nON id = id;",
+        "optionExplanations": {
+          "SELECT *\nFROM inventors\nJOIN inventions\nON id = id;": "正解。ON id = idを追加することで、対応する行同士だけを結合し、直積を避けられます。",
+          "SELECT *\nFROM inventors\nJOIN inventions;": "ON条件がないままで、原因だった直積の発生を修正できていません。",
+          "SELECT *;": "JOIN自体がなくなり、2つの表を結びつける目的を果たしていません。"
+        }
       },
       {
         "type": "reason-impact",
@@ -9731,7 +10081,12 @@ export const SQL_QUESTIONS = [
           "全データを削除できる",
           "NULLが0に変わる"
         ],
-        "answer": "目的の列・行だけを安定して取得できる"
+        "answer": "目的の列・行だけを安定して取得できる",
+        "optionExplanations": {
+          "目的の列・行だけを安定して取得できる": "正解。ON条件を補うことで、対応するinventorとinventionの組だけを毎回安定して取得できます。",
+          "全データを削除できる": "このクエリはSELECTで読み取るだけで、データの削除は行っていません。",
+          "NULLが0に変わる": "ON条件を補ってもNULL値が自動的に0に変換されるわけではありません。"
+        }
       }
     ]
   },
@@ -9964,7 +10319,12 @@ export const SQL_QUESTIONS = [
           "表の行数が多すぎる",
           "SQLは常に行順を保証する"
         ],
-        "answer": "列名・条件・句の使い方が目的とずれている"
+        "answer": "列名・条件・句の使い方が目的とずれている",
+        "optionExplanations": {
+          "列名・条件・句の使い方が目的とずれている": "正解。JOIN currenciesにON条件がないため、countriesとcurrenciesの全行同士が組み合わされる直積になってしまいます。",
+          "表の行数が多すぎる": "countriesとcurrenciesの行数はそれぞれ4件で、行数の多さはエラーの原因ではありません。",
+          "SQLは常に行順を保証する": "ORDER BYがなければ行順は保証されないのが正しい前提であり、これは原因の説明にもなっていません。"
+        }
       },
       {
         "type": "fix",
@@ -9974,7 +10334,12 @@ export const SQL_QUESTIONS = [
           "SELECT *\nFROM countries\nJOIN currencies;",
           "SELECT *;"
         ],
-        "answer": "SELECT *\nFROM countries\nJOIN currencies\nON id = currency_id;"
+        "answer": "SELECT *\nFROM countries\nJOIN currencies\nON id = currency_id;",
+        "optionExplanations": {
+          "SELECT *\nFROM countries\nJOIN currencies\nON id = currency_id;": "正解。ON id = currency_idを追加することで、対応する国と通貨の行同士だけを結合し、直積を避けられます。",
+          "SELECT *\nFROM countries\nJOIN currencies;": "ON条件がないままで、原因だった直積の発生を修正できていません。",
+          "SELECT *;": "JOIN自体がなくなり、2つの表を結びつける目的を果たしていません。"
+        }
       },
       {
         "type": "reason-impact",
@@ -9984,7 +10349,12 @@ export const SQL_QUESTIONS = [
           "全データを削除できる",
           "NULLが0に変わる"
         ],
-        "answer": "目的の列・行だけを安定して取得できる"
+        "answer": "目的の列・行だけを安定して取得できる",
+        "optionExplanations": {
+          "目的の列・行だけを安定して取得できる": "正解。ON条件を補うことで、対応する国と通貨の組だけを毎回安定して取得できます。",
+          "全データを削除できる": "このクエリはSELECTで読み取るだけで、データの削除は行っていません。",
+          "NULLが0に変わる": "ON条件を補ってもNULL値が自動的に0に変換されるわけではありません。"
+        }
       }
     ]
   },
@@ -10168,7 +10538,7 @@ export const SQL_QUESTIONS = [
     "answer": "b",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
+      "correctAnswer": "結果B",
       "completedQuery": "SELECT *\nFROM countries\nJOIN environment_records\nON id = id;",
       "executionSteps": [
         "1. TABLE countries, environment_records の列名を確認します。",
@@ -10217,7 +10587,12 @@ export const SQL_QUESTIONS = [
           "表の行数が多すぎる",
           "SQLは常に行順を保証する"
         ],
-        "answer": "列名・条件・句の使い方が目的とずれている"
+        "answer": "列名・条件・句の使い方が目的とずれている",
+        "optionExplanations": {
+          "列名・条件・句の使い方が目的とずれている": "正解。JOIN environment_recordsにON条件がないため、countriesとenvironment_recordsの全行同士が組み合わされる直積になってしまいます。",
+          "表の行数が多すぎる": "countriesとenvironment_recordsの行数はそれぞれ4件で、行数の多さはエラーの原因ではありません。",
+          "SQLは常に行順を保証する": "ORDER BYがなければ行順は保証されないのが正しい前提であり、これは原因の説明にもなっていません。"
+        }
       },
       {
         "type": "fix",
@@ -10227,7 +10602,12 @@ export const SQL_QUESTIONS = [
           "SELECT *\nFROM countries\nJOIN environment_records;",
           "SELECT *;"
         ],
-        "answer": "SELECT *\nFROM countries\nJOIN environment_records\nON id = id;"
+        "answer": "SELECT *\nFROM countries\nJOIN environment_records\nON id = id;",
+        "optionExplanations": {
+          "SELECT *\nFROM countries\nJOIN environment_records\nON id = id;": "正解。ON id = idを追加することで、対応する国と環境記録の行同士だけを結合し、直積を避けられます。",
+          "SELECT *\nFROM countries\nJOIN environment_records;": "ON条件がないままで、原因だった直積の発生を修正できていません。",
+          "SELECT *;": "JOIN自体がなくなり、2つの表を結びつける目的を果たしていません。"
+        }
       },
       {
         "type": "reason-impact",
@@ -10237,7 +10617,12 @@ export const SQL_QUESTIONS = [
           "全データを削除できる",
           "NULLが0に変わる"
         ],
-        "answer": "目的の列・行だけを安定して取得できる"
+        "answer": "目的の列・行だけを安定して取得できる",
+        "optionExplanations": {
+          "目的の列・行だけを安定して取得できる": "正解。ON条件を補うことで、対応する国と環境記録の組だけを毎回安定して取得できます。",
+          "全データを削除できる": "このクエリはSELECTで読み取るだけで、データの削除は行っていません。",
+          "NULLが0に変わる": "ON条件を補ってもNULL値が自動的に0に変換されるわけではありません。"
+        }
       }
     ]
   },
@@ -10510,10 +10895,15 @@ export const SQL_QUESTIONS = [
         }
       }
     ],
+    "optionExplanations": {
+      "a": "行の順序が逆になっています（delta→gamma→beta→alpha）。ORDER BYがない場合、行順はTABLEのまま（alpha→beta→gamma→delta）保たれるはずです。",
+      "b": "alphaの1行しか含まれておらず、TABLEに存在するbeta、gamma、deltaの行が欠落しています。",
+      "c": "正解。結合と条件を満たすのはalpha・beta・gamma・deltaの4行で、TABLEの順番のままalpha→beta→gamma→deltaの順で表示されます。"
+    },
     "answer": "c",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
+      "correctAnswer": "結果C",
       "completedQuery": "SELECT c.name, x.name\nFROM countries\nJOIN regions\nJOIN organization_memberships\nJOIN international_organizations\nON c.id = x.country_id\nWHERE c.region = 'Asia'\nORDER BY c.name;",
       "executionSteps": [
         "1. TABLE countries, regions, organization_memberships, international_organizations の列名を確認します。",
@@ -11005,10 +11395,15 @@ export const SQL_QUESTIONS = [
         }
       }
     ],
+    "optionExplanations": {
+      "a": "行の順序が逆になっています（gamma→beta→alpha）。ORDER BY name_labelの場合、name_labelの昇順（alpha→beta→gamma）に並ぶはずです。",
+      "b": "正解。DISTINCTで重複を除いた3件のname_labelをORDER BY name_labelで並べると、alpha→beta→gammaの順になります。",
+      "c": "alphaの1行しか含まれておらず、同じくDISTINCTの対象になるbeta、gammaの行が欠落しています。"
+    },
     "answer": "b",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
+      "correctAnswer": "結果B",
       "completedQuery": "SELECT DISTINCT COALESCE(name, '不明') AS name_label\nFROM heritage_country_links\nORDER BY name_label;",
       "executionSteps": [
         "1. TABLE heritage_country_links の列名を確認します。",
@@ -11185,10 +11580,15 @@ export const SQL_QUESTIONS = [
         }
       }
     ],
+    "optionExplanations": {
+      "a": "行の順序が逆になっています（gamma→beta→alpha）。ORDER BY name_labelの場合、name_labelの昇順（alpha→beta→gamma）に並ぶはずです。",
+      "b": "alphaの1行しか含まれておらず、同じくDISTINCTの対象になるbeta、gammaの行が欠落しています。",
+      "c": "正解。DISTINCTで重複を除いた3件のname_labelをORDER BY name_labelで並べると、alpha→beta→gammaの順になります。"
+    },
     "answer": "c",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
+      "correctAnswer": "結果C",
       "completedQuery": "SELECT DISTINCT COALESCE(name, '不明') AS name_label\nFROM nobel_awards\nORDER BY name_label;",
       "executionSteps": [
         "1. TABLE nobel_awards の列名を確認します。",
@@ -11365,6 +11765,11 @@ export const SQL_QUESTIONS = [
         }
       }
     ],
+    "optionExplanations": {
+      "a": "正解。DISTINCTで重複を除いた3件のname_labelをORDER BY name_labelで並べると、alpha→beta→gammaの順になります。",
+      "b": "行の順序が逆になっています（gamma→beta→alpha）。ORDER BY name_labelの場合、name_labelの昇順（alpha→beta→gamma）に並ぶはずです。",
+      "c": "alphaの1行しか含まれておらず、同じくDISTINCTの対象になるbeta、gammaの行が欠落しています。"
+    },
     "answer": "a",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
@@ -11540,7 +11945,7 @@ export const SQL_QUESTIONS = [
     "answer": "c",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
+      "correctAnswer": "結果C",
       "completedQuery": "SELECT *\nFROM treaties\nWHERE end_date IS NULL;",
       "executionSteps": [
         "1. TABLE treaties の列名を確認します。",
@@ -11588,7 +11993,12 @@ export const SQL_QUESTIONS = [
           "表の行数が多すぎる",
           "SQLは常に行順を保証する"
         ],
-        "answer": "列名・条件・句の使い方が目的とずれている"
+        "answer": "列名・条件・句の使い方が目的とずれている",
+        "optionExplanations": {
+          "列名・条件・句の使い方が目的とずれている": "正解。end_date = NULLという比較は常にNULL（不明）として評価されるため行を取得できません。NULLの判定にはIS NULLを使う必要があります。",
+          "表の行数が多すぎる": "treatiesの行数は4件で、行数の多さはエラーの原因ではありません。",
+          "SQLは常に行順を保証する": "ORDER BYがなければ行順は保証されないのが正しい前提であり、これは原因の説明にもなっていません。"
+        }
       },
       {
         "type": "fix",
@@ -11598,7 +12008,12 @@ export const SQL_QUESTIONS = [
           "SELECT *\nFROM treaties\nWHERE end_date = NULL;",
           "SELECT *;"
         ],
-        "answer": "SELECT *\nFROM treaties\nWHERE end_date IS NULL;"
+        "answer": "SELECT *\nFROM treaties\nWHERE end_date IS NULL;",
+        "optionExplanations": {
+          "SELECT *\nFROM treaties\nWHERE end_date IS NULL;": "正解。IS NULLに変更することで、end_dateが未設定（NULL）の行を正しく判定できます。",
+          "SELECT *\nFROM treaties\nWHERE end_date = NULL;": "= NULLのままで、原因だったNULL判定の誤りを修正できていません。",
+          "SELECT *;": "WHERE条件自体がなくなり、終了日が未設定の行だけを絞り込む目的を果たしていません。"
+        }
       },
       {
         "type": "reason-impact",
@@ -11608,7 +12023,12 @@ export const SQL_QUESTIONS = [
           "全データを削除できる",
           "NULLが0に変わる"
         ],
-        "answer": "目的の列・行だけを安定して取得できる"
+        "answer": "目的の列・行だけを安定して取得できる",
+        "optionExplanations": {
+          "目的の列・行だけを安定して取得できる": "正解。IS NULLを使うことで、終了日が未設定の行を毎回正しく取得できます。",
+          "全データを削除できる": "このクエリはSELECTで読み取るだけで、データの削除は行っていません。",
+          "NULLが0に変わる": "IS NULLに変更してもNULL値自体が0に変換されるわけではありません。"
+        }
       }
     ]
   },
@@ -11800,7 +12220,12 @@ export const SQL_QUESTIONS = [
           "表の行数が多すぎる",
           "SQLは常に行順を保証する"
         ],
-        "answer": "列名・条件・句の使い方が目的とずれている"
+        "answer": "列名・条件・句の使い方が目的とずれている",
+        "optionExplanations": {
+          "列名・条件・句の使い方が目的とずれている": "正解。end_date = NULLという比較は常にNULL（不明）として評価されるため行を取得できません。NULLの判定にはIS NULLを使う必要があります。",
+          "表の行数が多すぎる": "country_languagesの行数は4件で、行数の多さはエラーの原因ではありません。",
+          "SQLは常に行順を保証する": "ORDER BYがなければ行順は保証されないのが正しい前提であり、これは原因の説明にもなっていません。"
+        }
       },
       {
         "type": "fix",
@@ -11810,7 +12235,12 @@ export const SQL_QUESTIONS = [
           "SELECT *\nFROM country_languages\nWHERE end_date = NULL;",
           "SELECT *;"
         ],
-        "answer": "SELECT *\nFROM country_languages\nWHERE end_date IS NULL;"
+        "answer": "SELECT *\nFROM country_languages\nWHERE end_date IS NULL;",
+        "optionExplanations": {
+          "SELECT *\nFROM country_languages\nWHERE end_date IS NULL;": "正解。IS NULLに変更することで、end_dateが未設定（NULL）の行を正しく判定できます。",
+          "SELECT *\nFROM country_languages\nWHERE end_date = NULL;": "= NULLのままで、原因だったNULL判定の誤りを修正できていません。",
+          "SELECT *;": "WHERE条件自体がなくなり、目的の行だけを絞り込む目的を果たしていません。"
+        }
       },
       {
         "type": "reason-impact",
@@ -11820,7 +12250,12 @@ export const SQL_QUESTIONS = [
           "全データを削除できる",
           "NULLが0に変わる"
         ],
-        "answer": "目的の列・行だけを安定して取得できる"
+        "answer": "目的の列・行だけを安定して取得できる",
+        "optionExplanations": {
+          "目的の列・行だけを安定して取得できる": "正解。IS NULLを使うことで、目的の条件を満たす行を毎回正しく取得できます。",
+          "全データを削除できる": "このクエリはSELECTで読み取るだけで、データの削除は行っていません。",
+          "NULLが0に変わる": "IS NULLに変更してもNULL値自体が0に変換されるわけではありません。"
+        }
       }
     ]
   },
@@ -11964,7 +12399,7 @@ export const SQL_QUESTIONS = [
     "answer": "b",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
+      "correctAnswer": "結果B",
       "completedQuery": "SELECT *\nFROM organization_aliases\nWHERE end_date IS NULL;",
       "executionSteps": [
         "1. TABLE organization_aliases の列名を確認します。",
@@ -12012,7 +12447,12 @@ export const SQL_QUESTIONS = [
           "表の行数が多すぎる",
           "SQLは常に行順を保証する"
         ],
-        "answer": "列名・条件・句の使い方が目的とずれている"
+        "answer": "列名・条件・句の使い方が目的とずれている",
+        "optionExplanations": {
+          "列名・条件・句の使い方が目的とずれている": "正解。end_date = NULLという比較は常にNULL（不明）として評価されるため行を取得できません。NULLの判定にはIS NULLを使う必要があります。",
+          "表の行数が多すぎる": "organization_aliasesの行数は4件で、行数の多さはエラーの原因ではありません。",
+          "SQLは常に行順を保証する": "ORDER BYがなければ行順は保証されないのが正しい前提であり、これは原因の説明にもなっていません。"
+        }
       },
       {
         "type": "fix",
@@ -12022,7 +12462,12 @@ export const SQL_QUESTIONS = [
           "SELECT *\nFROM organization_aliases\nWHERE end_date = NULL;",
           "SELECT *;"
         ],
-        "answer": "SELECT *\nFROM organization_aliases\nWHERE end_date IS NULL;"
+        "answer": "SELECT *\nFROM organization_aliases\nWHERE end_date IS NULL;",
+        "optionExplanations": {
+          "SELECT *\nFROM organization_aliases\nWHERE end_date IS NULL;": "正解。IS NULLに変更することで、end_dateが未設定（NULL）の行を正しく判定できます。",
+          "SELECT *\nFROM organization_aliases\nWHERE end_date = NULL;": "= NULLのままで、原因だったNULL判定の誤りを修正できていません。",
+          "SELECT *;": "WHERE条件自体がなくなり、目的の行だけを絞り込む目的を果たしていません。"
+        }
       },
       {
         "type": "reason-impact",
@@ -12032,7 +12477,12 @@ export const SQL_QUESTIONS = [
           "全データを削除できる",
           "NULLが0に変わる"
         ],
-        "answer": "目的の列・行だけを安定して取得できる"
+        "answer": "目的の列・行だけを安定して取得できる",
+        "optionExplanations": {
+          "目的の列・行だけを安定して取得できる": "正解。IS NULLを使うことで、目的の条件を満たす行を毎回正しく取得できます。",
+          "全データを削除できる": "このクエリはSELECTで読み取るだけで、データの削除は行っていません。",
+          "NULLが0に変わる": "IS NULLに変更してもNULL値自体が0に変換されるわけではありません。"
+        }
       }
     ]
   },
@@ -12185,10 +12635,15 @@ export const SQL_QUESTIONS = [
         }
       }
     ],
+    "optionExplanations": {
+      "a": "行の順序が逆になっています（UNICEF→FAO→WHO→UNESCO）。ORDER BY name_labelの場合、name（あるいはname_label）のアルファベット順（UNESCO→WHO→FAO→UNICEF）に並ぶはずです。",
+      "b": "UNESCOの1行しか含まれておらず、TABLEに存在するWHO、FAO、UNICEFの行が欠落しています。",
+      "c": "正解。DISTINCTで重複を除いた4件をORDER BY name_labelで並べると、UNESCO→WHO→FAO→UNICEFの順になります。"
+    },
     "answer": "c",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
+      "correctAnswer": "結果C",
       "completedQuery": "SELECT DISTINCT COALESCE(name, '不明') AS name_label\nFROM international_organizations\nORDER BY name_label;",
       "executionSteps": [
         "1. TABLE international_organizations の列名を確認します。",
@@ -12677,10 +13132,15 @@ export const SQL_QUESTIONS = [
         }
       }
     ],
+    "optionExplanations": {
+      "a": "行の順序が逆になっています（gamma→beta→alpha）。ORDER BYがない場合、行順はTABLEのまま（alpha→beta→gamma）保たれるはずです。",
+      "b": "正解。対象となるのはalpha・beta・gammaの3行で、TABLEの順番のままalpha→beta→gammaの順で表示されます。",
+      "c": "alphaの1行しか含まれておらず、TABLEに存在するbeta、gammaの行が欠落しています。"
+    },
     "answer": "b",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
+      "correctAnswer": "結果B",
       "completedQuery": "-- preview first\nSELECT * FROM international_days WHERE id = 2;\nUPDATE international_days\nSET value = 99\nWHERE id = 2;",
       "executionSteps": [
         "1. TABLE international_days の列名を確認します。",
@@ -12857,10 +13317,15 @@ export const SQL_QUESTIONS = [
         }
       }
     ],
+    "optionExplanations": {
+      "a": "行の順序が逆になっています（gamma→beta→alpha）。ORDER BYがない場合、行順はTABLEのまま（alpha→beta→gamma）保たれるはずです。",
+      "b": "alphaの1行しか含まれておらず、TABLEに存在するbeta、gammaの行が欠落しています。",
+      "c": "正解。対象となるのはalpha・beta・gammaの3行で、TABLEの順番のままalpha→beta→gammaの順で表示されます。"
+    },
     "answer": "c",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
+      "correctAnswer": "結果C",
       "completedQuery": "-- preview first\nSELECT * FROM treaty_memberships WHERE id = 2;\nUPDATE treaty_memberships\nSET value = 99\nWHERE id = 2;",
       "executionSteps": [
         "1. TABLE treaty_memberships の列名を確認します。",
@@ -13037,6 +13502,11 @@ export const SQL_QUESTIONS = [
         }
       }
     ],
+    "optionExplanations": {
+      "a": "正解。対象となるのはalpha・beta・gammaの3行で、TABLEの順番のままalpha→beta→gammaの順で表示されます。",
+      "b": "行の順序が逆になっています（gamma→beta→alpha）。ORDER BYがない場合、行順はTABLEのまま（alpha→beta→gamma）保たれるはずです。",
+      "c": "alphaの1行しか含まれておらず、TABLEに存在するbeta、gammaの行が欠落しています。"
+    },
     "answer": "a",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
@@ -13212,7 +13682,7 @@ export const SQL_QUESTIONS = [
     "answer": "c",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
+      "correctAnswer": "結果C",
       "completedQuery": "UPDATE population_records\nSET value = 0\nWHERE id = 2;",
       "executionSteps": [
         "1. TABLE population_records の列名を確認します。",
@@ -13260,7 +13730,12 @@ export const SQL_QUESTIONS = [
           "表の行数が多すぎる",
           "SQLは常に行順を保証する"
         ],
-        "answer": "列名・条件・句の使い方が目的とずれている"
+        "answer": "列名・条件・句の使い方が目的とずれている",
+        "optionExplanations": {
+          "列名・条件・句の使い方が目的とずれている": "正解。UPDATE population_records SET value = 0;にはWHERE句がないため、テーブルの全行のvalueが0に書き換えられてしまいます。",
+          "表の行数が多すぎる": "population_recordsの行数は4件で、行数の多さはエラーの原因ではありません。",
+          "SQLは常に行順を保証する": "ORDER BYがなければ行順は保証されないのが正しい前提であり、これは原因の説明にもなっていません。"
+        }
       },
       {
         "type": "fix",
@@ -13270,7 +13745,12 @@ export const SQL_QUESTIONS = [
           "UPDATE population_records\nSET value = 0;",
           "SELECT *;"
         ],
-        "answer": "UPDATE population_records\nSET value = 0\nWHERE id = 2;"
+        "answer": "UPDATE population_records\nSET value = 0\nWHERE id = 2;",
+        "optionExplanations": {
+          "UPDATE population_records\nSET value = 0\nWHERE id = 2;": "正解。WHERE id = 2を追加することで、更新対象を該当する1行だけに絞り込めます。",
+          "UPDATE population_records\nSET value = 0;": "WHERE句がないままで、原因だった全行更新を修正できていません。",
+          "SELECT *;": "UPDATE自体がなくなり、データを訂正する目的を果たしていません。"
+        }
       },
       {
         "type": "reason-impact",
@@ -13280,7 +13760,12 @@ export const SQL_QUESTIONS = [
           "全データを削除できる",
           "NULLが0に変わる"
         ],
-        "answer": "目的の列・行だけを安定して取得できる"
+        "answer": "目的の列・行だけを安定して取得できる",
+        "optionExplanations": {
+          "目的の列・行だけを安定して取得できる": "正解。WHERE句を補うことで、意図した1行だけを毎回安定して更新できます。",
+          "全データを削除できる": "このクエリはUPDATEで値を書き換えるだけで、行の削除（DELETE）は行っていません。",
+          "NULLが0に変わる": "WHERE句を補ってもNULL値が自動的に0に変換されるわけではありません。"
+        }
       }
     ]
   },
@@ -13472,7 +13957,12 @@ export const SQL_QUESTIONS = [
           "表の行数が多すぎる",
           "SQLは常に行順を保証する"
         ],
-        "answer": "列名・条件・句の使い方が目的とずれている"
+        "answer": "列名・条件・句の使い方が目的とずれている",
+        "optionExplanations": {
+          "列名・条件・句の使い方が目的とずれている": "正解。UPDATE disasters SET value = 0;にはWHERE句がないため、テーブルの全行のvalueが0に書き換えられてしまいます。",
+          "表の行数が多すぎる": "disastersの行数は4件で、行数の多さはエラーの原因ではありません。",
+          "SQLは常に行順を保証する": "ORDER BYがなければ行順は保証されないのが正しい前提であり、これは原因の説明にもなっていません。"
+        }
       },
       {
         "type": "fix",
@@ -13482,7 +13972,12 @@ export const SQL_QUESTIONS = [
           "UPDATE disasters\nSET value = 0;",
           "SELECT *;"
         ],
-        "answer": "UPDATE disasters\nSET value = 0\nWHERE id = 2;"
+        "answer": "UPDATE disasters\nSET value = 0\nWHERE id = 2;",
+        "optionExplanations": {
+          "UPDATE disasters\nSET value = 0\nWHERE id = 2;": "正解。WHERE id = 2を追加することで、更新対象を該当する1行だけに絞り込めます。",
+          "UPDATE disasters\nSET value = 0;": "WHERE句がないままで、原因だった全行更新を修正できていません。",
+          "SELECT *;": "UPDATE自体がなくなり、データを訂正する目的を果たしていません。"
+        }
       },
       {
         "type": "reason-impact",
@@ -13492,7 +13987,12 @@ export const SQL_QUESTIONS = [
           "全データを削除できる",
           "NULLが0に変わる"
         ],
-        "answer": "目的の列・行だけを安定して取得できる"
+        "answer": "目的の列・行だけを安定して取得できる",
+        "optionExplanations": {
+          "目的の列・行だけを安定して取得できる": "正解。WHERE句を補うことで、意図した1行だけを毎回安定して更新できます。",
+          "全データを削除できる": "このクエリはUPDATEで値を書き換えるだけで、行の削除（DELETE）は行っていません。",
+          "NULLが0に変わる": "WHERE句を補ってもNULL値が自動的に0に変換されるわけではありません。"
+        }
       }
     ]
   },
@@ -13636,7 +14136,7 @@ export const SQL_QUESTIONS = [
     "answer": "b",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
+      "correctAnswer": "結果B",
       "completedQuery": "UPDATE space_missions\nSET value = 0\nWHERE id = 2;",
       "executionSteps": [
         "1. TABLE space_missions の列名を確認します。",
@@ -13684,7 +14184,12 @@ export const SQL_QUESTIONS = [
           "表の行数が多すぎる",
           "SQLは常に行順を保証する"
         ],
-        "answer": "列名・条件・句の使い方が目的とずれている"
+        "answer": "列名・条件・句の使い方が目的とずれている",
+        "optionExplanations": {
+          "列名・条件・句の使い方が目的とずれている": "正解。UPDATE space_missions SET value = 0;にはWHERE句がないため、テーブルの全行のvalueが0に書き換えられてしまいます。",
+          "表の行数が多すぎる": "space_missionsの行数は4件で、行数の多さはエラーの原因ではありません。",
+          "SQLは常に行順を保証する": "ORDER BYがなければ行順は保証されないのが正しい前提であり、これは原因の説明にもなっていません。"
+        }
       },
       {
         "type": "fix",
@@ -13694,7 +14199,12 @@ export const SQL_QUESTIONS = [
           "UPDATE space_missions\nSET value = 0;",
           "SELECT *;"
         ],
-        "answer": "UPDATE space_missions\nSET value = 0\nWHERE id = 2;"
+        "answer": "UPDATE space_missions\nSET value = 0\nWHERE id = 2;",
+        "optionExplanations": {
+          "UPDATE space_missions\nSET value = 0\nWHERE id = 2;": "正解。WHERE id = 2を追加することで、更新対象を該当する1行だけに絞り込めます。",
+          "UPDATE space_missions\nSET value = 0;": "WHERE句がないままで、原因だった全行更新を修正できていません。",
+          "SELECT *;": "UPDATE自体がなくなり、データを訂正する目的を果たしていません。"
+        }
       },
       {
         "type": "reason-impact",
@@ -13704,7 +14214,12 @@ export const SQL_QUESTIONS = [
           "全データを削除できる",
           "NULLが0に変わる"
         ],
-        "answer": "目的の列・行だけを安定して取得できる"
+        "answer": "目的の列・行だけを安定して取得できる",
+        "optionExplanations": {
+          "目的の列・行だけを安定して取得できる": "正解。WHERE句を補うことで、意図した1行だけを毎回安定して更新できます。",
+          "全データを削除できる": "このクエリはUPDATEで値を書き換えるだけで、行の削除（DELETE）は行っていません。",
+          "NULLが0に変わる": "WHERE句を補ってもNULL値が自動的に0に変換されるわけではありません。"
+        }
       }
     ]
   },
@@ -13857,10 +14372,15 @@ export const SQL_QUESTIONS = [
         }
       }
     ],
+    "optionExplanations": {
+      "a": "行の順序が逆になっています（delta→gamma→beta→alpha）。ORDER BYがない場合、行順はTABLEのまま（alpha→beta→gamma→delta）保たれるはずです。",
+      "b": "alphaの1行しか含まれておらず、TABLEに存在するbeta、gamma、deltaの行が欠落しています。",
+      "c": "正解。対象となるのはalpha・beta・gamma・deltaの4行で、TABLEの順番のままalpha→beta→gamma→deltaの順で表示されます。"
+    },
     "answer": "c",
     "hint": "QUERY の SELECT、FROM、WHERE、ORDER BY などを上から順に読んでください。",
     "explanation": {
-      "correctAnswer": "結果A",
+      "correctAnswer": "結果C",
       "completedQuery": "-- preview first\nSELECT * FROM world_knowledge_records WHERE id = 2;\nUPDATE world_knowledge_records\nSET value = 99\nWHERE id = 2;",
       "executionSteps": [
         "1. TABLE world_knowledge_records の列名を確認します。",

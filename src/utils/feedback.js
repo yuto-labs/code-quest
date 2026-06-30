@@ -61,7 +61,7 @@ function getAudioContext() {
   }
 }
 
-const BITCRUSH_STEPS = 9;
+const BITCRUSH_STEPS = 26;
 let bitcrushCurve = null;
 
 function getBitcrushCurve() {
@@ -151,19 +151,22 @@ function noise(ctx, {
 const SOUND_PATTERNS = {
   tap: [
     [
-      { offset: 0, duration: 0.028, frequency: 150, frequencyEnd: 85, type: 'square', gain: 0.052, attack: 0.002, release: 0.012 },
-      { offset: 0, duration: 0.065, frequency: 950, frequencyEnd: 1320, type: 'triangle', gain: 0.062, release: 0.022 },
-      { kind: 'noise', offset: 0.004, duration: 0.035, frequency: 2400, gain: 0.026 },
+      { offset: 0, duration: 0.018, frequency: 130, frequencyEnd: 85, type: 'square', gain: 0.022, attack: 0.001, release: 0.009 },
+      { offset: 0, duration: 0.095, frequency: 1318.51, type: 'sine', gain: 0.082, attack: 0.002, release: 0.055 },
+      { offset: 0, duration: 0.055, frequency: 3164.4, type: 'sine', gain: 0.03, attack: 0.001, release: 0.03 },
+      { kind: 'noise', offset: 0, duration: 0.016, frequency: 5400, gain: 0.034 },
     ],
     [
-      { offset: 0, duration: 0.026, frequency: 130, frequencyEnd: 78, type: 'square', gain: 0.05, attack: 0.002, release: 0.011 },
-      { offset: 0, duration: 0.058, frequency: 780, frequencyEnd: 1100, type: 'triangle', gain: 0.06, release: 0.02 },
-      { kind: 'noise', offset: 0.003, duration: 0.03, frequency: 2100, gain: 0.023 },
+      { offset: 0, duration: 0.017, frequency: 118, frequencyEnd: 78, type: 'square', gain: 0.02, attack: 0.001, release: 0.008 },
+      { offset: 0, duration: 0.09, frequency: 1174.66, type: 'sine', gain: 0.08, attack: 0.002, release: 0.05 },
+      { offset: 0, duration: 0.05, frequency: 2819.18, type: 'sine', gain: 0.028, attack: 0.001, release: 0.028 },
+      { kind: 'noise', offset: 0, duration: 0.015, frequency: 5000, gain: 0.032 },
     ],
     [
-      { offset: 0, duration: 0.03, frequency: 165, frequencyEnd: 95, type: 'square', gain: 0.054, attack: 0.002, release: 0.012 },
-      { offset: 0, duration: 0.07, frequency: 1060, frequencyEnd: 1420, type: 'sine', gain: 0.058, release: 0.024 },
-      { kind: 'noise', offset: 0.005, duration: 0.038, frequency: 2700, gain: 0.028 },
+      { offset: 0, duration: 0.019, frequency: 145, frequencyEnd: 95, type: 'square', gain: 0.023, attack: 0.001, release: 0.009 },
+      { offset: 0, duration: 0.1, frequency: 1567.98, type: 'sine', gain: 0.078, attack: 0.002, release: 0.06 },
+      { offset: 0, duration: 0.06, frequency: 3763.15, type: 'sine', gain: 0.031, attack: 0.001, release: 0.032 },
+      { kind: 'noise', offset: 0, duration: 0.017, frequency: 5800, gain: 0.036 },
     ],
   ],
   back: [

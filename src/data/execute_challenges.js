@@ -9,6 +9,7 @@ import { RU_JAVA_EXECUTE, RU_JS_EXECUTE, RU_PY_EXECUTE } from './russia_question
 import { CN_JAVA_EXECUTE, CN_JS_EXECUTE, CN_PY_EXECUTE } from './china_questions.js';
 import { DE_JAVA_EXECUTE, DE_JS_EXECUTE, DE_PY_EXECUTE } from './germany_questions.js';
 import { GB_JAVA_EXECUTE, GB_JS_EXECUTE, GB_PY_EXECUTE } from './united_kingdom_questions.js';
+import { CA_JAVA_EXECUTE, CA_JS_EXECUTE, CA_PY_EXECUTE } from './canada_questions.js';
 
 export const EXECUTE_CHALLENGES = {
   "JP": {
@@ -1486,6 +1487,11 @@ EXECUTE_CHALLENGES.GB = {
   python: GB_PY_EXECUTE,
   javascript: GB_JS_EXECUTE,
   java: GB_JAVA_EXECUTE,
+};
+EXECUTE_CHALLENGES.CA = {
+  python: CA_PY_EXECUTE,
+  javascript: CA_JS_EXECUTE,
+  java: CA_JAVA_EXECUTE,
 };
 
 export const EXECUTE_LANGUAGES = [

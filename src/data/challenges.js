@@ -10,6 +10,7 @@ import { RU_JAVA_DECODE, RU_JS_DECODE, RU_PY_DECODE } from './russia_questions.j
 import { CN_JAVA_DECODE, CN_JS_DECODE, CN_PY_DECODE } from './china_questions.js';
 import { DE_JAVA_DECODE, DE_JS_DECODE, DE_PY_DECODE } from './germany_questions.js';
 import { GB_JAVA_DECODE, GB_JS_DECODE, GB_PY_DECODE } from './united_kingdom_questions.js';
+import { CA_JAVA_DECODE, CA_JS_DECODE, CA_PY_DECODE } from './canada_questions.js';
 
 export const CHALLENGES = {
   "JP": {
@@ -2271,6 +2272,11 @@ CHALLENGES.GB = {
   python: GB_PY_DECODE,
   javascript: GB_JS_DECODE,
   java: GB_JAVA_DECODE,
+};
+CHALLENGES.CA = {
+  python: CA_PY_DECODE,
+  javascript: CA_JS_DECODE,
+  java: CA_JAVA_DECODE,
 };
 
 export const LANGUAGES = [

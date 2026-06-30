@@ -3,7 +3,7 @@ import { SQL_QUESTIONS_BY_ID } from '../data/sql/questions';
 import { SQL_GLOBAL_FACTS_BY_ID } from '../data/sql/global_facts';
 import { SqlExplanation, SqlQueryView, SqlResultTable, SqlTableView } from '../components/SqlComponents';
 import { SQL_MAX_HEARTS } from '../utils/sqlProgress';
-import { buildCompletedSql, buildSqlHint, evaluateSqlResult, normalizeSqlOptionLabel, SQL_MODE_LABELS } from '../utils/sqlDisplay';
+import { buildCompletedSql, buildSqlHint, buildSqlOptionBreakdown, evaluateSqlResult, normalizeSqlOptionLabel, SQL_MODE_LABELS } from '../utils/sqlDisplay';
 import BackButton from '../components/BackButton';
 import { triggerFeedback } from '../utils/feedback';
 
@@ -160,6 +160,9 @@ export default function SqlChallengeScreen({
     ...question.explanation,
     correctAnswer: isDebug ? currentCorrect : (question.explanation?.correctAnswer || currentCorrect),
     completedQuery: isDecode ? completedQuery : question.explanation?.completedQuery,
+    optionBreakdown: isDebug
+      ? buildSqlOptionBreakdown({ options: currentDebug?.options, answer: currentDebug?.answer, optionExplanations: currentDebug?.optionExplanations })
+      : buildSqlOptionBreakdown({ options: question.options, answer: question.answer, optionExplanations: question.optionExplanations }),
   };
 
   const renderChapterRoute = () => {

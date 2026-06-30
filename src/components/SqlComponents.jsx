@@ -71,6 +71,7 @@ export function SqlExplanation({ explanation, fact }) {
       {explanation.correctAnswer && <Block title="正解">{explanation.correctAnswer}</Block>}
       <SqlQueryView title="完成 QUERY" query={explanation.completedQuery} />
       {explanation.executionSteps?.length > 0 && <Block title="実行ステップ">{explanation.executionSteps.join('\n')}</Block>}
+      <OptionBreakdown items={explanation.optionBreakdown} />
       {explanation.commonMistakes?.length > 0 && (
         <Block title="よくある間違い">
           {explanation.commonMistakes.map(item => `NG: ${item.wrong}\n理由: ${item.reason}\nOK: ${item.correct}`).join('\n\n')}
@@ -79,6 +80,29 @@ export function SqlExplanation({ explanation, fact }) {
       {explanation.sqlExplanation && <Block title="SQL解説">{explanation.sqlExplanation}</Block>}
       {fact && <ThemeCard fact={fact} sources={explanation.sourceRefs || fact.sourceRefs || []} />}
     </div>
+  );
+}
+
+function OptionBreakdown({ items = [] }) {
+  const withReason = items.filter(item => item.reason);
+  if (withReason.length === 0) return null;
+  return (
+    <section style={styles.section}>
+      <div style={styles.label}>選択肢の解説</div>
+      <div style={styles.optionList}>
+        {items.map(item => (
+          <div key={item.option} style={styles.optionRow}>
+            <span style={item.isCorrect ? styles.optionMarkCorrect : styles.optionMarkWrong}>
+              {item.isCorrect ? '○' : '×'}
+            </span>
+            <div style={styles.optionRowBody}>
+              <span style={styles.optionRowText}>{item.option}</span>
+              {item.reason && <span style={styles.optionRowReason}>{item.reason}</span>}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -156,6 +180,13 @@ const styles = {
   sources: { borderTop: '1px solid rgba(0,255,136,0.16)', paddingTop: 8 },
   sourceSummary: { color: 'var(--text-dim)', cursor: 'pointer', fontFamily: 'var(--pixel-font)', fontSize: 8 },
   sourceLink: { display: 'block', color: 'var(--accent)', fontSize: 10, lineHeight: 1.8, marginTop: 8 },
+  optionList: { display: 'flex', flexDirection: 'column', gap: 8 },
+  optionRow: { display: 'flex', gap: 8, alignItems: 'flex-start' },
+  optionMarkCorrect: { flex: '0 0 auto', color: 'var(--accent)', fontSize: 11, lineHeight: 1.7 },
+  optionMarkWrong: { flex: '0 0 auto', color: 'var(--danger)', fontSize: 11, lineHeight: 1.7 },
+  optionRowBody: { display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 },
+  optionRowText: { fontSize: 10, color: 'var(--text)', lineHeight: 1.7, wordBreak: 'break-word' },
+  optionRowReason: { fontSize: 9, color: 'var(--text-dim)', lineHeight: 1.8, wordBreak: 'break-word' },
   progressWrap: { display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 },
   progressText: { color: 'var(--text-dim)', fontSize: 9, minWidth: 48, textAlign: 'right' },
 };

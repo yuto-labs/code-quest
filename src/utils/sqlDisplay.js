@@ -141,6 +141,19 @@ export function buildSqlHint(question, currentDebugStep = null) {
   return 'QUERY の空欄の前後を読み、TABLE と RESULT のどちらに対応しているかを見比べます。';
 }
 
+export function buildSqlOptionBreakdown({ options, answer, optionExplanations }) {
+  if (!options?.length) return [];
+  return options.map((option) => {
+    const isResultOption = typeof option === 'object' && option !== null;
+    const key = isResultOption ? option.id : option;
+    return {
+      option: isResultOption ? normalizeSqlOptionLabel(option) : option,
+      isCorrect: key === answer,
+      reason: optionExplanations?.[key],
+    };
+  });
+}
+
 export function normalizeSqlOptionLabel(option) {
   const label = typeof option === 'string' ? option : (option?.label || option?.id || '');
   const id = typeof option === 'string' ? option : option?.id;

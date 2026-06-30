@@ -25,7 +25,7 @@ export default function WireframeBackground({ countryId }) {
         <img
           src={src}
           alt=""
-          fetchpriority="high"
+          fetchPriority="high"
           decoding="sync"
           style={styles.img}
         />

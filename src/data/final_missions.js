@@ -519,6 +519,12 @@ export const FINAL_MISSIONS = {
               "other",
               "Error"
             ],
+            "optionExplanations": {
+              "Sacred Sites and Pilgrimage Routes in Kii Mountain Range": "正解。country==JPかつheritage/routeタグを持ちscore>=5を満たす唯一の要素なのでselectedに残り、並べ替えても先頭になります。",
+              "context": "nearby contextはscoreが4でscore>=5の条件を満たさないため、selectedから除外されます。",
+              "other": "outside sampleはcountryがJPではないため、最初の条件で除外されます。",
+              "Error": "条件を満たす要素が1件あり、joinも正しく動くため例外は発生しません。"
+            },
             "answer": "Sacred Sites and Pilgrimage Routes in Kii Mountain Range",
             "hint": "country が JP で、score が 5 以上の要素だけを残します。その後 score の大きい順に並びます。",
             "explanation": "条件を満たす主題データだけが残るため、出力は Sacred Sites and Pilgrimage Routes in Kii Mountain Range です。",
@@ -550,6 +556,12 @@ export const FINAL_MISSIONS = {
               "other",
               "Error"
             ],
+            "optionExplanations": {
+              "Kurobe Dam": "正解。country==JPかつheritage/routeタグを持ちscore>=6を満たす唯一の要素なのでselectedに残ります。",
+              "context": "nearby contextはscoreが5でscore>=6の条件を満たさないため、selectedから除外されます。",
+              "other": "outside sampleはcountryがJPではないため、最初の条件で除外されます。",
+              "Error": "条件を満たす要素が1件あり、joinも正しく動くため例外は発生しません。"
+            },
             "answer": "Kurobe Dam",
             "hint": "country が JP で、score が 6 以上の要素だけを残します。その後 score の大きい順に並びます。",
             "explanation": "条件を満たす主題データだけが残るため、出力は Kurobe Dam です。",
@@ -581,6 +593,12 @@ export const FINAL_MISSIONS = {
               "Toyama",
               "Error"
             ],
+            "optionExplanations": {
+              "Gokayama gassho-zukuri villages": "正解。listedかつToyamaの2件の家屋数18+4=22が20以上を満たすため、結果のGokayama gassho-zukuri villagesが表示されます。",
+              "review": "groups.get(\"Toyama\", 0)は22で20以上を満たすため、elseのreviewが返ることはありません。",
+              "Toyama": "Toyamaはキー名であり、resultにはそのキーに対応する判定結果の文字列が入ります。",
+              "Error": "辞書のgetやif条件はいずれも正常な操作で、例外は発生しません。"
+            },
             "answer": "Gokayama gassho-zukuri villages",
             "hint": "country が JP で、score が 7 以上の要素だけを残します。その後 score の大きい順に並びます。",
             "explanation": "条件を満たす主題データだけが残るため、出力は Gokayama gassho-zukuri villages です。",
@@ -622,6 +640,12 @@ export const FINAL_MISSIONS = {
               "other",
               "Error"
             ],
+            "optionExplanations": {
+              "Shikoku 88-temple pilgrimage": "正解。country==JPかつheritage/routeタグを持ちscore>=6を満たす唯一の要素なので、3段のfilterを通過して残ります。",
+              "context": "local contextはscoreが5でscore>=6の条件を満たさないため、3番目のfilterで除外されます。",
+              "other": "outside sampleはcountryがJPではないため、最初のfilterで除外されます。",
+              "Error": "filterとmapはいずれも正常な配列操作で、例外は発生しません。"
+            },
             "answer": "Shikoku 88-temple pilgrimage",
             "hint": "JP かつ score が 6 以上の要素を残します。Final では tag 条件と sort も確認します。",
             "explanation": "条件を満たす主題データだけが残るため、出力は Shikoku 88-temple pilgrimage です。",
@@ -653,6 +677,12 @@ export const FINAL_MISSIONS = {
               "7",
               "Error"
             ],
+            "optionExplanations": {
+              "Sanriku ria coast": "正解。Sanriku ria coast(5)とSanriku inlet(2)のbaysを合計すると7になり、7>=7を満たすのでsummary.names[0]のSanriku ria coastが表示されます。",
+              "review": "summary.baysは7で7>=7を満たすため、3項演算子のfalse側であるreviewは返りません。",
+              "7": "7はbaysの合計値であり、出力されるのはnames[0]の文字列でこの数値そのものではありません。",
+              "Error": "reduceとプロパティアクセスはいずれも正常な操作で、例外は発生しません。"
+            },
             "answer": "Sanriku ria coast",
             "hint": "JP かつ score が 7 以上の要素を残します。Final では tag 条件と sort も確認します。",
             "explanation": "条件を満たす主題データだけが残るため、出力は Sanriku ria coast です。",
@@ -684,6 +714,12 @@ export const FINAL_MISSIONS = {
               "other",
               "Error"
             ],
+            "optionExplanations": {
+              "Toyota Production System kanban": "正解。country==JPかつheritage/routeタグを持ちscore>=8を満たす唯一の要素なので、3段のfilterを通過して残ります。",
+              "context": "local contextはscoreが7でscore>=8の条件を満たさないため、3番目のfilterで除外されます。",
+              "other": "outside sampleはcountryがJPではないため、最初のfilterで除外されます。",
+              "Error": "filterとmapはいずれも正常な配列操作で、例外は発生しません。"
+            },
             "answer": "Toyota Production System kanban",
             "hint": "JP かつ score が 8 以上の要素を残します。Final では tag 条件と sort も確認します。",
             "explanation": "条件を満たす主題データだけが残るため、出力は Toyota Production System kanban です。",
@@ -727,6 +763,12 @@ export const FINAL_MISSIONS = {
               "outside sample",
               "Error"
             ],
+            "optionExplanations": {
+              "Everglades ecosystem/site data:9": "正解。country==USかつheritage/science/routeタグを持ちscore>=8を満たす唯一の要素なので、選ばれてname:scoreの形式で表示されます。",
+              "context sample": "context sampleはscoreが4でscore>=8の条件を満たさないため、selectedから除外されます。",
+              "outside sample": "outside sampleはcountryがUSではないため、最初の条件で除外されます。",
+              "Error": "ソートやリスト内包表記はいずれも正常な操作で、例外は発生しません。"
+            },
             "answer": "Everglades ecosystem/site data:9",
             "hint": "country、kind/tag、score の条件を上から順に確認します。",
             "explanation": "条件をすべて満たす対象だけが残るため、出力は Everglades ecosystem/site data:9 です。",
@@ -771,6 +813,12 @@ export const FINAL_MISSIONS = {
               "outside sample",
               "Error"
             ],
+            "optionExplanations": {
+              "Hubble launch/servicing timeline:10": "正解。country==USかつheritage/science/routeタグを持ちscore>=9を満たす唯一の要素なので、選ばれてname:scoreの形式で表示されます。",
+              "context sample": "context sampleはscoreが5でscore>=9の条件を満たさないため、selectedから除外されます。",
+              "outside sample": "outside sampleはcountryがUSではないため、最初の条件で除外されます。",
+              "Error": "ソートやリスト内包表記はいずれも正常な操作で、例外は発生しません。"
+            },
             "answer": "Hubble launch/servicing timeline:10",
             "hint": "country、kind/tag、score の条件を上から順に確認します。",
             "explanation": "条件をすべて満たす対象だけが残るため、出力は Hubble launch/servicing timeline:10 です。",
@@ -815,6 +863,12 @@ export const FINAL_MISSIONS = {
               "outside sample",
               "Error"
             ],
+            "optionExplanations": {
+              "Interstate Highway System route data:11": "正解。country==USかつheritage/science/routeタグを持ちscore>=10を満たす唯一の要素なので、選ばれてname:scoreの形式で表示されます。",
+              "context sample": "context sampleはscoreが6でscore>=10の条件を満たさないため、selectedから除外されます。",
+              "outside sample": "outside sampleはcountryがUSではないため、最初の条件で除外されます。",
+              "Error": "ソートやリスト内包表記はいずれも正常な操作で、例外は発生しません。"
+            },
             "answer": "Interstate Highway System route data:11",
             "hint": "country、kind/tag、score の条件を上から順に確認します。",
             "explanation": "条件をすべて満たす対象だけが残るため、出力は Interstate Highway System route data:11 です。",
@@ -869,6 +923,12 @@ export const FINAL_MISSIONS = {
               "outside sample",
               "Error"
             ],
+            "optionExplanations": {
+              "Chaco Culture site data:9": "正解。country==USかつheritage/route/networkタグを持ちscore>=8を満たす唯一の要素なので、3段のfilterを通過しname:scoreの形式で表示されます。",
+              "context sample": "context sampleはscoreが4でscore>=8の条件を満たさないため、3番目のfilterで除外されます。",
+              "outside sample": "outside sampleはcountryがUSではないため、最初のfilterで除外されます。",
+              "Error": "filter、sort、mapはいずれも正常な配列操作で、例外は発生しません。"
+            },
             "answer": "Chaco Culture site data:9",
             "hint": "country、kind/tag、score の条件を上から順に確認します。",
             "explanation": "条件をすべて満たす対象だけが残るため、出力は Chaco Culture site data:9 です。",
@@ -913,6 +973,12 @@ export const FINAL_MISSIONS = {
               "outside sample",
               "Error"
             ],
+            "optionExplanations": {
+              "Erie Canal route/timeline:10": "正解。country==USかつheritage/route/networkタグを持ちscore>=9を満たす唯一の要素なので、3段のfilterを通過しname:scoreの形式で表示されます。",
+              "context sample": "context sampleはscoreが5でscore>=9の条件を満たさないため、3番目のfilterで除外されます。",
+              "outside sample": "outside sampleはcountryがUSではないため、最初のfilterで除外されます。",
+              "Error": "filter、sort、mapはいずれも正常な配列操作で、例外は発生しません。"
+            },
             "answer": "Erie Canal route/timeline:10",
             "hint": "country、kind/tag、score の条件を上から順に確認します。",
             "explanation": "条件をすべて満たす対象だけが残るため、出力は Erie Canal route/timeline:10 です。",
@@ -957,6 +1023,12 @@ export const FINAL_MISSIONS = {
               "outside sample",
               "Error"
             ],
+            "optionExplanations": {
+              "ARPANET first-message log context:11": "正解。country==USかつheritage/route/networkタグを持ちscore>=10を満たす唯一の要素なので、3段のfilterを通過しname:scoreの形式で表示されます。",
+              "context sample": "context sampleはscoreが6でscore>=10の条件を満たさないため、3番目のfilterで除外されます。",
+              "outside sample": "outside sampleはcountryがUSではないため、最初のfilterで除外されます。",
+              "Error": "filter、sort、mapはいずれも正常な配列操作で、例外は発生しません。"
+            },
             "answer": "ARPANET first-message log context:11",
             "hint": "country、kind/tag、score の条件を上から順に確認します。",
             "explanation": "条件をすべて満たす対象だけが残るため、出力は ARPANET first-message log context:11 です。",
@@ -1022,7 +1094,12 @@ export const FINAL_MISSIONS = {
                 ],
                 "answer": "変換後の `local_time` ではなく、変換前の `utc_time` から日付を返している。",
                 "hint": "値を作っている行ではなく、比較または return で使っている変数を見ます。",
-                "explanation": "変換後の `local_time` ではなく、変換前の `utc_time` から日付を返している。"
+                "explanation": "変換後の `local_time` ではなく、変換前の `utc_time` から日付を返している。",
+                "optionExplanations": {
+                  "変換後の `local_time` ではなく、変換前の `utc_time` から日付を返している。": "正解。utc_time（変換前のUTC時刻）からstrftimeしているため、UTC+9時間を加えたlocal_time側の日付が反映されず、日付またぎのケースで実際の日本時間とずれます。",
+                  "配列の長さが常に0になっている": "recordsには要素が2件あり、forループも正常に2回実行されるため、配列が空という事実誤りです。",
+                  "print 文がコメントアウトされている": "print文はコメントアウトされておらず、実際に出力は行われています。問題は出力される日付の値が誤っている点です。"
+                }
               },
               {
                 "stepNum": 2,
@@ -1036,7 +1113,12 @@ export const FINAL_MISSIONS = {
                 ],
                 "answer": "`return local_time.strftime(\"%Y-%m-%d\")` に変更する",
                 "hint": "データを消さず、処理の対象になる値を正しくそろえる修正を選びます。",
-                "explanation": "`return local_time.strftime(\"%Y-%m-%d\")` に変更する"
+                "explanation": "`return local_time.strftime(\"%Y-%m-%d\")` に変更する",
+                "optionExplanations": {
+                  "`return local_time.strftime(\"%Y-%m-%d\")` に変更する": "正解。すでに計算済みのlocal_time（UTC+9を加えた時刻）からstrftimeすることで、日本時間基準の正しい日付を返せます。",
+                  "データを空にしてエラーを避ける": "データを空にすると本来表示すべき結果自体が失われてしまい、不具合の修正にはなりません。",
+                  "常に最初の record を表示する": "最初のrecordだけを表示してもループの目的を果たせず、他のrecordの結果が欠落します。"
+                }
               },
               {
                 "stepNum": 3,
@@ -1050,7 +1132,12 @@ export const FINAL_MISSIONS = {
                 ],
                 "answer": "午前0時をまたぐ日本時間の日付が正しく表示される。",
                 "hint": "修正で改善される境界ケースまたは表記ゆれに注目します。",
-                "explanation": "午前0時をまたぐ日本時間の日付が正しく表示される。"
+                "explanation": "午前0時をまたぐ日本時間の日付が正しく表示される。",
+                "optionExplanations": {
+                  "午前0時をまたぐ日本時間の日付が正しく表示される。": "正解。local_timeを使うことで、UTC側ではまだ前日でも日本時間で日付が変わるケースが正しく反映されます。",
+                  "国別データが不要になる": "country条件によるフィルタはそのまま残っており、国別データが不要になるわけではありません。",
+                  "すべての入力が同じ結果になる": "各recordのutc値は異なるため、修正後もrecordごとに異なる日付が出力されます。"
+                }
               }
             ],
             "correctAnswer": "変換後の `local_time` ではなく、変換前の `utc_time` から日付を返している。 / `return local_time.strftime(\"%Y-%m-%d\")` に変更する / 午前0時をまたぐ日本時間の日付が正しく表示される。",
@@ -1091,7 +1178,12 @@ export const FINAL_MISSIONS = {
                 ],
                 "answer": "変換後の `local_time` ではなく、変換前の `utc_time` から日付を返している。",
                 "hint": "値を作っている行ではなく、比較または return で使っている変数を見ます。",
-                "explanation": "変換後の `local_time` ではなく、変換前の `utc_time` から日付を返している。"
+                "explanation": "変換後の `local_time` ではなく、変換前の `utc_time` から日付を返している。",
+                "optionExplanations": {
+                  "変換後の `local_time` ではなく、変換前の `utc_time` から日付を返している。": "正解。utc_time（変換前のUTC時刻）からstrftimeしているため、UTC+9時間を加えたlocal_time側の日付が反映されず、日付またぎのケースで実際の日本時間とずれます。",
+                  "配列の長さが常に0になっている": "recordsには要素が2件あり、forループも正常に2回実行されるため、配列が空という事実誤りです。",
+                  "print 文がコメントアウトされている": "print文はコメントアウトされておらず、実際に出力は行われています。問題は出力される日付の値が誤っている点です。"
+                }
               },
               {
                 "stepNum": 2,
@@ -1105,7 +1197,12 @@ export const FINAL_MISSIONS = {
                 ],
                 "answer": "`return local_time.strftime(\"%Y-%m-%d\")` に変更する",
                 "hint": "データを消さず、処理の対象になる値を正しくそろえる修正を選びます。",
-                "explanation": "`return local_time.strftime(\"%Y-%m-%d\")` に変更する"
+                "explanation": "`return local_time.strftime(\"%Y-%m-%d\")` に変更する",
+                "optionExplanations": {
+                  "`return local_time.strftime(\"%Y-%m-%d\")` に変更する": "正解。すでに計算済みのlocal_time（UTC+9を加えた時刻）からstrftimeすることで、日本時間基準の正しい日付を返せます。",
+                  "データを空にしてエラーを避ける": "データを空にすると本来表示すべき結果自体が失われてしまい、不具合の修正にはなりません。",
+                  "常に最初の record を表示する": "最初のrecordだけを表示してもループの目的を果たせず、他のrecordの結果が欠落します。"
+                }
               },
               {
                 "stepNum": 3,
@@ -1119,7 +1216,12 @@ export const FINAL_MISSIONS = {
                 ],
                 "answer": "午前0時をまたぐ日本時間の日付が正しく表示される。",
                 "hint": "修正で改善される境界ケースまたは表記ゆれに注目します。",
-                "explanation": "午前0時をまたぐ日本時間の日付が正しく表示される。"
+                "explanation": "午前0時をまたぐ日本時間の日付が正しく表示される。",
+                "optionExplanations": {
+                  "午前0時をまたぐ日本時間の日付が正しく表示される。": "正解。local_timeを使うことで、UTC側ではまだ前日でも日本時間で日付が変わるケースが正しく反映されます。",
+                  "国別データが不要になる": "country条件によるフィルタはそのまま残っており、国別データが不要になるわけではありません。",
+                  "すべての入力が同じ結果になる": "各recordのutc値は異なるため、修正後もrecordごとに異なる日付が出力されます。"
+                }
               }
             ],
             "correctAnswer": "変換後の `local_time` ではなく、変換前の `utc_time` から日付を返している。 / `return local_time.strftime(\"%Y-%m-%d\")` に変更する / 午前0時をまたぐ日本時間の日付が正しく表示される。",
@@ -1160,7 +1262,12 @@ export const FINAL_MISSIONS = {
                 ],
                 "answer": "変換後の `local_time` ではなく、変換前の `utc_time` から日付を返している。",
                 "hint": "値を作っている行ではなく、比較または return で使っている変数を見ます。",
-                "explanation": "変換後の `local_time` ではなく、変換前の `utc_time` から日付を返している。"
+                "explanation": "変換後の `local_time` ではなく、変換前の `utc_time` から日付を返している。",
+                "optionExplanations": {
+                  "変換後の `local_time` ではなく、変換前の `utc_time` から日付を返している。": "正解。utc_time（変換前のUTC時刻）からstrftimeしているため、UTC+9時間を加えたlocal_time側の日付が反映されず、日付またぎのケースで実際の日本時間とずれます。",
+                  "配列ではなく Set を使っていること": "recordsはリスト（配列）として定義されており、Setは使われていません。",
+                  "print 文がコメントアウトされている": "print文はコメントアウトされておらず、実際に出力は行われています。問題は出力される日付の値が誤っている点です。"
+                }
               },
               {
                 "stepNum": 2,
@@ -1174,7 +1281,12 @@ export const FINAL_MISSIONS = {
                 ],
                 "answer": "`return local_time.strftime(\"%Y-%m-%d\")` に変更する",
                 "hint": "データを消さず、処理の対象になる値を正しくそろえる修正を選びます。",
-                "explanation": "`return local_time.strftime(\"%Y-%m-%d\")` に変更する"
+                "explanation": "`return local_time.strftime(\"%Y-%m-%d\")` に変更する",
+                "optionExplanations": {
+                  "`return local_time.strftime(\"%Y-%m-%d\")` に変更する": "正解。すでに計算済みのlocal_time（UTC+9を加えた時刻）からstrftimeすることで、日本時間基準の正しい日付を返せます。",
+                  "表示する文字列だけを uppercase にする": "文字列の大文字化は日付計算のロジックには関係せず、誤った日付がそのまま大文字で表示されるだけです。",
+                  "常に最初の record を表示する": "最初のrecordだけを表示してもループの目的を果たせず、他のrecordの結果が欠落します。"
+                }
               },
               {
                 "stepNum": 3,
@@ -1188,7 +1300,12 @@ export const FINAL_MISSIONS = {
                 ],
                 "answer": "午前0時をまたぐ日本時間の日付が正しく表示される。",
                 "hint": "修正で改善される境界ケースまたは表記ゆれに注目します。",
-                "explanation": "午前0時をまたぐ日本時間の日付が正しく表示される。"
+                "explanation": "午前0時をまたぐ日本時間の日付が正しく表示される。",
+                "optionExplanations": {
+                  "午前0時をまたぐ日本時間の日付が正しく表示される。": "正解。local_timeを使うことで、UTC側ではまだ前日でも日本時間で日付が変わるケースが正しく反映されます。",
+                  "すべての国データを同じ年度へ丸める": "年度を丸める処理ではなく、日付の文字列表現を正しい時刻から生成するようにする修正です。",
+                  "すべての入力が同じ結果になる": "各recordのutc値は異なるため、修正後もrecordごとに異なる日付が出力されます。"
+                }
               }
             ],
             "correctAnswer": "変換後の `local_time` ではなく、変換前の `utc_time` から日付を返している。 / `return local_time.strftime(\"%Y-%m-%d\")` に変更する / 午前0時をまたぐ日本時間の日付が正しく表示される。",
@@ -1239,7 +1356,12 @@ export const FINAL_MISSIONS = {
                 ],
                 "answer": "年度が4月開始なのに、常に暦年 `getFullYear()` を返している。",
                 "hint": "比較式または年度計算の条件を確認します。",
-                "explanation": "年度が4月開始なのに、常に暦年 `getFullYear()` を返している。"
+                "explanation": "年度が4月開始なのに、常に暦年 `getFullYear()` を返している。",
+                "optionExplanations": {
+                  "年度が4月開始なのに、常に暦年 `getFullYear()` を返している。": "正解。日本の年度は4月始まりですが、コードはgetFullYear()（西暦の年）をそのまま返すだけなので、1〜3月の日付も年度をまたいだ前年として扱われず暦年のまま表示されます。",
+                  "配列の末尾だけが処理される": "for...ofはrecords全体を順番に処理しており、末尾だけが処理されるわけではありません。",
+                  "console.log が非同期で遅れている": "console.logは同期的に実行されるため、非同期の遅延は発生していません。"
+                }
               },
               {
                 "stepNum": 2,
@@ -1253,7 +1375,12 @@ export const FINAL_MISSIONS = {
                 ],
                 "answer": "月が4月より前なら前年を返す条件を追加する",
                 "hint": "データを消さず、条件式の扱いを正しくします。",
-                "explanation": "月が4月より前なら前年を返す条件を追加する"
+                "explanation": "月が4月より前なら前年を返す条件を追加する",
+                "optionExplanations": {
+                  "月が4月より前なら前年を返す条件を追加する": "正解。getMonth()が3未満（1〜3月）なら年度はまだ前の年として扱う必要があるため、その条件分岐を追加すると日本の年度区分に合わせられます。",
+                  "records を空配列にする": "データを空にすると本来表示すべき結果自体が失われ、不具合の修正にはなりません。",
+                  "常に true を返す": "常にtrueを返しても年度の計算ロジック自体は変わらず、誤った年が表示され続けます。"
+                }
               },
               {
                 "stepNum": 3,
@@ -1267,7 +1394,12 @@ export const FINAL_MISSIONS = {
                 ],
                 "answer": "1月から3月の日付を前年度として扱える。",
                 "hint": "表記ゆれまたは日付境界を正しく扱えるかを見ます。",
-                "explanation": "1月から3月の日付を前年度として扱える。"
+                "explanation": "1月から3月の日付を前年度として扱える。",
+                "optionExplanations": {
+                  "1月から3月の日付を前年度として扱える。": "正解。getMonth()<3の条件により、1〜3月の日付は前の年度として正しく分類されるようになります。",
+                  "国別データが不要になる": "country条件による処理はそのまま残っており、国別データが不要になるわけではありません。",
+                  "どの入力でも同じ record を返す": "各recordのdateは異なるため、修正後もrecordごとに異なる年度が出力されます。"
+                }
               }
             ],
             "correctAnswer": "年度が4月開始なのに、常に暦年 `getFullYear()` を返している。 / 月が4月より前なら前年を返す条件を追加する / 1月から3月の日付を前年度として扱える。",
@@ -1308,7 +1440,12 @@ export const FINAL_MISSIONS = {
                 ],
                 "answer": "年度が4月開始なのに、常に暦年 `getFullYear()` を返している。",
                 "hint": "比較式または年度計算の条件を確認します。",
-                "explanation": "年度が4月開始なのに、常に暦年 `getFullYear()` を返している。"
+                "explanation": "年度が4月開始なのに、常に暦年 `getFullYear()` を返している。",
+                "optionExplanations": {
+                  "年度が4月開始なのに、常に暦年 `getFullYear()` を返している。": "正解。日本の年度は4月始まりですが、コードはgetFullYear()（西暦の年）をそのまま返すだけなので、1〜3月の日付も年度をまたいだ前年として扱われず暦年のまま表示されます。",
+                  "配列ではなく Set を使っていること": "recordsは配列として定義されており、Setは使われていません。",
+                  "console.log が非同期で遅れている": "console.logは同期的に実行されるため、非同期の遅延は発生していません。"
+                }
               },
               {
                 "stepNum": 2,
@@ -1322,7 +1459,12 @@ export const FINAL_MISSIONS = {
                 ],
                 "answer": "月が4月より前なら前年を返す条件を追加する",
                 "hint": "データを消さず、条件式の扱いを正しくします。",
-                "explanation": "月が4月より前なら前年を返す条件を追加する"
+                "explanation": "月が4月より前なら前年を返す条件を追加する",
+                "optionExplanations": {
+                  "月が4月より前なら前年を返す条件を追加する": "正解。getMonth()が3未満（1〜3月）なら年度はまだ前の年として扱う必要があるため、その条件分岐を追加すると日本の年度区分に合わせられます。",
+                  "表示する文字列だけを uppercase にする": "文字列の大文字化は年度計算のロジックには関係せず、誤った年がそのまま大文字で表示されるだけです。",
+                  "常に true を返す": "常にtrueを返しても年度の計算ロジック自体は変わらず、誤った年が表示され続けます。"
+                }
               },
               {
                 "stepNum": 3,
@@ -1336,7 +1478,12 @@ export const FINAL_MISSIONS = {
                 ],
                 "answer": "1月から3月の日付を前年度として扱える。",
                 "hint": "表記ゆれまたは日付境界を正しく扱えるかを見ます。",
-                "explanation": "1月から3月の日付を前年度として扱える。"
+                "explanation": "1月から3月の日付を前年度として扱える。",
+                "optionExplanations": {
+                  "1月から3月の日付を前年度として扱える。": "正解。getMonth()<3の条件により、1〜3月の日付は前の年度として正しく分類されるようになります。",
+                  "すべての国データを同じ年度へ丸める": "年度をすべて同じ値に丸める処理ではなく、月に応じて正しい年度を計算する修正です。",
+                  "どの入力でも同じ record を返す": "各recordのdateは異なるため、修正後もrecordごとに異なる年度が出力されます。"
+                }
               }
             ],
             "correctAnswer": "年度が4月開始なのに、常に暦年 `getFullYear()` を返している。 / 月が4月より前なら前年を返す条件を追加する / 1月から3月の日付を前年度として扱える。",
@@ -1377,7 +1524,12 @@ export const FINAL_MISSIONS = {
                 ],
                 "answer": "年度が4月開始なのに、常に暦年 `getFullYear()` を返している。",
                 "hint": "比較式または年度計算の条件を確認します。",
-                "explanation": "年度が4月開始なのに、常に暦年 `getFullYear()` を返している。"
+                "explanation": "年度が4月開始なのに、常に暦年 `getFullYear()` を返している。",
+                "optionExplanations": {
+                  "年度が4月開始なのに、常に暦年 `getFullYear()` を返している。": "正解。日本の年度は4月始まりですが、コードはgetFullYear()（西暦の年）をそのまま返すだけなので、1〜3月の日付も年度をまたいだ前年として扱われず暦年のまま表示されます。",
+                  "配列の末尾だけが処理される": "for...ofはrecords全体を順番に処理しており、末尾だけが処理されるわけではありません。",
+                  "console.log が非同期で遅れている": "console.logは同期的に実行されるため、非同期の遅延は発生していません。"
+                }
               },
               {
                 "stepNum": 2,
@@ -1391,7 +1543,12 @@ export const FINAL_MISSIONS = {
                 ],
                 "answer": "月が4月より前なら前年を返す条件を追加する",
                 "hint": "データを消さず、条件式の扱いを正しくします。",
-                "explanation": "月が4月より前なら前年を返す条件を追加する"
+                "explanation": "月が4月より前なら前年を返す条件を追加する",
+                "optionExplanations": {
+                  "月が4月より前なら前年を返す条件を追加する": "正解。getMonth()が3未満（1〜3月）なら年度はまだ前の年として扱う必要があるため、その条件分岐を追加すると日本の年度区分に合わせられます。",
+                  "records を空配列にする": "データを空にすると本来表示すべき結果自体が失われ、不具合の修正にはなりません。",
+                  "常に true を返す": "常にtrueを返しても年度の計算ロジック自体は変わらず、誤った年が表示され続けます。"
+                }
               },
               {
                 "stepNum": 3,
@@ -1405,7 +1562,12 @@ export const FINAL_MISSIONS = {
                 ],
                 "answer": "1月から3月の日付を前年度として扱える。",
                 "hint": "表記ゆれまたは日付境界を正しく扱えるかを見ます。",
-                "explanation": "1月から3月の日付を前年度として扱える。"
+                "explanation": "1月から3月の日付を前年度として扱える。",
+                "optionExplanations": {
+                  "1月から3月の日付を前年度として扱える。": "正解。getMonth()<3の条件により、1〜3月の日付は前の年度として正しく分類されるようになります。",
+                  "国別データが不要になる": "country条件による処理はそのまま残っており、国別データが不要になるわけではありません。",
+                  "どの入力でも同じ record を返す": "各recordのdateは異なるため、修正後もrecordごとに異なる年度が出力されます。"
+                }
               }
             ],
             "correctAnswer": "年度が4月開始なのに、常に暦年 `getFullYear()` を返している。 / 月が4月より前なら前年を返す条件を追加する / 1月から3月の日付を前年度として扱える。",
@@ -1457,7 +1619,12 @@ export const FINAL_MISSIONS = {
                 ],
                 "answer": "federal holiday observed-date rule で入力表記を正規化せず、保存データのキー形式と一致しない",
                 "hint": "入力値とキーの表記を比べます。",
-                "explanation": "federal holiday observed-date rule で入力表記を正規化せず、保存データのキー形式と一致しない"
+                "explanation": "federal holiday observed-date rule で入力表記を正規化せず、保存データのキー形式と一致しない",
+                "optionExplanations": {
+                  "federal holiday observed-date rule で入力表記を正規化せず、保存データのキー形式と一致しない": "正解。lookupのキーは小文字の\"ny\"/\"ca\"で保存されていますが、input_codeは大文字の\"NY\"のままlookup[input_code]を参照しているため、辞書に存在しないキーとなりKeyErrorの原因になります。",
+                  "出力関数の名前が違う": "print関数自体は正しく呼び出されており、関数名の誤りはありません。",
+                  "データが空になっている": "lookup辞書には\"ny\"と\"ca\"のデータが存在しており、空ではありません。"
+                }
               },
               {
                 "stepNum": 2,
@@ -1471,7 +1638,12 @@ export const FINAL_MISSIONS = {
                 ],
                 "answer": "参照前に lower() でキー形式をそろえる",
                 "hint": "データを消さず、入力を同じ形式にそろえます。",
-                "explanation": "参照前に lower() でキー形式をそろえる"
+                "explanation": "参照前に lower() でキー形式をそろえる",
+                "optionExplanations": {
+                  "参照前に lower() でキー形式をそろえる": "正解。input_code.lower()で\"NY\"を\"ny\"に変換すれば、lookup辞書のキー形式と一致し正しく値を参照できます。",
+                  "常に最初の値を返す": "常に最初の値を返すと入力コードに関係なく同じ結果になり、正しい実体を参照できません。",
+                  "キーを削除してから参照する": "キーを削除すると参照先のデータ自体が消えてしまい、KeyErrorが解消されません。"
+                }
               },
               {
                 "stepNum": 3,
@@ -1485,7 +1657,12 @@ export const FINAL_MISSIONS = {
                 ],
                 "answer": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
                 "hint": "表記ゆれを吸収できるかを考えます。",
-                "explanation": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる"
+                "explanation": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
+                "optionExplanations": {
+                  "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる": "正解。lower()による正規化で、\"NY\"\"ny\"\"Ny\"などの表記ゆれがあっても同じキーとして一致し、安定して値を参照できます。",
+                  "出典データが不要になる": "lookup辞書のデータはそのまま必要であり、不要になるわけではありません。",
+                  "どの入力でも同じ固定値を返す": "正規化後も入力コードごとに対応する異なる値（New York/California等）が返されます。"
+                }
               }
             ],
             "correctAnswer": "federal holiday observed-date rule で入力表記を正規化せず、保存データのキー形式と一致しない / 参照前に lower() でキー形式をそろえる / 大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
@@ -1543,7 +1720,12 @@ export const FINAL_MISSIONS = {
                 ],
                 "answer": "US customary mile/foot conversion で入力表記を正規化せず、保存データのキー形式と一致しない",
                 "hint": "入力値とキーの表記を比べます。",
-                "explanation": "US customary mile/foot conversion で入力表記を正規化せず、保存データのキー形式と一致しない"
+                "explanation": "US customary mile/foot conversion で入力表記を正規化せず、保存データのキー形式と一致しない",
+                "optionExplanations": {
+                  "US customary mile/foot conversion で入力表記を正規化せず、保存データのキー形式と一致しない": "正解。lookupのキーは小文字の\"ny\"/\"ca\"で保存されていますが、input_codeは大文字の\"NY\"のままlookup[input_code]を参照しているため、辞書に存在しないキーとなりKeyErrorの原因になります。",
+                  "出力関数の名前が違う": "print関数自体は正しく呼び出されており、関数名の誤りはありません。",
+                  "データが空になっている": "lookup辞書には\"ny\"と\"ca\"のデータが存在しており、空ではありません。"
+                }
               },
               {
                 "stepNum": 2,
@@ -1557,7 +1739,12 @@ export const FINAL_MISSIONS = {
                 ],
                 "answer": "参照前に lower() でキー形式をそろえる",
                 "hint": "データを消さず、入力を同じ形式にそろえます。",
-                "explanation": "参照前に lower() でキー形式をそろえる"
+                "explanation": "参照前に lower() でキー形式をそろえる",
+                "optionExplanations": {
+                  "参照前に lower() でキー形式をそろえる": "正解。input_code.lower()で\"NY\"を\"ny\"に変換すれば、lookup辞書のキー形式と一致し正しく値を参照できます。",
+                  "常に最初の値を返す": "常に最初の値を返すと入力コードに関係なく同じ結果になり、正しい実体を参照できません。",
+                  "キーを削除してから参照する": "キーを削除すると参照先のデータ自体が消えてしまい、KeyErrorが解消されません。"
+                }
               },
               {
                 "stepNum": 3,
@@ -1571,7 +1758,12 @@ export const FINAL_MISSIONS = {
                 ],
                 "answer": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
                 "hint": "表記ゆれを吸収できるかを考えます。",
-                "explanation": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる"
+                "explanation": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
+                "optionExplanations": {
+                  "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる": "正解。lower()による正規化で、\"NY\"\"ny\"\"Ny\"などの表記ゆれがあっても同じキーとして一致し、安定して値を参照できます。",
+                  "出典データが不要になる": "lookup辞書のデータはそのまま必要であり、不要になるわけではありません。",
+                  "どの入力でも同じ固定値を返す": "正規化後も入力コードごとに対応する異なる値（New York/California等）が返されます。"
+                }
               }
             ],
             "correctAnswer": "US customary mile/foot conversion で入力表記を正規化せず、保存データのキー形式と一致しない / 参照前に lower() でキー形式をそろえる / 大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
@@ -1629,7 +1821,12 @@ export const FINAL_MISSIONS = {
                 ],
                 "answer": "dollar/cents monetary calculation で入力表記を正規化せず、保存データのキー形式と一致しない",
                 "hint": "入力値とキーの表記を比べます。",
-                "explanation": "dollar/cents monetary calculation で入力表記を正規化せず、保存データのキー形式と一致しない"
+                "explanation": "dollar/cents monetary calculation で入力表記を正規化せず、保存データのキー形式と一致しない",
+                "optionExplanations": {
+                  "dollar/cents monetary calculation で入力表記を正規化せず、保存データのキー形式と一致しない": "正解。lookupのキーは小文字の\"ny\"/\"ca\"で保存されていますが、input_codeは大文字の\"NY\"のままlookup[input_code]を参照しているため、辞書に存在しないキーとなりKeyErrorの原因になります。",
+                  "出力関数の名前が違う": "print関数自体は正しく呼び出されており、関数名の誤りはありません。",
+                  "データが空になっている": "lookup辞書には\"ny\"と\"ca\"のデータが存在しており、空ではありません。"
+                }
               },
               {
                 "stepNum": 2,
@@ -1643,7 +1840,12 @@ export const FINAL_MISSIONS = {
                 ],
                 "answer": "参照前に lower() でキー形式をそろえる",
                 "hint": "データを消さず、入力を同じ形式にそろえます。",
-                "explanation": "参照前に lower() でキー形式をそろえる"
+                "explanation": "参照前に lower() でキー形式をそろえる",
+                "optionExplanations": {
+                  "参照前に lower() でキー形式をそろえる": "正解。input_code.lower()で\"NY\"を\"ny\"に変換すれば、lookup辞書のキー形式と一致し正しく値を参照できます。",
+                  "常に最初の値を返す": "常に最初の値を返すと入力コードに関係なく同じ結果になり、正しい実体を参照できません。",
+                  "キーを削除してから参照する": "キーを削除すると参照先のデータ自体が消えてしまい、KeyErrorが解消されません。"
+                }
               },
               {
                 "stepNum": 3,
@@ -1657,7 +1859,12 @@ export const FINAL_MISSIONS = {
                 ],
                 "answer": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
                 "hint": "表記ゆれを吸収できるかを考えます。",
-                "explanation": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる"
+                "explanation": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
+                "optionExplanations": {
+                  "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる": "正解。lower()による正規化で、\"NY\"\"ny\"\"Ny\"などの表記ゆれがあっても同じキーとして一致し、安定して値を参照できます。",
+                  "出典データが不要になる": "lookup辞書のデータはそのまま必要であり、不要になるわけではありません。",
+                  "どの入力でも同じ固定値を返す": "正規化後も入力コードごとに対応する異なる値（New York/California等）が返されます。"
+                }
               }
             ],
             "correctAnswer": "dollar/cents monetary calculation で入力表記を正規化せず、保存データのキー形式と一致しない / 参照前に lower() でキー形式をそろえる / 大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
@@ -1725,7 +1932,12 @@ export const FINAL_MISSIONS = {
                 ],
                 "answer": "US federal fiscal year Oct-1 boundary で入力表記を正規化せず、保存データのキー形式と一致しない",
                 "hint": "入力値とキーの表記を比べます。",
-                "explanation": "US federal fiscal year Oct-1 boundary で入力表記を正規化せず、保存データのキー形式と一致しない"
+                "explanation": "US federal fiscal year Oct-1 boundary で入力表記を正規化せず、保存データのキー形式と一致しない",
+                "optionExplanations": {
+                  "US federal fiscal year Oct-1 boundary で入力表記を正規化せず、保存データのキー形式と一致しない": "正解。lookupのキーは小文字の ny/ca で定義されていますが、inputCodeは大文字の\"NY\"のままlookup[inputCode]を参照しているため、オブジェクトに存在しないキーとなりundefinedが返ります。",
+                  "出力関数の名前が違う": "console.log自体は正しく呼び出されており、関数名の誤りはありません。",
+                  "データが空になっている": "lookupオブジェクトには ny と ca のデータが存在しており、空ではありません。"
+                }
               },
               {
                 "stepNum": 2,
@@ -1739,7 +1951,12 @@ export const FINAL_MISSIONS = {
                 ],
                 "answer": "参照前に toLowerCase() でキー形式をそろえる",
                 "hint": "データを消さず、入力を同じ形式にそろえます。",
-                "explanation": "参照前に toLowerCase() でキー形式をそろえる"
+                "explanation": "参照前に toLowerCase() でキー形式をそろえる",
+                "optionExplanations": {
+                  "参照前に toLowerCase() でキー形式をそろえる": "正解。inputCode.toLowerCase()で\"NY\"を\"ny\"に変換すれば、lookupオブジェクトのキー形式と一致し正しく値を参照できます。",
+                  "常に最初の値を返す": "常に最初の値を返すと入力コードに関係なく同じ結果になり、正しい実体を参照できません。",
+                  "キーを削除してから参照する": "キーを削除すると参照先のデータ自体が消えてしまい、undefinedが解消されません。"
+                }
               },
               {
                 "stepNum": 3,
@@ -1753,7 +1970,12 @@ export const FINAL_MISSIONS = {
                 ],
                 "answer": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
                 "hint": "表記ゆれを吸収できるかを考えます。",
-                "explanation": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる"
+                "explanation": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
+                "optionExplanations": {
+                  "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる": "正解。toLowerCase()による正規化で、\"NY\"\"ny\"\"Ny\"などの表記ゆれがあっても同じキーとして一致し、安定して値を参照できます。",
+                  "出典データが不要になる": "lookupオブジェクトのデータはそのまま必要であり、不要になるわけではありません。",
+                  "どの入力でも同じ固定値を返す": "正規化後も入力コードごとに対応する異なる値（New York/California等）が返されます。"
+                }
               }
             ],
             "correctAnswer": "US federal fiscal year Oct-1 boundary で入力表記を正規化せず、保存データのキー形式と一致しない / 参照前に toLowerCase() でキー形式をそろえる / 大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
@@ -1811,7 +2033,12 @@ export const FINAL_MISSIONS = {
                 ],
                 "answer": "Washington state vs Washington-DC で入力表記を正規化せず、保存データのキー形式と一致しない",
                 "hint": "入力値とキーの表記を比べます。",
-                "explanation": "Washington state vs Washington-DC で入力表記を正規化せず、保存データのキー形式と一致しない"
+                "explanation": "Washington state vs Washington-DC で入力表記を正規化せず、保存データのキー形式と一致しない",
+                "optionExplanations": {
+                  "Washington state vs Washington-DC で入力表記を正規化せず、保存データのキー形式と一致しない": "正解。lookupのキーは小文字の ny/ca で定義されていますが、inputCodeは大文字の\"NY\"のままlookup[inputCode]を参照しているため、オブジェクトに存在しないキーとなりundefinedが返ります。",
+                  "出力関数の名前が違う": "console.log自体は正しく呼び出されており、関数名の誤りはありません。",
+                  "データが空になっている": "lookupオブジェクトには ny と ca のデータが存在しており、空ではありません。"
+                }
               },
               {
                 "stepNum": 2,
@@ -1825,7 +2052,12 @@ export const FINAL_MISSIONS = {
                 ],
                 "answer": "参照前に toLowerCase() でキー形式をそろえる",
                 "hint": "データを消さず、入力を同じ形式にそろえます。",
-                "explanation": "参照前に toLowerCase() でキー形式をそろえる"
+                "explanation": "参照前に toLowerCase() でキー形式をそろえる",
+                "optionExplanations": {
+                  "参照前に toLowerCase() でキー形式をそろえる": "正解。inputCode.toLowerCase()で\"NY\"を\"ny\"に変換すれば、lookupオブジェクトのキー形式と一致し正しく値を参照できます。",
+                  "常に最初の値を返す": "常に最初の値を返すと入力コードに関係なく同じ結果になり、正しい実体を参照できません。",
+                  "キーを削除してから参照する": "キーを削除すると参照先のデータ自体が消えてしまい、undefinedが解消されません。"
+                }
               },
               {
                 "stepNum": 3,
@@ -1839,7 +2071,12 @@ export const FINAL_MISSIONS = {
                 ],
                 "answer": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
                 "hint": "表記ゆれを吸収できるかを考えます。",
-                "explanation": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる"
+                "explanation": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
+                "optionExplanations": {
+                  "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる": "正解。toLowerCase()による正規化で、\"NY\"\"ny\"\"Ny\"などの表記ゆれがあっても同じキーとして一致し、安定して値を参照できます。",
+                  "出典データが不要になる": "lookupオブジェクトのデータはそのまま必要であり、不要になるわけではありません。",
+                  "どの入力でも同じ固定値を返す": "正規化後も入力コードごとに対応する異なる値（New York/California等）が返されます。"
+                }
               }
             ],
             "correctAnswer": "Washington state vs Washington-DC で入力表記を正規化せず、保存データのキー形式と一致しない / 参照前に toLowerCase() でキー形式をそろえる / 大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
@@ -1897,7 +2134,12 @@ export const FINAL_MISSIONS = {
                 ],
                 "answer": "Hawaiʻi Unicode name normalization で入力表記を正規化せず、保存データのキー形式と一致しない",
                 "hint": "入力値とキーの表記を比べます。",
-                "explanation": "Hawaiʻi Unicode name normalization で入力表記を正規化せず、保存データのキー形式と一致しない"
+                "explanation": "Hawaiʻi Unicode name normalization で入力表記を正規化せず、保存データのキー形式と一致しない",
+                "optionExplanations": {
+                  "Hawaiʻi Unicode name normalization で入力表記を正規化せず、保存データのキー形式と一致しない": "正解。lookupのキーは小文字の ny/ca で定義されていますが、inputCodeは大文字の\"NY\"のままlookup[inputCode]を参照しているため、オブジェクトに存在しないキーとなりundefinedが返ります。",
+                  "出力関数の名前が違う": "console.log自体は正しく呼び出されており、関数名の誤りはありません。",
+                  "データが空になっている": "lookupオブジェクトには ny と ca のデータが存在しており、空ではありません。"
+                }
               },
               {
                 "stepNum": 2,
@@ -1911,7 +2153,12 @@ export const FINAL_MISSIONS = {
                 ],
                 "answer": "参照前に toLowerCase() でキー形式をそろえる",
                 "hint": "データを消さず、入力を同じ形式にそろえます。",
-                "explanation": "参照前に toLowerCase() でキー形式をそろえる"
+                "explanation": "参照前に toLowerCase() でキー形式をそろえる",
+                "optionExplanations": {
+                  "参照前に toLowerCase() でキー形式をそろえる": "正解。inputCode.toLowerCase()で\"NY\"を\"ny\"に変換すれば、lookupオブジェクトのキー形式と一致し正しく値を参照できます。",
+                  "常に最初の値を返す": "常に最初の値を返すと入力コードに関係なく同じ結果になり、正しい実体を参照できません。",
+                  "キーを削除してから参照する": "キーを削除すると参照先のデータ自体が消えてしまい、undefinedが解消されません。"
+                }
               },
               {
                 "stepNum": 3,
@@ -1925,7 +2172,12 @@ export const FINAL_MISSIONS = {
                 ],
                 "answer": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
                 "hint": "表記ゆれを吸収できるかを考えます。",
-                "explanation": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる"
+                "explanation": "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",
+                "optionExplanations": {
+                  "大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる": "正解。toLowerCase()による正規化で、\"NY\"\"ny\"\"Ny\"などの表記ゆれがあっても同じキーとして一致し、安定して値を参照できます。",
+                  "出典データが不要になる": "lookupオブジェクトのデータはそのまま必要であり、不要になるわけではありません。",
+                  "どの入力でも同じ固定値を返す": "正規化後も入力コードごとに対応する異なる値（New York/California等）が返されます。"
+                }
               }
             ],
             "correctAnswer": "Hawaiʻi Unicode name normalization で入力表記を正規化せず、保存データのキー形式と一致しない / 参照前に toLowerCase() でキー形式をそろえる / 大文字小文字や表記ゆれのある入力でも、同じ実体を安定して参照できる",

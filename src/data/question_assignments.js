@@ -10,6 +10,7 @@ import { CHINA_ASSIGNMENTS } from './china_questions.js';
 import { GERMANY_ASSIGNMENTS } from './germany_questions.js';
 import { UNITED_KINGDOM_ASSIGNMENTS } from './united_kingdom_questions.js';
 import { CANADA_ASSIGNMENTS } from './canada_questions.js';
+import { KOREA_ASSIGNMENTS } from './korea_questions.js';
 
 export const COGNITIVE_TASKS = Object.freeze([
   'recall-from-given-context',
@@ -2283,3 +2284,4 @@ QUESTION_ASSIGNMENTS.push(...CHINA_ASSIGNMENTS);
 QUESTION_ASSIGNMENTS.push(...GERMANY_ASSIGNMENTS);
 QUESTION_ASSIGNMENTS.push(...UNITED_KINGDOM_ASSIGNMENTS);
 QUESTION_ASSIGNMENTS.push(...CANADA_ASSIGNMENTS);
+QUESTION_ASSIGNMENTS.push(...KOREA_ASSIGNMENTS);

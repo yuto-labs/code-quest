@@ -11,6 +11,7 @@ import { CHINA_FINAL_MISSIONS } from './china_questions.js';
 import { GERMANY_FINAL_MISSIONS } from './germany_questions.js';
 import { UNITED_KINGDOM_FINAL_MISSIONS } from './united_kingdom_questions.js';
 import { CANADA_FINAL_MISSIONS } from './canada_questions.js';
+import { KOREA_FINAL_MISSIONS } from './korea_questions.js';
 
 export const FINAL_MISSION_TYPES = Object.freeze({
   decode: 'DECODE_FINAL',
@@ -2347,6 +2348,18 @@ FINAL_MISSIONS.debug.CA.javascript = CANADA_FINAL_MISSIONS.debug.javascript;
 FINAL_MISSIONS.decode.CA.java = CANADA_FINAL_MISSIONS.decode.java;
 FINAL_MISSIONS.execute.CA.java = CANADA_FINAL_MISSIONS.execute.java;
 FINAL_MISSIONS.debug.CA.java = CANADA_FINAL_MISSIONS.debug.java;
+FINAL_MISSIONS.decode.KR ??= {};
+FINAL_MISSIONS.execute.KR ??= {};
+FINAL_MISSIONS.debug.KR ??= {};
+FINAL_MISSIONS.decode.KR.python = KOREA_FINAL_MISSIONS.decode.python;
+FINAL_MISSIONS.execute.KR.python = KOREA_FINAL_MISSIONS.execute.python;
+FINAL_MISSIONS.debug.KR.python = KOREA_FINAL_MISSIONS.debug.python;
+FINAL_MISSIONS.decode.KR.javascript = KOREA_FINAL_MISSIONS.decode.javascript;
+FINAL_MISSIONS.execute.KR.javascript = KOREA_FINAL_MISSIONS.execute.javascript;
+FINAL_MISSIONS.debug.KR.javascript = KOREA_FINAL_MISSIONS.debug.javascript;
+FINAL_MISSIONS.decode.KR.java = KOREA_FINAL_MISSIONS.decode.java;
+FINAL_MISSIONS.execute.KR.java = KOREA_FINAL_MISSIONS.execute.java;
+FINAL_MISSIONS.debug.KR.java = KOREA_FINAL_MISSIONS.debug.java;
 
 export function getFinalMission(worldId, countryId, languageId) {
   const mission = FINAL_MISSIONS[worldId]?.[countryId]?.[languageId];

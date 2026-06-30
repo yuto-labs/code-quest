@@ -11,6 +11,7 @@ import { CN_JAVA_DECODE, CN_JS_DECODE, CN_PY_DECODE } from './china_questions.js
 import { DE_JAVA_DECODE, DE_JS_DECODE, DE_PY_DECODE } from './germany_questions.js';
 import { GB_JAVA_DECODE, GB_JS_DECODE, GB_PY_DECODE } from './united_kingdom_questions.js';
 import { CA_JAVA_DECODE, CA_JS_DECODE, CA_PY_DECODE } from './canada_questions.js';
+import { KR_JAVA_DECODE, KR_JS_DECODE, KR_PY_DECODE } from './korea_questions.js';
 
 export const CHALLENGES = {
   "JP": {
@@ -1195,120 +1196,6 @@ export const CHALLENGES = {
       }
     ]
   },
-  "KR": {
-    "python": [
-      {
-        "id": "kr_py_1",
-        "title": "リスト内包表記を書こう",
-        "description": "0から4の数のリストを内包表記で作ってください。",
-        "code": "nums = [___BLANK___ for x in range(5)]\nprint(nums)",
-        "blank": "x",
-        "hint": "[式 for 変数 in イテラブル] の形で書きます",
-        "explanation": "リスト内包表記は for ループを1行で書く方法です。[x for x in range(5)] は [0,1,2,3,4] を返します。"
-      },
-      {
-        "id": "kr_py_2",
-        "title": "各要素を2乗しよう",
-        "description": "1から5の各数を2乗したリストを作ってください。",
-        "code": "squares = [x ___BLANK___ 2 for x in range(1, 6)]\nprint(squares)",
-        "blank": "**",
-        "hint": "べき乗は ** です",
-        "explanation": "[x**2 for x in range(1,6)] で [1,4,9,16,25] が作れます。式の部分に計算を書けます。"
-      },
-      {
-        "id": "kr_py_3",
-        "title": "フィルタリングしよう",
-        "description": "1から10の偶数だけのリストを作ってください。",
-        "code": "evens = [x for x in range(1, 11) ___BLANK___ x % 2 == 0]\nprint(evens)",
-        "blank": "if",
-        "hint": "条件でフィルタリングするには末尾に if を付けます",
-        "explanation": "[式 for 変数 in イテラブル if 条件] の形でフィルタリングできます。x % 2 == 0 で偶数のみ残せます。"
-      },
-      {
-        "id": "kr_py_4",
-        "title": "文字列リストを大文字にしよう",
-        "description": "都市名リストを全部大文字にしてください。",
-        "code": "cities = [\"seoul\", \"busan\", \"incheon\"]\nupper = [c.___BLANK___() for c in cities]\nprint(upper)",
-        "blank": "upper",
-        "hint": "大文字に変換するメソッドは upper() です",
-        "explanation": "内包表記の式の部分にメソッド呼び出しも書けます。c.upper() で各文字列を大文字に変換します。"
-      },
-      {
-        "id": "kr_py_5",
-        "title": "辞書内包表記を書こう",
-        "description": "単語をキー、その長さを値にした辞書を作ってください。",
-        "code": "words = [\"hi\", \"hello\", \"hey\"]\nd = {w: ___BLANK___(w) for w in words}\nprint(d)",
-        "blank": "len",
-        "hint": "文字列の長さは len() です",
-        "explanation": "{キー: 値 for 変数 in イテラブル} で辞書内包表記が書けます。len() で文字列の長さを取得しています。"
-      },
-      {
-        "id": "kr_py_6",
-        "title": "ネストした内包表記を使おう",
-        "description": "2次元リストをフラットに展開してください。",
-        "code": "matrix = [[1,2,3],[4,5,6],[7,8,9]]\nflat = [n for row in matrix for n ___BLANK___ row]\nprint(flat)",
-        "blank": "in",
-        "hint": "ネストは for ... in ... を重ねます",
-        "explanation": "[n for row in matrix for n in row] でネストしたリストを1次元にできます。外側のforから左から右に読みます。"
-      }
-    ],
-    "javascript": [
-      {
-        "id": "kr_js_1",
-        "title": "map で配列を変換しよう",
-        "description": "各数値を2倍にした新しい配列を作ってください。",
-        "code": "const nums = [1, 2, 3, 4, 5];\nconst doubled = nums.___BLANK___(n => n * 2);\nconsole.log(doubled);",
-        "blank": "map",
-        "hint": "map() は各要素を変換した新しい配列を返します",
-        "explanation": ".map() は元の配列を変更せず、各要素を関数で変換した新しい配列を返します。"
-      },
-      {
-        "id": "kr_js_2",
-        "title": "filter で絞り込もう",
-        "description": "偶数だけの配列を作ってください。",
-        "code": "const nums = [1, 2, 3, 4, 5, 6];\nconst evens = nums.___BLANK___(n => n % 2 === 0);\nconsole.log(evens);",
-        "blank": "filter",
-        "hint": "filter() は条件を満たす要素だけ残した配列を返します",
-        "explanation": ".filter() は条件が true の要素だけを残した新しい配列を返します。"
-      },
-      {
-        "id": "kr_js_3",
-        "title": "reduce で合計を求めよう",
-        "description": "配列の合計を reduce で計算してください。",
-        "code": "const nums = [10, 20, 30, 40];\nconst total = nums.___BLANK___((acc, n) => acc + n, 0);\nconsole.log(total);",
-        "blank": "reduce",
-        "hint": "reduce() は配列を1つの値にまとめます",
-        "explanation": ".reduce((蓄積値, 現在値) => ..., 初期値) で配列を1つの値に集約します。"
-      },
-      {
-        "id": "kr_js_4",
-        "title": "find で要素を検索しよう",
-        "description": "最初に条件を満たす要素を取得してください。",
-        "code": "const users = [{name:\"Kim\",age:25},{name:\"Lee\",age:17}];\nconst adult = users.___BLANK___(u => u.age >= 18);\nconsole.log(adult.name);",
-        "blank": "find",
-        "hint": "find() は最初にマッチした要素を返します",
-        "explanation": ".find() は条件を満たす最初の要素を返します。見つからなければ undefined です。"
-      },
-      {
-        "id": "kr_js_5",
-        "title": "every で全要素を確認しよう",
-        "description": "全員が18歳以上か確認してください。",
-        "code": "const ages = [20, 25, 18, 30];\nconst allAdults = ages.___BLANK___(age => age >= 18);\nconsole.log(allAdults);",
-        "blank": "every",
-        "hint": "every() は全要素が条件を満たすか確認します",
-        "explanation": ".every() は全要素が条件を満たせば true です。.some() は1つでも満たせば true です。"
-      },
-      {
-        "id": "kr_js_6",
-        "title": "flatMap で変換と平坦化をまとめよう",
-        "description": "各文を単語に分解して1つの配列にしてください。",
-        "code": "const sentences = [\"hello world\", \"foo bar\"];\nconst words = sentences.___BLANK___(s => s.split(\" \"));\nconsole.log(words);",
-        "blank": "flatMap",
-        "hint": "flatMap() は map した結果を1段階フラットにします",
-        "explanation": ".flatMap() は map() と flat() を組み合わせたものです。"
-      }
-    ]
-  },
   "CA": {
     "python": [
       {
@@ -2277,6 +2164,11 @@ CHALLENGES.CA = {
   python: CA_PY_DECODE,
   javascript: CA_JS_DECODE,
   java: CA_JAVA_DECODE,
+};
+CHALLENGES.KR = {
+  python: KR_PY_DECODE,
+  javascript: KR_JS_DECODE,
+  java: KR_JAVA_DECODE,
 };
 
 export const LANGUAGES = [

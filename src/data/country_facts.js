@@ -10,6 +10,7 @@ import { CHINA_FACTS } from './china_questions.js';
 import { GERMANY_FACTS } from './germany_questions.js';
 import { UNITED_KINGDOM_FACTS } from './united_kingdom_questions.js';
 import { CANADA_FACTS } from './canada_questions.js';
+import { KOREA_FACTS } from './korea_questions.js';
 
 export const FACT_STATUS = Object.freeze({
   VERIFIED: 'verified',
@@ -4887,6 +4888,7 @@ COUNTRY_FACTS.push(...CHINA_FACTS);
 COUNTRY_FACTS.push(...GERMANY_FACTS);
 COUNTRY_FACTS.push(...UNITED_KINGDOM_FACTS);
 COUNTRY_FACTS.push(...CANADA_FACTS);
+COUNTRY_FACTS.push(...KOREA_FACTS);
 
 function validateSourceRef(ref, index, factId, issues) {
   if (typeof ref === 'string') {

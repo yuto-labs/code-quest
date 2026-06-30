@@ -10,6 +10,7 @@ import { CN_JAVA_DEBUG, CN_JS_DEBUG, CN_PY_DEBUG } from './china_questions.js';
 import { DE_JAVA_DEBUG, DE_JS_DEBUG, DE_PY_DEBUG } from './germany_questions.js';
 import { GB_JAVA_DEBUG, GB_JS_DEBUG, GB_PY_DEBUG } from './united_kingdom_questions.js';
 import { CA_JAVA_DEBUG, CA_JS_DEBUG, CA_PY_DEBUG } from './canada_questions.js';
+import { KR_JAVA_DEBUG, KR_JS_DEBUG, KR_PY_DEBUG } from './korea_questions.js';
 
 export const DEBUG_CHALLENGES = {
   "JP": {
@@ -2359,6 +2360,11 @@ DEBUG_CHALLENGES.CA = {
   python: CA_PY_DEBUG,
   javascript: CA_JS_DEBUG,
   java: CA_JAVA_DEBUG,
+};
+DEBUG_CHALLENGES.KR = {
+  python: KR_PY_DEBUG,
+  javascript: KR_JS_DEBUG,
+  java: KR_JAVA_DEBUG,
 };
 
 export const DEBUG_LANGUAGES = [

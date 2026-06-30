@@ -10,6 +10,7 @@ import { CN_JAVA_EXECUTE, CN_JS_EXECUTE, CN_PY_EXECUTE } from './china_questions
 import { DE_JAVA_EXECUTE, DE_JS_EXECUTE, DE_PY_EXECUTE } from './germany_questions.js';
 import { GB_JAVA_EXECUTE, GB_JS_EXECUTE, GB_PY_EXECUTE } from './united_kingdom_questions.js';
 import { CA_JAVA_EXECUTE, CA_JS_EXECUTE, CA_PY_EXECUTE } from './canada_questions.js';
+import { KR_JAVA_EXECUTE, KR_JS_EXECUTE, KR_PY_EXECUTE } from './korea_questions.js';
 
 export const EXECUTE_CHALLENGES = {
   "JP": {
@@ -1492,6 +1493,11 @@ EXECUTE_CHALLENGES.CA = {
   python: CA_PY_EXECUTE,
   javascript: CA_JS_EXECUTE,
   java: CA_JAVA_EXECUTE,
+};
+EXECUTE_CHALLENGES.KR = {
+  python: KR_PY_EXECUTE,
+  javascript: KR_JS_EXECUTE,
+  java: KR_JAVA_EXECUTE,
 };
 
 export const EXECUTE_LANGUAGES = [

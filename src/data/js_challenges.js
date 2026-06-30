@@ -1178,62 +1178,6 @@ export const JS_CHALLENGES = {
       "explanation": ".split(/,\\s*/) でカンマ後のスペースも含めて分割できます。"
     }
   ],
-  "KR": [
-    {
-      "id": "kr_js_1",
-      "title": "map で配列を変換しよう",
-      "description": "各数値を2倍にした新しい配列を作ってください。",
-      "code": "const nums = [1, 2, 3, 4, 5];\nconst doubled = nums.___BLANK___(n => n * 2);\nconsole.log(doubled);",
-      "blank": "map",
-      "hint": "map() は各要素を変換した新しい配列を返します",
-      "explanation": ".map() は元の配列を変更せず、各要素を関数で変換した新しい配列を返します。"
-    },
-    {
-      "id": "kr_js_2",
-      "title": "filter で絞り込もう",
-      "description": "偶数だけの配列を作ってください。",
-      "code": "const nums = [1, 2, 3, 4, 5, 6];\nconst evens = nums.___BLANK___(n => n % 2 === 0);\nconsole.log(evens);",
-      "blank": "filter",
-      "hint": "filter() は条件を満たす要素だけ残した配列を返します",
-      "explanation": ".filter() は条件が true の要素だけを残した新しい配列を返します。"
-    },
-    {
-      "id": "kr_js_3",
-      "title": "reduce で合計を求めよう",
-      "description": "配列の合計を reduce で計算してください。",
-      "code": "const nums = [10, 20, 30, 40];\nconst total = nums.___BLANK___((acc, n) => acc + n, 0);\nconsole.log(total);",
-      "blank": "reduce",
-      "hint": "reduce() は配列を1つの値にまとめます",
-      "explanation": ".reduce((蓄積値, 現在値) => ..., 初期値) で配列を1つの値に集約します。"
-    },
-    {
-      "id": "kr_js_4",
-      "title": "find で要素を検索しよう",
-      "description": "最初に条件を満たす要素を取得してください。",
-      "code": "const users = [{name:\"Kim\",age:25},{name:\"Lee\",age:17}];\nconst adult = users.___BLANK___(u => u.age >= 18);\nconsole.log(adult.name);",
-      "blank": "find",
-      "hint": "find() は最初にマッチした要素を返します",
-      "explanation": ".find() は条件を満たす最初の要素を返します。見つからなければ undefined です。"
-    },
-    {
-      "id": "kr_js_5",
-      "title": "every で全要素を確認しよう",
-      "description": "全員が18歳以上か確認してください。",
-      "code": "const ages = [20, 25, 18, 30];\nconst allAdults = ages.___BLANK___(age => age >= 18);\nconsole.log(allAdults);",
-      "blank": "every",
-      "hint": "every() は全要素が条件を満たすか確認します",
-      "explanation": ".every() は全要素が条件を満たせば true です。.some() は1つでも満たせば true です。"
-    },
-    {
-      "id": "kr_js_6",
-      "title": "flatMap で変換と平坦化をまとめよう",
-      "description": "各文を単語に分解して1つの配列にしてください。",
-      "code": "const sentences = [\"hello world\", \"foo bar\"];\nconst words = sentences.___BLANK___(s => s.split(\" \"));\nconsole.log(words);",
-      "blank": "flatMap",
-      "hint": "flatMap() は map した結果を1段階フラットにします",
-      "explanation": ".flatMap() は map() と flat() を組み合わせたものです。"
-    }
-  ],
   "CA": [
     {
       "id": "ca_js_1",

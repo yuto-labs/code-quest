@@ -1259,7 +1259,13 @@ export const EXECUTE_CHALLENGES = {
         ],
         "answer": "Tour 1\nTour 2\nTour 3",
         "hint": "count は 0,1,2 と増え、3 になるとループを抜けます",
-        "explanation": "count=0: print(Tour 1), count=1: print(Tour 2), count=2: print(Tour 3), count=3: 条件 False でループ終了。"
+        "explanation": "count=0: print(Tour 1), count=1: print(Tour 2), count=2: print(Tour 3), count=3: 条件 False でループ終了。",
+        "optionExplanations": {
+          "Tour 0\nTour 1\nTour 2": "count自体は0,1,2と表示されますが、画面に出るのは count+1 なのでTour 0は出力されません。",
+          "Tour 1\nTour 2\nTour 3": "正解。count が0,1,2の3回ループし、count+1（1,2,3）がそれぞれ表示されます。",
+          "Tour 1\nTour 2\nTour 3\nTour 4": "count<3の条件はcountが3になった時点でFalseになりループを抜けるため、4回目（Tour 4）は出力されません。",
+          "無限ループ": "ループ内で count += 1 により count は確実に増え続け、3になった時点で条件 count < 3 がFalseになるため正常に終了します。"
+        }
       },
       {
         "id": "ex_fr_py_2",
@@ -1277,7 +1283,13 @@ export const EXECUTE_CHALLENGES = {
         ],
         "answer": "['Paris', 'Toulouse']",
         "hint": "len(\"Paris\")=5, len(\"Lyon\")=4, len(\"Nice\")=4, len(\"Toulouse\")=8",
-        "explanation": "len > 4 を満たすのは Paris(5) と Toulouse(8)。Lyon(4) と Nice(4) は除外されます。"
+        "explanation": "len > 4 を満たすのは Paris(5) と Toulouse(8)。Lyon(4) と Nice(4) は除外されます。",
+        "optionExplanations": {
+          "['Paris', 'Lyon', 'Nice', 'Toulouse']": "if len(city) > 4 で絞り込んでいるため、4文字のLyonとNiceは条件を満たさず除外されます。",
+          "['Paris', 'Toulouse']": "正解。Paris(5文字)とToulouse(8文字)だけが4文字を超えるため残ります。",
+          "['Lyon', 'Nice']": "LyonとNiceはどちらも4文字で、条件「> 4」（4より大きい）を満たさないため実際には除外される側です。",
+          "['Paris']": "Toulouseも8文字で条件を満たすため、Parisだけに絞られることはありません。"
+        }
       },
       {
         "id": "ex_fr_py_3",
@@ -1314,7 +1326,13 @@ export const EXECUTE_CHALLENGES = {
         ],
         "answer": "Ubuntu! Ubuntu! Ubuntu! ",
         "hint": "文字列 * 数値は文字列を繰り返します。型ヒントは実行時には強制されません。",
-        "explanation": "\"Ubuntu! \" * 3 → \"Ubuntu! Ubuntu! Ubuntu! \"。Pythonの型ヒントは注釈のみで実行時チェックなし。"
+        "explanation": "\"Ubuntu! \" * 3 → \"Ubuntu! Ubuntu! Ubuntu! \"。Pythonの型ヒントは注釈のみで実行時チェックなし。",
+        "optionExplanations": {
+          "Ubuntu! Ubuntu! Ubuntu! ": "正解。name * times は文字列の繰り返しなので \"Ubuntu! \" が3回連結されます。",
+          "Ubuntu! 3": "* 演算子は文字列同士の連結ではなく繰り返しなので、timesの値がそのまま文字として出力されることはありません。",
+          "Error: type mismatch": "Pythonの型ヒント（str, int）は注釈にすぎず実行時に強制されないため、型が合っていればエラーは出ません。",
+          "None": "return name * times が文字列を返しているので、戻り値がNoneになることはありません。"
+        }
       },
       {
         "id": "ex_za_py_2",
@@ -1347,7 +1365,13 @@ export const EXECUTE_CHALLENGES = {
         ],
         "answer": "22",
         "hint": "dataclass は __init__ を自動生成します。sa.languages の値は？",
-        "explanation": "@dataclass は name と languages の __init__ を自動生成します。sa.languages = 11、11 * 2 = 22。"
+        "explanation": "@dataclass は name と languages の __init__ を自動生成します。sa.languages = 11、11 * 2 = 22。",
+        "optionExplanations": {
+          "11": "11はsa.languagesそのものの値です。コードはそれを2倍したsa.languages * 2を表示するので11ではありません。",
+          "22": "正解。@dataclassが自動生成した__init__でlanguagesに11が入り、11 * 2 = 22が表示されます。",
+          "None": "printが表示しているのはsa.languages * 2という式の結果であり、これは整数の22であってNoneではありません。",
+          "Error": "Country(\"South Africa\", 11) はdataclassが定義したnameとlanguagesの2引数に正しく対応しているため、エラーにはなりません。"
+        }
       }
     ]
   },
@@ -1389,7 +1413,13 @@ export const EXECUTE_CHALLENGES = {
         ],
         "answer": "4",
         "hint": "長さが 5 より大きい(>5)都市名をカウント。\"Rio\" の長さは？",
-        "explanation": "\"São Paulo\"(9), \"Rio\"(3), \"Brasília\"(8), \"Salvador\"(8), \"Fortaleza\"(9)。len > 5 を満たすのは Rio 以外の 4 つ。"
+        "explanation": "\"São Paulo\"(9), \"Rio\"(3), \"Brasília\"(8), \"Salvador\"(8), \"Fortaleza\"(9)。len > 5 を満たすのは Rio 以外の 4 つ。",
+        "optionExplanations": {
+          "2": "5都市のうち長さ5以下なのはRio(3文字)だけなので、条件を満たす都市はそれより多く残ります。",
+          "3": "São Paulo・Brasília・Salvador・Fortalezaの4つが5文字を超えており、3だと1つ数え漏れています。",
+          "4": "正解。Rio(3文字)だけが5文字以下で除外され、残り4都市（São Paulo, Brasília, Salvador, Fortaleza）が条件を満たします。",
+          "5": "Rioは3文字で「5より大きい」条件を満たさないため除外され、5都市すべてが残ることはありません。"
+        }
       },
       {
         "id": "ex_br_py_3",

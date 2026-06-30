@@ -1895,7 +1895,13 @@ export const DEBUG_CHALLENGES = {
               "問題ない、正常に動作する"
             ],
             "answer": "range(2, 10, 2) の終端 10 は含まれないため Floor 10 が出ない",
-            "hint": "range(start, stop, step) の stop は含まれません（exclusive）"
+            "hint": "range(start, stop, step) の stop は含まれません（exclusive）",
+            "optionExplanations": {
+              "range(2, 10, 2) は 2 から始まるので Floor 1 が出ない": "そもそも1階から表示する想定はなく、2階ごとの表示（2,4,6,8,10）を意図しているため、これは問題の原因ではありません。",
+              "range(2, 10, 2) の終端 10 は含まれないため Floor 10 が出ない": "正解。range(2, 10, 2) は stop=10 を含まないため 2,4,6,8 までで止まり、10 が生成されません。",
+              "f-string の書き方が間違っている": "f\"Floor {i}\" の構文自体は正しく、iの値を正しく埋め込めています。",
+              "問題ない、正常に動作する": "Floor 10 が表示されないという症状が出ているため、正常に動作しているとは言えません。"
+            }
           },
           {
             "stepNum": 2,
@@ -1909,7 +1915,13 @@ export const DEBUG_CHALLENGES = {
               "range(1, 10, 2) に変更する"
             ],
             "answer": "range(2, 11, 2) に変更する",
-            "explanation": "range(2, 11, 2) → 2, 4, 6, 8, 10。stop=11 にすることで 10 が含まれるようになります。"
+            "explanation": "range(2, 11, 2) → 2, 4, 6, 8, 10。stop=11 にすることで 10 が含まれるようになります。",
+            "optionExplanations": {
+              "range(2, 10, 2) のまま": "stop=10のままでは10自身が範囲に含まれず、修正になりません。",
+              "range(2, 11, 2) に変更する": "正解。stopを11にすることで10がexclusiveの境界内に入り、2,4,6,8,10が生成されます。",
+              "range(2, 12, 2) に変更する": "stop=12にすると2,4,6,8,10,12まで生成され、想定していないFloor 12が余分に出てしまいます。",
+              "range(1, 10, 2) に変更する": "startを1にすると1,3,5,7,9という奇数列になり、2階ごとの偶数列という意図からずれてしまいます。"
+            }
           },
           {
             "stepNum": 3,
@@ -1923,7 +1935,13 @@ export const DEBUG_CHALLENGES = {
               "負の数への対応が楽になるから"
             ],
             "answer": "range(0, len(lst)) でリストの全インデックスをちょうど過不足なく生成でき、スライス記法とも一致するから",
-            "explanation": "range(0, 5) = 0,1,2,3,4 はちょうど 5 要素のリストのインデックスと一致します。lst[0:5] と同じ「終端を含まない」ルールで統一されているため、直感的に使えます。"
+            "explanation": "range(0, 5) = 0,1,2,3,4 はちょうど 5 要素のリストのインデックスと一致します。lst[0:5] と同じ「終端を含まない」ルールで統一されているため、直感的に使えます。",
+            "optionExplanations": {
+              "計算が速くなるから": "終端を含まない設計は性能上の理由ではなく、インデックス生成・スライスとの一貫性のための設計です。",
+              "range(0, len(lst)) でリストの全インデックスをちょうど過不足なく生成でき、スライス記法とも一致するから": "正解。長さnのリストの有効インデックスは0〜n-1なので、range(0, n)がexclusiveであることでちょうど一致します。",
+              "Python の伝統だから": "単なる慣習ではなく、スライス記法 lst[0:n] と一致させるという明確な設計上の理由があります。",
+              "負の数への対応が楽になるから": "終端がexclusiveであることと負数（負のインデックス）の扱いは直接関係しません。"
+            }
           }
         ]
       },
@@ -1947,7 +1965,13 @@ export const DEBUG_CHALLENGES = {
               "f-string の書き方が間違っている"
             ],
             "answer": "range(1, 5) は 1〜4 なので \"Paris\"（インデックス0）が表示されない",
-            "hint": "range(1, 5) は何の値を生成しますか？"
+            "hint": "range(1, 5) は何の値を生成しますか？",
+            "optionExplanations": {
+              "正常に動作する": "range(1, 5)はインデックス0を含まないため、cities[0]であるParisが一度も表示されず、意図通りには動作していません。",
+              "range(1, 5) は 1〜4 なので \"Paris\"（インデックス0）が表示されない": "正解。range(1, 5)は1,2,3,4を生成するためインデックス0（Paris）にアクセスせず、表示が漏れます。",
+              "cities[i] でインデックスエラーが発生する": "citiesは5要素あり、range(1,5)が生成する最大インデックスは4なので範囲内に収まり、エラーは発生しません。",
+              "f-string の書き方が間違っている": "f\"{i}. {cities[i]}\"の構文自体は正しく、変数を正しく埋め込めています。"
+            }
           },
           {
             "stepNum": 2,
@@ -1961,7 +1985,13 @@ export const DEBUG_CHALLENGES = {
               "どれでも動く"
             ],
             "answer": "enumerate() を使って for i, city in enumerate(cities, 1)",
-            "explanation": "enumerate(cities, 1) でインデックスを 1 始まりで取得できます。for i, city in enumerate(cities, 1): print(f\"{i}. {city}\") が最もシンプル。"
+            "explanation": "enumerate(cities, 1) でインデックスを 1 始まりで取得できます。for i, city in enumerate(cities, 1): print(f\"{i}. {city}\") が最もシンプル。",
+            "optionExplanations": {
+              "for i in range(0, 5): で i+1 を番号にする": "動作はしますが、表示用の番号とインデックスを別々に管理する必要があり、enumerateより冗長で読みにくくなります。",
+              "for i in range(1, 6): を使う": "range(1, 6)はインデックスとしては1〜5になりcities[5]で範囲外（IndexError）になってしまい、正しい修正にはなりません。",
+              "enumerate() を使って for i, city in enumerate(cities, 1)": "正解。enumerate(cities, 1)はインデックス0から始まる要素を1始まりの番号と一緒に取得でき、Paris〜Niceが正しく1〜5で表示されます。",
+              "どれでも動く": "range(1, 6)を使う案はcities[5]でIndexErrorになるため、どの案でも動くわけではありません。"
+            }
           },
           {
             "stepNum": 3,
@@ -1975,7 +2005,13 @@ export const DEBUG_CHALLENGES = {
               "Python 3 でのみ使えるから"
             ],
             "answer": "インデックスと値を同時に取得でき、リスト長に依存しない読みやすいコードが書けるから",
-            "explanation": "for i in range(len(lst)): ... lst[i] は動きますが、for i, val in enumerate(lst, 1): の方が簡潔でバグが入りにくいです。start 引数で開始番号も自由に指定できます。"
+            "explanation": "for i in range(len(lst)): ... lst[i] は動きますが、for i, val in enumerate(lst, 1): の方が簡潔でバグが入りにくいです。start 引数で開始番号も自由に指定できます。",
+            "optionExplanations": {
+              "実行速度が速いから": "enumerateの利点は速度ではなく、コードの読みやすさと書き間違いの減少です。",
+              "インデックスと値を同時に取得でき、リスト長に依存しない読みやすいコードが書けるから": "正解。enumerateはインデックスと要素を同時に取り出せるため、lst[i]のような添字アクセスを書かずに済みます。",
+              "エラーが発生しないから": "range(len(lst))の書き方自体も正しく書けばエラーは起きないため、これがenumerateの優位点ではありません。",
+              "Python 3 でのみ使えるから": "enumerateはPython 2の時点から存在する組み込み関数で、Python 3限定の機能ではありません。"
+            }
           }
         ]
       }
@@ -2003,7 +2039,13 @@ export const DEBUG_CHALLENGES = {
               "Error"
             ],
             "answer": "['Zulu']",
-            "hint": "official はどこで定義されていますか？"
+            "hint": "official はどこで定義されていますか？",
+            "optionExplanations": {
+              "[]": "officialはクラス変数としてLanguageクラス自体に属しており、lang1がappendした内容はクラス変数そのものに反映されるため空にはなりません。",
+              "['Zulu']": "正解。officialはクラス変数なのでlang1とlang2で同じリストを共有し、lang1.official.append(\"Zulu\")の結果がlang2.officialにも見えます。",
+              "None": "print(lang2.official)はリストオブジェクトを表示するので、Noneにはなりません。",
+              "Error": "lang2.officialは存在するクラス変数への正常なアクセスなので、例外は発生しません。"
+            }
           },
           {
             "stepNum": 2,
@@ -2017,7 +2059,13 @@ export const DEBUG_CHALLENGES = {
               "lang1 と lang2 を別のクラスにする"
             ],
             "answer": "__init__(self) メソッドで self.official = [] を定義する",
-            "explanation": "def __init__(self): self.official = [] とすることで、インスタンス生成時に各自の独立したリストが作られます。"
+            "explanation": "def __init__(self): self.official = [] とすることで、インスタンス生成時に各自の独立したリストが作られます。",
+            "optionExplanations": {
+              "official = [] をクラスの外に移動する": "クラス変数の外（グローバル）に移動してもインスタンス間で共有される状態は変わらず、問題は解決しません。",
+              "__init__(self) メソッドで self.official = [] を定義する": "正解。__init__内でself.officialを定義することで、インスタンスごとに別々のリストオブジェクトが作られます。",
+              "official = tuple() に変更する": "タプルはイミュータブルでappendできなくなるため、用途を変えてしまい元の「言語を追加する」処理ができなくなります。",
+              "lang1 と lang2 を別のクラスにする": "別クラスにすると共通の構造を再利用できなくなり、共有自体の原因（クラス変数の仕組み）を解決していません。"
+            }
           },
           {
             "stepNum": 3,
@@ -2031,7 +2079,13 @@ export const DEBUG_CHALLENGES = {
               "リスト型のみこの動作が起きるから"
             ],
             "answer": "クラス変数はクラスオブジェクト自体に属し、インスタンスが直接変更しない限り全インスタンスで同じオブジェクトを参照するから",
-            "explanation": "クラス変数はクラス定義時に 1 回だけ作られます。lang1.official.append() はクラス変数のリストを直接変更するため lang2 にも影響します。self.official = [] は各インスタンスに固有のインスタンス変数を作ります。"
+            "explanation": "クラス変数はクラス定義時に 1 回だけ作られます。lang1.official.append() はクラス変数のリストを直接変更するため lang2 にも影響します。self.official = [] は各インスタンスに固有のインスタンス変数を作ります。",
+            "optionExplanations": {
+              "Python の仕様でクラス変数は自動的にコピーされるから": "クラス変数は自動コピーされず、逆に全インスタンスで同一のオブジェクトを参照し続けます。",
+              "クラス変数はクラスオブジェクト自体に属し、インスタンスが直接変更しない限り全インスタンスで同じオブジェクトを参照するから": "正解。officialはLanguageクラス自体が持つ1つのリストで、lang1.official.append()はそのリストを直接変更するため全インスタンスに影響します。",
+              "append() が特殊な動作をするから": "append()自体は通常のリストメソッドで、特殊な挙動をするわけではありません。原因は共有されているオブジェクトの方にあります。",
+              "リスト型のみこの動作が起きるから": "辞書や集合などのミュータブルなクラス変数でも同様に共有が起きるため、リスト型に限った現象ではありません。"
+            }
           }
         ]
       },
@@ -2055,7 +2109,13 @@ export const DEBUG_CHALLENGES = {
               "Error"
             ],
             "answer": "['Zulu', 'Xhosa', 'Afrikaans', 'English']",
-            "hint": "copy = original はリストをコピーしますか？"
+            "hint": "copy = original はリストをコピーしますか？",
+            "optionExplanations": {
+              "['Zulu', 'Xhosa', 'Afrikaans']": "copy = original は新しいリストを作らず同じリストへの参照を共有するため、copyへの変更はoriginalにも反映されます。",
+              "['Zulu', 'Xhosa', 'Afrikaans', 'English']": "正解。copyとoriginalは同じリストを指しているため、copy.append(\"English\")の結果がoriginalにも表れます。",
+              "['English']": "appendは既存のリストの末尾に要素を追加するだけで、リストの内容を置き換えるわけではありません。",
+              "Error": "append(\"English\")はリストに対する通常の操作で、例外は発生しません。"
+            }
           },
           {
             "stepNum": 2,
@@ -2069,7 +2129,13 @@ export const DEBUG_CHALLENGES = {
               "上記すべて正しい"
             ],
             "answer": "上記すべて正しい",
-            "explanation": "copy = original は同じリストへの参照を作るだけです。copy() / list() / [:] はどれも浅いコピーを作成します。"
+            "explanation": "copy = original は同じリストへの参照を作るだけです。copy() / list() / [:] はどれも浅いコピーを作成します。",
+            "optionExplanations": {
+              "copy = original.copy()": "正しい方法の一つですが、list()や[:]も同様に新しいリストを作るため、これだけが正解ではありません。",
+              "copy = list(original)": "正しい方法の一つですが、copy()や[:]も同様に新しいリストを作るため、これだけが正解ではありません。",
+              "copy = original[:]": "正しい方法の一つですが、copy()やlist()も同様に新しいリストを作るため、これだけが正解ではありません。",
+              "上記すべて正しい": "正解。.copy()、list()、スライス[:]はいずれも元のリストとは別の新しいリストオブジェクトを作るため、originalに影響を与えません。"
+            }
           },
           {
             "stepNum": 3,
@@ -2083,7 +2149,13 @@ export const DEBUG_CHALLENGES = {
               "リスト型は immutable だから"
             ],
             "answer": "Python の変数はオブジェクトへの参照であり、= は参照をコピーするだけで新しいオブジェクトを作らないから",
-            "explanation": "Python の変数はメモリ上のオブジェクトへのポインタです。copy = original は同じリストを指す 2 つの名前を作るだけです。copy() / list() / [:] は新しいリストオブジェクトを作成します。"
+            "explanation": "Python の変数はメモリ上のオブジェクトへのポインタです。copy = original は同じリストを指す 2 つの名前を作るだけです。copy() / list() / [:] は新しいリストオブジェクトを作成します。",
+            "optionExplanations": {
+              "Python はリストを自動的に複製するから": "Pythonの代入はオブジェクトを自動複製せず、同じオブジェクトへの参照を新しい名前に結びつけるだけです。",
+              "Python の変数はオブジェクトへの参照であり、= は参照をコピーするだけで新しいオブジェクトを作らないから": "正解。copy = original は同じリストオブジェクトを指す2つの名前を作るだけなので、片方への変更がもう片方にも見えます。",
+              "append() が original にも適用される仕様があるから": "append自体に特別な仕様はなく、copyとoriginalが同じオブジェクトを指しているために結果として両方に影響が見えるだけです。",
+              "リスト型は immutable だから": "リストはミュータブル（変更可能）な型であり、まさにそれゆえにappendによる変更が共有先にも反映されます。"
+            }
           }
         ]
       }
@@ -2111,7 +2183,13 @@ export const DEBUG_CHALLENGES = {
               "Error"
             ],
             "answer": "3",
-            "hint": "append() はリスト全体を 1 要素として追加します"
+            "hint": "append() はリスト全体を 1 要素として追加します",
+            "optionExplanations": {
+              "2": "appendはcitiesの末尾に何かを1つ追加するので、元の2件のまま変わらないことはありません。",
+              "3": "正解。append(new_cities)はnew_citiesというリスト自体を1つの要素としてcitiesの末尾に追加するため、長さは2+1=3になります。",
+              "4": "append()はnew_citiesの中身を展開して4件にするのではなく、リストそのものを1要素として追加します。",
+              "Error": "append()にリストを渡すこと自体は正常な操作で、例外は発生しません。"
+            }
           },
           {
             "stepNum": 2,
@@ -2125,7 +2203,13 @@ export const DEBUG_CHALLENGES = {
               "cities.insert(new_cities) に変更する"
             ],
             "answer": "cities.extend(new_cities) に変更する",
-            "explanation": "extend() は反復可能オブジェクトの各要素を 1 つずつ追加します。append() はオブジェクト全体を 1 要素として追加するため、リストを渡すと入れ子になります。"
+            "explanation": "extend() は反復可能オブジェクトの各要素を 1 つずつ追加します。append() はオブジェクト全体を 1 要素として追加するため、リストを渡すと入れ子になります。",
+            "optionExplanations": {
+              "cities.append(new_cities) のまま": "appendのままだとnew_citiesがリストとしてそのまま1要素として追加され、入れ子になる問題が解決しません。",
+              "cities.extend(new_cities) に変更する": "正解。extend()はnew_citiesの各要素を1つずつcitiesに追加するので、フラットな4要素のリストになります。",
+              "cities + new_cities に変更する（再代入なし）": "+ 演算子は新しいリストを返すだけで、再代入しなければcities自体は変更されず結合結果が失われます。",
+              "cities.insert(new_cities) に変更する": "insert()は挿入位置のインデックスを第一引数に取るメソッドで、リストだけを渡す使い方は意図通りに動きません。"
+            }
           },
           {
             "stepNum": 3,
@@ -2139,7 +2223,13 @@ export const DEBUG_CHALLENGES = {
               "常に extend() の方が良い"
             ],
             "answer": "1 つの要素（値やオブジェクト）をリストの末尾に追加したい場合",
-            "explanation": "append(x) はどんな型でも 1 要素として追加します。extend(iterable) はリストやタプルなどの各要素を展開して追加します。cities.append(\"Fortaleza\") は文字列 1 つを追加、cities.extend([\"Fortaleza\", \"Manaus\"]) は 2 つを展開して追加します。"
+            "explanation": "append(x) はどんな型でも 1 要素として追加します。extend(iterable) はリストやタプルなどの各要素を展開して追加します。cities.append(\"Fortaleza\") は文字列 1 つを追加、cities.extend([\"Fortaleza\", \"Manaus\"]) は 2 つを展開して追加します。",
+            "optionExplanations": {
+              "複数の要素をまとめてリストに追加したい場合": "複数の要素をまとめてフラットに追加したい場合はextend()が適しており、appendを使うとリストごと1要素になってしまいます。",
+              "1 つの要素（値やオブジェクト）をリストの末尾に追加したい場合": "正解。append(x)はxがどんな型であっても1つの要素としてそのまま追加するメソッドです。",
+              "リストをフラットに結合したい場合": "リストを展開してフラットに結合したい場合はextend()を使うべきで、appendだと入れ子になってしまいます。",
+              "常に extend() の方が良い": "1つの値だけを追加したい場合はappendの方が意図に合っており、常にextendが優れているわけではありません。"
+            }
           }
         ]
       },
@@ -2163,7 +2253,13 @@ export const DEBUG_CHALLENGES = {
               "Error"
             ],
             "answer": "None",
-            "hint": "list.sort() は何を返しますか？"
+            "hint": "list.sort() は何を返しますか？",
+            "optionExplanations": {
+              "[2900, 3094, 6747, 12325]": "populations.sort()自体はpopulationsを昇順に並べ替えますが、その戻り値がrankedに入るのではなくNoneが入ります。",
+              "[12325, 6747, 3094, 2900]": "sort()はリストを変更しますが、変更後の値ではなくNoneを戻り値として返すため、rankedにはこの並びは入りません。",
+              "None": "正解。list.sort()はリストをin-placeで並べ替えるだけで戻り値はNoneのため、ranked = populations.sort()はNoneを代入します。",
+              "Error": "sort()はメソッドとして正常に呼び出せるため、例外は発生しません。"
+            }
           },
           {
             "stepNum": 2,
@@ -2177,7 +2273,13 @@ export const DEBUG_CHALLENGES = {
               "populations.sort(inplace=False) に変更する"
             ],
             "answer": "ranked = sorted(populations) に変更する",
-            "explanation": "sorted() は元のリストを変更せず新しいソート済みリストを返します。populations.sort() は in-place でリスト自体を変更し None を返します。"
+            "explanation": "sorted() は元のリストを変更せず新しいソート済みリストを返します。populations.sort() は in-place でリスト自体を変更し None を返します。",
+            "optionExplanations": {
+              "populations.sort() のまま": "sort()はNoneを返す仕様のままなので、rankedにNoneが入る問題は解決しません。",
+              "ranked = sorted(populations) に変更する": "正解。sorted()は新しいソート済みリストを戻り値として返すため、rankedに正しく代入できます。",
+              "ranked = populations.sorted() に変更する": "リストオブジェクトにはsorted()という名前のメソッドは存在せず、AttributeErrorになります。",
+              "populations.sort(inplace=False) に変更する": "list.sort()にinplaceという引数は存在せず、TypeErrorになります。"
+            }
           },
           {
             "stepNum": 3,
@@ -2191,7 +2293,13 @@ export const DEBUG_CHALLENGES = {
               "降順ソートが必要な場合"
             ],
             "answer": "元のリストを保持しつつ、ソート済みコピーが必要な場合",
-            "explanation": "list.sort() は in-place で元を変更・None を返します。sorted() は元を変更せず新しいリストを返します。どちらも key= や reverse= が使えます。元データを保持したい場合は sorted() を選びましょう。"
+            "explanation": "list.sort() は in-place で元を変更・None を返します。sorted() は元を変更せず新しいリストを返します。どちらも key= や reverse= が使えます。元データを保持したい場合は sorted() を選びましょう。",
+            "optionExplanations": {
+              "元のリストを変更したい場合": "元のリスト自体を直接並べ替えたい場合はsort()が適しており、これはsortedが優位な場面ではありません。",
+              "元のリストを保持しつつ、ソート済みコピーが必要な場合": "正解。sorted()は元のリストを変更せず新しいソート済みリストを返すため、元データを保持したまま使えます。",
+              "大きなリストを高速にソートしたい場合": "sort()とsorted()は内部的に同じアルゴリズムを使い速度面の優位差はなく、使い分けの基準は速度ではありません。",
+              "降順ソートが必要な場合": "降順はsort(reverse=True)でもsorted(reverse=True)でも同様に指定できるため、これがsortedだけの利点ではありません。"
+            }
           }
         ]
       }

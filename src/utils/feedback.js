@@ -76,12 +76,11 @@ function getBitcrushCurve() {
   return curve;
 }
 
-function connectThroughBitcrush(ctx, node) {
+function createBitcrusher(ctx) {
   const shaper = ctx.createWaveShaper();
   shaper.curve = getBitcrushCurve();
   shaper.oversample = 'none';
-  node.connect(shaper);
-  shaper.connect(ctx.destination);
+  return shaper;
 }
 
 function tone(ctx, {
@@ -96,6 +95,7 @@ function tone(ctx, {
 }) {
   const osc = ctx.createOscillator();
   const amp = ctx.createGain();
+  const crusher = createBitcrusher(ctx);
   osc.type = type;
   osc.frequency.setValueAtTime(frequency, start);
   if (frequencyEnd) {
@@ -105,8 +105,12 @@ function tone(ctx, {
   amp.gain.exponentialRampToValueAtTime(Math.max(0.0001, gain), start + attack);
   amp.gain.setValueAtTime(Math.max(0.0001, gain), Math.max(start + attack, start + duration - release));
   amp.gain.exponentialRampToValueAtTime(0.0001, start + duration);
-  osc.connect(amp);
-  connectThroughBitcrush(ctx, amp);
+  // Bitcrush the raw full-amplitude oscillator first, then apply the envelope —
+  // crushing after the gain envelope would quantize quiet sounds (e.g. tap) to silence,
+  // since the step size is large relative to their small post-envelope amplitude.
+  osc.connect(crusher);
+  crusher.connect(amp);
+  amp.connect(ctx.destination);
   osc.start(start);
   osc.stop(start + duration + 0.02);
 }
@@ -128,6 +132,7 @@ function noise(ctx, {
   const source = ctx.createBufferSource();
   const filter = ctx.createBiquadFilter();
   const amp = ctx.createGain();
+  const crusher = createBitcrusher(ctx);
   source.buffer = buffer;
   filter.type = filterType;
   filter.frequency.setValueAtTime(frequency, start);
@@ -136,8 +141,9 @@ function noise(ctx, {
   amp.gain.exponentialRampToValueAtTime(Math.max(0.0001, gain), start + attack);
   amp.gain.exponentialRampToValueAtTime(0.0001, start + duration);
   source.connect(filter);
-  filter.connect(amp);
-  connectThroughBitcrush(ctx, amp);
+  filter.connect(crusher);
+  crusher.connect(amp);
+  amp.connect(ctx.destination);
   source.start(start);
   source.stop(start + duration + 0.02);
 }
@@ -145,16 +151,19 @@ function noise(ctx, {
 const SOUND_PATTERNS = {
   tap: [
     [
-      { offset: 0, duration: 0.055, frequency: 900, frequencyEnd: 1260, type: 'triangle', gain: 0.045, release: 0.018 },
-      { kind: 'noise', offset: 0.004, duration: 0.035, frequency: 2400, gain: 0.018 },
+      { offset: 0, duration: 0.028, frequency: 150, frequencyEnd: 85, type: 'square', gain: 0.052, attack: 0.002, release: 0.012 },
+      { offset: 0, duration: 0.065, frequency: 950, frequencyEnd: 1320, type: 'triangle', gain: 0.062, release: 0.022 },
+      { kind: 'noise', offset: 0.004, duration: 0.035, frequency: 2400, gain: 0.026 },
     ],
     [
-      { offset: 0, duration: 0.05, frequency: 760, frequencyEnd: 1080, type: 'triangle', gain: 0.045, release: 0.016 },
-      { kind: 'noise', offset: 0.003, duration: 0.03, frequency: 2100, gain: 0.016 },
+      { offset: 0, duration: 0.026, frequency: 130, frequencyEnd: 78, type: 'square', gain: 0.05, attack: 0.002, release: 0.011 },
+      { offset: 0, duration: 0.058, frequency: 780, frequencyEnd: 1100, type: 'triangle', gain: 0.06, release: 0.02 },
+      { kind: 'noise', offset: 0.003, duration: 0.03, frequency: 2100, gain: 0.023 },
     ],
     [
-      { offset: 0, duration: 0.06, frequency: 1040, frequencyEnd: 1380, type: 'sine', gain: 0.042, release: 0.02 },
-      { kind: 'noise', offset: 0.005, duration: 0.038, frequency: 2700, gain: 0.02 },
+      { offset: 0, duration: 0.03, frequency: 165, frequencyEnd: 95, type: 'square', gain: 0.054, attack: 0.002, release: 0.012 },
+      { offset: 0, duration: 0.07, frequency: 1060, frequencyEnd: 1420, type: 'sine', gain: 0.058, release: 0.024 },
+      { kind: 'noise', offset: 0.005, duration: 0.038, frequency: 2700, gain: 0.028 },
     ],
   ],
   back: [
